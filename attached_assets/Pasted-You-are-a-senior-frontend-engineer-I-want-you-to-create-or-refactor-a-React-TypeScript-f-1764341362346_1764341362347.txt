@@ -1,0 +1,332 @@
+You are a senior frontend engineer.
+
+I want you to create (or refactor) a **React + TypeScript** frontend project for a platform called **Sinopia**, based on the following folder structure and requirements.
+
+This is **frontend only**. No real backend implementation is required, but the code must be ready to connect to a REST API later.
+
+---
+
+## 1. Tech Stack & General Rules
+
+- Use **React + TypeScript**.
+- Use **React Router v6** for routing.
+- Use **functional components** and **React hooks**.
+- Use **Context API + custom hooks** for global state (auth, profile, projects, notifications).
+- Use **Axios** with a shared `api` instance for all HTTP calls (even if they are just mocked for now).
+- Use **Tailwind CSS** for styling plus a `globals.css` file for custom styles.
+- Code must be modular, readable, and easy to extend.
+
+Brand (Sinopia) – use these as main colors:
+- Primary: `#cb410b`
+- Secondary: `#932319`
+- Accent: `#d05423`
+- Background: `#f7f7f7`
+- Text: `#1f2933`
+
+---
+
+## 2. Project Structure (very important – follow this)
+
+Create a `frontend` folder with this structure and implement ALL the core files as React + TS components or modules:
+
+frontend/                       # Root folder of the frontend project
+│
+├── public/                     # Static files
+│   ├── index.html              # Main HTML page
+│   └── assets/
+│       ├── images/
+│       ├── icons/
+│       └── fonts/
+│
+├── src/                        # React source
+│   ├── main.tsx                # React entry, mounts <App />
+│   ├── App.tsx                 # Root component, sets up Router and global layout
+│
+├── routes/                     # Routing logic
+│   ├── PublicRoutes.tsx        # Routes without auth (landing, sign-in, sign-up...)
+│   └── PrivateRoutes.tsx       # Routes that require auth (dashboard, profile, projects...)
+│
+├── pages/                      # Page-level views
+│   ├── Public/
+│   │   ├── HomePage.tsx
+│   │   ├── AboutPage.tsx
+│   │   ├── ContactPage.tsx
+│   │   ├── TermsPage.tsx
+│   │   └── PrivacyPolicyPage.tsx
+│   │
+│   ├── Auth/
+│   │   ├── SignInPage.tsx
+│   │   ├── SignUpPage.tsx
+│   │   ├── ForgotPasswordPage.tsx
+│   │   ├── OTPVerificationPage.tsx
+│   │   └── ResetPasswordPage.tsx
+│   │
+│   ├── Profile/
+│   │   ├── SkillGiverProfilePage.tsx
+│   │   ├── SkillGiverEditPage.tsx
+│   │   ├── SkillSearcherProfilePage.tsx
+│   │   └── SkillSearcherEditPage.tsx
+│   │
+│   ├── Projects/
+│   │   ├── SkillGiverProjectsPage.tsx
+│   │   ├── SkillSearcherProjectsPage.tsx
+│   │   ├── ProjectDetailPage.tsx
+│   │   └── AddProjectPage.tsx
+│   │
+│   ├── Offers/
+│   │   ├── OffersListPage.tsx
+│   │   └── OfferDetailPage.tsx
+│   │
+│   ├── Contracts/
+│   │   ├── ContractsListPage.tsx
+│   │   └── ContractDetailPage.tsx
+│   │
+│   ├── Payments/
+│   │   ├── SkillGiverInvoicesPage.tsx
+│   │   └── SkillSearcherPaymentsPage.tsx
+│   │
+│   └── Notifications/
+│       ├── SkillGiverNotificationsPage.tsx
+│       └── SkillSearcherNotificationsPage.tsx
+│
+├── components/                 # Reusable components
+│   ├── Public/
+│   │   ├── HeroSection.tsx
+│   │   ├── FeaturesSection.tsx
+│   │   ├── Testimonials.tsx
+│   │   ├── ContactForm.tsx
+│   │   ├── AboutInfo.tsx
+│   │   └── Footer.tsx
+│   │
+│   ├── Auth/
+│   │   ├── SignInForm.tsx
+│   │   ├── SignUpForm.tsx
+│   │   ├── ForgotPasswordForm.tsx
+│   │   ├── OTPForm.tsx
+│   │   └── ResetPasswordForm.tsx
+│   │
+│   ├── Profile/
+│   │   ├── PersonalInfoForm.tsx
+│   │   ├── ExperienceForm.tsx
+│   │   ├── UploadCVForm.tsx
+│   │   ├── EducationForm.tsx
+│   │   ├── CertificationsForm.tsx
+│   │   ├── ProjectsForm.tsx
+│   │   └── SkillsManagement.tsx
+│   │
+│   ├── Projects/
+│   │   ├── ProjectCard.tsx
+│   │   ├── StageTaskCard.tsx
+│   │   └── AddProjectForm.tsx
+│   │
+│   ├── Offers/
+│   │   ├── OfferCard.tsx
+│   │   └── OfferActions.tsx
+│   │
+│   ├── Contracts/
+│   │   ├── ContractCard.tsx
+│   │   └── ContractActions.tsx
+│   │
+│   ├── Payments/
+│   │   ├── InvoiceCard.tsx
+│   │   ├── PaymentCard.tsx
+│   │   └── PaymentForm.tsx
+│   │
+│   ├── Notifications/
+│   │   ├── NotificationItem.tsx
+│   │   └── NotificationsList.tsx
+│   │
+│   └── UI/                     # Generic UI components
+│       ├── Button.tsx
+│       ├── InputField.tsx
+│       ├── Modal.tsx
+│       ├── Table.tsx
+│       ├── Card.tsx
+│       └── Loader.tsx
+│
+├── context/                    # React Contexts
+│   ├── AuthContext.tsx
+│   ├── ProfileContext.tsx
+│   ├── ProjectContext.tsx
+│   └── NotificationContext.tsx
+│
+├── services/                   # API service layer (frontend only, mockable)
+│   ├── api.ts                  # Axios instance with baseURL and interceptors
+│   ├── authService.ts
+│   ├── profileService.ts
+│   ├── projectService.ts
+│   ├── offersService.ts
+│   ├── contractsService.ts
+│   ├── paymentsService.ts
+│   └── notificationsService.ts
+│
+├── hooks/                      # Custom hooks
+│   ├── useAuth.ts
+│   ├── useProfile.ts
+│   ├── useProjects.ts
+│   ├── useOffers.ts
+│   └── useNotifications.ts
+│
+├── utils/                      # Helpers
+│   ├── validation.ts
+│   ├── formatters.ts
+│   └── constants.ts
+│
+└── styles/
+    ├── tailwind.config.js
+    └── globals.css
+
+---
+
+## 3. Routing & Layout Behavior
+
+Implement routing with **React Router v6**:
+
+- `main.tsx`
+  - Wrap the app in `<BrowserRouter>`.
+  - Render `<App />`.
+
+- `App.tsx`
+  - Wrap children in all context providers:
+    - `<AuthContextProvider>`
+    - `<ProfileContextProvider>`
+    - `<ProjectContextProvider>`
+    - `<NotificationContextProvider>`
+  - Define a main layout:
+    - **Public layout**: simple navbar + main content + footer using Public components.
+    - **Private layout**: sidebar navigation + top bar (user info + notifications) + main content.
+  - Use:
+    - `<PublicRoutes />` for: `/`, `/about`, `/contact`, `/terms`, `/privacy`, `/sign-in`, `/sign-up`, `/forgot-password`, `/otp-verification`, `/reset-password`.
+    - `<PrivateRoutes />` for protected paths: `/dashboard`, `/projects`, `/projects/:id`, `/offers`, `/contracts`, `/payments`, `/profile`, `/notifications`.
+
+- `PublicRoutes.tsx`
+  - Define all public & auth routes and render their respective pages.
+
+- `PrivateRoutes.tsx`
+  - Use `useAuth()` to check `isAuthenticated`.
+  - If not authenticated → navigate to `/sign-in`.
+  - If authenticated → render private layout and nested routes.
+
+---
+
+## 4. Core Frontend Logic (high level, no real backend)
+
+### Auth
+
+- `AuthContext.tsx` + `useAuth.ts`
+  - Holds:
+    - `user` (id, email, role: "skill_giver" or "skill_searcher")
+    - `token`
+    - `isAuthenticated`
+  - Methods:
+    - `login(credentials)`
+    - `logout()`
+    - `loadCurrentUser()`
+  - Persist token in `localStorage` for now.
+
+- `authService.ts`
+  - Functions (for now return Promises with mocked data):
+    - `login(email, password)`
+    - `register(payload)`
+    - `requestPasswordReset(email)`
+    - `verifyEmailOTP(email, code)`
+    - `verifyResetOTP(email, code)`
+    - `resetPassword(payload)`
+    - `getCurrentUser()`
+
+- Auth pages (`SignInPage`, `SignUpPage`, `ForgotPasswordPage`, `OTPVerificationPage`, `ResetPasswordPage`) use the corresponding components in `components/Auth/` for the forms and call `authService` then update `AuthContext`.
+
+### Profiles
+
+- `ProfileContext.tsx` + `useProfile.ts`
+  - Stores:
+    - current profile data for the logged-in user (Skill Giver or Skill Searcher).
+  - Methods:
+    - `loadSkillGiverProfile()`
+    - `updateSkillGiverProfile(data)`
+    - `loadSkillSearcherProfile()`
+    - `updateSkillSearcherProfile(data)`
+    - `uploadCV(file)` (just mocked for now).
+
+- `SkillGiverProfilePage` / `SkillGiverEditPage`:
+  - Show and edit personal info, skills, experience, education, certifications, personal projects.
+
+- `SkillSearcherProfilePage` / `SkillSearcherEditPage`:
+  - Show and edit company profile (company name, industry, website, contact, bio).
+
+- Use subcomponents from `components/Profile/` to build these pages.
+
+### Projects, Offers, Contracts, Payments, Notifications
+
+Implement basic but realistic UIs:
+
+- `ProjectContext` + `useProjects`:
+  - Hold a list of projects and selected project.
+  - Methods:
+    - `loadSkillGiverProjects()`
+    - `loadSkillSearcherProjects()`
+    - `getProjectById(id)`
+    - `createProject(data)` (called from `AddProjectPage` using `AddProjectForm`).
+  - Use `ProjectCard` and `StageTaskCard` in project pages.
+
+- `OffersListPage` / `OfferDetailPage`:
+  - Render mock offers with statuses (Pending, Accepted, Rejected).
+  - `offersService` methods: `getOffersForUser()`, `acceptOffer(id)`, `rejectOffer(id)`.
+
+- `ContractsListPage` / `ContractDetailPage`:
+  - Show mock contracts (status: Draft, Sent, Signed).
+  - `contractsService` with methods: `getContractsForUser()`, `signContract(id)`.
+
+- `SkillGiverInvoicesPage` / `SkillSearcherPaymentsPage`:
+  - Show mock invoices/payments.
+  - `paymentsService` with methods: `getInvoicesForUser()`, `getPaymentsForUser()`.
+
+- `NotificationContext` + `useNotifications`:
+  - Store notification list and unread count.
+  - Methods:
+    - `loadNotifications()`
+    - `markAsRead(id)`
+    - `markAllAsRead()`
+  - `NotificationsList` + `NotificationItem` display them.
+
+All services (`projectService`, `offersService`, `contractsService`, `paymentsService`, `notificationsService`) should be thin wrappers around the `api` Axios instance, but for now can return mocked data.
+
+---
+
+## 5. API & Utils
+
+- `services/api.ts`
+  - Create an Axios instance with:
+    - `baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"`
+    - Request interceptor to attach `Authorization: Bearer <token>` from `AuthContext` or `localStorage` (if token exists).
+    - Response interceptor to handle 401 (unauthorized) by logging out and redirecting to `/sign-in`.
+
+- `utils/validation.ts`
+  - `isValidEmail`, `isStrongPassword`, `isValidPhone`.
+
+- `utils/formatters.ts`
+  - `formatDate`, `formatCurrency`, and helpers for status labels.
+
+- `utils/constants.ts`
+  - Status arrays and enums for:
+    - Projects, stages, tasks
+    - Offers
+    - Contracts
+    - Invoices & payments
+    - Roles and user types (`"skill_giver"`, `"skill_searcher"`).
+
+---
+
+## 6. UI & Design
+
+- Implement a simple but clean Tailwind-based design:
+  - Public pages: landing-style layout using `HeroSection`, `FeaturesSection`, `Testimonials`, `ContactForm`, `AboutInfo`, `Footer`.
+  - Private pages: dashboard layout with:
+    - Left sidebar navigation (links to Projects, Offers, Contracts, Payments, Profile, Notifications).
+    - Top bar with page title, user info, and notifications icon.
+- Use `UI/Button`, `UI/InputField`, `UI/Card`, `UI/Modal`, `UI/Table`, and `UI/Loader` across the app.
+- All pages must be responsive (desktop + mobile).
+
+IMPORTANT:
+- Generate all files listed in the structure with at least skeleton implementations (valid React + TypeScript code).
+- Use mock data where no real API exists, but keep types and structure realistic so we can plug in a real backend later.
