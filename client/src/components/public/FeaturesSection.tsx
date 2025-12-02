@@ -15,21 +15,21 @@ import {
 } from 'lucide-react';
 
 const skillGiverFeatures = [
-  { icon: Target, title: 'Find Projects', description: 'Access thousands of projects matching your skills and expertise.' },
-  { icon: TrendingUp, title: 'Build Portfolio', description: 'Showcase your work and grow your professional reputation.' },
-  { icon: CreditCard, title: 'Get Paid Securely', description: 'Receive payments on time with our secure payment system.' },
+  { icon: Target, title: 'Share Your Expertise', description: 'Bring your lifelong knowledge into meaningful, flexible projects.' },
+  { icon: TrendingUp, title: 'UseCase Based Work', description: 'Get matched to targeted, modular Use Cases tailored to your skills not generic jobs.' },
+  { icon: CreditCard, title: 'Fair & Secure Compensation', description: 'Receive transparent pricing and reliable payments based on effort and expertise.' },
 ];
 
 const skillSearcherFeatures = [
-  { icon: Users, title: 'Access Top Talent', description: 'Find verified professionals with proven track records.' },
-  { icon: Briefcase, title: 'Manage Projects', description: 'Track progress with milestones, stages, and task management.' },
-  { icon: Shield, title: 'Quality Guaranteed', description: 'Work with vetted talent and secure contract protection.' },
+  { icon: Users, title: 'Access Experienced Professionals', description: 'Find senior experts with verified skills, proven track records, and deep industry knowledge.' },
+  { icon: Briefcase, title: 'AI Driven Matching', description: 'Receive tailored Use Case recommendations, skill mappings (ESCO), and effort estimations.' },
+  { icon: Shield, title: 'Modular Project Delivery', description: 'Break work into clear tasks, milestones, and factory style processes for predictable outcomes.' },
 ];
 
 const howItWorks = [
-  { step: 1, icon: UserCheck, title: 'Create Your Profile', description: 'Sign up and showcase your skills or post your project requirements.' },
-  { step: 2, icon: Search, title: 'Find the Perfect Match', description: 'Browse talent or projects and connect with the right people.' },
-  { step: 3, icon: FileCheck, title: 'Collaborate Securely', description: 'Use contracts, milestones, and our secure payment system.' },
+  { step: 1, icon: UserCheck, title: 'Create Your Profile, Define Your Expertise or Need', description: 'Create your profile and outline your skills or submit your project as a clear Use Case.' },
+  { step: 2, icon: Search, title: 'Get Smart Matched', description: 'AI analyzes requirements and recommends the right experts or Use Cases based on skills and experience.' },
+  { step: 3, icon: FileCheck, title: 'Collaborate with Clarity', description: 'Work through structured tasks and milestones, with transparent pricing and secure payment upon delivery.' },
 ];
 
 export function FeaturesSection() {
@@ -45,7 +45,7 @@ export function FeaturesSection() {
               <h3 className="font-display text-2xl font-bold">For Skill Givers</h3>
             </div>
             <p className="text-muted-foreground mb-6">
-              Freelancers and professionals looking to showcase their expertise and find exciting projects.
+              Retirees, senior experts, and professionals offering their experience.
             </p>
             <div className="space-y-4">
               {skillGiverFeatures.map((feature) => (
@@ -70,7 +70,7 @@ export function FeaturesSection() {
               <h3 className="font-display text-2xl font-bold">For Skill Searchers</h3>
             </div>
             <p className="text-muted-foreground mb-6">
-              Companies and teams seeking talented professionals for their projects and goals.
+              Companies seeking precise expertise for tasks, processes, or projects.
             </p>
             <div className="space-y-4">
               {skillSearcherFeatures.map((feature) => (

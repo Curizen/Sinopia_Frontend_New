@@ -119,8 +119,8 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1">Email</h3>
-                      <p className="text-sm text-muted-foreground">support@sinopia.com</p>
-                      <p className="text-sm text-muted-foreground">sales@sinopia.com</p>
+                      <p className="text-sm text-muted-foreground">info@sinopia.eu</p>
+                      <p className="text-sm text-muted-foreground"></p>
                     </div>
                   </div>
                 </CardContent>
@@ -134,7 +134,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1">Phone</h3>
-                      <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
+                      <p className="text-sm text-muted-foreground">+49 177 4928319</p>
                       <p className="text-sm text-muted-foreground">Mon-Fri 9am-6pm EST</p>
                     </div>
                   </div>
@@ -150,9 +150,10 @@ export default function ContactPage() {
                     <div>
                       <h3 className="font-semibold mb-1">Office</h3>
                       <p className="text-sm text-muted-foreground">
-                        123 Innovation Street<br />
-                        San Francisco, CA 94102<br />
-                        United States
+                        Sinopia Deutschland GmbH
+                        <br />
+                        Deckerstr.   39
+                        70372 Stuttgart
                       </p>
                     </div>
                   </div>

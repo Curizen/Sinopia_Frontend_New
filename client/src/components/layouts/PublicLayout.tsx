@@ -23,11 +23,13 @@ export function PublicLayout({ children }: PublicLayoutProps) {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">S</span>
-              </div>
-              <span className="font-display font-bold text-xl text-foreground">Sinopia</span>
+              <img 
+                src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+                alt="Sinopia Logo" 
+                className="w-16 h-auto rounded-md object-cover"
+              />
             </Link>
+
 
             <div className="hidden md:flex items-center gap-6">
               {navLinks.map((link) => (
@@ -102,8 +104,14 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-1">
               <Link href="/" className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-lg">S</span>
+                <div className="flex items-center justify-center">
+                  <Link href="/" className="flex items-center gap-2">
+                    <img 
+                      src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+                      alt="Sinopia Logo" 
+                      className="w-16 h-auto rounded-md object-cover"
+                    />
+                  </Link>
                 </div>
                 <span className="font-display font-bold text-xl">Sinopia</span>
               </Link>
@@ -113,7 +121,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             </div>
 
             <div>
-              <h4 className="font-semibold mb-4">For Talent</h4>
+              <h4 className="font-semibold mb-4">Skill Giver</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><Link href="/sign-up" className="hover:text-foreground">Find Projects</Link></li>
                 <li><Link href="/sign-up" className="hover:text-foreground">Build Portfolio</Link></li>
@@ -122,7 +130,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             </div>
 
             <div>
-              <h4 className="font-semibold mb-4">For Companies</h4>
+              <h4 className="font-semibold mb-4">Skill Searcher</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><Link href="/sign-up" className="hover:text-foreground">Post Projects</Link></li>
                 <li><Link href="/sign-up" className="hover:text-foreground">Find Talent</Link></li>

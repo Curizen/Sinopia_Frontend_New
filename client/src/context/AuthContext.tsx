@@ -1,4 +1,11 @@
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  type ReactNode,
+} from 'react';
 import type { User } from '@/types';
 import type { UserRole } from '@/lib/utils/constants';
 
@@ -8,32 +15,31 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, role: UserRole, firstName: string, lastName: string) => Promise<void>;
+  register: (email: string, password: string, role: UserRole, cvFile?: File | null) => Promise<void>;
   logout: () => void;
   setMockUser: (role: UserRole) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// todo: remove mock functionality
+// todo: remove mock functionality (still used for login / setMockUser)
 const mockUsers: Record<UserRole, User> = {
   skill_giver: {
     id: '1',
     email: 'john@example.com',
     role: 'skill_giver',
-    firstName: 'John',
-    lastName: 'Smith',
     avatar: undefined,
   },
   skill_searcher: {
     id: '2',
     email: 'sarah@techcorp.com',
     role: 'skill_searcher',
-    firstName: 'Sarah',
-    lastName: 'Johnson',
     avatar: undefined,
   },
 };
+
+// you can configure this in your .env as VITE_API_BASE_URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -51,32 +57,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(async (email: string, _password: string) => {
-    // todo: remove mock functionality
+    // todo: replace with real backend login
     const mockToken = 'mock_token_' + Date.now();
     const mockUser = email.includes('searcher') ? mockUsers.skill_searcher : mockUsers.skill_giver;
-    
+
     setToken(mockToken);
     setUser(mockUser);
     localStorage.setItem('sinopia_token', mockToken);
     localStorage.setItem('sinopia_user', JSON.stringify(mockUser));
   }, []);
 
-  const register = useCallback(async (email: string, _password: string, role: UserRole, firstName: string, lastName: string) => {
-    // todo: remove mock functionality
-    const mockToken = 'mock_token_' + Date.now();
-    const newUser: User = {
-      id: Date.now().toString(),
-      email,
-      role,
-      firstName,
-      lastName,
-    };
-    
-    setToken(mockToken);
-    setUser(newUser);
-    localStorage.setItem('sinopia_token', mockToken);
-    localStorage.setItem('sinopia_user', JSON.stringify(newUser));
-  }, []);
+  const register = useCallback(
+    async (email: string, password: string, role: UserRole, cvFile?: File | null) => {
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+      formData.append('role', role);
+
+      if (cvFile) {
+        formData.append('cv', cvFile); 
+      }
+
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => 'Registration failed');
+        throw new Error(errorText);
+      }
+
+      const data = (await response.json()) as { token: string; user: User };
+
+      const newToken = data.token;
+      const newUser = data.user;
+
+      setToken(newToken);
+      setUser(newUser);
+      localStorage.setItem('sinopia_token', newToken);
+      localStorage.setItem('sinopia_user', JSON.stringify(newUser));
+    },
+    [],
+  );
 
   const logout = useCallback(() => {
     setToken(null);

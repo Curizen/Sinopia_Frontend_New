@@ -47,8 +47,14 @@ export default function SignInPage() {
       <div className="min-h-[80vh] flex items-center justify-center py-12 px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center mx-auto mb-4">
-              <span className="text-primary-foreground font-bold text-xl">S</span>
+            <div className="flex items-center justify-center mx-auto mb-4">
+              <Link href="/" className="flex items-center gap-2">
+                <img 
+                  src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+                  alt="Sinopia Logo" 
+                  className="w-16 h-auto rounded-md object-cover"
+                />
+              </Link>
             </div>
             <CardTitle className="font-display text-2xl">Welcome Back</CardTitle>
             <CardDescription>Sign in to your Sinopia account</CardDescription>

@@ -1,13 +1,18 @@
 import type { UserRole, ProjectStatus, OfferStatus, ContractStatus, InvoiceStatus, TaskStatus } from '@/lib/utils/constants';
 
+
+
 export interface User {
   id: string;
   email: string;
   role: UserRole;
-  firstName: string;
-  lastName: string;
   avatar?: string;
+  firstName?: string;
+  lastName?: string;
+
+  cvUrl?: string;        
 }
+
 
 export interface SkillGiverProfile {
   id: string;

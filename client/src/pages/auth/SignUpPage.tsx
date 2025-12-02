@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
@@ -8,42 +8,113 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, UserPlus, Briefcase, User } from 'lucide-react';
+import { Eye, EyeOff, UserPlus, Briefcase, User, FileText } from 'lucide-react';
 import type { UserRole } from '@/lib/utils/constants';
 
 export default function SignUpPage() {
   const { register } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // step 1 → account info, step 2 → CV upload (for Skill Giver)
+  const [step, setStep] = useState<1 | 2>(1);
+
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
     email: '',
     password: '',
     role: 'skill_giver' as UserRole,
   });
 
+  const [cvFile, setCvFile] = useState<File | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const isSkillGiver = formData.role === 'skill_giver';
+
+  const handleFileSelect = (file: File | undefined | null) => {
+    if (!file) return;
+    setCvFile(file);
+    toast({
+      title: 'CV selected',
+      description: `We will upload "${file.name}" with your account.`,
+    });
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    handleFileSelect(file);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    try {
-      await register(formData.email, formData.password, formData.role, formData.firstName, formData.lastName);
-      toast({
-        title: 'Account created!',
-        description: 'Welcome to Sinopia. Let\'s set up your profile.',
-      });
-      setLocation('/dashboard');
-    } catch (error) {
-      toast({
-        title: 'Registration failed',
-        description: 'Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
+    // STEP 1: basic account info
+    if (step === 1) {
+      // If Skill Searcher -> directly register (no CV step)
+      if (!isSkillGiver) {
+        setIsLoading(true);
+        try {
+          await register(formData.email, formData.password, formData.role);
+          toast({
+            title: 'Account created!',
+            description: 'Welcome to Sinopia. Let\'s set up your profile.',
+          });
+          setLocation('/dashboard');
+        } catch (error) {
+          console.error(error);
+          toast({
+            title: 'Registration failed',
+            description: 'Please try again.',
+            variant: 'destructive',
+          });
+        } finally {
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      // If Skill Giver -> go to CV step
+      setStep(2);
+      return;
+    }
+
+    // STEP 2: CV upload for Skill Giver
+    if (step === 2) {
+      if (!cvFile) {
+        toast({
+          title: 'CV required',
+          description: 'Please upload your CV to continue as a Skill Giver.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        // send CV to backend via register (multipart form-data)
+        await register(formData.email, formData.password, formData.role, cvFile);
+
+        toast({
+          title: 'Account created!',
+          description: `Welcome to Sinopia. Your CV "${cvFile.name}" has been uploaded.`,
+        });
+
+        setLocation('/dashboard');
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: 'Registration failed',
+          description: 'Please try again.',
+          variant: 'destructive',
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -52,135 +123,258 @@ export default function SignUpPage() {
       <div className="min-h-[80vh] flex items-center justify-center py-12 px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center mx-auto mb-4">
-              <span className="text-primary-foreground font-bold text-xl">S</span>
+            <div className="flex items-center justify-center mx-auto mb-4">
+              <Link href="/" className="flex items-center gap-2">
+                <img 
+                  src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+                  alt="Sinopia Logo" 
+                  className="w-16 h-auto rounded-md object-cover"
+                />
+              </Link>
             </div>
-            <CardTitle className="font-display text-2xl">Create Your Account</CardTitle>
-            <CardDescription>Join Sinopia and start your journey</CardDescription>
+            <CardTitle className="font-display text-2xl">
+              {step === 1 ? 'Create Your Account' : 'Upload Your CV'}
+            </CardTitle>
+            <CardDescription>
+              {step === 1
+                ? 'Join Sinopia and start your journey'
+                : 'Please provide your CV so we can better match you with opportunities.'}
+            </CardDescription>
           </CardHeader>
+
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-3">
-                <Label>I want to</Label>
-                <RadioGroup
-                  value={formData.role}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, role: value as UserRole }))}
-                  className="grid grid-cols-2 gap-4"
-                >
-                  <Label
-                    htmlFor="skill_giver"
-                    className={`flex flex-col items-center gap-2 p-4 border rounded-lg cursor-pointer transition-colors ${
-                      formData.role === 'skill_giver' ? 'border-primary bg-primary/5' : 'border-border hover:border-muted-foreground'
-                    }`}
-                  >
-                    <RadioGroupItem value="skill_giver" id="skill_giver" className="sr-only" />
-                    <User className={`w-6 h-6 ${formData.role === 'skill_giver' ? 'text-primary' : 'text-muted-foreground'}`} />
-                    <span className={`text-sm font-medium ${formData.role === 'skill_giver' ? 'text-primary' : ''}`}>
-                      Find Work
-                    </span>
-                    <span className="text-xs text-muted-foreground text-center">
-                      I'm a professional
-                    </span>
-                  </Label>
-                  <Label
-                    htmlFor="skill_searcher"
-                    className={`flex flex-col items-center gap-2 p-4 border rounded-lg cursor-pointer transition-colors ${
-                      formData.role === 'skill_searcher' ? 'border-primary bg-primary/5' : 'border-border hover:border-muted-foreground'
-                    }`}
-                  >
-                    <RadioGroupItem value="skill_searcher" id="skill_searcher" className="sr-only" />
-                    <Briefcase className={`w-6 h-6 ${formData.role === 'skill_searcher' ? 'text-primary' : 'text-muted-foreground'}`} />
-                    <span className={`text-sm font-medium ${formData.role === 'skill_searcher' ? 'text-primary' : ''}`}>
-                      Hire Talent
-                    </span>
-                    <span className="text-xs text-muted-foreground text-center">
-                      I'm a company
-                    </span>
-                  </Label>
-                </RadioGroup>
-              </div>
+              {step === 1 && (
+                <>
+                  {/* Role selection */}
+                  <div className="space-y-3">
+                    <Label>I want to</Label>
+                    <RadioGroup
+                      value={formData.role}
+                      onValueChange={(value) =>
+                        setFormData((prev) => ({ ...prev, role: value as UserRole }))
+                      }
+                      className="grid grid-cols-2 gap-4"
+                    >
+                      <Label
+                        htmlFor="skill_giver"
+                        className={`flex flex-col items-center gap-2 p-4 border rounded-lg cursor-pointer transition-colors ${
+                          formData.role === 'skill_giver'
+                            ? 'border-primary bg-primary/5'
+                            : 'border-border hover:border-muted-foreground'
+                        }`}
+                      >
+                        <RadioGroupItem
+                          value="skill_giver"
+                          id="skill_giver"
+                          className="sr-only"
+                        />
+                        <User
+                          className={`w-6 h-6 ${
+                            formData.role === 'skill_giver'
+                              ? 'text-primary'
+                              : 'text-muted-foreground'
+                          }`}
+                        />
+                        <span
+                          className={`text-sm font-medium ${
+                            formData.role === 'skill_giver' ? 'text-primary' : ''
+                          }`}
+                        >
+                          Provide Your Expertise
+                        </span>
+                        <span className="text-xs text-muted-foreground text-center">
+                          I&apos;m a Skill Giver
+                        </span>
+                      </Label>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input
-                    id="firstName"
-                    placeholder="John"
-                    value={formData.firstName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
-                    required
-                    data-testid="input-signup-firstname"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input
-                    id="lastName"
-                    placeholder="Doe"
-                    value={formData.lastName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
-                    required
-                    data-testid="input-signup-lastname"
-                  />
-                </div>
-              </div>
+                      <Label
+                        htmlFor="skill_searcher"
+                        className={`flex flex-col items-center gap-2 p-4 border rounded-lg cursor-pointer transition-colors ${
+                          formData.role === 'skill_searcher'
+                            ? 'border-primary bg-primary/5'
+                            : 'border-border hover:border-muted-foreground'
+                        }`}
+                      >
+                        <RadioGroupItem
+                          value="skill_searcher"
+                          id="skill_searcher"
+                          className="sr-only"
+                        />
+                        <Briefcase
+                          className={`w-6 h-6 ${
+                            formData.role === 'skill_searcher'
+                              ? 'text-primary'
+                              : 'text-muted-foreground'
+                          }`}
+                        />
+                        <span
+                          className={`text-sm font-medium ${
+                            formData.role === 'skill_searcher' ? 'text-primary' : ''
+                          }`}
+                        >
+                          Find Expertise
+                        </span>
+                        <span className="text-xs text-muted-foreground text-center">
+                          I&apos;m a Skill Searcher
+                        </span>
+                      </Label>
+                    </RadioGroup>
+                    {isSkillGiver && (
+                      <p className="text-xs text-muted-foreground">
+                        As a Skill Giver, you’ll be asked to upload your CV in the next step.
+                      </p>
+                    )}
+                  </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={formData.email}
-                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                  required
-                  data-testid="input-signup-email"
-                />
-              </div>
+                  {/* Email */}
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData((prev) => ({ ...prev, email: e.target.value }))
+                      }
+                      required
+                      data-testid="input-signup-email"
+                    />
+                  </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Create a strong password"
-                    value={formData.password}
-                    onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                    required
-                    data-testid="input-signup-password"
-                  />
-                  <button
+                  {/* Password */}
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Create a strong password"
+                        value={formData.password}
+                        onChange={(e) =>
+                          setFormData((prev) => ({ ...prev, password: e.target.value }))
+                        }
+                        required
+                        data-testid="input-signup-password"
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      At least 8 characters with uppercase, lowercase, and a number
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {step === 2 && (
+                <>
+                  {/* CV upload – only for skill_giver */}
+                  <div className="space-y-2">
+                    <Label>Upload your CV</Label>
+                    <p className="text-xs text-muted-foreground">
+                      Please provide your CV (PDF, DOC, or DOCX) so we can better match you with
+                      suitable opportunities.
+                    </p>
+
+                    <div
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        setIsDragging(true);
+                      }}
+                      onDragLeave={(e) => {
+                        e.preventDefault();
+                        setIsDragging(false);
+                      }}
+                      onDrop={handleDrop}
+                      onClick={() => fileInputRef.current?.click()}
+                      className={`mt-2 flex flex-col items-center justify-center border-2 border-dashed rounded-lg px-4 py-8 text-center cursor-pointer transition-colors ${
+                        isDragging
+                          ? 'border-primary bg-primary/5'
+                          : 'border-muted-foreground/40 hover:border-primary/60'
+                      }`}
+                    >
+                      <FileText className="w-8 h-8 text-muted-foreground mb-2" />
+                      <p className="text-sm font-medium">
+                        Drag &amp; drop your CV here, or click to browse
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Accepted formats: PDF, DOC, DOCX
+                      </p>
+                      {cvFile && (
+                        <p className="mt-3 text-xs text-primary">
+                          Selected file: <span className="font-medium">{cvFile.name}</span>
+                        </p>
+                      )}
+                    </div>
+
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      className="hidden"
+                      onChange={(e) => handleFileSelect(e.target.files?.[0])}
+                    />
+                  </div>
+
+                  <Button
                     type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    onClick={() => setShowPassword(!showPassword)}
+                    variant="ghost"
+                    className="w-full"
+                    onClick={() => setStep(1)}
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  At least 8 characters with uppercase, lowercase, and a number
-                </p>
-              </div>
+                    ← Back to account details
+                  </Button>
+                </>
+              )}
 
-              <Button type="submit" className="w-full" disabled={isLoading} data-testid="button-signup-submit">
-                {isLoading ? 'Creating account...' : 'Create Account'}
+              {/* Submit button */}
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isLoading}
+                data-testid="button-signup-submit"
+              >
+                {isLoading
+                  ? step === 1
+                    ? 'Creating account...'
+                    : 'Finishing sign up...'
+                  : step === 1
+                    ? isSkillGiver
+                      ? 'Continue'
+                      : 'Create Account'
+                    : 'Create Account'}
                 <UserPlus className="ml-2 w-4 h-4" />
               </Button>
 
-              <p className="text-xs text-center text-muted-foreground">
-                By creating an account, you agree to our{' '}
-                <Link href="/terms" className="text-primary hover:underline">Terms</Link> and{' '}
-                <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
-              </p>
+              {step === 1 && (
+                <p className="text-xs text-center text-muted-foreground">
+                  By creating an account, you agree to our{' '}
+                  <Link href="/terms" className="text-primary hover:underline">
+                    Terms
+                  </Link>{' '}
+                  and{' '}
+                  <Link href="/privacy" className="text-primary hover:underline">
+                    Privacy Policy
+                  </Link>
+                </p>
+              )}
             </form>
 
-            <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">Already have an account? </span>
-              <Link href="/sign-in" className="text-primary hover:underline font-medium">
-                Sign in
-              </Link>
-            </div>
+            {step === 1 && (
+              <div className="mt-6 text-center text-sm">
+                <span className="text-muted-foreground">Already have an account? </span>
+                <Link href="/sign-in" className="text-primary hover:underline font-medium">
+                  Sign in
+                </Link>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

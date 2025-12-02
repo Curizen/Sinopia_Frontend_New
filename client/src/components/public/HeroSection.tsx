@@ -26,22 +26,22 @@ export function HeroSection() {
           </h1>
           
           <p className="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl">
-            Sinopia is the marketplace where talented professionals meet companies seeking expertise. 
-            Build your career, showcase your skills, and grow your business.
+            Sinopia enables professionals to present their skills to companies seeking qualified talent. 
+            Find your next project or hire the perfect freelancer today.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 mb-12">
+          <div className="flex flex-wrap gap-4 mb-12">
             <Link href="/sign-up">
-              <Button size="lg" className="w-full sm:w-auto text-lg px-8" data-testid="button-hero-signup">
+              <Button size="lg" className="gap-2" data-testid="button-hero-cta">
                 Get Started
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
             <Link href="/about">
               <Button
                 size="lg"
                 variant="outline"
-                className="w-full sm:w-auto text-lg px-8 bg-white/10 border-white/30 text-white backdrop-blur-sm hover:bg-white/20"
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
                 data-testid="button-hero-learn"
               >
                 Learn More

@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Target, Heart, Users, Globe } from 'lucide-react';
 import heroImage from '@assets/generated_images/team_collaboration_coworking_hero.png';
 
-// todo: remove mock functionality
 const team = [
   { name: 'Alex Rivera', role: 'CEO & Founder', initials: 'AR' },
   { name: 'Jordan Kim', role: 'CTO', initials: 'JK' },
@@ -13,10 +12,10 @@ const team = [
 ];
 
 const values = [
-  { icon: Target, title: 'Excellence', description: 'We strive for excellence in everything we do, from our platform to our support.' },
-  { icon: Heart, title: 'Trust', description: 'Building trust between talent and companies is at the core of our mission.' },
-  { icon: Users, title: 'Community', description: 'We foster a supportive community where professionals can thrive and grow.' },
-  { icon: Globe, title: 'Accessibility', description: 'We believe talent is everywhere and should have equal opportunities globally.' },
+  { icon: Target, title: 'Unlocking Hidden Expertise', description: 'We activate the unused knowledge of senior professionals and turn their experience into real value for today’s market.' },
+  { icon: Heart, title: 'Flexible, Use-Case Based Work', description: 'We break work into modular, targeted Use Cases enabling flexible collaboration for experts and companies..' },
+  { icon: Users, title: 'Smart Matching of Skills & Demand', description: 'We intelligently connect companies’ needs with the right expertise, closing skill gaps efficiently.' },
+  { icon: Globe, title: 'Preserving Knowledge for Society', description: 'We keep valuable human experience alive by reintegrating it into the economy for long-term social benefit.' },
 ];
 
 export default function AboutPage() {
@@ -31,7 +30,7 @@ export default function AboutPage() {
           <div className="text-center text-white">
             <h1 className="font-display text-4xl sm:text-5xl font-bold mb-4">About Sinopia</h1>
             <p className="text-lg text-gray-200 max-w-2xl mx-auto px-4">
-              Connecting talent with opportunity since 2020
+              Connecting talent with opportunity since 2025
             </p>
           </div>
         </div>
@@ -42,18 +41,15 @@ export default function AboutPage() {
           <div className="prose prose-lg max-w-none">
             <h2 className="font-display text-3xl font-bold mb-6">Our Story</h2>
             <p className="text-muted-foreground mb-4">
-              Sinopia was founded with a simple yet powerful vision: to create a marketplace where skilled professionals 
-              and forward-thinking companies could connect seamlessly. We saw the gap between talented individuals seeking 
-              meaningful work and organizations searching for the right expertise.
+              Sinopia is a young and innovative company with a clear vision: to rethink existing societal potential and make it accessible in new, meaningful ways.
+              Our mission is to develop alternative and sometimes disruptive approaches to reintegrate valuable resources, especially human expertise and experience, back                 into the social and economic cycle..
             </p>
             <p className="text-muted-foreground mb-4">
-              Today, Sinopia serves thousands of professionals and companies worldwide, facilitating successful 
-              collaborations across industries. Our platform combines intuitive design with powerful features to make 
-              finding work or talent easier than ever.
+              The idea behind Sinopia was inspired by a simple yet profound image: ancient cave paintings depicting human hands a timeless symbol of connection, support,                  and the passing on of knowledge.
+              From this symbolism, the vision emerged to make the vast experience of retirees and senior professionals available to today’s working world  flexible,                       targeted, and impactful.
             </p>
             <p className="text-muted-foreground">
-              We believe that when the right talent meets the right opportunity, amazing things happen. That's why 
-              we're committed to continuously improving our platform and supporting our community every step of the way.
+              As founders, we are convinced that our approach not only addresses the challenges of demographic change but also contributes to social participation,                        knowledge preservation, and a more sustainable labor market.
             </p>
           </div>
         </div>
