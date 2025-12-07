@@ -1,14 +1,30 @@
 import { type ReactNode, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Globe } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useI18n } from '@/i18n';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+
+function GermanFlag() {
+  return (
+    <svg viewBox="0 0 32 32" className="w-full h-full">
+      <circle cx="16" cy="16" r="16" fill="#FFCE00" />
+      <path d="M0,16 a16,16 0 0,1 32,0" fill="#000" />
+      <path d="M0,16 a16,16 0 0,1 32,0" fill="#DD0000" transform="translate(0, 5.33)" />
+    </svg>
+  );
+}
+
+function EnglishFlag() {
+  return (
+    <svg viewBox="0 0 32 32" className="w-full h-full">
+      <circle cx="16" cy="16" r="16" fill="#012169" />
+      <path d="M16,0 L16,32 M0,16 L32,16" stroke="#fff" strokeWidth="6" />
+      <path d="M16,0 L16,32 M0,16 L32,16" stroke="#C8102E" strokeWidth="3" />
+      <path d="M0,0 L32,32 M32,0 L0,32" stroke="#fff" strokeWidth="3" />
+      <path d="M0,0 L32,32 M32,0 L0,32" stroke="#C8102E" strokeWidth="1.5" />
+    </svg>
+  );
+}
 
 interface PublicLayoutProps {
   children: ReactNode;
@@ -56,29 +72,14 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             </div>
 
             <div className="hidden md:flex items-center gap-3">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" data-testid="button-language-switcher">
-                    <Globe className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem 
-                    onClick={() => setLanguage('en')}
-                    className={language === 'en' ? 'bg-accent' : ''}
-                    data-testid="button-lang-en"
-                  >
-                    EN - English
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={() => setLanguage('de')}
-                    className={language === 'de' ? 'bg-accent' : ''}
-                    data-testid="button-lang-de"
-                  >
-                    DE - Deutsch
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <button
+                onClick={() => setLanguage(language === 'en' ? 'de' : 'en')}
+                className="w-8 h-8 rounded-full overflow-hidden border-2 border-border hover:border-primary transition-colors flex items-center justify-center"
+                data-testid="button-language-toggle"
+                title={language === 'en' ? t('common.switchToGerman') : t('common.switchToEnglish')}
+              >
+                {language === 'en' ? <GermanFlag /> : <EnglishFlag />}
+              </button>
               <Link href="/sign-in">
                 <Button variant="ghost" data-testid="button-sign-in">
                   {t('nav.signIn')}
@@ -113,22 +114,18 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                     {t(link.labelKey)}
                   </Link>
                 ))}
-                <div className="flex items-center gap-2 py-2">
-                  <span className="text-sm text-muted-foreground">Language:</span>
+                <div className="flex items-center gap-3 py-2">
+                  <span className="text-sm text-muted-foreground">{t('common.language')}:</span>
                   <button
-                    onClick={() => setLanguage('en')}
-                    className={`px-2 py-1 text-sm rounded ${language === 'en' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
-                    data-testid="button-mobile-lang-en"
+                    onClick={() => setLanguage(language === 'en' ? 'de' : 'en')}
+                    className="w-8 h-8 rounded-full overflow-hidden border-2 border-border hover:border-primary transition-colors flex items-center justify-center"
+                    data-testid="button-mobile-language-toggle"
                   >
-                    EN
+                    {language === 'en' ? <GermanFlag /> : <EnglishFlag />}
                   </button>
-                  <button
-                    onClick={() => setLanguage('de')}
-                    className={`px-2 py-1 text-sm rounded ${language === 'de' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
-                    data-testid="button-mobile-lang-de"
-                  >
-                    DE
-                  </button>
+                  <span className="text-sm text-muted-foreground">
+                    {language === 'en' ? 'EN' : 'DE'}
+                  </span>
                 </div>
                 <div className="flex flex-col gap-2 pt-4 border-t border-border">
                   <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>

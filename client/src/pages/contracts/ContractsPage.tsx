@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
 import { useContracts } from '@/context/ContractContext';
+import { useI18n } from '@/i18n';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -29,6 +30,7 @@ export default function ContractsPage() {
   const { user } = useAuth();
   const { contracts, signContract } = useContracts();
   const { toast } = useToast();
+  const { t } = useI18n();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedContract, setSelectedContract] = useState<typeof contracts[0] | null>(null);
@@ -58,8 +60,8 @@ export default function ContractsPage() {
 
     signContract(selectedContract.id);
     toast({
-      title: 'Contract signed!',
-      description: 'The contract is now active.',
+      title: t('contracts.signed'),
+      description: t('contracts.active'),
     });
     setSelectedContract(null);
   };
@@ -68,9 +70,9 @@ export default function ContractsPage() {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-display font-bold">Contracts</h1>
+          <h1 className="text-2xl font-display font-bold">{t('contracts.title')}</h1>
           <p className="text-muted-foreground">
-            Manage your contracts and agreements
+            {isSkillGiver ? t('contracts.manageGiver') : t('contracts.manageSearcher')}
           </p>
         </div>
 
@@ -78,7 +80,7 @@ export default function ContractsPage() {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="Search contracts..."
+              placeholder={t('contracts.search')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -87,13 +89,13 @@ export default function ContractsPage() {
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-full sm:w-[180px]" data-testid="select-contract-filter">
-              <SelectValue placeholder="Filter by status" />
+              <SelectValue placeholder={t('contracts.filterByStatus')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="draft">Draft</SelectItem>
-              <SelectItem value="sent">Sent</SelectItem>
-              <SelectItem value="signed">Signed</SelectItem>
+              <SelectItem value="all">{t('contracts.allStatus')}</SelectItem>
+              <SelectItem value="draft">{t('projects.statusDraft')}</SelectItem>
+              <SelectItem value="sent">{t('offers.sent')}</SelectItem>
+              <SelectItem value="signed">{t('contracts.signed')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -102,11 +104,11 @@ export default function ContractsPage() {
           <Card>
             <CardContent className="py-12 text-center">
               <Handshake className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="font-semibold text-lg mb-2">No contracts found</h3>
+              <h3 className="font-semibold text-lg mb-2">{t('contracts.noContractsFound')}</h3>
               <p className="text-muted-foreground">
                 {searchQuery || statusFilter !== 'all'
-                  ? 'Try adjusting your search or filters'
-                  : 'No contracts to display at the moment'}
+                  ? t('contracts.adjustFilters')
+                  : t('contracts.noContractsToDisplay')}
               </p>
             </CardContent>
           </Card>
@@ -149,11 +151,11 @@ export default function ContractsPage() {
                           data-testid={`button-sign-contract-${contract.id}`}
                         >
                           <FileSignature className="w-4 h-4 mr-2" />
-                          Sign Contract
+                          {t('contracts.sign')}
                         </Button>
                       )}
                       <Button variant="outline" data-testid={`button-view-contract-${contract.id}`}>
-                        View Details
+                        {t('contracts.viewContract')}
                       </Button>
                     </div>
                   </div>
@@ -166,7 +168,7 @@ export default function ContractsPage() {
         <Dialog open={!!selectedContract} onOpenChange={() => setSelectedContract(null)}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Sign Contract</DialogTitle>
+              <DialogTitle>{t('contracts.sign')}</DialogTitle>
               <DialogDescription>
                 You are about to sign the contract for "{selectedContract?.projectTitle}". 
                 This will make the contract legally binding.
@@ -174,7 +176,7 @@ export default function ContractsPage() {
             </DialogHeader>
             <div className="py-4 space-y-4">
               <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
-                <span className="text-sm text-muted-foreground">Contract Value</span>
+                <span className="text-sm text-muted-foreground">{t('contracts.contractValue')}</span>
                 <span className="font-bold text-lg">{formatCurrency(selectedContract?.amount || 0)}</span>
               </div>
               <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
@@ -186,11 +188,11 @@ export default function ContractsPage() {
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setSelectedContract(null)}>
-                Cancel
+                {t('common.cancel')}
               </Button>
               <Button onClick={handleSign} data-testid="button-confirm-sign">
                 <FileSignature className="w-4 h-4 mr-2" />
-                Sign Contract
+                {t('contracts.sign')}
               </Button>
             </DialogFooter>
           </DialogContent>

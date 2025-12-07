@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
+import { useI18n } from '@/i18n';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,7 +26,6 @@ import {
   X,
 } from 'lucide-react';
 
-// todo: remove mock functionality
 const mockSkillGiverProfile = {
   bio: 'Experienced full-stack developer with 8+ years in building web and mobile applications. Passionate about clean code and user-centric design.',
   title: 'Senior Full-Stack Developer',
@@ -59,6 +59,7 @@ const mockSkillSearcherProfile = {
 export default function ProfilePage() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useI18n();
   const [isEditing, setIsEditing] = useState(false);
   const [newSkill, setNewSkill] = useState('');
 
@@ -66,10 +67,9 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState(isSkillGiver ? mockSkillGiverProfile : mockSkillSearcherProfile);
 
   const handleSave = () => {
-    // todo: remove mock functionality
     toast({
-      title: 'Profile updated!',
-      description: 'Your changes have been saved successfully.',
+      title: t('common.success'),
+      description: t('profile.profileUpdated'),
     });
     setIsEditing(false);
   };
@@ -98,26 +98,26 @@ export default function ProfilePage() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-display font-bold">Profile</h1>
+            <h1 className="text-2xl font-display font-bold">{t('profile.title')}</h1>
             <p className="text-muted-foreground">
-              Manage your {isSkillGiver ? 'professional profile' : 'company profile'}
+              {isSkillGiver ? t('profile.manageProfessionalProfile') : t('profile.manageCompanyProfile')}
             </p>
           </div>
           {isEditing ? (
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => setIsEditing(false)}>
                 <X className="w-4 h-4 mr-2" />
-                Cancel
+                {t('common.cancel')}
               </Button>
               <Button onClick={handleSave} data-testid="button-save-profile">
                 <Save className="w-4 h-4 mr-2" />
-                Save Changes
+                {t('profile.saveChanges')}
               </Button>
             </div>
           ) : (
             <Button onClick={() => setIsEditing(true)} data-testid="button-edit-profile">
               <Edit2 className="w-4 h-4 mr-2" />
-              Edit Profile
+              {t('profile.editProfile')}
             </Button>
           )}
         </div>
@@ -174,7 +174,7 @@ export default function ProfilePage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <User className="w-5 h-5" />
-                  About
+                  {t('profile.about')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -194,7 +194,7 @@ export default function ProfilePage() {
             {isSkillGiver && 'skills' in profile && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Skills</CardTitle>
+                  <CardTitle>{t('profile.skills')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
@@ -212,7 +212,7 @@ export default function ProfilePage() {
                   {isEditing && (
                     <div className="flex gap-2 mt-4">
                       <Input
-                        placeholder="Add a skill"
+                        placeholder={t('profile.addSkill')}
                         value={newSkill}
                         onChange={(e) => setNewSkill(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddSkill())}
@@ -232,7 +232,7 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Briefcase className="w-5 h-5" />
-                    Experience
+                    {t('profile.experience')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -245,7 +245,7 @@ export default function ProfilePage() {
                         <h4 className="font-semibold">{exp.role}</h4>
                         <p className="text-sm text-muted-foreground">{exp.company}</p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
+                          {exp.startDate} - {exp.current ? t('profile.present') : exp.endDate}
                         </p>
                         {exp.description && (
                           <p className="text-sm mt-2">{exp.description}</p>
@@ -262,7 +262,7 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <GraduationCap className="w-5 h-5" />
-                    Education
+                    {t('profile.education')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -289,7 +289,7 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Award className="w-5 h-5" />
-                    Certifications
+                    {t('profile.certifications')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">

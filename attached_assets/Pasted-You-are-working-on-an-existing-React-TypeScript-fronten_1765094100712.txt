@@ -1,0 +1,159 @@
+You are working on an existing React + TypeScript frontend for Sinopia, a skill marketplace. The app runs correctly and already has most of the UI in English, with some initial i18n work done by previous prompts.
+
+Goal
+
+Make the entire user-facing UI fully translatable between English (en) and German (de).
+
+Add a language toggle button with round flag icons in the main header:
+
+When the current language is English, show a small round German flag icon.
+
+Clicking it switches the app to German.
+
+When the current language is German, show a small round UK/US-style English flag icon.
+
+Clicking it switches the app back to English.
+
+The language switch must work across all pages without reloading the browser and must persist using localStorage.
+
+Steps & Requirements
+1. Reuse or create i18n system
+
+First, scan the codebase to see if an i18n system already exists (I18nProvider, useI18n, t() function, en/de files, etc.).
+
+If an i18n system exists:
+
+Reuse and extend it. Do NOT create a second or parallel system.
+
+If no i18n system exists:
+
+Create a minimal i18n setup:
+
+I18nProvider React context + useI18n() hook exposing:
+
+language: "en" | "de"
+
+setLanguage(lang: "en" | "de")
+
+t(key: string): string
+
+Translation dictionaries in:
+
+client/src/i18n/en.ts
+
+client/src/i18n/de.ts
+
+Keep the translation keys structured and nested by page/section, e.g.:
+
+export const en = {
+  common: {
+    appName: "Sinopia",
+    signIn: "Sign In",
+    signOut: "Sign Out",
+    getStarted: "Get Started",
+  },
+  home: {
+    heroTitle: "Connect Your Skills with Opportunities",
+    heroSubtitle: "Sinopia enables professionals...",
+    forSkillGiversTitle: "For Skill Givers",
+    // ...
+  },
+  // other pages...
+};
+
+
+Use the same key structure in de.ts with natural, professional German translations.
+
+2. Full translation coverage
+
+Find all remaining user-visible English strings in the codebase (JSX/TSX, layouts, pages, sections, buttons, headings, labels, empty-state texts, etc.) that are not yet using t().
+
+For each string:
+
+Create an appropriate translation key in en.ts and de.ts.
+
+Replace the hard-coded text in JSX with t("...").
+
+Cover all major areas, including:
+
+Navbar: Home, About, Contact, Sign In, Get Started
+
+Home page: hero title/subtitle, feature blocks (For Skill Givers / For Skill Searchers, bullet points, etc.)
+
+Auth pages: Sign In, Sign Up (including skill_giver / skill_searcher stepper)
+
+Dashboard, notifications, profile, projects, offers, contracts, payments
+
+Any tooltips, empty states, call-to-action texts visible to the user.
+
+Keep route paths, test IDs, and programmatic identifiers unchanged. Only texts that the user reads should be translated.
+
+3. Language persistence
+
+Store the selected language in localStorage (e.g. key: sinopia_language).
+
+On app initialization, read from localStorage. If no value exists, default to "en".
+
+Changing the language should:
+
+Update context state,
+
+Re-render visible texts,
+
+Update localStorage,
+
+Not require a full page reload.
+
+4. Flag toggle button in the header
+
+In the main public layout header (the navigation that currently shows the Sinopia logo, links like Home/About/Contact, Sign In, Get Started), add a language toggle button:
+
+Show a small circle icon with the flag of the other language:
+
+If language === "en", show German flag (DE) as a small circular icon.
+
+If language === "de", show English flag (EN) as a small circular icon.
+
+Clicking the icon toggles the language (en ↔ de) using the i18n system.
+
+Make sure the button:
+
+Works in desktop layout.
+
+Is also visible and usable in the mobile menu/hamburger layout.
+
+Feel free to implement flags using inline SVGs, emoji (🇩🇪 / 🇬🇧), or a small icon set, styled as a circular button using Tailwind classes (e.g. rounded-full w-8 h-8 flex items-center justify-center border).
+
+Optionally, reuse this toggle in the dashboard layout header as well so the language switch is consistent across public and authenticated pages.
+
+5. Non-breaking constraints
+
+Do not break or rewrite:
+
+AuthContext mock logic
+
+Routing with wouter
+
+Existing layouts structure
+
+Do not rename routes, contexts, or change data models.
+
+Ensure the app builds and runs in Replit with no TypeScript or runtime errors.
+
+6. Quick documentation
+
+Add a short comment or small README section (client/src/i18n/README.md or comments in I18nProvider) explaining:
+
+How to add a new translation key.
+
+How to add another language in the future.
+
+After implementing, run the app and confirm:
+
+Default language is English on first visit.
+
+Clicking the round German flag switches the whole UI to German and the button changes to an English flag.
+
+Clicking the English flag switches back to English.
+
+Reloading the page preserves the last selected language.
