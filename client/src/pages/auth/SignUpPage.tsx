@@ -85,7 +85,7 @@ export default function SignUpPage() {
       if (!cvFile) {
         toast({
           title: t('common.error'),
-          description: 'CV required',
+          description: t('auth.cvRequired'),
           variant: 'destructive',
         });
         return;

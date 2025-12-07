@@ -84,6 +84,7 @@ export const en = {
     rememberMe: "Remember me",
     noAccount: "Don't have an account?",
     hasAccount: "Already have an account?",
+    cvRequired: "Please upload your CV to continue.",
     signInButton: "Sign In",
     signUpButton: "Create Account",
     orContinueWith: "Or continue with",

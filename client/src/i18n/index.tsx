@@ -80,7 +80,7 @@ interface I18nProviderProps {
   children: ReactNode;
 }
 
-export function I18nProvider({ children }: I18nProviderProps) {
+export function I18nProvider({ children }: I18nProviderProps): JSX.Element {
   const [language, setLanguageState] = useState<Language>(getInitialLanguage);
 
   useEffect(() => {

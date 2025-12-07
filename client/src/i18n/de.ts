@@ -82,6 +82,7 @@ export const de = {
     rememberMe: "Angemeldet bleiben",
     noAccount: "Noch kein Konto?",
     hasAccount: "Bereits ein Konto?",
+    cvRequired: "Bitte laden Sie Ihren Lebenslauf hoch, um fortzufahren.",
     signInButton: "Anmelden",
     signUpButton: "Konto erstellen",
     orContinueWith: "Oder fortfahren mit",

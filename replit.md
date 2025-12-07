@@ -98,7 +98,55 @@ client/src/
 - Experience-driven public pages
 - Minimal animations for performance
 
+## Internationalization (i18n)
+
+The app supports multiple languages with a minimal i18n system.
+
+### Supported Languages
+- English (en) - Default
+- German (de)
+
+### Translation Files Location
+```
+client/src/i18n/
+├── index.tsx    # I18nProvider, useI18n hook, and core logic
+├── en.ts        # English translations
+└── de.ts        # German translations
+```
+
+### How to Use Translations
+```tsx
+import { useI18n } from '@/i18n';
+
+function MyComponent() {
+  const { t, language, setLanguage } = useI18n();
+  
+  return (
+    <div>
+      <h1>{t('home.heroTitle')}</h1>
+      <button onClick={() => setLanguage('de')}>Switch to German</button>
+    </div>
+  );
+}
+```
+
+### How to Add a New Translation Key
+1. Add the key to `client/src/i18n/en.ts`
+2. Add the same key with German translation to `client/src/i18n/de.ts`
+3. Use the key with `t('section.key')` in your component
+
+### How to Add a New Language
+1. Create a new file (e.g., `fr.ts`) with the same structure as `en.ts`
+2. Import and add it to the `translations` object in `index.tsx`
+3. Update the `Language` type: `export type Language = 'en' | 'de' | 'fr';`
+4. Add the new language option to the language switcher in `PublicLayout.tsx`
+
+### Language Persistence
+The selected language is stored in `localStorage` under the key `sinopia_language`.
+On app load, the language is restored from localStorage, defaulting to English.
+
 ## Recent Changes
+- December 2024: Added German language support with i18n system
 - November 2024: Initial frontend prototype completed
 - Implemented all core pages and components
 - Added mock data for development testing

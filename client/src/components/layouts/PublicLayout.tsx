@@ -68,14 +68,14 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                     className={language === 'en' ? 'bg-accent' : ''}
                     data-testid="button-lang-en"
                   >
-                    🇬🇧 English
+                    EN - English
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={() => setLanguage('de')}
                     className={language === 'de' ? 'bg-accent' : ''}
                     data-testid="button-lang-de"
                   >
-                    🇩🇪 Deutsch
+                    DE - Deutsch
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
