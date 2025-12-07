@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
 import { useOffers } from '@/context/OfferContext';
-import { useI18n } from '@/i18n';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -29,7 +28,6 @@ import { Search, FileText, Check, X } from 'lucide-react';
 export default function OffersPage() {
   const { user } = useAuth();
   const { offers, acceptOffer, rejectOffer } = useOffers();
-  const { t } = useI18n();
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -62,14 +60,14 @@ export default function OffersPage() {
     if (dialogAction === 'accept') {
       acceptOffer(selectedOffer.id);
       toast({
-        title: t('offers.offerAccepted'),
-        description: t('offers.contractCreated'),
+        title: 'Offer accepted!',
+        description: 'The contract will be created shortly.',
       });
     } else {
       rejectOffer(selectedOffer.id);
       toast({
-        title: t('offers.offerRejected'),
-        description: t('offers.offerDeclined'),
+        title: 'Offer rejected',
+        description: 'The offer has been declined.',
       });
     }
 
@@ -81,9 +79,9 @@ export default function OffersPage() {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-display font-bold">{t('offers.title')}</h1>
+          <h1 className="text-2xl font-display font-bold">Offers</h1>
           <p className="text-muted-foreground">
-            {isSkillGiver ? t('offers.manageGiver') : t('offers.manageSearcher')}
+            {isSkillGiver ? 'View offers you have sent' : 'Review and manage incoming offers'}
           </p>
         </div>
 
@@ -91,7 +89,7 @@ export default function OffersPage() {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder={t('offers.search')}
+              placeholder="Search offers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -100,13 +98,13 @@ export default function OffersPage() {
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-full sm:w-[180px]" data-testid="select-offer-filter">
-              <SelectValue placeholder={t('offers.filterByStatus')} />
+              <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t('offers.allStatus')}</SelectItem>
-              <SelectItem value="pending">{t('offers.pending')}</SelectItem>
-              <SelectItem value="accepted">{t('offers.accepted')}</SelectItem>
-              <SelectItem value="rejected">{t('offers.rejected')}</SelectItem>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="accepted">Accepted</SelectItem>
+              <SelectItem value="rejected">Rejected</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -115,11 +113,11 @@ export default function OffersPage() {
           <Card>
             <CardContent className="py-12 text-center">
               <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="font-semibold text-lg mb-2">{t('offers.noOffersFound')}</h3>
+              <h3 className="font-semibold text-lg mb-2">No offers found</h3>
               <p className="text-muted-foreground">
                 {searchQuery || statusFilter !== 'all'
-                  ? t('offers.adjustFilters')
-                  : t('offers.noOffersToDisplay')}
+                  ? 'Try adjusting your search or filters'
+                  : 'No offers to display at the moment'}
               </p>
             </CardContent>
           </Card>
@@ -143,12 +141,12 @@ export default function OffersPage() {
                         {offer.message}
                       </p>
                       <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                        <span>{t('offers.sent')}: {formatDate(offer.createdAt)}</span>
+                        <span>Sent: {formatDate(offer.createdAt)}</span>
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-3">
                       <div className="text-right">
-                        <p className="text-sm text-muted-foreground">{t('offers.amount')}</p>
+                        <p className="text-sm text-muted-foreground">Offer Amount</p>
                         <p className="text-xl font-bold text-primary">
                           {formatCurrency(offer.amount)}
                         </p>
@@ -164,7 +162,7 @@ export default function OffersPage() {
                             data-testid={`button-accept-offer-${offer.id}`}
                           >
                             <Check className="w-4 h-4 mr-1" />
-                            {t('offers.accept')}
+                            Accept
                           </Button>
                           <Button
                             size="sm"
@@ -176,7 +174,7 @@ export default function OffersPage() {
                             data-testid={`button-reject-offer-${offer.id}`}
                           >
                             <X className="w-4 h-4 mr-1" />
-                            {t('offers.reject')}
+                            Reject
                           </Button>
                         </div>
                       )}
@@ -192,24 +190,24 @@ export default function OffersPage() {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>
-                {dialogAction === 'accept' ? t('offers.acceptOffer') : t('offers.rejectOffer')}
+                {dialogAction === 'accept' ? 'Accept Offer' : 'Reject Offer'}
               </DialogTitle>
               <DialogDescription>
                 {dialogAction === 'accept'
-                  ? t('offers.confirmAccept')
-                  : t('offers.confirmReject')}
+                  ? 'Are you sure you want to accept this offer? A contract will be created.'
+                  : 'Are you sure you want to reject this offer? This action cannot be undone.'}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <Button variant="outline" onClick={() => setDialogAction(null)}>
-                {t('common.cancel')}
+                Cancel
               </Button>
               <Button
                 variant={dialogAction === 'reject' ? 'destructive' : 'default'}
                 onClick={handleAction}
                 data-testid="button-confirm-action"
               >
-                {dialogAction === 'accept' ? t('offers.accept') : t('offers.reject')}
+                {dialogAction === 'accept' ? 'Accept' : 'Reject'}
               </Button>
             </DialogFooter>
           </DialogContent>

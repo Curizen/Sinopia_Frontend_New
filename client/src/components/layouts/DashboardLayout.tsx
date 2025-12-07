@@ -2,7 +2,6 @@ import { type ReactNode } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
 import { useNotifications } from '@/context/NotificationContext';
-import { useI18n } from '@/i18n';
 
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -26,28 +25,6 @@ import {
   Settings,
 } from 'lucide-react';
 
-function GermanFlag() {
-  return (
-    <svg viewBox="0 0 32 32" className="w-full h-full">
-      <circle cx="16" cy="16" r="16" fill="#FFCE00" />
-      <path d="M0,16 a16,16 0 0,1 32,0" fill="#000" />
-      <path d="M0,16 a16,16 0 0,1 32,0" fill="#DD0000" transform="translate(0, 5.33)" />
-    </svg>
-  );
-}
-
-function EnglishFlag() {
-  return (
-    <svg viewBox="0 0 32 32" className="w-full h-full">
-      <circle cx="16" cy="16" r="16" fill="#012169" />
-      <path d="M16,0 L16,32 M0,16 L32,16" stroke="#fff" strokeWidth="6" />
-      <path d="M16,0 L16,32 M0,16 L32,16" stroke="#C8102E" strokeWidth="3" />
-      <path d="M0,0 L32,32 M32,0 L0,32" stroke="#fff" strokeWidth="3" />
-      <path d="M0,0 L32,32 M32,0 L0,32" stroke="#C8102E" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
 interface DashboardLayoutProps {
   children: ReactNode;
 }
@@ -56,18 +33,17 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { user, logout } = useAuth();
   const { unreadCount } = useNotifications();
   const [location, setLocation] = useLocation();
-  const { t, language, setLanguage } = useI18n();
 
   const isSkillGiver = user?.role === 'skill_giver';
 
   const navItems = [
-    { href: '/dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
-    { href: '/projects', label: t('nav.projects'), icon: FolderKanban },
-    { href: '/offers', label: t('nav.offers'), icon: FileText },
-    { href: '/contracts', label: t('nav.contracts'), icon: Handshake },
-    { href: '/payments', label: isSkillGiver ? t('payments.invoices') : t('nav.payments'), icon: CreditCard },
-    { href: '/notifications', label: t('nav.notifications'), icon: Bell, badge: unreadCount },
-    { href: '/profile', label: t('nav.profile'), icon: User },
+    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/projects', label: 'Projects', icon: FolderKanban },
+    { href: '/offers', label: 'Offers', icon: FileText },
+    { href: '/contracts', label: 'Contracts', icon: Handshake },
+    { href: '/payments', label: isSkillGiver ? 'Invoices' : 'Payments', icon: CreditCard },
+    { href: '/notifications', label: 'Notifications', icon: Bell, badge: unreadCount },
+    { href: '/profile', label: 'Profile', icon: User },
   ];
 
   const handleLogout = () => {
@@ -76,7 +52,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   const currentNav = navItems.find((item) => item.href === location);
-  const pageTitle = currentNav?.label ?? t('nav.dashboard');
+  const pageTitle = currentNav?.label ?? 'Dashboard';
 
   return (
     <div className="flex min-h-screen flex-col bg-muted/30">
@@ -104,16 +80,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </h1>
         </div>
 
-        {/* Right: language toggle + notifications + user dropdown */}
+        {/* Right: notifications + user dropdown */}
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => setLanguage(language === 'en' ? 'de' : 'en')}
-            className="w-8 h-8 rounded-full overflow-hidden border-2 border-border hover:border-primary transition-colors flex items-center justify-center"
-            data-testid="button-dashboard-language-toggle"
-            title={language === 'en' ? t('common.switchToGerman') : t('common.switchToEnglish')}
-          >
-            {language === 'en' ? <GermanFlag /> : <EnglishFlag />}
-          </button>
           <Link href="/notifications">
             <Button
               variant="ghost"
@@ -156,7 +124,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   {user?.email}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {isSkillGiver ? t('auth.skillGiver') : t('auth.skillSearcher')}
+                  {isSkillGiver ? 'Skill Giver' : 'Skill Searcher'}
                 </p>
               </div>
 
@@ -188,7 +156,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <DropdownMenuItem asChild className="cursor-pointer">
                 <Link href="/settings" className="flex items-center gap-2">
                   <Settings className="w-4 h-4" />
-                  <span>{t('profile.settings')}</span>
+                  <span>Settings</span>
                 </Link>
               </DropdownMenuItem>
 
@@ -201,7 +169,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 data-testid="button-logout"
               >
                 <LogOut className="w-4 h-4 mr-2" />
-                {t('nav.signOut')}
+                Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

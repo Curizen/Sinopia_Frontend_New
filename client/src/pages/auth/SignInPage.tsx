@@ -7,13 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { useI18n } from '@/i18n';
 import { Eye, EyeOff, LogIn } from 'lucide-react';
 
 export default function SignInPage() {
   const { login } = useAuth();
   const { toast } = useToast();
-  const { t } = useI18n();
   const [, setLocation] = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,14 +27,14 @@ export default function SignInPage() {
     try {
       await login(formData.email, formData.password);
       toast({
-        title: t('common.success'),
-        description: t('auth.signInTitle'),
+        title: 'Welcome back!',
+        description: 'You have successfully signed in.',
       });
       setLocation('/dashboard');
     } catch (error) {
       toast({
-        title: t('common.error'),
-        description: t('auth.signInButton'),
+        title: 'Sign in failed',
+        description: 'Please check your credentials and try again.',
         variant: 'destructive',
       });
     } finally {
@@ -58,17 +56,17 @@ export default function SignInPage() {
                 />
               </Link>
             </div>
-            <CardTitle className="font-display text-2xl">{t('auth.signInTitle')}</CardTitle>
-            <CardDescription>{t('auth.signInSubtitle')}</CardDescription>
+            <CardTitle className="font-display text-2xl">Welcome Back</CardTitle>
+            <CardDescription>Sign in to your Sinopia account</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">{t('auth.email')}</Label>
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder={t('auth.emailPlaceholder')}
+                  placeholder="you@example.com"
                   value={formData.email}
                   onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                   required
@@ -78,16 +76,16 @@ export default function SignInPage() {
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">{t('auth.password')}</Label>
+                  <Label htmlFor="password">Password</Label>
                   <Link href="/forgot-password" className="text-sm text-primary hover:underline">
-                    {t('auth.forgotPassword')}
+                    Forgot password?
                   </Link>
                 </div>
                 <div className="relative">
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder={t('auth.passwordPlaceholder')}
+                    placeholder="Enter your password"
                     value={formData.password}
                     onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                     required
@@ -104,15 +102,15 @@ export default function SignInPage() {
               </div>
 
               <Button type="submit" className="w-full" disabled={isLoading} data-testid="button-signin-submit">
-                {isLoading ? `${t('common.loading')}` : t('auth.signInButton')}
+                {isLoading ? 'Signing in...' : 'Sign In'}
                 <LogIn className="ml-2 w-4 h-4" />
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">{t('auth.noAccount')} </span>
+              <span className="text-muted-foreground">Don't have an account? </span>
               <Link href="/sign-up" className="text-primary hover:underline font-medium">
-                {t('nav.signUp')}
+                Sign up
               </Link>
             </div>
           </CardContent>

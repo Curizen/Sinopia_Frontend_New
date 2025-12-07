@@ -9,7 +9,6 @@ import { ProjectProvider } from "@/context/ProjectContext";
 import { OfferProvider } from "@/context/OfferContext";
 import { ContractProvider } from "@/context/ContractContext";
 import { PaymentProvider } from "@/context/PaymentContext";
-import { I18nProvider } from "@/i18n";
 
 import HomePage from "@/pages/HomePage";
 import AboutPage from "@/pages/AboutPage";
@@ -130,22 +129,20 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <I18nProvider>
-          <AuthProvider>
-            <NotificationProvider>
-              <ProjectProvider>
-                <OfferProvider>
-                  <ContractProvider>
-                    <PaymentProvider>
-                      <Toaster />
-                      <Router />
-                    </PaymentProvider>
-                  </ContractProvider>
-                </OfferProvider>
-              </ProjectProvider>
-            </NotificationProvider>
-          </AuthProvider>
-        </I18nProvider>
+        <AuthProvider>
+          <NotificationProvider>
+            <ProjectProvider>
+              <OfferProvider>
+                <ContractProvider>
+                  <PaymentProvider>
+                    <Toaster />
+                    <Router />
+                  </PaymentProvider>
+                </ContractProvider>
+              </OfferProvider>
+            </ProjectProvider>
+          </NotificationProvider>
+        </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
