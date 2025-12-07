@@ -1,0 +1,122 @@
+You are working on an existing React + TypeScript frontend for Sinopia (skill marketplace).
+The app is already designed and working in English only. I’ve already used several prompts before, so please do not rewrite or redesign components – only make minimal, incremental changes.
+
+Goal
+
+Add German (de) as a second language to the existing English UI, in a clean and minimal way, without breaking any current routes, layouts, or mock auth logic.
+
+Requirements
+
+Check first what already exists
+
+Before adding anything, scan the codebase to see if there is:
+
+any existing i18n setup (context, hooks, t() function), or
+
+any previous language switcher.
+
+If something exists, extend it to support German instead of creating a second system.
+
+If there is no i18n yet, create a minimal one
+
+Create a simple i18n setup with:
+
+I18nProvider + useI18n() hook that exposes:
+
+language: "en" | "de"
+
+setLanguage(lang: "en" | "de")
+
+t(key: string): string
+
+Translation dictionaries as TS files like:
+
+client/src/i18n/en.ts
+
+client/src/i18n/de.ts
+
+Keep the structure small and readable. For example:
+
+export const en = {
+  common: {
+    appName: "Sinopia",
+    signIn: "Sign In",
+    getStarted: "Get Started",
+  },
+  home: {
+    heroTitle: "Connect Your Skills with Opportunities",
+    heroSubtitle: "Sinopia enables professionals...",
+  },
+  // ...
+};
+
+
+And provide natural, professional German translations in de.
+
+Language persistence
+
+Store the selected language in localStorage (e.g. sinopia_language).
+
+On app load, initialize the language from localStorage, falling back to "en".
+
+Language switcher in the main layout
+
+In PublicLayout (the top navbar with logo, Home / About / Contact / Sign In / Get Started), add a small language switcher on the right side, for example:
+
+EN | DE, or a simple select.
+
+Make sure it works both on desktop and mobile (when the mobile menu is open).
+
+When the user changes language:
+
+update the i18n context,
+
+save it to localStorage,
+
+and re-render texts without a full page reload.
+
+Apply translations incrementally
+
+Replace only user-facing English strings with t("...") calls, starting with:
+
+Navbar (Home, About, Contact, Sign In, Get Started)
+
+Home hero section title and subtitle
+
+Main buttons: “Get Started”, “Learn More”
+
+Then, if there is time, extend to important pages like:
+
+/sign-in, /sign-up
+
+/dashboard, /profile
+
+Do not change route names, test IDs, or auth logic – only the visible labels.
+
+Non-breaking changes
+
+Do not remove or rename existing components or contexts (AuthContext, layouts, pages).
+
+Keep the mock Auth behavior as it is.
+
+Ensure the app still runs successfully in Replit with no TypeScript errors.
+
+Documentation
+
+Add a short comment or small README section explaining:
+
+where the translation files live,
+
+how to add a new key,
+
+how to add another language later.
+
+After implementing, run the app and verify:
+
+Default language is English on first load.
+
+Switching to German updates all visible texts that were wired to t().
+
+Refreshing the page keeps the selected language (thanks to localStorage).
+
+Focus on editing the existing project, not on rebuilding it.

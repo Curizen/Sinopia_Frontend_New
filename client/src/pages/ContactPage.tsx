@@ -135,7 +135,6 @@ export default function ContactPage() {
                     <div>
                       <h3 className="font-semibold mb-1">Phone</h3>
                       <p className="text-sm text-muted-foreground">+49 177 4928319</p>
-                      <p className="text-sm text-muted-foreground">Mon-Fri 9am-6pm EST</p>
                     </div>
                   </div>
                 </CardContent>

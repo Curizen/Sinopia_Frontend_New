@@ -29,9 +29,8 @@ import {
 const mockSkillGiverProfile = {
   bio: 'Experienced full-stack developer with 8+ years in building web and mobile applications. Passionate about clean code and user-centric design.',
   title: 'Senior Full-Stack Developer',
-  hourlyRate: 85,
   skills: ['React', 'TypeScript', 'Node.js', 'Python', 'PostgreSQL', 'AWS', 'Docker', 'GraphQL'],
-  location: 'San Francisco, CA',
+  location: 'Düsseldorf, NW',
   availability: 'Full-time',
   experience: [
     { id: '1', company: 'TechCorp', role: 'Senior Developer', startDate: '2020-01', endDate: '', current: true, description: 'Leading frontend development' },
@@ -53,8 +52,8 @@ const mockSkillSearcherProfile = {
   website: 'https://techcorp.example.com',
   bio: 'Leading technology company specializing in innovative software solutions for enterprise clients.',
   contactEmail: 'hiring@techcorp.com',
-  contactPhone: '+1 (555) 123-4567',
-  location: 'San Francisco, CA',
+  contactPhone: '+49 1512 847 6390',
+  location: 'Düsseldorf, NW',
 };
 
 export default function ProfilePage() {
@@ -166,12 +165,7 @@ export default function ProfilePage() {
                 )}
               </div>
 
-              {isSkillGiver && 'hourlyRate' in profile && (
-                <div className="mt-6 p-4 bg-primary/10 rounded-lg">
-                  <p className="text-sm text-muted-foreground">Hourly Rate</p>
-                  <p className="text-2xl font-bold text-primary">${profile.hourlyRate}/hr</p>
-                </div>
-              )}
+             
             </CardContent>
           </Card>
 
