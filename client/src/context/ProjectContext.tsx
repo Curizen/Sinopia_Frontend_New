@@ -1,61 +1,103 @@
-import { createContext, useContext, useState, useCallback, type ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import type { Project } from '@/types';
-import { useAuth } from './AuthContext';
 
 interface ProjectContextType {
   projects: Project[];
   selectedProject: Project | null;
   isLoading: boolean;
-  error: string | null;
   selectProject: (id: string) => void;
   clearSelectedProject: () => void;
-  addProject: (project: Omit<Project, 'id'>) => Promise<void>;
-  updateProject: (id: string, updates: Partial<Project>) => Promise<void>;
-  refetchProjects: () => Promise<void>;
+  addProject: (project: Omit<Project, 'id'>) => void;
+  updateProject: (id: string, updates: Partial<Project>) => void;
 }
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
+// todo: remove mock functionality
+const mockProjects: Project[] = [
+  {
+    id: '1',
+    title: 'E-commerce Platform Redesign',
+    description: 'Complete redesign of our e-commerce platform with modern UI/UX and improved checkout flow.',
+    status: 'in_progress',
+    budget: 15000,
+    deadline: '2025-02-15',
+    skills: ['React', 'TypeScript', 'Tailwind CSS', 'Node.js'],
+    ownerId: '2',
+    assigneeId: '1',
+    stages: [
+      {
+        id: 's1',
+        name: 'Design Phase',
+        order: 1,
+        progress: 100,
+        tasks: [
+          { id: 't1', title: 'Wireframes', status: 'completed' },
+          { id: 't2', title: 'UI Mockups', status: 'completed' },
+        ],
+      },
+      {
+        id: 's2',
+        name: 'Development',
+        order: 2,
+        progress: 60,
+        tasks: [
+          { id: 't3', title: 'Frontend Setup', status: 'completed' },
+          { id: 't4', title: 'Component Library', status: 'in_progress' },
+          { id: 't5', title: 'API Integration', status: 'todo' },
+        ],
+      },
+      {
+        id: 's3',
+        name: 'Testing & Launch',
+        order: 3,
+        progress: 0,
+        tasks: [
+          { id: 't6', title: 'QA Testing', status: 'todo' },
+          { id: 't7', title: 'Deployment', status: 'todo' },
+        ],
+      },
+    ],
+  },
+  {
+    id: '2',
+    title: 'Mobile App Development',
+    description: 'Native mobile application for iOS and Android platforms with real-time features.',
+    status: 'open',
+    budget: 25000,
+    deadline: '2025-03-30',
+    skills: ['React Native', 'TypeScript', 'Firebase', 'GraphQL'],
+    ownerId: '2',
+    stages: [],
+  },
+  {
+    id: '3',
+    title: 'Data Analytics Dashboard',
+    description: 'Interactive dashboard for visualizing business metrics and KPIs.',
+    status: 'completed',
+    budget: 8000,
+    deadline: '2024-12-01',
+    skills: ['Python', 'D3.js', 'PostgreSQL', 'Docker'],
+    ownerId: '2',
+    assigneeId: '1',
+    stages: [
+      {
+        id: 's4',
+        name: 'Complete',
+        order: 1,
+        progress: 100,
+        tasks: [
+          { id: 't8', title: 'All tasks completed', status: 'completed' },
+        ],
+      },
+    ],
+  },
+];
+
 export function ProjectProvider({ children }: { children: ReactNode }) {
-  const { token, isAuthenticated } = useAuth();
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<Project[]>(mockProjects);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchProjects = useCallback(async () => {
-    if (!token) return;
-    
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const response = await fetch('/api/projects', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch projects');
-      }
-      
-      const data = await response.json();
-      setProjects(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch projects');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [token]);
-
-  useEffect(() => {
-    if (isAuthenticated && token) {
-      fetchProjects();
-    } else {
-      setProjects([]);
-    }
-  }, [isAuthenticated, token, fetchProjects]);
+  const [isLoading] = useState(false);
 
   const selectProject = useCallback((id: string) => {
     const project = projects.find(p => p.id === id) || null;
@@ -66,56 +108,22 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     setSelectedProject(null);
   }, []);
 
-  const addProject = useCallback(async (project: Omit<Project, 'id'>) => {
-    if (!token) return;
-    
-    const response = await fetch('/api/projects', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(project),
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Failed to create project' }));
-      throw new Error(errorData.error || 'Failed to create project');
-    }
-    
-    const newProject = await response.json();
+  const addProject = useCallback((project: Omit<Project, 'id'>) => {
+    const newProject: Project = {
+      ...project,
+      id: Date.now().toString(),
+    };
     setProjects(prev => [...prev, newProject]);
-  }, [token]);
+  }, []);
 
-  const updateProject = useCallback(async (id: string, updates: Partial<Project>) => {
-    if (!token) return;
-    
-    const response = await fetch(`/api/projects/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(updates),
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Failed to update project' }));
-      throw new Error(errorData.error || 'Failed to update project');
-    }
-    
-    const updatedProject = await response.json();
+  const updateProject = useCallback((id: string, updates: Partial<Project>) => {
     setProjects(prev =>
-      prev.map(p => (p.id === id ? updatedProject : p))
+      prev.map(p => (p.id === id ? { ...p, ...updates } : p))
     );
     if (selectedProject?.id === id) {
-      setSelectedProject(updatedProject);
+      setSelectedProject(prev => prev ? { ...prev, ...updates } : null);
     }
-  }, [token, selectedProject]);
-
-  const refetchProjects = useCallback(async () => {
-    await fetchProjects();
-  }, [fetchProjects]);
+  }, [selectedProject]);
 
   return (
     <ProjectContext.Provider
@@ -123,12 +131,10 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         projects,
         selectedProject,
         isLoading,
-        error,
         selectProject,
         clearSelectedProject,
         addProject,
         updateProject,
-        refetchProjects,
       }}
     >
       {children}

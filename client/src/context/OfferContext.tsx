@@ -1,132 +1,71 @@
-import { createContext, useContext, useState, useCallback, type ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import type { Offer } from '@/types';
-import { useAuth } from './AuthContext';
 
 interface OfferContextType {
   offers: Offer[];
-  isLoading: boolean;
-  error: string | null;
-  acceptOffer: (id: string) => Promise<void>;
-  rejectOffer: (id: string) => Promise<void>;
-  createOffer: (offer: { projectId: string; toUserId: string; amount: number; message?: string }) => Promise<void>;
-  refetchOffers: () => Promise<void>;
+  acceptOffer: (id: string) => void;
+  rejectOffer: (id: string) => void;
 }
 
 const OfferContext = createContext<OfferContextType | undefined>(undefined);
 
+// todo: remove mock functionality
+const mockOffers: Offer[] = [
+  {
+    id: '1',
+    projectId: '2',
+    projectTitle: 'Mobile App Development',
+    fromUserId: '1',
+    fromUserName: 'John Smith',
+    toUserId: '2',
+    status: 'pending',
+    amount: 22000,
+    message: 'I am excited to work on this mobile app project. My expertise in React Native will ensure a high-quality deliverable.',
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+  },
+  {
+    id: '2',
+    projectId: '1',
+    projectTitle: 'E-commerce Platform Redesign',
+    fromUserId: '1',
+    fromUserName: 'John Smith',
+    toUserId: '2',
+    status: 'accepted',
+    amount: 15000,
+    message: 'Ready to transform your e-commerce platform with modern design.',
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(),
+  },
+  {
+    id: '3',
+    projectId: '3',
+    projectTitle: 'Data Analytics Dashboard',
+    fromUserId: '1',
+    fromUserName: 'John Smith',
+    toUserId: '2',
+    status: 'rejected',
+    amount: 10000,
+    message: 'I can build comprehensive analytics dashboards.',
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 168).toISOString(),
+  },
+];
+
 export function OfferProvider({ children }: { children: ReactNode }) {
-  const { token, isAuthenticated } = useAuth();
-  const [offers, setOffers] = useState<Offer[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [offers, setOffers] = useState<Offer[]>(mockOffers);
 
-  const fetchOffers = useCallback(async () => {
-    if (!token) return;
-    
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const response = await fetch('/api/offers', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch offers');
-      }
-      
-      const data = await response.json();
-      setOffers(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch offers');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [token]);
-
-  useEffect(() => {
-    if (isAuthenticated && token) {
-      fetchOffers();
-    } else {
-      setOffers([]);
-    }
-  }, [isAuthenticated, token, fetchOffers]);
-
-  const acceptOffer = useCallback(async (id: string) => {
-    if (!token) return;
-    
-    const response = await fetch(`/api/offers/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify({ status: 'accepted' }),
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Failed to accept offer' }));
-      throw new Error(errorData.error || 'Failed to accept offer');
-    }
-    
-    const updatedOffer = await response.json();
+  const acceptOffer = useCallback((id: string) => {
     setOffers(prev =>
-      prev.map(o => (o.id === id ? { ...o, ...updatedOffer, status: 'accepted' as const } : o))
+      prev.map(o => (o.id === id ? { ...o, status: 'accepted' as const } : o))
     );
-  }, [token]);
+  }, []);
 
-  const rejectOffer = useCallback(async (id: string) => {
-    if (!token) return;
-    
-    const response = await fetch(`/api/offers/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify({ status: 'rejected' }),
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Failed to reject offer' }));
-      throw new Error(errorData.error || 'Failed to reject offer');
-    }
-    
-    const updatedOffer = await response.json();
+  const rejectOffer = useCallback((id: string) => {
     setOffers(prev =>
-      prev.map(o => (o.id === id ? { ...o, ...updatedOffer, status: 'rejected' as const } : o))
+      prev.map(o => (o.id === id ? { ...o, status: 'rejected' as const } : o))
     );
-  }, [token]);
-
-  const createOffer = useCallback(async (offer: { projectId: string; toUserId: string; amount: number; message?: string }) => {
-    if (!token) return;
-    
-    const response = await fetch('/api/offers', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(offer),
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Failed to create offer' }));
-      throw new Error(errorData.error || 'Failed to create offer');
-    }
-    
-    const newOffer = await response.json();
-    setOffers(prev => [newOffer, ...prev]);
-  }, [token]);
-
-  const refetchOffers = useCallback(async () => {
-    await fetchOffers();
-  }, [fetchOffers]);
+  }, []);
 
   return (
-    <OfferContext.Provider value={{ offers, isLoading, error, acceptOffer, rejectOffer, createOffer, refetchOffers }}>
+    <OfferContext.Provider value={{ offers, acceptOffer, rejectOffer }}>
       {children}
     </OfferContext.Provider>
   );
