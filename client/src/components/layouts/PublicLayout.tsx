@@ -1,7 +1,14 @@
 import { type ReactNode, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Globe } from 'lucide-react';
+import { useI18n } from '@/i18n';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface PublicLayoutProps {
   children: ReactNode;
@@ -10,11 +17,12 @@ interface PublicLayoutProps {
 export function PublicLayout({ children }: PublicLayoutProps) {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { t, language, setLanguage } = useI18n();
 
   const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/about', label: 'About' },
-    { href: '/contact', label: 'Contact' },
+    { href: '/', labelKey: 'nav.home' },
+    { href: '/about', labelKey: 'nav.about' },
+    { href: '/contact', labelKey: 'nav.contact' },
   ];
 
   return (
@@ -30,7 +38,6 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               />
             </Link>
 
-
             <div className="hidden md:flex items-center gap-6">
               {navLinks.map((link) => (
                 <Link
@@ -41,21 +48,44 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                       ? 'text-primary'
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
-                  data-testid={`link-nav-${link.label.toLowerCase()}`}
+                  data-testid={`link-nav-${link.labelKey.split('.')[1]}`}
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </Link>
               ))}
             </div>
 
             <div className="hidden md:flex items-center gap-3">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" data-testid="button-language-switcher">
+                    <Globe className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem 
+                    onClick={() => setLanguage('en')}
+                    className={language === 'en' ? 'bg-accent' : ''}
+                    data-testid="button-lang-en"
+                  >
+                    🇬🇧 English
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => setLanguage('de')}
+                    className={language === 'de' ? 'bg-accent' : ''}
+                    data-testid="button-lang-de"
+                  >
+                    🇩🇪 Deutsch
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Link href="/sign-in">
                 <Button variant="ghost" data-testid="button-sign-in">
-                  Sign In
+                  {t('nav.signIn')}
                 </Button>
               </Link>
               <Link href="/sign-up">
-                <Button data-testid="button-sign-up">Get Started</Button>
+                <Button data-testid="button-sign-up">{t('nav.getStarted')}</Button>
               </Link>
             </div>
 
@@ -80,15 +110,32 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                     }`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    {link.label}
+                    {t(link.labelKey)}
                   </Link>
                 ))}
+                <div className="flex items-center gap-2 py-2">
+                  <span className="text-sm text-muted-foreground">Language:</span>
+                  <button
+                    onClick={() => setLanguage('en')}
+                    className={`px-2 py-1 text-sm rounded ${language === 'en' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
+                    data-testid="button-mobile-lang-en"
+                  >
+                    EN
+                  </button>
+                  <button
+                    onClick={() => setLanguage('de')}
+                    className={`px-2 py-1 text-sm rounded ${language === 'de' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}
+                    data-testid="button-mobile-lang-de"
+                  >
+                    DE
+                  </button>
+                </div>
                 <div className="flex flex-col gap-2 pt-4 border-t border-border">
                   <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="ghost" className="w-full">Sign In</Button>
+                    <Button variant="ghost" className="w-full">{t('nav.signIn')}</Button>
                   </Link>
                   <Link href="/sign-up" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full">Get Started</Button>
+                    <Button className="w-full">{t('nav.getStarted')}</Button>
                   </Link>
                 </div>
               </div>
@@ -103,53 +150,49 @@ export function PublicLayout({ children }: PublicLayoutProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-1">
-              <Link href="/" className="flex items-center gap-2 mb-4">
-                <div className="flex items-center justify-center">
-                  <Link href="/" className="flex items-center gap-2">
-                    <img 
-                      src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
-                      alt="Sinopia Logo" 
-                      className="w-16 h-auto rounded-md object-cover"
-                    />
-                  </Link>
-                </div>
-                <span className="font-display font-bold text-xl">Sinopia</span>
-              </Link>
+              <div className="flex items-center gap-2 mb-4">
+                <img 
+                  src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+                  alt="Sinopia Logo" 
+                  className="w-16 h-auto rounded-md object-cover"
+                />
+                <span className="font-display font-bold text-xl">{t('common.appName')}</span>
+              </div>
               <p className="text-sm text-muted-foreground">
-                Connect skills with opportunities. Build your career or find the talent you need.
+                {t('footer.tagline')}
               </p>
             </div>
 
             <div>
-              <h4 className="font-semibold mb-4">Skill Giver</h4>
+              <h4 className="font-semibold mb-4">{t('footer.skillGiver')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/sign-up" className="hover:text-foreground">Find Projects</Link></li>
-                <li><Link href="/sign-up" className="hover:text-foreground">Build Portfolio</Link></li>
-                <li><Link href="/sign-up" className="hover:text-foreground">Get Paid</Link></li>
+                <li><Link href="/sign-up" className="hover:text-foreground">{t('footer.findProjects')}</Link></li>
+                <li><Link href="/sign-up" className="hover:text-foreground">{t('footer.buildPortfolio')}</Link></li>
+                <li><Link href="/sign-up" className="hover:text-foreground">{t('footer.getPaid')}</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-semibold mb-4">Skill Searcher</h4>
+              <h4 className="font-semibold mb-4">{t('footer.skillSearcher')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/sign-up" className="hover:text-foreground">Post Projects</Link></li>
-                <li><Link href="/sign-up" className="hover:text-foreground">Find Talent</Link></li>
-                <li><Link href="/sign-up" className="hover:text-foreground">Manage Teams</Link></li>
+                <li><Link href="/sign-up" className="hover:text-foreground">{t('footer.postProjects')}</Link></li>
+                <li><Link href="/sign-up" className="hover:text-foreground">{t('footer.findTalent')}</Link></li>
+                <li><Link href="/sign-up" className="hover:text-foreground">{t('footer.manageTeams')}</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-semibold mb-4">Legal</h4>
+              <h4 className="font-semibold mb-4">{t('footer.legal')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/terms" className="hover:text-foreground">Terms of Service</Link></li>
-                <li><Link href="/privacy" className="hover:text-foreground">Privacy Policy</Link></li>
-                <li><Link href="/contact" className="hover:text-foreground">Contact Us</Link></li>
+                <li><Link href="/terms" className="hover:text-foreground">{t('footer.terms')}</Link></li>
+                <li><Link href="/privacy" className="hover:text-foreground">{t('footer.privacy')}</Link></li>
+                <li><Link href="/contact" className="hover:text-foreground">{t('footer.contactUs')}</Link></li>
               </ul>
             </div>
           </div>
 
           <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-            <p>&copy; {new Date().getFullYear()} Sinopia. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} {t('common.appName')}. {t('footer.copyright')}</p>
           </div>
         </div>
       </footer>
