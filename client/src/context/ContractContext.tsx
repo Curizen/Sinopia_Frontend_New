@@ -1,67 +1,86 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, type ReactNode, useEffect } from 'react';
 import type { Contract } from '@/types';
+import { useAuth } from './AuthContext';
 
 interface ContractContextType {
   contracts: Contract[];
-  signContract: (id: string) => void;
+  isLoading: boolean;
+  error: string | null;
+  signContract: (id: string) => Promise<void>;
+  refetchContracts: () => Promise<void>;
 }
 
 const ContractContext = createContext<ContractContextType | undefined>(undefined);
 
-// todo: remove mock functionality
-const mockContracts: Contract[] = [
-  {
-    id: '1',
-    projectId: '1',
-    projectTitle: 'E-commerce Platform Redesign',
-    clientId: '2',
-    clientName: 'TechCorp Inc.',
-    freelancerId: '1',
-    freelancerName: 'John Smith',
-    status: 'signed',
-    amount: 15000,
-    startDate: '2024-12-01',
-    endDate: '2025-02-15',
-  },
-  {
-    id: '2',
-    projectId: '2',
-    projectTitle: 'Mobile App Development',
-    clientId: '2',
-    clientName: 'TechCorp Inc.',
-    freelancerId: '1',
-    freelancerName: 'John Smith',
-    status: 'sent',
-    amount: 22000,
-    startDate: '2025-01-15',
-    endDate: '2025-03-30',
-  },
-  {
-    id: '3',
-    projectId: '4',
-    projectTitle: 'API Integration Service',
-    clientId: '2',
-    clientName: 'TechCorp Inc.',
-    freelancerId: '1',
-    freelancerName: 'John Smith',
-    status: 'draft',
-    amount: 5000,
-    startDate: '2025-02-01',
-    endDate: '2025-02-28',
-  },
-];
-
 export function ContractProvider({ children }: { children: ReactNode }) {
-  const [contracts, setContracts] = useState<Contract[]>(mockContracts);
+  const { token, isAuthenticated } = useAuth();
+  const [contracts, setContracts] = useState<Contract[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const signContract = useCallback((id: string) => {
+  const fetchContracts = useCallback(async () => {
+    if (!token) return;
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch('/api/contracts', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch contracts');
+      }
+      
+      const data = await response.json();
+      setContracts(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch contracts');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (isAuthenticated && token) {
+      fetchContracts();
+    } else {
+      setContracts([]);
+    }
+  }, [isAuthenticated, token, fetchContracts]);
+
+  const signContract = useCallback(async (id: string) => {
+    if (!token) return;
+    
+    const response = await fetch(`/api/contracts/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status: 'signed' }),
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Failed to sign contract' }));
+      throw new Error(errorData.error || 'Failed to sign contract');
+    }
+    
+    const updatedContract = await response.json();
     setContracts(prev =>
-      prev.map(c => (c.id === id ? { ...c, status: 'signed' as const } : c))
+      prev.map(c => (c.id === id ? { ...c, ...updatedContract, status: 'signed' as const } : c))
     );
-  }, []);
+  }, [token]);
+
+  const refetchContracts = useCallback(async () => {
+    await fetchContracts();
+  }, [fetchContracts]);
 
   return (
-    <ContractContext.Provider value={{ contracts, signContract }}>
+    <ContractContext.Provider value={{ contracts, isLoading, error, signContract, refetchContracts }}>
       {children}
     </ContractContext.Provider>
   );
