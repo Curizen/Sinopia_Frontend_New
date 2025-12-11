@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { formatCurrency, formatDate, getStatusLabel } from '@/lib/utils/formatters';
+import { formatCurrency, formatDate } from '@/lib/utils/formatters';
 import { Search, Plus, Clock, DollarSign, FolderKanban } from 'lucide-react';
 
 export default function ProjectsPage() {
@@ -48,6 +48,17 @@ export default function ProjectsPage() {
       default:
         return 'secondary';
     }
+  };
+
+  const getTranslatedStatus = (status: string) => {
+    const statusMap: Record<string, string> = {
+      draft: 'projects.statusDraft',
+      open: 'projects.statusOpen',
+      in_progress: 'projects.statusInProgress',
+      completed: 'projects.statusCompleted',
+      cancelled: 'projects.statusCancelled',
+    };
+    return t(statusMap[status] || status);
   };
 
   return (
@@ -126,7 +137,7 @@ export default function ProjectsPage() {
                           <div className="flex items-start justify-between gap-4 mb-2">
                             <h3 className="font-semibold text-lg">{project.title}</h3>
                             <Badge variant={getStatusBadgeVariant(project.status)}>
-                              {getStatusLabel(project.status)}
+                              {getTranslatedStatus(project.status)}
                             </Badge>
                           </div>
                           <p className="text-muted-foreground text-sm line-clamp-2 mb-4">
@@ -158,12 +169,12 @@ export default function ProjectsPage() {
                         {project.stages.length > 0 && (
                           <div className="w-full md:w-48">
                             <div className="flex items-center justify-between text-sm mb-2">
-                              <span className="text-muted-foreground">Progress</span>
+                              <span className="text-muted-foreground">{t('dashboard.progress')}</span>
                               <span className="font-medium">{overallProgress}%</span>
                             </div>
                             <Progress value={overallProgress} className="h-2" />
                             <p className="text-xs text-muted-foreground mt-2">
-                              {project.stages.length} stages
+                              {project.stages.length} {t('dashboard.stages')}
                             </p>
                           </div>
                         )}

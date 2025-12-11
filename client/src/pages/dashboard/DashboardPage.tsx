@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Link } from 'wouter';
-import { formatCurrency, formatDate, getStatusLabel } from '@/lib/utils/formatters';
+import { formatCurrency, formatDate } from '@/lib/utils/formatters';
 import {
   FolderKanban,
   FileText,
@@ -29,6 +29,17 @@ export default function DashboardPage() {
   const { t } = useI18n();
 
   const isSkillGiver = user?.role === 'skill_giver';
+
+  const getTranslatedStatus = (status: string) => {
+    const statusMap: Record<string, string> = {
+      draft: 'projects.statusDraft',
+      open: 'projects.statusOpen',
+      in_progress: 'projects.statusInProgress',
+      completed: 'projects.statusCompleted',
+      cancelled: 'projects.statusCancelled',
+    };
+    return t(statusMap[status] || status);
+  };
 
   const activeProjects = projects.filter(p => p.status === 'in_progress');
   const pendingOffers = offers.filter(o => o.status === 'pending');
@@ -156,12 +167,12 @@ export default function DashboardPage() {
                               </div>
                             </div>
                             <Badge variant={getStatusBadgeVariant(project.status)}>
-                              {getStatusLabel(project.status)}
+                              {getTranslatedStatus(project.status)}
                             </Badge>
                           </div>
                           <div className="space-y-1">
                             <div className="flex items-center justify-between text-sm">
-                              <span className="text-muted-foreground">Progress</span>
+                              <span className="text-muted-foreground">{t('dashboard.progress')}</span>
                               <span className="font-medium">{overallProgress}%</span>
                             </div>
                             <Progress value={overallProgress} className="h-2" />

@@ -129,15 +129,11 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-1">
               <Link href="/" className="flex items-center gap-2 mb-4">
-                <div className="flex items-center justify-center">
-                  <Link href="/" className="flex items-center gap-2">
-                    <img 
-                      src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
-                      alt="Sinopia Logo" 
-                      className="w-16 h-auto rounded-md object-cover"
-                    />
-                  </Link>
-                </div>
+                <img 
+                  src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+                  alt="Sinopia Logo" 
+                  className="w-16 h-auto rounded-md object-cover"
+                />
                 <span className="font-display font-bold text-xl">Sinopia</span>
               </Link>
               <p className="text-sm text-muted-foreground">

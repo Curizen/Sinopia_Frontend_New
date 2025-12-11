@@ -6,20 +6,20 @@ import { Target, Heart, Users, Globe } from 'lucide-react';
 import heroImage from '@assets/generated_images/team_collaboration_coworking_hero.png';
 
 const team = [
-  { name: 'Alex Rivera', role: 'CEO & Founder', initials: 'AR' },
-  { name: 'Jordan Kim', role: 'CTO', initials: 'JK' },
-  { name: 'Sam Patel', role: 'Head of Product', initials: 'SP' },
-  { name: 'Taylor Chen', role: 'Head of Design', initials: 'TC' },
+  { name: 'Alex Rivera', roleKey: 'about.roleCEO', initials: 'AR' },
+  { name: 'Jordan Kim', roleKey: 'about.roleCTO', initials: 'JK' },
+  { name: 'Sam Patel', roleKey: 'about.roleHeadOps', initials: 'SP' },
+  { name: 'Taylor Chen', roleKey: 'about.roleHeadDesign', initials: 'TC' },
 ];
 
 export default function AboutPage() {
   const { t } = useI18n();
 
   const values = [
-    { icon: Target, titleKey: 'about.missionTitle', descKey: 'about.missionText' },
-    { icon: Heart, title: 'Flexible Work', description: 'We break work into modular, targeted Use Cases enabling flexible collaboration.' },
-    { icon: Users, title: 'Smart Matching', description: 'We intelligently connect companies needs with the right expertise.' },
-    { icon: Globe, titleKey: 'about.visionTitle', descKey: 'about.visionText' },
+    { icon: Target, titleKey: 'about.value1Title', descKey: 'about.value1Desc' },
+    { icon: Heart, titleKey: 'about.value2Title', descKey: 'about.value2Desc' },
+    { icon: Users, titleKey: 'about.value3Title', descKey: 'about.value3Desc' },
+    { icon: Globe, titleKey: 'about.value4Title', descKey: 'about.value4Desc' },
   ];
 
   return (
@@ -56,7 +56,7 @@ export default function AboutPage() {
 
       <section className="py-16 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display text-3xl font-bold text-center mb-12">Our Values</h2>
+          <h2 className="font-display text-3xl font-bold text-center mb-12">{t('about.valuesTitle')}</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map((value, index) => (
               <Card key={index} className="hover-elevate">
@@ -65,10 +65,10 @@ export default function AboutPage() {
                     <value.icon className="w-6 h-6 text-primary" />
                   </div>
                   <h3 className="font-semibold text-lg mb-2">
-                    {value.titleKey ? t(value.titleKey) : value.title}
+                    {t(value.titleKey)}
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    {value.descKey ? t(value.descKey) : value.description}
+                    {t(value.descKey)}
                   </p>
                 </CardContent>
               </Card>
@@ -79,7 +79,7 @@ export default function AboutPage() {
 
       <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display text-3xl font-bold text-center mb-12">Our Team</h2>
+          <h2 className="font-display text-3xl font-bold text-center mb-12">{t('about.teamTitle')}</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {team.map((member) => (
               <Card key={member.name} className="hover-elevate">
@@ -90,7 +90,7 @@ export default function AboutPage() {
                     </AvatarFallback>
                   </Avatar>
                   <h3 className="font-semibold">{member.name}</h3>
-                  <p className="text-sm text-muted-foreground">{member.role}</p>
+                  <p className="text-sm text-muted-foreground">{t(member.roleKey)}</p>
                 </CardContent>
               </Card>
             ))}

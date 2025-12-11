@@ -65,15 +65,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <header className="flex items-center justify-between gap-4 px-6 py-4 border-b border-border bg-background">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex items-center justify-center">
-              <Link href="/" className="flex items-center gap-2">
-                <img 
-                  src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
-                  alt="Sinopia Logo" 
-                  className="w-16 h-auto rounded-md object-cover"
-                />
-              </Link>   
-            </div>
+            <img 
+              src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+              alt="Sinopia Logo" 
+              className="w-16 h-auto rounded-md object-cover"
+            />
             <span className="font-display font-bold text-xl">Sinopia</span>
           </Link>
           |

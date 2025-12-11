@@ -1,9 +1,10 @@
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useNotifications } from '@/context/NotificationContext';
+import { useI18n } from '@/i18n';
+import { formatDate } from '@/lib/utils/formatters';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
-import { formatRelativeTime } from '@/lib/utils/formatters';
 import {
   Bell,
   CheckCheck,
@@ -15,6 +16,23 @@ import {
 
 export default function NotificationsPage() {
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+  const { t } = useI18n();
+
+  const formatRelativeTime = (date: Date | string) => {
+    const d = typeof date === 'string' ? new Date(date) : date;
+    const now = new Date();
+    const diff = now.getTime() - d.getTime();
+    
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+    
+    if (minutes < 1) return t('time.justNow');
+    if (minutes < 60) return `${minutes}${t('time.minutesAgo')}`;
+    if (hours < 24) return `${hours}${t('time.hoursAgo')}`;
+    if (days < 7) return `${days}${t('time.daysAgo')}`;
+    return formatDate(d);
+  };
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
@@ -47,15 +65,15 @@ export default function NotificationsPage() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-display font-bold">Notifications</h1>
+            <h1 className="text-2xl font-display font-bold">{t('notifications.title')}</h1>
             <p className="text-muted-foreground">
-              {unreadCount > 0 ? `You have ${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}` : 'All caught up!'}
+              {unreadCount > 0 ? t('notifications.unreadCount').replace('{count}', String(unreadCount)) : t('notifications.allCaughtUp')}
             </p>
           </div>
           {unreadCount > 0 && (
             <Button variant="outline" onClick={markAllAsRead} data-testid="button-mark-all-read">
               <CheckCheck className="w-4 h-4 mr-2" />
-              Mark all as read
+              {t('notifications.markAllRead')}
             </Button>
           )}
         </div>
@@ -64,16 +82,16 @@ export default function NotificationsPage() {
           <Card>
             <CardContent className="py-12 text-center">
               <Bell className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="font-semibold text-lg mb-2">No notifications</h3>
+              <h3 className="font-semibold text-lg mb-2">{t('notifications.noNotifications')}</h3>
               <p className="text-muted-foreground">
-                You're all caught up! New notifications will appear here.
+                {t('notifications.noNotificationsDesc')}
               </p>
             </CardContent>
           </Card>
         ) : (
           <Card>
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
+              <CardTitle>{t('notifications.recentActivity')}</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="divide-y divide-border">
@@ -109,7 +127,7 @@ export default function NotificationsPage() {
                               size="sm"
                               className="h-auto p-0 text-primary hover:text-primary/80"
                             >
-                              View details
+                              {t('notifications.viewDetails')}
                             </Button>
                           </Link>
                         )}
@@ -121,7 +139,7 @@ export default function NotificationsPage() {
                             onClick={() => markAsRead(notification.id)}
                             data-testid={`button-mark-read-${notification.id}`}
                           >
-                            Mark as read
+                            {t('notifications.markAsRead')}
                           </Button>
                         )}
                       </div>
