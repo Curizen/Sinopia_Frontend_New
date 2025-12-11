@@ -1,0 +1,38 @@
+I need to fully internationalize my React application to support both English and German. Currently, the i18n setup is incomplete. Please perform the following comprehensive refactor to ensure ALL text is translated.
+ 
+### 1. Fix the Root Setup
+First, ensure the `I18nProvider` is correctly wrapping the application in `client/src/App.tsx`. It should be placed inside the `QueryClientProvider` but wrapping the `AuthProvider`.
+ 
+### 2. Update Layouts & Navigation
+Refactor the following layout files to use the `useI18n` hook. Replace all hardcoded strings (navigation links, buttons, footer text, user menu items) with `t('key')` calls:
+- `client/src/components/layouts/PublicLayout.tsx` (Add a language switcher here if missing)
+- `client/src/components/layouts/DashboardLayout.tsx` (Sidebar items, header titles, logout button)
+ 
+### 3. Translate All Public Components
+Go through these files in `client/src/components/public/` and extract all text into the translation files:
+- `HeroSection.tsx` (Headlines, subheadlines, buttons, badges)
+- `FeaturesSection.tsx` (Feature titles and descriptions - you may need to map these inside the component or translate the array content)
+- `TestimonialsSection.tsx` (Static headers and subtitles)
+- `CTASection.tsx` (Call to action titles and buttons)
+ 
+### 4. Translate All Pages
+Systematically go through every page in `client/src/pages/` and replace hardcoded text. This includes titles, descriptions, placeholders, labels, and button text.
+- **Public Pages:** `HomePage.tsx`, `AboutPage.tsx`, `ContactPage.tsx`, `TermsPage.tsx`, `PrivacyPage.tsx`.
+- **Auth Pages:** `SignInPage.tsx`, `SignUpPage.tsx`, `ForgotPasswordPage.tsx`, `OTPVerificationPage.tsx`, `ResetPasswordPage.tsx`.
+- **Dashboard Pages:** `DashboardPage.tsx` (Stats labels, section headers).
+- **Feature Pages:**
+  - `projects/ProjectsPage.tsx`, `projects/ProjectDetailPage.tsx`, `projects/AddProjectPage.tsx`
+  - `offers/OffersPage.tsx`
+  - `contracts/ContractsPage.tsx`
+  - `payments/PaymentsPage.tsx`
+  - `notifications/NotificationsPage.tsx`
+  - `profile/ProfilePage.tsx`
+ 
+### 5. Update Translation Files
+For every piece of text you extract, add the corresponding key-value pair to:
+- `client/src/i18n/en.ts` (English)
+- `client/src/i18n/de.ts` (German)
+ 
+Please organize the keys in the translation files by section (e.g., `common`, `nav`, `home`, `dashboard`, `projects`, `auth`, `about`, `contact`, etc.) to keep it manageable.
+ 
+**Important:** Do not break any existing functionality. Ensure `useI18n` is imported from `@/i18n` in every file where it is used.
