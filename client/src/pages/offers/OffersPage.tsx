@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
 import { useOffers } from '@/context/OfferContext';
+import { useI18n } from '@/i18n';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -29,6 +30,7 @@ export default function OffersPage() {
   const { user } = useAuth();
   const { offers, acceptOffer, rejectOffer } = useOffers();
   const { toast } = useToast();
+  const { t } = useI18n();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedOffer, setSelectedOffer] = useState<typeof offers[0] | null>(null);
@@ -79,9 +81,9 @@ export default function OffersPage() {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-display font-bold">Offers</h1>
+          <h1 className="text-2xl font-display font-bold">{t('offers.pageTitle')}</h1>
           <p className="text-muted-foreground">
-            {isSkillGiver ? 'View offers you have sent' : 'Review and manage incoming offers'}
+            {isSkillGiver ? t('offers.subtitleGiver') : t('offers.subtitleSearcher')}
           </p>
         </div>
 

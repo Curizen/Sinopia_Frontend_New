@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
 import { useContracts } from '@/context/ContractContext';
+import { useI18n } from '@/i18n';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -29,6 +30,7 @@ export default function ContractsPage() {
   const { user } = useAuth();
   const { contracts, signContract } = useContracts();
   const { toast } = useToast();
+  const { t } = useI18n();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedContract, setSelectedContract] = useState<typeof contracts[0] | null>(null);
@@ -68,9 +70,9 @@ export default function ContractsPage() {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-display font-bold">Contracts</h1>
+          <h1 className="text-2xl font-display font-bold">{t('contracts.pageTitle')}</h1>
           <p className="text-muted-foreground">
-            Manage your contracts and agreements
+            {t('contracts.pageSubtitle')}
           </p>
         </div>
 

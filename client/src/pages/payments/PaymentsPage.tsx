@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
 import { usePayments } from '@/context/PaymentContext';
+import { useI18n } from '@/i18n';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -19,6 +20,7 @@ import { Search, CreditCard, DollarSign, TrendingUp, Clock } from 'lucide-react'
 export default function PaymentsPage() {
   const { user } = useAuth();
   const { invoices, payments } = usePayments();
+  const { t } = useI18n();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
@@ -52,10 +54,10 @@ export default function PaymentsPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-display font-bold">
-            {isSkillGiver ? 'Invoices & Earnings' : 'Payments'}
+            {isSkillGiver ? t('payments.titleGiver') : t('payments.titleSearcher')}
           </h1>
           <p className="text-muted-foreground">
-            {isSkillGiver ? 'Track your invoices and earnings' : 'Manage your payments and invoices'}
+            {isSkillGiver ? t('payments.subtitleGiver') : t('payments.subtitleSearcher')}
           </p>
         </div>
 

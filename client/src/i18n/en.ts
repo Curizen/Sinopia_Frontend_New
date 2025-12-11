@@ -66,6 +66,10 @@ export const en = {
     ctaTitle: "Ready to Get Started?",
     ctaSubtitle: "Join thousands of professionals already using Sinopia",
     ctaButton: "Create Your Account",
+    testimonials: {
+      title: "Success Stories",
+      subtitle: "Hear from professionals and companies who have achieved their goals with Sinopia.",
+    },
   },
   auth: {
     signInTitle: "Welcome Back",
@@ -140,6 +144,9 @@ export const en = {
   },
   offers: {
     title: "Offers",
+    pageTitle: "Offers",
+    subtitleGiver: "View offers you have sent",
+    subtitleSearcher: "Review and manage incoming offers",
     pending: "Pending",
     accepted: "Accepted",
     rejected: "Rejected",
@@ -151,6 +158,8 @@ export const en = {
   },
   contracts: {
     title: "Contracts",
+    pageTitle: "Contracts",
+    pageSubtitle: "Manage your contracts and agreements",
     sign: "Sign Contract",
     signed: "Signed",
     pending: "Pending Signature",
@@ -159,6 +168,10 @@ export const en = {
   },
   payments: {
     title: "Payments",
+    titleGiver: "Invoices & Earnings",
+    titleSearcher: "Payments",
+    subtitleGiver: "Track your invoices and earnings",
+    subtitleSearcher: "Manage your payments and invoices",
     invoices: "Invoices",
     pending: "Pending",
     paid: "Paid",
@@ -170,7 +183,15 @@ export const en = {
   },
   profile: {
     title: "Profile",
+    pageTitle: "Profile",
+    pageSubtitleGiver: "Manage your professional profile",
+    pageSubtitleSearcher: "Manage your company profile",
     editProfile: "Edit Profile",
+    saveChanges: "Save Changes",
+    about: "About",
+    experience: "Experience",
+    education: "Education",
+    certifications: "Certifications",
     personalInfo: "Personal Information",
     professionalInfo: "Professional Information",
     skills: "Skills",
@@ -247,6 +268,11 @@ export const en = {
     messageLabel: "Message",
     sendButton: "Send Message",
     successMessage: "Thank you for your message. We'll get back to you soon!",
+    info: {
+      email: "Email",
+      phone: "Phone",
+      office: "Office",
+    },
   },
   features: {
     forSkillGivers: "For Skill Givers",

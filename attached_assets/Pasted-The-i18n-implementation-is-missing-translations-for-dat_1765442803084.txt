@@ -1,0 +1,63 @@
+The i18n implementation is missing translations for data arrays and page headers. Please apply the following specific fixes to fully translate the Home, About, Contact, and Dashboard pages.
+ 
+### 1. Update `client/src/components/public/FeaturesSection.tsx`
+**Problem:** The arrays `skillGiverFeatures`, `skillSearcherFeatures`, and `howItWorks` are defined outside the component, so they cannot use `t()`.
+**Action:**
+1. Move these three arrays **inside** the `FeaturesSection` component body.
+2. Replace the English text strings (title and description) with `t('home.features.giver.1.title')`, `t('home.features.giver.1.desc')`, etc.
+3. Update `client/src/i18n/en.ts` and `client/src/i18n/de.ts` with these new keys.
+   * *Target text:* "Share Your Expertise", "AI Driven Matching", "Get Smart Matched", "UseCase Based Work".
+ 
+### 2. Update `client/src/components/public/TestimonialsSection.tsx`
+**Action:**
+1. Replace the hardcoded `<h2>Success Stories</h2>` and the `<p>` description below it with `t('home.testimonials.title')` and `t('home.testimonials.subtitle')`.
+2. Add these keys to the i18n files.
+ 
+### 3. Update `client/src/pages/AboutPage.tsx`
+**Problem:** The `values` array is outside the component.
+**Action:**
+1. Move the `values` array **inside** the `AboutPage` component.
+2. Replace titles like "Flexible, Use-Case Based Work" and descriptions with `t('about.values.1.title')` calls.
+3. Replace the section header "Our Team" with `t('about.team.title')`.
+4. Add keys to i18n files.
+ 
+### 4. Update `client/src/pages/ContactPage.tsx`
+**Action:**
+1. Locate the cards for "Email", "Phone", and "Office".
+2. Replace these hardcoded labels with `t('contact.info.email')`, `t('contact.info.phone')`, and `t('contact.info.office')`.
+3. Add keys to i18n files.
+ 
+### 5. Update Feature Pages (Dashboard Area)
+Go through these specific pages and translate the Headers and Subheaders (currently hardcoded strings):
+ 
+* **`client/src/pages/profile/ProfilePage.tsx`**:
+    * Replace "Profile" and "Manage your..." with `t('profile.pageTitle')` and `t('profile.pageSubtitle')`.
+* **`client/src/pages/payments/PaymentsPage.tsx`**:
+    * Replace "Invoices & Earnings" and "Payments" logic with `t('payments.titleGiver')` / `t('payments.titleSearcher')`.
+* **`client/src/pages/contracts/ContractsPage.tsx`**:
+    * Replace "Contracts" header with `t('contracts.pageTitle')`.
+* **`client/src/pages/offers/OffersPage.tsx`**:
+    * Replace "Offers" header with `t('offers.pageTitle')`.
+* **`client/src/pages/dashboard/DashboardPage.tsx`**:
+    * Move the `stats` array **inside** the component.
+    * Translate stat titles: "Active Projects", "Pending Offers", "Active Contracts", "Total Earnings".
+ 
+### 6. Finalize Translation Files
+Ensure `client/src/i18n/de.ts` has the specific German translations requested:
+* "Share Your Expertise" -> "Teilen Sie Ihre Expertise"
+* "AI Driven Matching" -> "KI-gesteuertes Matching"
+* "Get Smart Matched" -> "Smart gematcht werden"
+* "Flexible, Use-Case Based Work" -> "Flexible, Use-Case-basierte Arbeit"
+* "Success Stories" -> "Erfolgsgeschichten"
+* "Hear from professionals..." -> "Erfahren Sie von Fachleuten und Unternehmen, die ihre Ziele mit Sinopia erreicht haben."
+* "Office" -> "Büro"
+* "Phone" -> "Telefon"
+* "Email" -> "E-Mail"
+* "Profile" -> "Profil"
+* "Manage your professional profile" -> "Verwalten Sie Ihr professionelles Profil"
+* "Invoices & Earnings" -> "Rechnungen & Einnahmen"
+* "Contracts" -> "Verträge"
+* "Offers" -> "Angebote"
+* "Team" -> "Unser Team"
+ 
+Apply these changes now.

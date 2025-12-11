@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
+import { useI18n } from '@/i18n';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -59,6 +60,7 @@ const mockSkillSearcherProfile = {
 export default function ProfilePage() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useI18n();
   const [isEditing, setIsEditing] = useState(false);
   const [newSkill, setNewSkill] = useState('');
 
@@ -98,26 +100,26 @@ export default function ProfilePage() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-display font-bold">Profile</h1>
+            <h1 className="text-2xl font-display font-bold">{t('profile.pageTitle')}</h1>
             <p className="text-muted-foreground">
-              Manage your {isSkillGiver ? 'professional profile' : 'company profile'}
+              {isSkillGiver ? t('profile.pageSubtitleGiver') : t('profile.pageSubtitleSearcher')}
             </p>
           </div>
           {isEditing ? (
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => setIsEditing(false)}>
                 <X className="w-4 h-4 mr-2" />
-                Cancel
+                {t('common.cancel')}
               </Button>
               <Button onClick={handleSave} data-testid="button-save-profile">
                 <Save className="w-4 h-4 mr-2" />
-                Save Changes
+                {t('profile.saveChanges')}
               </Button>
             </div>
           ) : (
             <Button onClick={() => setIsEditing(true)} data-testid="button-edit-profile">
               <Edit2 className="w-4 h-4 mr-2" />
-              Edit Profile
+              {t('profile.editProfile')}
             </Button>
           )}
         </div>
@@ -174,7 +176,7 @@ export default function ProfilePage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <User className="w-5 h-5" />
-                  About
+                  {t('profile.about')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -194,7 +196,7 @@ export default function ProfilePage() {
             {isSkillGiver && 'skills' in profile && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Skills</CardTitle>
+                  <CardTitle>{t('profile.skills')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
@@ -232,7 +234,7 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Briefcase className="w-5 h-5" />
-                    Experience
+                    {t('profile.experience')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -262,7 +264,7 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <GraduationCap className="w-5 h-5" />
-                    Education
+                    {t('profile.education')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -289,7 +291,7 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Award className="w-5 h-5" />
-                    Certifications
+                    {t('profile.certifications')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">

@@ -64,6 +64,10 @@ export const de = {
     ctaTitle: "Bereit anzufangen?",
     ctaSubtitle: "Schließen Sie sich Tausenden von Fachleuten an, die Sinopia bereits nutzen",
     ctaButton: "Konto erstellen",
+    testimonials: {
+      title: "Erfolgsgeschichten",
+      subtitle: "Erfahren Sie von Fachleuten und Unternehmen, die ihre Ziele mit Sinopia erreicht haben.",
+    },
   },
   auth: {
     signInTitle: "Willkommen zurück",
@@ -138,6 +142,9 @@ export const de = {
   },
   offers: {
     title: "Angebote",
+    pageTitle: "Angebote",
+    subtitleGiver: "Sehen Sie Ihre gesendeten Angebote",
+    subtitleSearcher: "Überprüfen und verwalten Sie eingehende Angebote",
     pending: "Ausstehend",
     accepted: "Angenommen",
     rejected: "Abgelehnt",
@@ -149,6 +156,8 @@ export const de = {
   },
   contracts: {
     title: "Verträge",
+    pageTitle: "Verträge",
+    pageSubtitle: "Verwalten Sie Ihre Verträge und Vereinbarungen",
     sign: "Vertrag unterzeichnen",
     signed: "Unterzeichnet",
     pending: "Unterschrift ausstehend",
@@ -157,6 +166,10 @@ export const de = {
   },
   payments: {
     title: "Zahlungen",
+    titleGiver: "Rechnungen & Einnahmen",
+    titleSearcher: "Zahlungen",
+    subtitleGiver: "Verfolgen Sie Ihre Rechnungen und Einnahmen",
+    subtitleSearcher: "Verwalten Sie Ihre Zahlungen und Rechnungen",
     invoices: "Rechnungen",
     pending: "Ausstehend",
     paid: "Bezahlt",
@@ -168,7 +181,15 @@ export const de = {
   },
   profile: {
     title: "Profil",
+    pageTitle: "Profil",
+    pageSubtitleGiver: "Verwalten Sie Ihr professionelles Profil",
+    pageSubtitleSearcher: "Verwalten Sie Ihr Unternehmensprofil",
     editProfile: "Profil bearbeiten",
+    saveChanges: "Änderungen speichern",
+    about: "Über",
+    experience: "Erfahrung",
+    education: "Ausbildung",
+    certifications: "Zertifizierungen",
     personalInfo: "Persönliche Informationen",
     professionalInfo: "Berufliche Informationen",
     skills: "Fähigkeiten",
@@ -245,6 +266,11 @@ export const de = {
     messageLabel: "Nachricht",
     sendButton: "Nachricht senden",
     successMessage: "Vielen Dank für Ihre Nachricht. Wir melden uns bald bei Ihnen!",
+    info: {
+      email: "E-Mail",
+      phone: "Telefon",
+      office: "Büro",
+    },
   },
   features: {
     forSkillGivers: "Für Fähigkeitengeber",

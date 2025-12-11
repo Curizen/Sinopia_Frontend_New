@@ -119,7 +119,7 @@ export default function ContactPage() {
                       <Mail className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">Email</h3>
+                      <h3 className="font-semibold mb-1">{t('contact.info.email')}</h3>
                       <p className="text-sm text-muted-foreground">info@sinopia.eu</p>
                     </div>
                   </div>
@@ -133,7 +133,7 @@ export default function ContactPage() {
                       <Phone className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">Phone</h3>
+                      <h3 className="font-semibold mb-1">{t('contact.info.phone')}</h3>
                       <p className="text-sm text-muted-foreground">+49 177 4928319</p>
                     </div>
                   </div>
@@ -147,7 +147,7 @@ export default function ContactPage() {
                       <MapPin className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">Office</h3>
+                      <h3 className="font-semibold mb-1">{t('contact.info.office')}</h3>
                       <p className="text-sm text-muted-foreground">
                         Sinopia Deutschland GmbH
                         <br />
