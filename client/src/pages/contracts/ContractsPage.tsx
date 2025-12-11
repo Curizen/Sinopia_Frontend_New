@@ -168,19 +168,18 @@ export default function ContractsPage() {
         <Dialog open={!!selectedContract} onOpenChange={() => setSelectedContract(null)}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Sign Contract</DialogTitle>
+              <DialogTitle>{t('contracts.signContractDialog')}</DialogTitle>
               <DialogDescription>
-                You are about to sign the contract for "{selectedContract?.projectTitle}". 
-                This will make the contract legally binding.
+                {t('contracts.signContractDesc').replace('{projectTitle}', selectedContract?.projectTitle || '')}
               </DialogDescription>
             </DialogHeader>
             <div className="py-4 space-y-4">
               <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
-                <span className="text-sm text-muted-foreground">Contract Value</span>
+                <span className="text-sm text-muted-foreground">{t('contracts.contractValue')}</span>
                 <span className="font-bold text-lg">{formatCurrency(selectedContract?.amount || 0)}</span>
               </div>
               <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
-                <span className="text-sm text-muted-foreground">Duration</span>
+                <span className="text-sm text-muted-foreground">{t('contracts.duration')}</span>
                 <span className="font-medium">
                   {selectedContract && `${formatDate(selectedContract.startDate)} - ${formatDate(selectedContract.endDate)}`}
                 </span>
@@ -188,11 +187,11 @@ export default function ContractsPage() {
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setSelectedContract(null)}>
-                Cancel
+                {t('common.cancel')}
               </Button>
               <Button onClick={handleSign} data-testid="button-confirm-sign">
                 <FileSignature className="w-4 h-4 mr-2" />
-                Sign Contract
+                {t('contracts.sign')}
               </Button>
             </DialogFooter>
           </DialogContent>

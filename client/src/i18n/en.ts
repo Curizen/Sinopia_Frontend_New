@@ -197,6 +197,10 @@ export const en = {
     freelancer: "Freelancer",
     contractSigned: "Contract signed!",
     contractActive: "The contract is now active.",
+    signContractDialog: "Sign Contract",
+    signContractDesc: "You are about to sign the contract for \"{projectTitle}\". This will make the contract legally binding.",
+    contractValue: "Contract Value",
+    duration: "Duration",
   },
   payments: {
     title: "Payments",
@@ -252,7 +256,8 @@ export const en = {
     location: "Location",
     profileUpdated: "Profile updated!",
     changesSaved: "Your changes have been saved successfully.",
-    addSkill: "Add skill...",
+    addSkill: "Add a skill",
+    present: "Present",
   },
   footer: {
     skillGiver: "Skill Giver",

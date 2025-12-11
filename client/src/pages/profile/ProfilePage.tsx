@@ -214,7 +214,7 @@ export default function ProfilePage() {
                   {isEditing && (
                     <div className="flex gap-2 mt-4">
                       <Input
-                        placeholder="Add a skill"
+                        placeholder={t('profile.addSkill')}
                         value={newSkill}
                         onChange={(e) => setNewSkill(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddSkill())}
@@ -247,7 +247,7 @@ export default function ProfilePage() {
                         <h4 className="font-semibold">{exp.role}</h4>
                         <p className="text-sm text-muted-foreground">{exp.company}</p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
+                          {exp.startDate} - {exp.current ? t('profile.present') : exp.endDate}
                         </p>
                         {exp.description && (
                           <p className="text-sm mt-2">{exp.description}</p>

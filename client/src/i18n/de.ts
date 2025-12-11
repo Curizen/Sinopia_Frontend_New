@@ -195,6 +195,10 @@ export const de = {
     freelancer: "Freiberufler",
     contractSigned: "Vertrag unterzeichnet!",
     contractActive: "Der Vertrag ist jetzt aktiv.",
+    signContractDialog: "Vertrag unterzeichnen",
+    signContractDesc: "Sie sind dabei, den Vertrag für \"{projectTitle}\" zu unterzeichnen. Dies macht den Vertrag rechtlich bindend.",
+    contractValue: "Vertragswert",
+    duration: "Laufzeit",
   },
   payments: {
     title: "Zahlungen",
@@ -250,7 +254,8 @@ export const de = {
     location: "Standort",
     profileUpdated: "Profil aktualisiert!",
     changesSaved: "Ihre Änderungen wurden erfolgreich gespeichert.",
-    addSkill: "Fähigkeit hinzufügen...",
+    addSkill: "Fähigkeit hinzufügen",
+    present: "Heute",
   },
   footer: {
     skillGiver: "Fähigkeitengeber",
