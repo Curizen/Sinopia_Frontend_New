@@ -3,6 +3,7 @@ import { Link } from 'wouter';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
 import { useProjects } from '@/context/ProjectContext';
+import { useI18n } from '@/i18n';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -21,6 +22,7 @@ import { Search, Plus, Clock, DollarSign, FolderKanban } from 'lucide-react';
 export default function ProjectsPage() {
   const { user } = useAuth();
   const { projects } = useProjects();
+  const { t } = useI18n();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
@@ -53,16 +55,16 @@ export default function ProjectsPage() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-display font-bold">Projects</h1>
+            <h1 className="text-2xl font-display font-bold">{t('projects.title')}</h1>
             <p className="text-muted-foreground">
-              {isSkillGiver ? 'View and manage your assigned projects' : 'Manage your posted projects'}
+              {isSkillGiver ? t('footer.findProjects') : t('footer.postProjects')}
             </p>
           </div>
           {!isSkillGiver && (
             <Link href="/projects/new">
               <Button data-testid="button-add-project">
                 <Plus className="w-4 h-4 mr-2" />
-                New Project
+                {t('projects.addNew')}
               </Button>
             </Link>
           )}
@@ -72,7 +74,7 @@ export default function ProjectsPage() {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="Search projects..."
+              placeholder={t('projects.search')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -81,14 +83,14 @@ export default function ProjectsPage() {
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-full sm:w-[180px]" data-testid="select-status-filter">
-              <SelectValue placeholder="Filter by status" />
+              <SelectValue placeholder={t('projects.status')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="open">Open</SelectItem>
-              <SelectItem value="in_progress">In Progress</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
+              <SelectItem value="all">{t('common.filter')}</SelectItem>
+              <SelectItem value="open">{t('projects.statusOpen')}</SelectItem>
+              <SelectItem value="in_progress">{t('projects.statusInProgress')}</SelectItem>
+              <SelectItem value="completed">{t('projects.statusCompleted')}</SelectItem>
+              <SelectItem value="cancelled">{t('projects.statusCancelled')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -97,17 +99,13 @@ export default function ProjectsPage() {
           <Card>
             <CardContent className="py-12 text-center">
               <FolderKanban className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="font-semibold text-lg mb-2">No projects found</h3>
+              <h3 className="font-semibold text-lg mb-2">{t('common.noResults')}</h3>
               <p className="text-muted-foreground mb-4">
-                {searchQuery || statusFilter !== 'all'
-                  ? 'Try adjusting your search or filters'
-                  : isSkillGiver
-                    ? 'Browse available projects to get started'
-                    : 'Create your first project to find talent'}
+                {t('dashboard.noProjects')}
               </p>
               {!isSkillGiver && !searchQuery && statusFilter === 'all' && (
                 <Link href="/projects/new">
-                  <Button>Create Project</Button>
+                  <Button>{t('projects.addNew')}</Button>
                 </Link>
               )}
             </CardContent>
@@ -142,7 +140,7 @@ export default function ProjectsPage() {
                             ))}
                             {project.skills.length > 5 && (
                               <Badge variant="secondary" className="text-xs">
-                                +{project.skills.length - 5} more
+                                +{project.skills.length - 5}
                               </Badge>
                             )}
                           </div>
@@ -153,7 +151,7 @@ export default function ProjectsPage() {
                             </span>
                             <span className="flex items-center gap-1">
                               <Clock className="w-4 h-4" />
-                              Due {formatDate(project.deadline)}
+                              {t('projects.deadline')}: {formatDate(project.deadline)}
                             </span>
                           </div>
                         </div>

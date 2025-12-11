@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
+import { useI18n } from '@/i18n';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +11,7 @@ import { Mail, Phone, MapPin, Send } from 'lucide-react';
 
 export default function ContactPage() {
   const { toast } = useToast();
+  const { t } = useI18n();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -22,12 +24,11 @@ export default function ContactPage() {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // todo: remove mock functionality
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     toast({
-      title: 'Message sent!',
-      description: 'We\'ll get back to you as soon as possible.',
+      title: t('common.success'),
+      description: t('contact.successMessage'),
     });
     
     setFormData({ name: '', email: '', subject: '', message: '' });
@@ -39,9 +40,9 @@ export default function ContactPage() {
       <div className="bg-primary/5 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h1 className="font-display text-4xl sm:text-5xl font-bold mb-4">Contact Us</h1>
+            <h1 className="font-display text-4xl sm:text-5xl font-bold mb-4">{t('contact.title')}</h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Have questions or need assistance? We're here to help. Reach out to our team and we'll respond as soon as possible.
+              {t('contact.subtitle')}
             </p>
           </div>
 
@@ -49,13 +50,13 @@ export default function ContactPage() {
             <div className="lg:col-span-2">
               <Card>
                 <CardHeader>
-                  <CardTitle>Send us a message</CardTitle>
+                  <CardTitle>{t('contact.sendButton')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="name">Your Name</Label>
+                        <Label htmlFor="name">{t('contact.nameLabel')}</Label>
                         <Input
                           id="name"
                           placeholder="John Doe"
@@ -66,7 +67,7 @@ export default function ContactPage() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email">Email Address</Label>
+                        <Label htmlFor="email">{t('contact.emailLabel')}</Label>
                         <Input
                           id="email"
                           type="email"
@@ -79,7 +80,7 @@ export default function ContactPage() {
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="subject">Subject</Label>
+                      <Label htmlFor="subject">{t('contact.subjectLabel')}</Label>
                       <Input
                         id="subject"
                         placeholder="How can we help?"
@@ -90,10 +91,10 @@ export default function ContactPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="message">Message</Label>
+                      <Label htmlFor="message">{t('contact.messageLabel')}</Label>
                       <Textarea
                         id="message"
-                        placeholder="Tell us more about your inquiry..."
+                        placeholder="Tell us more..."
                         rows={6}
                         value={formData.message}
                         onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
@@ -102,7 +103,7 @@ export default function ContactPage() {
                       />
                     </div>
                     <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting} data-testid="button-contact-submit">
-                      {isSubmitting ? 'Sending...' : 'Send Message'}
+                      {isSubmitting ? t('common.loading') : t('contact.sendButton')}
                       <Send className="ml-2 w-4 h-4" />
                     </Button>
                   </form>
@@ -120,7 +121,6 @@ export default function ContactPage() {
                     <div>
                       <h3 className="font-semibold mb-1">Email</h3>
                       <p className="text-sm text-muted-foreground">info@sinopia.eu</p>
-                      <p className="text-sm text-muted-foreground"></p>
                     </div>
                   </div>
                 </CardContent>
@@ -151,7 +151,8 @@ export default function ContactPage() {
                       <p className="text-sm text-muted-foreground">
                         Sinopia Deutschland GmbH
                         <br />
-                        Deckerstr.   39
+                        Deckerstr. 39
+                        <br />
                         70372 Stuttgart
                       </p>
                     </div>

@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
+import { useI18n } from '@/i18n';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,12 +15,11 @@ import type { UserRole } from '@/lib/utils/constants';
 export default function SignUpPage() {
   const { register } = useAuth();
   const { toast } = useToast();
+  const { t } = useI18n();
   const [, setLocation] = useLocation();
 
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  // step 1 → account info, step 2 → CV upload (for Skill Giver)
   const [step, setStep] = useState<1 | 2>(1);
 
   const [formData, setFormData] = useState({
@@ -38,8 +38,8 @@ export default function SignUpPage() {
     if (!file) return;
     setCvFile(file);
     toast({
-      title: 'CV selected',
-      description: `We will upload "${file.name}" with your account.`,
+      title: t('common.success'),
+      description: `${file.name}`,
     });
   };
 
@@ -53,23 +53,20 @@ export default function SignUpPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // STEP 1: basic account info
     if (step === 1) {
-      // If Skill Searcher -> directly register (no CV step)
       if (!isSkillGiver) {
         setIsLoading(true);
         try {
           await register(formData.email, formData.password, formData.role);
           toast({
-            title: 'Account created!',
-            description: 'Welcome to Sinopia. Let\'s set up your profile.',
+            title: t('common.success'),
+            description: t('auth.signUpTitle'),
           });
           setLocation('/dashboard');
         } catch (error) {
           console.error(error);
           toast({
-            title: 'Registration failed',
-            description: 'Please try again.',
+            title: t('common.error'),
             variant: 'destructive',
           });
         } finally {
@@ -77,18 +74,14 @@ export default function SignUpPage() {
         }
         return;
       }
-
-      // If Skill Giver -> go to CV step
       setStep(2);
       return;
     }
 
-    // STEP 2: CV upload for Skill Giver
     if (step === 2) {
       if (!cvFile) {
         toast({
-          title: 'CV required',
-          description: 'Please upload your CV to continue as a Skill Giver.',
+          title: t('common.error'),
           variant: 'destructive',
         });
         return;
@@ -96,20 +89,16 @@ export default function SignUpPage() {
 
       setIsLoading(true);
       try {
-        // send CV to backend via register (multipart form-data)
         await register(formData.email, formData.password, formData.role, cvFile);
-
         toast({
-          title: 'Account created!',
-          description: `Welcome to Sinopia. Your CV "${cvFile.name}" has been uploaded.`,
+          title: t('common.success'),
+          description: t('auth.signUpTitle'),
         });
-
         setLocation('/dashboard');
       } catch (error) {
         console.error(error);
         toast({
-          title: 'Registration failed',
-          description: 'Please try again.',
+          title: t('common.error'),
           variant: 'destructive',
         });
       } finally {
@@ -133,12 +122,10 @@ export default function SignUpPage() {
               </Link>
             </div>
             <CardTitle className="font-display text-2xl">
-              {step === 1 ? 'Create Your Account' : 'Upload Your CV'}
+              {step === 1 ? t('auth.signUpTitle') : 'Upload CV'}
             </CardTitle>
             <CardDescription>
-              {step === 1
-                ? 'Join Sinopia and start your journey'
-                : 'Please provide your CV so we can better match you with opportunities.'}
+              {step === 1 ? t('auth.signUpSubtitle') : t('auth.skillGiverDesc')}
             </CardDescription>
           </CardHeader>
 
@@ -146,9 +133,8 @@ export default function SignUpPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {step === 1 && (
                 <>
-                  {/* Role selection */}
                   <div className="space-y-3">
-                    <Label>I want to</Label>
+                    <Label>{t('auth.selectRole')}</Label>
                     <RadioGroup
                       value={formData.role}
                       onValueChange={(value) =>
@@ -181,10 +167,10 @@ export default function SignUpPage() {
                             formData.role === 'skill_giver' ? 'text-primary' : ''
                           }`}
                         >
-                          Provide Your Expertise
+                          {t('auth.skillGiver')}
                         </span>
                         <span className="text-xs text-muted-foreground text-center">
-                          I&apos;m a Skill Giver
+                          {t('auth.skillGiverDesc')}
                         </span>
                       </Label>
 
@@ -213,27 +199,21 @@ export default function SignUpPage() {
                             formData.role === 'skill_searcher' ? 'text-primary' : ''
                           }`}
                         >
-                          Find Expertise
+                          {t('auth.skillSearcher')}
                         </span>
                         <span className="text-xs text-muted-foreground text-center">
-                          I&apos;m a Skill Searcher
+                          {t('auth.skillSearcherDesc')}
                         </span>
                       </Label>
                     </RadioGroup>
-                    {isSkillGiver && (
-                      <p className="text-xs text-muted-foreground">
-                        As a Skill Giver, you’ll be asked to upload your CV in the next step.
-                      </p>
-                    )}
                   </div>
 
-                  {/* Email */}
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">{t('auth.email')}</Label>
                     <Input
                       id="email"
                       type="email"
-                      placeholder="you@example.com"
+                      placeholder={t('auth.emailPlaceholder')}
                       value={formData.email}
                       onChange={(e) =>
                         setFormData((prev) => ({ ...prev, email: e.target.value }))
@@ -243,14 +223,13 @@ export default function SignUpPage() {
                     />
                   </div>
 
-                  {/* Password */}
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">{t('auth.password')}</Label>
                     <div className="relative">
                       <Input
                         id="password"
                         type={showPassword ? 'text' : 'password'}
-                        placeholder="Create a strong password"
+                        placeholder={t('auth.passwordPlaceholder')}
                         value={formData.password}
                         onChange={(e) =>
                           setFormData((prev) => ({ ...prev, password: e.target.value }))
@@ -266,23 +245,14 @@ export default function SignUpPage() {
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      At least 8 characters with uppercase, lowercase, and a number
-                    </p>
                   </div>
                 </>
               )}
 
               {step === 2 && (
                 <>
-                  {/* CV upload – only for skill_giver */}
                   <div className="space-y-2">
-                    <Label>Upload your CV</Label>
-                    <p className="text-xs text-muted-foreground">
-                      Please provide your CV (PDF, DOC, or DOCX) so we can better match you with
-                      suitable opportunities.
-                    </p>
-
+                    <Label>Upload CV</Label>
                     <div
                       onDragOver={(e) => {
                         e.preventDefault();
@@ -302,14 +272,14 @@ export default function SignUpPage() {
                     >
                       <FileText className="w-8 h-8 text-muted-foreground mb-2" />
                       <p className="text-sm font-medium">
-                        Drag &amp; drop your CV here, or click to browse
+                        Drag & drop your CV here, or click to browse
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Accepted formats: PDF, DOC, DOCX
+                        PDF, DOC, DOCX
                       </p>
                       {cvFile && (
                         <p className="mt-3 text-xs text-primary">
-                          Selected file: <span className="font-medium">{cvFile.name}</span>
+                          Selected: <span className="font-medium">{cvFile.name}</span>
                         </p>
                       )}
                     </div>
@@ -329,12 +299,11 @@ export default function SignUpPage() {
                     className="w-full"
                     onClick={() => setStep(1)}
                   >
-                    ← Back to account details
+                    {t('common.back')}
                   </Button>
                 </>
               )}
 
-              {/* Submit button */}
               <Button
                 type="submit"
                 className="w-full"
@@ -342,36 +311,27 @@ export default function SignUpPage() {
                 data-testid="button-signup-submit"
               >
                 {isLoading
-                  ? step === 1
-                    ? 'Creating account...'
-                    : 'Finishing sign up...'
+                  ? t('common.loading')
                   : step === 1
                     ? isSkillGiver
-                      ? 'Continue'
-                      : 'Create Account'
-                    : 'Create Account'}
+                      ? t('common.next')
+                      : t('auth.signUpButton')
+                    : t('auth.signUpButton')}
                 <UserPlus className="ml-2 w-4 h-4" />
               </Button>
 
               {step === 1 && (
                 <p className="text-xs text-center text-muted-foreground">
-                  By creating an account, you agree to our{' '}
-                  <Link href="/terms" className="text-primary hover:underline">
-                    Terms
-                  </Link>{' '}
-                  and{' '}
-                  <Link href="/privacy" className="text-primary hover:underline">
-                    Privacy Policy
-                  </Link>
+                  {t('footer.terms')} & {t('footer.privacy')}
                 </p>
               )}
             </form>
 
             {step === 1 && (
               <div className="mt-6 text-center text-sm">
-                <span className="text-muted-foreground">Already have an account? </span>
+                <span className="text-muted-foreground">{t('auth.hasAccount')} </span>
                 <Link href="/sign-in" className="text-primary hover:underline font-medium">
-                  Sign in
+                  {t('nav.signIn')}
                 </Link>
               </div>
             )}
