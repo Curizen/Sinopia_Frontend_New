@@ -60,8 +60,8 @@ export default function ContractsPage() {
 
     signContract(selectedContract.id);
     toast({
-      title: 'Contract signed!',
-      description: 'The contract is now active.',
+      title: t('contracts.contractSigned'),
+      description: t('contracts.contractActive'),
     });
     setSelectedContract(null);
   };
@@ -80,7 +80,7 @@ export default function ContractsPage() {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="Search contracts..."
+              placeholder={t('contracts.searchContracts')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -89,13 +89,13 @@ export default function ContractsPage() {
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-full sm:w-[180px]" data-testid="select-contract-filter">
-              <SelectValue placeholder="Filter by status" />
+              <SelectValue placeholder={t('contracts.filterByStatus')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="draft">Draft</SelectItem>
-              <SelectItem value="sent">Sent</SelectItem>
-              <SelectItem value="signed">Signed</SelectItem>
+              <SelectItem value="all">{t('contracts.allStatus')}</SelectItem>
+              <SelectItem value="draft">{t('contracts.draft')}</SelectItem>
+              <SelectItem value="sent">{t('contracts.sent')}</SelectItem>
+              <SelectItem value="signed">{t('contracts.signed')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -104,11 +104,11 @@ export default function ContractsPage() {
           <Card>
             <CardContent className="py-12 text-center">
               <Handshake className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="font-semibold text-lg mb-2">No contracts found</h3>
+              <h3 className="font-semibold text-lg mb-2">{t('contracts.noContractsFound')}</h3>
               <p className="text-muted-foreground">
                 {searchQuery || statusFilter !== 'all'
-                  ? 'Try adjusting your search or filters'
-                  : 'No contracts to display at the moment'}
+                  ? t('contracts.adjustFilters')
+                  : t('contracts.noContractsToDisplay')}
               </p>
             </CardContent>
           </Card>
@@ -127,10 +127,10 @@ export default function ContractsPage() {
                       </div>
                       <div className="grid sm:grid-cols-2 gap-2 text-sm mb-4">
                         <p className="text-muted-foreground">
-                          Client: <span className="font-medium text-foreground">{contract.clientName}</span>
+                          {t('contracts.client')}: <span className="font-medium text-foreground">{contract.clientName}</span>
                         </p>
                         <p className="text-muted-foreground">
-                          Freelancer: <span className="font-medium text-foreground">{contract.freelancerName}</span>
+                          {t('contracts.freelancer')}: <span className="font-medium text-foreground">{contract.freelancerName}</span>
                         </p>
                       </div>
                       <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
@@ -151,11 +151,11 @@ export default function ContractsPage() {
                           data-testid={`button-sign-contract-${contract.id}`}
                         >
                           <FileSignature className="w-4 h-4 mr-2" />
-                          Sign Contract
+                          {t('contracts.sign')}
                         </Button>
                       )}
                       <Button variant="outline" data-testid={`button-view-contract-${contract.id}`}>
-                        View Details
+                        {t('contracts.viewDetails')}
                       </Button>
                     </div>
                   </div>

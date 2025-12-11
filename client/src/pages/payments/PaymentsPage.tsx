@@ -67,7 +67,7 @@ export default function PaymentsPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">
-                    {isSkillGiver ? 'Total Earned' : 'Total Paid'}
+                    {isSkillGiver ? t('payments.totalEarned') : t('payments.totalPaid')}
                   </p>
                   <p className="text-2xl font-bold text-green-600">{formatCurrency(totalPaid)}</p>
                 </div>
@@ -81,7 +81,7 @@ export default function PaymentsPage() {
             <CardContent className="pt-6">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Pending</p>
+                  <p className="text-sm text-muted-foreground">{t('payments.pending')}</p>
                   <p className="text-2xl font-bold text-yellow-600">{formatCurrency(totalPending)}</p>
                 </div>
                 <div className="w-10 h-10 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center">
@@ -94,7 +94,7 @@ export default function PaymentsPage() {
             <CardContent className="pt-6">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Overdue</p>
+                  <p className="text-sm text-muted-foreground">{t('payments.overdue')}</p>
                   <p className="text-2xl font-bold text-red-600">{formatCurrency(totalOverdue)}</p>
                 </div>
                 <div className="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
@@ -107,8 +107,8 @@ export default function PaymentsPage() {
 
         <Tabs defaultValue="invoices">
           <TabsList>
-            <TabsTrigger value="invoices" data-testid="tab-invoices">Invoices</TabsTrigger>
-            <TabsTrigger value="payments" data-testid="tab-payments">Payment History</TabsTrigger>
+            <TabsTrigger value="invoices" data-testid="tab-invoices">{t('payments.invoices')}</TabsTrigger>
+            <TabsTrigger value="payments" data-testid="tab-payments">{t('payments.paymentHistory')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="invoices" className="space-y-4">
@@ -116,7 +116,7 @@ export default function PaymentsPage() {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search invoices..."
+                  placeholder={t('payments.searchInvoices')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -125,13 +125,13 @@ export default function PaymentsPage() {
               </div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-full sm:w-[180px]" data-testid="select-invoice-filter">
-                  <SelectValue placeholder="Filter by status" />
+                  <SelectValue placeholder={t('payments.filterByStatus')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="paid">Paid</SelectItem>
-                  <SelectItem value="overdue">Overdue</SelectItem>
+                  <SelectItem value="all">{t('payments.allStatus')}</SelectItem>
+                  <SelectItem value="pending">{t('payments.pending')}</SelectItem>
+                  <SelectItem value="paid">{t('payments.paid')}</SelectItem>
+                  <SelectItem value="overdue">{t('payments.overdue')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -140,11 +140,11 @@ export default function PaymentsPage() {
               <Card>
                 <CardContent className="py-12 text-center">
                   <CreditCard className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="font-semibold text-lg mb-2">No invoices found</h3>
+                  <h3 className="font-semibold text-lg mb-2">{t('payments.noInvoicesFound')}</h3>
                   <p className="text-muted-foreground">
                     {searchQuery || statusFilter !== 'all'
-                      ? 'Try adjusting your search or filters'
-                      : 'No invoices to display at the moment'}
+                      ? t('payments.adjustFilters')
+                      : t('payments.noInvoicesToDisplay')}
                   </p>
                 </CardContent>
               </Card>
@@ -162,8 +162,8 @@ export default function PaymentsPage() {
                             </Badge>
                           </div>
                           <p className="text-sm text-muted-foreground">
-                            Due: {formatDate(invoice.dueDate)}
-                            {invoice.paidDate && ` • Paid: ${formatDate(invoice.paidDate)}`}
+                            {t('payments.due')}: {formatDate(invoice.dueDate)}
+                            {invoice.paidDate && ` • ${t('payments.paidOn')}: ${formatDate(invoice.paidDate)}`}
                           </p>
                         </div>
                         <div className="text-right">
@@ -182,16 +182,16 @@ export default function PaymentsPage() {
               <Card>
                 <CardContent className="py-12 text-center">
                   <DollarSign className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="font-semibold text-lg mb-2">No payments yet</h3>
+                  <h3 className="font-semibold text-lg mb-2">{t('payments.noPayments')}</h3>
                   <p className="text-muted-foreground">
-                    Payment history will appear here
+                    {t('payments.paymentHistoryWillAppear')}
                   </p>
                 </CardContent>
               </Card>
             ) : (
               <Card>
                 <CardHeader>
-                  <CardTitle>Recent Payments</CardTitle>
+                  <CardTitle>{t('payments.recentPayments')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">

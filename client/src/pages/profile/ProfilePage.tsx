@@ -70,8 +70,8 @@ export default function ProfilePage() {
   const handleSave = () => {
     // todo: remove mock functionality
     toast({
-      title: 'Profile updated!',
-      description: 'Your changes have been saved successfully.',
+      title: t('profile.profileUpdated'),
+      description: t('profile.changesSaved'),
     });
     setIsEditing(false);
   };
