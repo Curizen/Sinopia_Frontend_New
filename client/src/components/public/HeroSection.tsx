@@ -2,9 +2,12 @@ import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Users, Briefcase, Star } from 'lucide-react';
+import { useI18n } from '@/i18n';
 import heroImage from '@assets/generated_images/team_collaboration_coworking_hero.png';
 
 export function HeroSection() {
+  const { t } = useI18n();
+
   return (
     <section className="relative min-h-[90vh] flex items-center">
       <div
@@ -17,23 +20,22 @@ export function HeroSection() {
         <div className="max-w-3xl">
           <Badge className="mb-6 bg-primary/20 text-white border-primary/30 backdrop-blur-sm">
             <Star className="w-3 h-3 mr-1 fill-current" />
-            Trusted by 10,000+ professionals
+            {t('home.trustedBy')}
           </Badge>
           
           <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-            Connect Your Skills with
-            <span className="text-primary"> Opportunities</span>
+            {t('home.heroTitle')}
+            <span className="text-primary"> {t('home.heroTitleHighlight')}</span>
           </h1>
           
           <p className="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl">
-            Sinopia enables professionals to present their skills to companies seeking qualified talent. 
-            Find your next project or hire the perfect freelancer today.
+            {t('home.heroSubtitle')}
           </p>
 
           <div className="flex flex-wrap gap-4 mb-12">
             <Link href="/sign-up">
               <Button size="lg" className="gap-2" data-testid="button-hero-cta">
-                Get Started
+                {t('nav.getStarted')}
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
@@ -44,7 +46,7 @@ export function HeroSection() {
                 className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
                 data-testid="button-hero-learn"
               >
-                Learn More
+                {t('home.learnMore')}
               </Button>
             </Link>
           </div>
@@ -56,7 +58,7 @@ export function HeroSection() {
               </div>
               <div>
                 <p className="font-bold text-2xl">50K+</p>
-                <p className="text-sm text-gray-300">Active Users</p>
+                <p className="text-sm text-gray-300">{t('home.activeUsers')}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 text-white/90">
@@ -65,7 +67,7 @@ export function HeroSection() {
               </div>
               <div>
                 <p className="font-bold text-2xl">10K+</p>
-                <p className="text-sm text-gray-300">Projects Completed</p>
+                <p className="text-sm text-gray-300">{t('home.projectsCompleted')}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 text-white/90">
@@ -74,7 +76,7 @@ export function HeroSection() {
               </div>
               <div>
                 <p className="font-bold text-2xl">4.9</p>
-                <p className="text-sm text-gray-300">Average Rating</p>
+                <p className="text-sm text-gray-300">{t('home.averageRating')}</p>
               </div>
             </div>
           </div>

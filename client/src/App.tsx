@@ -3,6 +3,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { I18nProvider } from "@/i18n";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { NotificationProvider } from "@/context/NotificationContext";
 import { ProjectProvider } from "@/context/ProjectContext";
@@ -129,20 +130,22 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <AuthProvider>
-          <NotificationProvider>
-            <ProjectProvider>
-              <OfferProvider>
-                <ContractProvider>
-                  <PaymentProvider>
-                    <Toaster />
-                    <Router />
-                  </PaymentProvider>
-                </ContractProvider>
-              </OfferProvider>
-            </ProjectProvider>
-          </NotificationProvider>
-        </AuthProvider>
+        <I18nProvider>
+          <AuthProvider>
+            <NotificationProvider>
+              <ProjectProvider>
+                <OfferProvider>
+                  <ContractProvider>
+                    <PaymentProvider>
+                      <Toaster />
+                      <Router />
+                    </PaymentProvider>
+                  </ContractProvider>
+                </OfferProvider>
+              </ProjectProvider>
+            </NotificationProvider>
+          </AuthProvider>
+        </I18nProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
