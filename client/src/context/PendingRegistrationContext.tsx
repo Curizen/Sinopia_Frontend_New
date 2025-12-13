@@ -22,6 +22,7 @@ interface PendingRegistrationContextType {
   resendOtp: () => string | null;
   setOtpVerified: () => void;
   setStage: (stage: SignupStage) => void;
+  setOtpVerifiedAndStage: (stage: SignupStage) => void;
   setCvFile: (file: File) => void;
 }
 
@@ -69,6 +70,15 @@ export function PendingRegistrationProvider({ children }: { children: ReactNode 
     });
   };
 
+  const setOtpVerifiedAndStage = (stage: SignupStage) => {
+    if (!pendingData) return;
+    setPendingDataState({
+      ...pendingData,
+      otpVerified: true,
+      stage,
+    });
+  };
+
   const setCvFile = (file: File) => {
     if (!pendingData) return;
     setPendingDataState({
@@ -87,6 +97,7 @@ export function PendingRegistrationProvider({ children }: { children: ReactNode 
         resendOtp,
         setOtpVerified,
         setStage,
+        setOtpVerifiedAndStage,
         setCvFile,
       }}
     >

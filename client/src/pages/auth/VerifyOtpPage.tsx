@@ -8,10 +8,11 @@ import { Button } from '@/components/ui/button';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Shield } from 'lucide-react';
+import { USER_ROLES } from '@/lib/utils/constants';
 
 export default function VerifyOtpPage() {
   const { register } = useAuth();
-  const { pendingData, clearPendingData, resendOtp } = usePendingRegistration();
+  const { pendingData, clearPendingData, resendOtp, setOtpVerifiedAndStage } = usePendingRegistration();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   
@@ -52,16 +53,22 @@ export default function VerifyOtpPage() {
     setIsLoading(true);
 
     try {
-      await register(pendingData.email, pendingData.password, pendingData.role, pendingData.cvFile);
-      
-      clearPendingData();
-      
-      toast({
-        title: 'Success!',
-        description: 'Your account has been created successfully.',
-      });
-      
-      setLocation('/dashboard');
+      if (pendingData.role === USER_ROLES.SKILL_GIVER) {
+        setOtpVerifiedAndStage('cv_upload_required');
+        toast({
+          title: 'Email Verified!',
+          description: 'Now please upload your CV to complete registration.',
+        });
+        setTimeout(() => setLocation('/sign-up/cv'), 50);
+      } else {
+        await register(pendingData.email, pendingData.password, pendingData.role);
+        clearPendingData();
+        toast({
+          title: 'Success!',
+          description: 'Your account has been created successfully.',
+        });
+        setLocation('/dashboard');
+      }
     } catch (error) {
       console.error(error);
       toast({
@@ -134,7 +141,7 @@ export default function VerifyOtpPage() {
                 disabled={isLoading || otp.length !== 6}
                 data-testid="button-verify-otp-submit"
               >
-                {isLoading ? 'Verifying...' : 'Verify & Create Account'}
+                {isLoading ? 'Verifying...' : (pendingData?.role === USER_ROLES.SKILL_GIVER ? 'Verify Email' : 'Verify & Create Account')}
               </Button>
             </form>
 

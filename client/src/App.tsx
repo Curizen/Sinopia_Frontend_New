@@ -23,6 +23,7 @@ import ForgotPasswordPage from "@/pages/auth/ForgotPasswordPage";
 import OTPVerificationPage from "@/pages/auth/OTPVerificationPage";
 import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
 import VerifyOtpPage from "@/pages/auth/VerifyOtpPage";
+import CVUploadPage from "@/pages/auth/CVUploadPage";
 import DashboardPage from "@/pages/dashboard/DashboardPage";
 import ProjectsPage from "@/pages/projects/ProjectsPage";
 import ProjectDetailPage from "@/pages/projects/ProjectDetailPage";
@@ -96,6 +97,9 @@ function Router() {
       </Route>
       <Route path="/verify-otp">
         <PublicOnlyRoute component={VerifyOtpPage} />
+      </Route>
+      <Route path="/sign-up/cv">
+        <PublicOnlyRoute component={CVUploadPage} />
       </Route>
 
       <Route path="/dashboard">
