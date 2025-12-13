@@ -1,0 +1,87 @@
+You are working on an existing React + TypeScript frontend (Vite) using wouter routing, shadcn/ui components, and an AuthContext (mock auth / no real backend).
+
+Current Sign Up flow:
+- Step 1: email + password (+ role selection)
+- Step 2: CV upload (skill_giver only)
+You already added Confirm Password + OTP page.
+
+NEW REQUIREMENT:
+For Skill Giver, OTP verification must happen BEFORE the CV upload step.
+
+FINAL FLOW RULES:
+1) Skill Searcher:
+   Sign Up form (email, password, confirm password, role=skill_searcher)
+   -> OTP page (/verify-otp)
+   -> Complete registration (AuthContext.register)
+   -> Redirect to /dashboard
+
+2) Skill Giver:
+   Sign Up form (email, password, confirm password, role=skill_giver)
+   -> OTP page (/verify-otp)
+   -> CV upload step (still within SignUp flow, or separate route)
+   -> Complete registration only AFTER CV upload
+   -> Redirect to /dashboard
+
+IMPORTANT:
+- FRONTEND ONLY. No backend changes, no database, no real email sending.
+- OTP remains mocked (generate 6 digits and store in localStorage).
+- Keep existing routing, test IDs, and AuthContext logic stable.
+- Do not break existing sign-in and dashboard routes.
+
+IMPLEMENTATION DETAILS:
+
+A) SignUp Page:
+- Validate confirm password before proceeding.
+- On submit, do NOT register yet.
+- Generate OTP, store signup draft in localStorage:
+  - email, password, role
+  - (do NOT store confirmPassword)
+  - and a "signup_flow_stage" value
+- Then redirect to /verify-otp
+
+B) OTP Page (/verify-otp):
+- Read stored OTP + signup draft from localStorage.
+- If missing, redirect to /sign-up.
+- On correct OTP:
+  - If role === "skill_searcher":
+      call AuthContext.register(email, password, role) immediately
+      clear otp + draft
+      redirect to /dashboard
+  - If role === "skill_giver":
+      do NOT call register yet
+      set signup_flow_stage = "cv_upload_required"
+      redirect to the CV upload step route (recommended: /sign-up/cv)
+
+C) CV Upload Step:
+- Create (or update) a CV upload page/step for skill_giver only:
+  - Route: /sign-up/cv
+  - UI: drag & drop + file picker
+  - Text: "Please provide your CV"
+- Guard:
+  - If role is not skill_giver -> redirect to /sign-up
+  - If otp not verified (no stage or stage not cv_upload_required) -> redirect to /verify-otp
+- On successful upload selection:
+  - Call AuthContext.register(email, password, role, cvFile)
+  - clear otp + draft + stage
+  - redirect to /dashboard
+
+D) LocalStorage keys (use consistent naming):
+- sinopia_signup_draft: JSON { email, password, role }
+- sinopia_otp_code: string
+- sinopia_otp_verified: "true" | "false"
+- sinopia_signup_stage: "otp_pending" | "cv_upload_required"
+
+E) UX:
+- Disable verify button until 6 digits entered
+- Resend code regenerates OTP and updates localStorage
+- If user refreshes CV upload page, flow should still work from localStorage.
+
+DO NOT:
+- add real backend/email
+- refactor the entire app
+- change existing AuthContext mock login behavior
+- rename routes except adding /verify-otp and /sign-up/cv
+
+After implementing, verify:
+- skill_giver: sign-up -> otp -> cv upload -> dashboard
+- skill_searcher: sign-up -> otp -> dashboard

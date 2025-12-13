@@ -1,12 +1,16 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import type { UserRole } from '@/lib/utils/constants';
 
+type SignupStage = 'otp_pending' | 'cv_upload_required' | 'completed';
+
 interface PendingRegistration {
   email: string;
   password: string;
   role: UserRole;
   otp: string;
   timestamp: number;
+  stage: SignupStage;
+  otpVerified: boolean;
   cvFile?: File | null;
 }
 
@@ -16,6 +20,9 @@ interface PendingRegistrationContextType {
   clearPendingData: () => void;
   generateOtp: () => string;
   resendOtp: () => string | null;
+  setOtpVerified: () => void;
+  setStage: (stage: SignupStage) => void;
+  setCvFile: (file: File) => void;
 }
 
 const PendingRegistrationContext = createContext<PendingRegistrationContextType | undefined>(undefined);
@@ -46,6 +53,30 @@ export function PendingRegistrationProvider({ children }: { children: ReactNode 
     return newOtp;
   };
 
+  const setOtpVerified = () => {
+    if (!pendingData) return;
+    setPendingDataState({
+      ...pendingData,
+      otpVerified: true,
+    });
+  };
+
+  const setStage = (stage: SignupStage) => {
+    if (!pendingData) return;
+    setPendingDataState({
+      ...pendingData,
+      stage,
+    });
+  };
+
+  const setCvFile = (file: File) => {
+    if (!pendingData) return;
+    setPendingDataState({
+      ...pendingData,
+      cvFile: file,
+    });
+  };
+
   return (
     <PendingRegistrationContext.Provider
       value={{
@@ -54,6 +85,9 @@ export function PendingRegistrationProvider({ children }: { children: ReactNode 
         clearPendingData,
         generateOtp,
         resendOtp,
+        setOtpVerified,
+        setStage,
+        setCvFile,
       }}
     >
       {children}
