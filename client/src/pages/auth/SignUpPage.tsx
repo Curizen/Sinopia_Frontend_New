@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { Link, useLocation } from 'wouter';
-import { useAuth } from '@/context/AuthContext';
+import { usePendingRegistration } from '@/context/PendingRegistrationContext';
 import { useI18n } from '@/i18n';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,7 +13,7 @@ import { Eye, EyeOff, UserPlus, Briefcase, User, FileText } from 'lucide-react';
 import type { UserRole } from '@/lib/utils/constants';
 
 export default function SignUpPage() {
-  const { register } = useAuth();
+  const { setPendingData, generateOtp } = usePendingRegistration();
   const { toast } = useToast();
   const { t } = useI18n();
   const [, setLocation] = useLocation();
@@ -25,8 +25,10 @@ export default function SignUpPage() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+    confirmPassword: '',
     role: 'skill_giver' as UserRole,
   });
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [cvFile, setCvFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -54,24 +56,32 @@ export default function SignUpPage() {
     e.preventDefault();
 
     if (step === 1) {
+      if (formData.password !== formData.confirmPassword) {
+        toast({
+          title: t('common.error'),
+          description: 'Passwords do not match',
+          variant: 'destructive',
+        });
+        return;
+      }
+
       if (!isSkillGiver) {
-        setIsLoading(true);
-        try {
-          await register(formData.email, formData.password, formData.role);
-          toast({
-            title: t('common.success'),
-            description: t('auth.signUpTitle'),
-          });
-          setLocation('/dashboard');
-        } catch (error) {
-          console.error(error);
-          toast({
-            title: t('common.error'),
-            variant: 'destructive',
-          });
-        } finally {
-          setIsLoading(false);
-        }
+        const otp = generateOtp();
+        setPendingData({
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+          otp,
+          timestamp: Date.now(),
+        });
+        
+        console.log('Mock OTP for verification:', otp);
+        
+        toast({
+          title: 'Verification Required',
+          description: `A verification code has been sent to ${formData.email}`,
+        });
+        setLocation('/verify-otp');
         return;
       }
       setStep(2);
@@ -87,23 +97,23 @@ export default function SignUpPage() {
         return;
       }
 
-      setIsLoading(true);
-      try {
-        await register(formData.email, formData.password, formData.role, cvFile);
-        toast({
-          title: t('common.success'),
-          description: t('auth.signUpTitle'),
-        });
-        setLocation('/dashboard');
-      } catch (error) {
-        console.error(error);
-        toast({
-          title: t('common.error'),
-          variant: 'destructive',
-        });
-      } finally {
-        setIsLoading(false);
-      }
+      const otp = generateOtp();
+      setPendingData({
+        email: formData.email,
+        password: formData.password,
+        role: formData.role,
+        otp,
+        timestamp: Date.now(),
+        cvFile,
+      });
+      
+      console.log('Mock OTP for verification:', otp);
+      
+      toast({
+        title: 'Verification Required',
+        description: `A verification code has been sent to ${formData.email}`,
+      });
+      setLocation('/verify-otp');
     }
   };
 
@@ -243,6 +253,30 @@ export default function SignUpPage() {
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="confirmPassword"
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        placeholder="Re-enter your password"
+                        value={formData.confirmPassword}
+                        onChange={(e) =>
+                          setFormData((prev) => ({ ...prev, confirmPassword: e.target.value }))
+                        }
+                        required
+                        data-testid="input-signup-confirm-password"
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      >
+                        {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
                     </div>
                   </div>

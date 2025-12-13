@@ -1,0 +1,113 @@
+You are working on an existing React + TypeScript frontend project (Vite) with:
+- AuthContext (mock auth, no real backend yet)
+- SignUp page already implemented
+- Routing handled via wouter
+- UI components from shadcn/ui
+- No real email backend (OTP should be mocked for now)
+
+Your task is to implement a COMPLETE SIGN-UP VERIFICATION FLOW with:
+Confirm Password + OTP verification page.
+
+IMPORTANT RULES:
+- FRONTEND ONLY
+- DO NOT introduce real backend, email services, or external APIs
+- Use mock OTP logic (stored in memory or localStorage)
+- Do NOT break existing login, dashboard, or routing logic
+- Keep UX clean and professional
+
+--------------------------------------------------
+STEP 1 — Update Sign Up Form (Confirm Password)
+--------------------------------------------------
+
+File: client/src/pages/SignUpPage.tsx
+
+1. Add a new input field:
+   - Confirm Password
+   - Required
+   - Must match password
+   - Show validation error if passwords do not match
+
+2. Prevent submission if:
+   - Password !== Confirm Password
+
+3. On successful validation:
+   - DO NOT log user in yet
+   - Generate a 6-digit OTP (mocked)
+   - Save OTP + email temporarily (localStorage or memory)
+   - Redirect user to /verify-otp
+
+--------------------------------------------------
+STEP 2 — Create OTP Verification Page
+--------------------------------------------------
+
+Create a new page:
+client/src/pages/VerifyOtpPage.tsx
+
+UI Requirements:
+- Title: "Verify your email"
+- Subtitle: "Enter the 6-digit code sent to your email"
+- 6-digit OTP input (single input or 6 boxes)
+- Button: "Verify"
+- Button: "Resend Code"
+
+Logic:
+- Read stored OTP
+- Compare with user input
+- If incorrect → show error message
+- If correct:
+  - Complete registration
+  - Call AuthContext.register(...)
+  - Clear stored OTP
+  - Redirect to /dashboard
+
+--------------------------------------------------
+STEP 3 — Update Routing
+--------------------------------------------------
+
+File: client/src/App.tsx (or router file)
+
+- Add route:
+  /verify-otp → VerifyOtpPage
+- Ensure user CANNOT access dashboard unless OTP verified
+
+--------------------------------------------------
+STEP 4 — Update AuthContext (Minimal Changes)
+--------------------------------------------------
+
+File: client/src/context/AuthContext.tsx
+
+- Keep existing mock logic
+- Allow registration to be triggered ONLY after OTP verification
+- No breaking changes to login/logout
+
+--------------------------------------------------
+STEP 5 — UX & Safety
+--------------------------------------------------
+
+- If user refreshes OTP page and no OTP exists → redirect to /sign-up
+- Disable Verify button until OTP length is valid
+- Show loading states on submit
+- Use existing UI components (Button, Input, Card, etc.)
+
+--------------------------------------------------
+FINAL RESULT FLOW
+--------------------------------------------------
+
+1. User opens Sign Up
+2. Enters:
+   - Email
+   - Password
+   - Confirm Password
+3. Clicks "Create Account"
+4. Redirected to OTP page
+5. Enters OTP
+6. Account verified
+7. Redirected to Dashboard
+
+--------------------------------------------------
+DO NOT:
+--------------------------------------------------
+- Do NOT translate text
+- Do NOT modify dashboard layout
+- Do NOT add backend/email services
+- Do NOT remove existing auth features

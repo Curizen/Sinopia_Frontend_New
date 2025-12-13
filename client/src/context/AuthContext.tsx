@@ -68,35 +68,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const register = useCallback(
-    async (email: string, password: string, role: UserRole, cvFile?: File | null) => {
-      const formData = new FormData();
-      formData.append('email', email);
-      formData.append('password', password);
-      formData.append('role', role);
+    async (email: string, _password: string, role: UserRole, _cvFile?: File | null) => {
+      // todo: replace with real backend registration
+      // For now, use mock registration like login
+      const mockToken = 'mock_token_' + Date.now();
+      const mockUser: User = {
+        id: Date.now().toString(),
+        email,
+        role,
+        avatar: undefined,
+      };
 
-      if (cvFile) {
-        formData.append('cv', cvFile); 
-      }
-
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text().catch(() => 'Registration failed');
-        throw new Error(errorText);
-      }
-
-      const data = (await response.json()) as { token: string; user: User };
-
-      const newToken = data.token;
-      const newUser = data.user;
-
-      setToken(newToken);
-      setUser(newUser);
-      localStorage.setItem('sinopia_token', newToken);
-      localStorage.setItem('sinopia_user', JSON.stringify(newUser));
+      setToken(mockToken);
+      setUser(mockUser);
+      localStorage.setItem('sinopia_token', mockToken);
+      localStorage.setItem('sinopia_user', JSON.stringify(mockUser));
     },
     [],
   );

@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { I18nProvider } from "@/i18n";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { PendingRegistrationProvider } from "@/context/PendingRegistrationContext";
 import { NotificationProvider } from "@/context/NotificationContext";
 import { ProjectProvider } from "@/context/ProjectContext";
 import { OfferProvider } from "@/context/OfferContext";
@@ -21,6 +22,7 @@ import SignUpPage from "@/pages/auth/SignUpPage";
 import ForgotPasswordPage from "@/pages/auth/ForgotPasswordPage";
 import OTPVerificationPage from "@/pages/auth/OTPVerificationPage";
 import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
+import VerifyOtpPage from "@/pages/auth/VerifyOtpPage";
 import DashboardPage from "@/pages/dashboard/DashboardPage";
 import ProjectsPage from "@/pages/projects/ProjectsPage";
 import ProjectDetailPage from "@/pages/projects/ProjectDetailPage";
@@ -92,6 +94,9 @@ function Router() {
       <Route path="/reset-password">
         <PublicOnlyRoute component={ResetPasswordPage} />
       </Route>
+      <Route path="/verify-otp">
+        <PublicOnlyRoute component={VerifyOtpPage} />
+      </Route>
 
       <Route path="/dashboard">
         <PrivateRoute component={DashboardPage} />
@@ -132,7 +137,8 @@ function App() {
       <TooltipProvider>
         <I18nProvider>
           <AuthProvider>
-            <NotificationProvider>
+            <PendingRegistrationProvider>
+              <NotificationProvider>
               <ProjectProvider>
                 <OfferProvider>
                   <ContractProvider>
@@ -143,7 +149,8 @@ function App() {
                   </ContractProvider>
                 </OfferProvider>
               </ProjectProvider>
-            </NotificationProvider>
+              </NotificationProvider>
+            </PendingRegistrationProvider>
           </AuthProvider>
         </I18nProvider>
       </TooltipProvider>
