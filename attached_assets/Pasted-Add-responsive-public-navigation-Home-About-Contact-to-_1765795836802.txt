@@ -1,0 +1,44 @@
+Add responsive public navigation (Home/About/Contact) to the Dashboard header.
+Desktop: show links inline next to the Sinopia logo.
+Mobile: show a hamburger menu that contains the same links PLUS keeps the existing user dropdown menu items.
+
+Project context:
+- React + TypeScript (Vite)
+- Routing with wouter (Link, useLocation)
+- Dashboard layout file: client/src/components/layouts/DashboardLayout.tsx
+- UI components already used: Button, DropdownMenu*, Avatar*, lucide-react icons.
+
+Requirements:
+1) Desktop header nav:
+   - In DashboardLayout.tsx, add a nav section "hidden md:flex" next to the Sinopia logo with links:
+     Home -> "/"
+     About -> "/about"
+     Contact -> "/contact"
+   - Use same styling as PublicLayout navbar:
+     "text-sm font-medium transition-colors"
+     active link => "text-primary"
+     inactive => "text-muted-foreground hover:text-foreground"
+
+2) Mobile hamburger menu:
+   - On mobile only ("md:hidden"), add a hamburger icon button in the header (left or near the right side, but keep layout clean).
+   - Clicking opens a DropdownMenu (or existing menu component) with items:
+     - Home
+     - About
+     - Contact
+   - This mobile menu must NOT remove the existing user dropdown (avatar menu). Keep the current user dropdown exactly as it is.
+   - The hamburger menu is ONLY for public nav links; user dropdown remains for dashboard pages and sign out.
+
+3) UX:
+   - Close the hamburger dropdown on selection.
+   - Keep Sinopia logo clickable and always routes to "/".
+   - Ensure no nested <Link> inside <Link> (avoid invalid HTML).
+   - Ensure TypeScript passes and app runs.
+
+4) Output:
+   - Implement changes ONLY in: client/src/components/layouts/DashboardLayout.tsx
+   - Provide the updated full file content.
+
+Suggested implementation details:
+- Import Menu icon from lucide-react (Menu).
+- Use DropdownMenu / DropdownMenuTrigger / DropdownMenuContent / DropdownMenuItem.
+- Use <DropdownMenuItem asChild><Link href="/...">...</Link></DropdownMenuItem> for navigation.

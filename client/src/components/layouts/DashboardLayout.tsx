@@ -24,6 +24,10 @@ import {
   User,
   LogOut,
   Settings,
+  Menu,
+  Home,
+  Info,
+  Mail,
 } from 'lucide-react';
 
 interface DashboardLayoutProps {
@@ -70,12 +74,69 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               alt="Sinopia Logo" 
               className="w-16 h-auto rounded-md object-cover"
             />
-            <span className="font-display font-bold text-xl">Sinopia</span>
           </Link>
-          |
-          <h1 className="text-xl font-semibold capitalize">
+
+          <nav className="hidden md:flex items-center gap-4 ml-2">
+            <Link 
+              href="/" 
+              className={`text-sm font-medium transition-colors ${location === '/' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              data-testid="nav-home"
+            >
+              Home
+            </Link>
+            <Link 
+              href="/about" 
+              className={`text-sm font-medium transition-colors ${location === '/about' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              data-testid="nav-about"
+            >
+              About
+            </Link>
+            <Link 
+              href="/contact" 
+              className={`text-sm font-medium transition-colors ${location === '/contact' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              data-testid="nav-contact"
+            >
+              Contact
+            </Link>
+          </nav>
+
+          <span className="hidden md:inline text-muted-foreground">|</span>
+          <h1 className="text-xl font-semibold capitalize hidden md:block">
             {pageTitle}
           </h1>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                data-testid="button-mobile-menu"
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48">
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link href="/" className="flex items-center gap-2">
+                  <Home className="w-4 h-4" />
+                  <span>Home</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link href="/about" className="flex items-center gap-2">
+                  <Info className="w-4 h-4" />
+                  <span>About</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link href="/contact" className="flex items-center gap-2">
+                  <Mail className="w-4 h-4" />
+                  <span>Contact</span>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div className="flex items-center gap-3">
