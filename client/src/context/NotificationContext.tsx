@@ -34,7 +34,7 @@ const mockNotifications: Notification[] = [
   {
     id: '3',
     title: 'Payment received',
-    message: 'You received $2,500 for Project Alpha milestone',
+    message: 'You received €2,500 for Project Alpha milestone',
     type: 'success',
     read: true,
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),

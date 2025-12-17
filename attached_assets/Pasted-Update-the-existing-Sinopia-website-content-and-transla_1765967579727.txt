@@ -1,0 +1,84 @@
+Update the existing Sinopia website content and translations (English + German) with the following requirements.
+Make the changes across the actual pages/components AND the i18n translation files so the language toggle works and ALL text is translated.
+
+1) About Page Restructure
+
+In the About page:
+
+REMOVE sections: Our Mission and Our Vision completely (including headings and body text).
+
+REMOVE the section Our Team completely.
+
+ADD a new section Our Story (English + German).
+
+ADD a new section Our Skills (English + German) with unique skills and mock names.
+
+Our Story (English text to insert)
+
+Title: Our Story
+Body (use exactly this, keep it professional and well formatted):
+“Sinopia is a young and innovative company with a clear vision: to rethink existing societal potential and make it accessible in new, meaningful ways.
+Our mission is to develop alternative and sometimes disruptive approaches to reintegrate valuable resources, especially human expertise and experience, back into the social and economic cycle.
+The idea behind Sinopia was inspired by a simple yet profound image: ancient cave paintings depicting human hands — a timeless symbol of connection, support, and the passing on of knowledge.
+From this symbolism, the vision emerged to make the vast experience of retirees and senior professionals available to today’s working world — flexible, targeted, and impactful.
+As founders, we are convinced that our approach not only addresses the challenges of demographic change but also contributes to social participation, knowledge preservation, and a more sustainable labor market.”
+
+Our Story (German translation)
+
+Title: Unsere Geschichte
+Body (professional German, natural, not literal, keep same meaning and tone).
+
+Our Skills (must replace Our Team)
+
+Create a section:
+
+English title: Our Skills
+
+German title: Unsere Stärken
+Add a grid/list of “skills” with mock names (do NOT use real people). Example structure:
+
+Skill name + 1 line description.
+Make it fit the Sinopia theme: matching experts to use cases, ESCO skill mapping, project scoping, contracts/milestones, quality assurance, onboarding.
+Provide 6–8 skills.
+Translate all to German.
+
+2) Hero Section – Update Text
+
+Update the hero description text to include Skill Seeker benefits.
+Replace the existing hero paragraph with:
+English:
+“Sinopia enables professionals to present their expertise while helping companies access the right skills for specific Use Cases. Find experienced experts, define clear project scopes, and deliver results with transparency and confidence.”
+
+German translation: Provide a natural German equivalent with the same meaning and professional tone.
+
+3) Currency – Replace Dollar Sign with Euro Sign
+
+Replace any visible $ currency sign in UI with € (Euro).
+This includes cards, pricing, hourly rate, offers, payments, totals, mock data etc.
+Keep numeric formatting sensible.
+
+4) Ensure i18n Coverage (IMPORTANT)
+
+The current issue is that only some text translates. Fix this properly:
+
+Identify all hardcoded strings across pages/components (Home, About, Contact, Dashboard, Auth pages, sections, buttons, headings, descriptions).
+
+Move them into translation keys (EN + DE).
+
+Replace hardcoded strings with t("...") usage consistently.
+
+Ensure About’s new sections (Our Story / Our Skills) are included in translations.
+
+Make sure the language toggle switches ALL visible text.
+
+5) Files & Implementation Notes
+
+Make minimal UI changes (keep layout/design consistent).
+
+Update the actual page components AND translation files.
+
+If the project uses a translations folder (e.g. locales/en.json and locales/de.json), update them.
+
+If it uses a custom translation object/provider, update that.
+
+Output: Implement code changes directly, ensuring build passes and no missing translation keys.

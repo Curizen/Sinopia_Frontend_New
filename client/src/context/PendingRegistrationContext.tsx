@@ -31,7 +31,8 @@ const PendingRegistrationContext = createContext<PendingRegistrationContextType 
 export function PendingRegistrationProvider({ children }: { children: ReactNode }) {
   const [pendingData, setPendingDataState] = useState<PendingRegistration | null>(null);
 
-  // DEV ONLY: Mock OTP = 123456 (no backend/email)
+  // ⚠️ SECURITY WARNING: DEV ONLY - Mock OTP = 123456 (no backend/email)
+  // DO NOT deploy to production with hardcoded OTP - replace with real OTP service
   const generateOtp = () => {
     return '123456';
   };

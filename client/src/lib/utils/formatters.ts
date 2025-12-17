@@ -7,8 +7,8 @@ export function formatDate(date: Date | string): string {
   });
 }
 
-export function formatCurrency(amount: number, currency = 'USD'): string {
-  return new Intl.NumberFormat('en-US', {
+export function formatCurrency(amount: number, currency = 'EUR'): string {
+  return new Intl.NumberFormat('de-DE', {
     style: 'currency',
     currency,
   }).format(amount);

@@ -1,15 +1,16 @@
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { useI18n } from '@/i18n';
 import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Target, Heart, Users, Globe } from 'lucide-react';
+import { Target, Heart, Users, Globe, Lightbulb, FileSearch, ClipboardCheck, Shield, UserCheck, Cog } from 'lucide-react';
 import heroImage from '@assets/generated_images/team_collaboration_coworking_hero.png';
 
-const team = [
-  { name: 'Alex Rivera', roleKey: 'about.roleCEO', initials: 'AR' },
-  { name: 'Jordan Kim', roleKey: 'about.roleCTO', initials: 'JK' },
-  { name: 'Sam Patel', roleKey: 'about.roleHeadOps', initials: 'SP' },
-  { name: 'Taylor Chen', roleKey: 'about.roleHeadDesign', initials: 'TC' },
+const skills = [
+  { icon: UserCheck, nameKey: 'about.skill1Name', descKey: 'about.skill1Desc' },
+  { icon: FileSearch, nameKey: 'about.skill2Name', descKey: 'about.skill2Desc' },
+  { icon: Lightbulb, nameKey: 'about.skill3Name', descKey: 'about.skill3Desc' },
+  { icon: ClipboardCheck, nameKey: 'about.skill4Name', descKey: 'about.skill4Desc' },
+  { icon: Shield, nameKey: 'about.skill5Name', descKey: 'about.skill5Desc' },
+  { icon: Cog, nameKey: 'about.skill6Name', descKey: 'about.skill6Desc' },
 ];
 
 export default function AboutPage() {
@@ -42,14 +43,13 @@ export default function AboutPage() {
       <section className="py-16 bg-background">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="prose prose-lg max-w-none">
-            <h2 className="font-display text-3xl font-bold mb-6">{t('about.missionTitle')}</h2>
-            <p className="text-muted-foreground mb-4">
-              {t('about.missionText')}
-            </p>
-            <h2 className="font-display text-3xl font-bold mb-6 mt-8">{t('about.visionTitle')}</h2>
-            <p className="text-muted-foreground">
-              {t('about.visionText')}
-            </p>
+            <h2 className="font-display text-3xl font-bold mb-6">{t('about.storyTitle')}</h2>
+            <div className="text-muted-foreground space-y-4">
+              <p>{t('about.storyText1')}</p>
+              <p>{t('about.storyText2')}</p>
+              <p>{t('about.storyText3')}</p>
+              <p>{t('about.storyText4')}</p>
+            </div>
           </div>
         </div>
       </section>
@@ -79,18 +79,20 @@ export default function AboutPage() {
 
       <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display text-3xl font-bold text-center mb-12">{t('about.teamTitle')}</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {team.map((member) => (
-              <Card key={member.name} className="hover-elevate">
-                <CardContent className="pt-6 text-center">
-                  <Avatar className="w-20 h-20 mx-auto mb-4">
-                    <AvatarFallback className="bg-primary/10 text-primary text-xl">
-                      {member.initials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <h3 className="font-semibold">{member.name}</h3>
-                  <p className="text-sm text-muted-foreground">{t(member.roleKey)}</p>
+          <h2 className="font-display text-3xl font-bold text-center mb-12">{t('about.skillsTitle')}</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {skills.map((skill, index) => (
+              <Card key={index} className="hover-elevate">
+                <CardContent className="pt-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <skill.icon className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">{t(skill.nameKey)}</h3>
+                      <p className="text-sm text-muted-foreground">{t(skill.descKey)}</p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             ))}
