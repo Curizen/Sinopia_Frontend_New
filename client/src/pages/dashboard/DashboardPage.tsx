@@ -19,6 +19,7 @@ import {
   Clock,
   DollarSign,
   Plus,
+  Upload,
 } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -102,12 +103,22 @@ export default function DashboardPage() {
               {t('dashboard.overview')}
             </p>
           </div>
-          <Link href={isSkillGiver ? '/projects' : '/projects/new'}>
-            <Button data-testid="button-dashboard-action">
-              <Plus className="w-4 h-4 mr-2" />
-              {isSkillGiver ? t('footer.findProjects') : t('footer.postProjects')}
-            </Button>
-          </Link>
+          <div className="flex gap-2 flex-wrap">
+            {!isSkillGiver && (
+              <Link href="/use-cases/upload">
+                <Button variant="outline" data-testid="button-upload-usecase">
+                  <Upload className="w-4 h-4 mr-2" />
+                  {t('useCases.uploadUseCase')}
+                </Button>
+              </Link>
+            )}
+            <Link href={isSkillGiver ? '/projects' : '/projects/new'}>
+              <Button data-testid="button-dashboard-action">
+                <Plus className="w-4 h-4 mr-2" />
+                {isSkillGiver ? t('footer.findProjects') : t('useCases.postUseCase')}
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">

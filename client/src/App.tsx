@@ -28,6 +28,7 @@ import DashboardPage from "@/pages/dashboard/DashboardPage";
 import ProjectsPage from "@/pages/projects/ProjectsPage";
 import ProjectDetailPage from "@/pages/projects/ProjectDetailPage";
 import AddProjectPage from "@/pages/projects/AddProjectPage";
+import UseCaseUploadPage from "@/pages/use-cases/UseCaseUploadPage";
 import OffersPage from "@/pages/offers/OffersPage";
 import ContractsPage from "@/pages/contracts/ContractsPage";
 import PaymentsPage from "@/pages/payments/PaymentsPage";
@@ -113,6 +114,9 @@ function Router() {
       </Route>
       <Route path="/projects/:id">
         <PrivateRoute component={ProjectDetailPage} />
+      </Route>
+      <Route path="/use-cases/upload">
+        <PrivateRoute component={UseCaseUploadPage} />
       </Route>
       <Route path="/offers">
         <PrivateRoute component={OffersPage} />

@@ -2,12 +2,13 @@ import { useRoute, Link } from 'wouter';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useProjects } from '@/context/ProjectContext';
 import { useAuth } from '@/context/AuthContext';
+import { useI18n } from '@/i18n';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Checkbox } from '@/components/ui/checkbox';
-import { formatCurrency, formatDate, getStatusLabel } from '@/lib/utils/formatters';
+import { formatCurrency, formatDate } from '@/lib/utils/formatters';
 import {
   ArrowLeft,
   Clock,
@@ -22,18 +23,30 @@ export default function ProjectDetailPage() {
   const [, params] = useRoute('/projects/:id');
   const { projects, updateProject } = useProjects();
   const { user } = useAuth();
+  const { t } = useI18n();
 
   const project = projects.find(p => p.id === params?.id);
+
+  const getTranslatedStatus = (status: string) => {
+    const statusMap: Record<string, string> = {
+      draft: 'projects.statusDraft',
+      open: 'projects.statusOpen',
+      in_progress: 'projects.statusInProgress',
+      completed: 'projects.statusCompleted',
+      cancelled: 'projects.statusCancelled',
+    };
+    return t(statusMap[status] || status);
+  };
 
   if (!project) {
     return (
       <DashboardLayout>
         <div className="text-center py-12">
-          <h2 className="text-xl font-semibold mb-2">Project not found</h2>
+          <h2 className="text-xl font-semibold mb-2">{t('projectDetail.notFound')}</h2>
           <Link href="/projects">
             <Button variant="outline">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Projects
+              {t('projectDetail.backToProjects')}
             </Button>
           </Link>
         </div>
@@ -105,12 +118,12 @@ export default function ProjectDetailPage() {
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="text-2xl font-display font-bold">{project.title}</h1>
               <Badge variant={getStatusBadgeVariant(project.status)}>
-                {getStatusLabel(project.status)}
+                {getTranslatedStatus(project.status)}
               </Badge>
             </div>
           </div>
           {!isSkillGiver && (
-            <Button variant="outline" data-testid="button-edit-project">Edit Project</Button>
+            <Button variant="outline" data-testid="button-edit-project">{t('projectDetail.editProject')}</Button>
           )}
         </div>
 
@@ -118,7 +131,7 @@ export default function ProjectDetailPage() {
           <div className="lg:col-span-2 space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Description</CardTitle>
+                <CardTitle>{t('projects.description')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">{project.description}</p>
@@ -127,7 +140,7 @@ export default function ProjectDetailPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Skills Required</CardTitle>
+                <CardTitle>{t('projects.skills')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
@@ -144,9 +157,9 @@ export default function ProjectDetailPage() {
               <Card>
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <CardTitle>Project Stages</CardTitle>
+                    <CardTitle>{t('projectDetail.projectStages')}</CardTitle>
                     <div className="text-sm text-muted-foreground">
-                      Overall: {overallProgress}%
+                      {t('projectDetail.overall')}: {overallProgress}%
                     </div>
                   </div>
                 </CardHeader>
@@ -186,7 +199,7 @@ export default function ProjectDetailPage() {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Project Details</CardTitle>
+                <CardTitle>{t('projectDetail.projectDetails')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-3">
@@ -194,7 +207,7 @@ export default function ProjectDetailPage() {
                     <DollarSign className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Budget</p>
+                    <p className="text-sm text-muted-foreground">{t('projects.budget')}</p>
                     <p className="font-semibold">{formatCurrency(project.budget)}</p>
                   </div>
                 </div>
@@ -203,7 +216,7 @@ export default function ProjectDetailPage() {
                     <Clock className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Deadline</p>
+                    <p className="text-sm text-muted-foreground">{t('projects.deadline')}</p>
                     <p className="font-semibold">{formatDate(project.deadline)}</p>
                   </div>
                 </div>
@@ -213,7 +226,7 @@ export default function ProjectDetailPage() {
                       <User className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Assigned To</p>
+                      <p className="text-sm text-muted-foreground">{t('projectDetail.assignedTo')}</p>
                       <p className="font-semibold">John Smith</p>
                     </div>
                   </div>
@@ -223,12 +236,12 @@ export default function ProjectDetailPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Progress</CardTitle>
+                <CardTitle>{t('dashboard.progress')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Overall Completion</span>
+                    <span className="text-sm text-muted-foreground">{t('projectDetail.overallCompletion')}</span>
                     <span className="font-bold text-lg">{overallProgress}%</span>
                   </div>
                   <Progress value={overallProgress} className="h-3" />
@@ -238,7 +251,7 @@ export default function ProjectDetailPage() {
 
             {isSkillGiver && project.status === 'open' && (
               <Button className="w-full" data-testid="button-apply-project">
-                Apply for this Project
+                {t('projects.applyNow')}
               </Button>
             )}
           </div>

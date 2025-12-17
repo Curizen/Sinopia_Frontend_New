@@ -7,50 +7,34 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Plus, X } from 'lucide-react';
+import { useI18n } from '@/i18n';
+import { ArrowLeft } from 'lucide-react';
 
 export default function AddProjectPage() {
+  const { t } = useI18n();
   const { addProject } = useProjects();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(false);
-  const [skillInput, setSkillInput] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    budget: '',
-    deadline: '',
-    skills: [] as string[],
+    objective: '',
   });
-
-  const handleAddSkill = () => {
-    if (skillInput.trim() && !formData.skills.includes(skillInput.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        skills: [...prev.skills, skillInput.trim()],
-      }));
-      setSkillInput('');
-    }
-  };
-
-  const handleRemoveSkill = (skill: string) => {
-    setFormData(prev => ({
-      ...prev,
-      skills: prev.skills.filter(s => s !== skill),
-    }));
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleAddSkill();
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.title.trim() || !formData.description.trim() || !formData.objective.trim()) {
+      toast({
+        title: t('common.error'),
+        description: t('useCases.allFieldsRequired'),
+        variant: 'destructive',
+      });
+      return;
+    }
+    
     setIsLoading(true);
 
     // todo: remove mock functionality
@@ -58,21 +42,21 @@ export default function AddProjectPage() {
 
     addProject({
       title: formData.title,
-      description: formData.description,
+      description: `${formData.description}\n\n${t('useCases.objective')}: ${formData.objective}`,
       status: 'open',
-      budget: parseFloat(formData.budget),
-      deadline: formData.deadline,
-      skills: formData.skills,
+      budget: 0,
+      deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      skills: [],
       stages: [],
       ownerId: '2',
     });
 
     toast({
-      title: 'Project created!',
-      description: 'Your project has been posted successfully.',
+      title: t('useCases.created'),
+      description: t('useCases.createdDesc'),
     });
 
-    setLocation('/projects');
+    setLocation('/dashboard');
     setIsLoading(false);
   };
 
@@ -80,115 +64,69 @@ export default function AddProjectPage() {
     <DashboardLayout>
       <div className="max-w-2xl mx-auto space-y-6">
         <div className="flex items-center gap-4">
-          <Link href="/projects">
-            <Button variant="ghost" size="icon">
+          <Link href="/dashboard">
+            <Button variant="ghost" size="icon" data-testid="button-back">
               <ArrowLeft className="w-4 h-4" />
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-display font-bold">Create New Project</h1>
-            <p className="text-muted-foreground">Post a new project to find talent</p>
+            <h1 className="text-2xl font-display font-bold">{t('useCases.postTitle')}</h1>
+            <p className="text-muted-foreground">{t('useCases.postSubtitle')}</p>
           </div>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Project Details</CardTitle>
+            <CardTitle>{t('useCases.details')}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="title">Project Title</Label>
+                <Label htmlFor="title">{t('useCases.titleLabel')}</Label>
                 <Input
                   id="title"
-                  placeholder="e.g., E-commerce Website Redesign"
+                  placeholder={t('useCases.titlePlaceholder')}
                   value={formData.title}
                   onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                   required
-                  data-testid="input-project-title"
+                  data-testid="input-usecase-title"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">{t('useCases.descriptionLabel')}</Label>
                 <Textarea
                   id="description"
-                  placeholder="Describe your project requirements, goals, and expectations..."
+                  placeholder={t('useCases.descriptionPlaceholder')}
                   rows={5}
                   value={formData.description}
                   onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   required
-                  data-testid="input-project-description"
+                  data-testid="input-usecase-description"
                 />
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="budget">Budget (USD)</Label>
-                  <Input
-                    id="budget"
-                    type="number"
-                    min="0"
-                    step="100"
-                    placeholder="5000"
-                    value={formData.budget}
-                    onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
-                    required
-                    data-testid="input-project-budget"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="deadline">Deadline</Label>
-                  <Input
-                    id="deadline"
-                    type="date"
-                    value={formData.deadline}
-                    onChange={(e) => setFormData(prev => ({ ...prev, deadline: e.target.value }))}
-                    required
-                    data-testid="input-project-deadline"
-                  />
-                </div>
-              </div>
-
               <div className="space-y-2">
-                <Label htmlFor="skills">Required Skills</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="skills"
-                    placeholder="Add a skill (e.g., React, Node.js)"
-                    value={skillInput}
-                    onChange={(e) => setSkillInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    data-testid="input-project-skill"
-                  />
-                  <Button type="button" variant="outline" onClick={handleAddSkill}>
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-                {formData.skills.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {formData.skills.map((skill) => (
-                      <Badge key={skill} variant="secondary" className="gap-1">
-                        {skill}
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveSkill(skill)}
-                          className="ml-1 hover:text-destructive"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </Badge>
-                    ))}
-                  </div>
-                )}
+                <Label htmlFor="objective">{t('useCases.objectiveLabel')}</Label>
+                <Textarea
+                  id="objective"
+                  placeholder={t('useCases.objectivePlaceholder')}
+                  rows={3}
+                  value={formData.objective}
+                  onChange={(e) => setFormData(prev => ({ ...prev, objective: e.target.value }))}
+                  required
+                  data-testid="input-usecase-objective"
+                />
               </div>
 
               <div className="flex gap-4 pt-4">
-                <Link href="/projects">
-                  <Button type="button" variant="outline">Cancel</Button>
+                <Link href="/dashboard">
+                  <Button type="button" variant="outline" data-testid="button-cancel">
+                    {t('common.cancel')}
+                  </Button>
                 </Link>
-                <Button type="submit" disabled={isLoading} data-testid="button-create-project">
-                  {isLoading ? 'Creating...' : 'Create Project'}
+                <Button type="submit" disabled={isLoading} data-testid="button-create-usecase">
+                  {isLoading ? t('common.loading') : t('useCases.createButton')}
                 </Button>
               </div>
             </form>

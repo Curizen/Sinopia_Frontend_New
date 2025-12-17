@@ -1,0 +1,98 @@
+I want you to update my existing Sinopia project (React/TS + current i18n EN/DE).
+Make the following changes and ensure EVERYTHING is translated in both English and German.
+
+A) Skill Searcher Dashboard – Add “Upload Use Case”
+
+On the Skill Searcher dashboard (role = skill_searcher):
+
+Add a new dashboard action/card/button named:
+
+EN: Upload Use Case
+
+DE: Use Case hochladen
+
+Clicking it should open a new page (route) like: /use-cases/upload (or similar clean route).
+
+The page must support drag & drop + browse file upload.
+
+Accept only:
+
+PDF (application/pdf)
+
+Word (.doc, .docx)
+
+Add client-side validation:
+
+show a translated error if file type not allowed
+
+optional max file size (ex: 10MB) with translated error
+
+When user uploads successfully, show translated success toast/message and store the file in state (mock mode is okay if no backend exists).
+
+B) Rename and Update “Post Project” to “Post Use Case”
+
+Everywhere in the UI for Skill Searcher:
+
+Replace label “Post Project” with:
+
+EN: Post Use Case
+
+DE: Use Case erstellen
+
+And update the “post” form/page so it contains ONLY these fields:
+
+Title (required)
+
+Description (required)
+
+Objective (required)
+
+Add clean UI with labels + placeholders (all translated):
+
+EN labels: Title / Description / Objective
+
+DE labels: Titel / Beschreibung / Ziel
+
+Add a submit button:
+
+EN: Create Use Case
+
+DE: Use Case erstellen
+
+On submit:
+
+validate required fields
+
+show translated success message
+
+create a mock use case object and route user back to dashboard or a “Use Case details” page (your choice, but keep it consistent).
+
+C) Full i18n Coverage (Critical)
+
+My current issue is partial translation. Fix it properly:
+
+Search through ALL files/pages/components for hardcoded text.
+
+Move every string into translation keys and use t("...").
+
+Ensure Home, About, Contact, Auth pages, Dashboard, forms, buttons, errors, toasts, placeholders, cards, menus — ALL are translated in EN+DE.
+
+Ensure the language toggle updates all visible text instantly.
+
+D) Read the whole repo before editing
+
+Read all existing files to locate:
+
+where the dashboard is defined for skill_searcher
+
+existing “Post Project” page/route/component
+
+existing i18n implementation (provider, hooks, JSON files)
+Then implement changes in the correct places (no duplicated components, no broken routing).
+
+E) Deliverable
+
+Implement the code changes directly (not a description).
+Ensure the app builds and runs without errors.
+If you add new translation keys, update BOTH EN and DE translation sources.
+Keep the UI consistent with current design system (shadcn/tailwind components used in the repo
