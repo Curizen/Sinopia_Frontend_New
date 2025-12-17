@@ -41,10 +41,11 @@ export default function VerifyOtpPage() {
     e.preventDefault();
     if (otp.length !== 6 || !pendingData) return;
 
-    if (otp !== pendingData.otp) {
+    // DEV ONLY: Mock OTP = 123456 (no backend/email)
+    if (otp !== '123456') {
       toast({
         title: 'Invalid Code',
-        description: 'The verification code you entered is incorrect.',
+        description: 'Invalid verification code',
         variant: 'destructive',
       });
       return;
@@ -81,15 +82,14 @@ export default function VerifyOtpPage() {
     }
   };
 
+  // DEV ONLY: Mock OTP = 123456 (no backend/email)
   const handleResend = () => {
-    const newOtp = resendOtp();
-    if (newOtp) {
-      console.log('New mock OTP:', newOtp);
-      toast({
-        title: 'Code Resent',
-        description: 'A new verification code has been sent to your email.',
-      });
-    }
+    resendOtp();
+    console.log('DEV ONLY: Mock OTP is always 123456');
+    toast({
+      title: 'Code Resent',
+      description: 'A new verification code has been sent to your email.',
+    });
   };
 
   if (!pendingData) {

@@ -31,8 +31,9 @@ const PendingRegistrationContext = createContext<PendingRegistrationContextType 
 export function PendingRegistrationProvider({ children }: { children: ReactNode }) {
   const [pendingData, setPendingDataState] = useState<PendingRegistration | null>(null);
 
+  // DEV ONLY: Mock OTP = 123456 (no backend/email)
   const generateOtp = () => {
-    return Math.floor(100000 + Math.random() * 900000).toString();
+    return '123456';
   };
 
   const setPendingData = (data: PendingRegistration | null) => {
@@ -43,9 +44,10 @@ export function PendingRegistrationProvider({ children }: { children: ReactNode 
     setPendingDataState(null);
   };
 
+  // DEV ONLY: Mock OTP = 123456 (no backend/email)
   const resendOtp = () => {
     if (!pendingData) return null;
-    const newOtp = generateOtp();
+    const newOtp = '123456';
     setPendingDataState({
       ...pendingData,
       otp: newOtp,
