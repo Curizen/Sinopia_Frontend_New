@@ -49,12 +49,8 @@ export const en = {
   home: {
     heroTitle: "Connect Your Skills with",
     heroTitleHighlight: "Opportunities",
-    heroSubtitle: "Sinopia enables professionals to present their expertise while helping companies access the right skills for specific Use Cases. Find experienced experts, define clear project scopes, and deliver results with transparency and confidence.",
+    heroSubtitle: "Sinopia enables companies to turn a business use case into an outcome, by breaking the request down into the required skills, making those skills instantly available through the Agentic AI platform, and orchestrating the right skill set to solve the use case.",
     learnMore: "Learn More",
-    trustedBy: "Trusted by 10,000+ professionals",
-    activeUsers: "Active Users",
-    projectsCompleted: "Projects Completed",
-    averageRating: "Average Rating",
     featuresTitle: "Why Choose Sinopia?",
     featuresSubtitle: "Everything you need to connect skills with opportunities",
     feature1Title: "Find Perfect Matches",

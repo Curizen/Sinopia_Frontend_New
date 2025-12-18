@@ -47,12 +47,8 @@ export const de = {
   home: {
     heroTitle: "Verbinde deine Fähigkeiten mit",
     heroTitleHighlight: "Möglichkeiten",
-    heroSubtitle: "Sinopia ermöglicht es Fachleuten, ihre Expertise zu präsentieren, während Unternehmen gezielt die richtigen Fähigkeiten für spezifische Use Cases finden. Entdecken Sie erfahrene Experten, definieren Sie klare Projektumfänge und liefern Sie Ergebnisse mit Transparenz und Vertrauen.",
+    heroSubtitle: "Sinopia ermöglicht es Unternehmen, einen geschäftlichen Use Case in ein konkretes Ergebnis zu verwandeln, indem Anforderungen in die benötigten Fähigkeiten aufgeteilt werden, diese Fähigkeiten über die Agentic-AI-Plattform sofort verfügbar gemacht werden und das passende Skill-Set gezielt zur Lösung des Use Cases orchestriert wird.",
     learnMore: "Mehr erfahren",
-    trustedBy: "Vertraut von 10.000+ Fachleuten",
-    activeUsers: "Aktive Nutzer",
-    projectsCompleted: "Abgeschlossene Projekte",
-    averageRating: "Durchschnittliche Bewertung",
     featuresTitle: "Warum Sinopia wählen?",
     featuresSubtitle: "Alles, was Sie brauchen, um Fähigkeiten mit Möglichkeiten zu verbinden",
     feature1Title: "Perfekte Übereinstimmungen finden",
