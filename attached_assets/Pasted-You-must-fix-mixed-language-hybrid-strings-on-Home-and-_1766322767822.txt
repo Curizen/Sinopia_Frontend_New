@@ -1,0 +1,93 @@
+You must fix mixed-language (hybrid) strings on Home and About pages.
+Currently, when I switch to German, these labels are still partially English.
+This means they are hardcoded or concatenated (part static English + part translated).
+
+STRICT REQUIREMENTS:
+- Do NOT hardcode German inside JSX.
+- All text must come from i18n keys with EN and DE versions.
+- Fix BOTH the home page and about page.
+- Ensure German is fully German and English is fully English (no mixed words).
+- Keep the existing UI layout unchanged.
+
+========================================
+1) FIND WHERE THESE STRINGS ARE RENDERED
+========================================
+In the codebase, search and locate the exact components/pages where these appear (Home and About).
+Target strings:
+- Use Cases erstellen
+- Teams verwalten
+- Support
+- KI-gesteuertes Matching
+- Teilen Sie Ihre Expertise
+- Smart gematcht werden
+- Experten-Onboarding
+- Vertrags- & Meilenstein-Management
+- ESCO Skill-Mapping
+- Flexible, Use-Case-basierte Arbeit
+- Fähigkeitensucher
+- Talente finden
+
+Search for them AND also search for partial English fragments that might be concatenated:
+- "Use Case"
+- "Team"
+- "Support"
+- "Matching"
+- "Onboarding"
+- "Management"
+- "Skill"
+- "Find talent"
+- "Create"
+- "Manage"
+
+========================================
+2) REMOVE ANY CONCATENATION / MIXING
+========================================
+If any string is built like:
+t("...") + " Use Case"   OR   "Use Case " + t("...")   OR   `${t(...)} something`
+replace it with ONE SINGLE i18n key that contains the full sentence/label.
+
+Example:
+BAD:  t("features.create") + " Use Case"
+GOOD: t("features.useCasesCreate")
+
+========================================
+3) IMPLEMENT CLEAN i18n KEYS
+========================================
+Create/Update translation keys for all items, for example:
+
+features.useCasesCreate
+features.manageTeams
+features.support
+features.aiDrivenMatching
+features.shareExpertise
+features.smartMatching
+features.expertOnboarding
+features.contractMilestoneManagement
+features.escoSkillMapping
+features.flexibleUseCaseWork
+audience.skillSeeker
+actions.findTalent
+
+Add BOTH languages:
+- EN: professional English
+- DE: professional German (use the exact German texts I listed above, with no English words)
+
+========================================
+4) FIX HOME + ABOUT UI
+========================================
+- Replace the displayed labels on Home and About with t("...") keys only.
+- Ensure any feature cards, lists, or badges use i18n keys and not hardcoded arrays of strings.
+- If the labels come from a data array (like const features = [...] ):
+  store keys instead of text:
+  { titleKey: "features.useCasesCreate", descKey: "..." }
+  then render with t(titleKey).
+
+========================================
+5) VERIFY BEFORE FINISHING
+========================================
+- Switch to German: all these labels must be 100% German with NO English words.
+- Switch back to English: all these labels must be 100% English.
+- Do not leave any remaining occurrences in code.
+
+DELIVERABLE:
+Apply code changes directly and ensure build passes with no missing keys.
