@@ -6,11 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { useI18n } from '@/i18n';
 import { Eye, EyeOff, Lock, Check } from 'lucide-react';
 
 export default function ResetPasswordPage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const { t } = useI18n();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,12 +29,11 @@ export default function ResetPasswordPage() {
 
     setIsLoading(true);
 
-    // todo: remove mock functionality
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     toast({
-      title: 'Password reset successful!',
-      description: 'You can now sign in with your new password.',
+      title: t('auth.resetPassword.success'),
+      description: t('auth.resetPassword.successDesc'),
     });
     setLocation('/sign-in');
     setIsLoading(false);
@@ -46,18 +47,18 @@ export default function ResetPasswordPage() {
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-4">
               <Lock className="w-6 h-6 text-primary" />
             </div>
-            <CardTitle className="font-display text-2xl">Reset Password</CardTitle>
-            <CardDescription>Create a new password for your account</CardDescription>
+            <CardTitle className="font-display text-2xl">{t('auth.resetPassword.title')}</CardTitle>
+            <CardDescription>{t('auth.resetPassword.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="password">New Password</Label>
+                <Label htmlFor="password">{t('auth.resetPassword.newPassword')}</Label>
                 <div className="relative">
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="Create a strong password"
+                    placeholder={t('auth.resetPassword.newPasswordPlaceholder')}
                     value={formData.password}
                     onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                     required
@@ -72,17 +73,17 @@ export default function ResetPasswordPage() {
                   </button>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  At least 8 characters with uppercase, lowercase, and a number
+                  {t('auth.resetPassword.passwordHint')}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Label htmlFor="confirmPassword">{t('auth.resetPassword.confirmPassword')}</Label>
                 <div className="relative">
                   <Input
                     id="confirmPassword"
                     type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="Confirm your password"
+                    placeholder={t('auth.resetPassword.confirmPasswordPlaceholder')}
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
                     required
@@ -101,10 +102,10 @@ export default function ResetPasswordPage() {
                     {passwordsMatch ? (
                       <>
                         <Check className="w-3 h-3" />
-                        Passwords match
+                        {t('auth.resetPassword.passwordsMatch')}
                       </>
                     ) : (
-                      'Passwords do not match'
+                      t('auth.resetPassword.passwordsDoNotMatch')
                     )}
                   </p>
                 )}
@@ -116,14 +117,14 @@ export default function ResetPasswordPage() {
                 disabled={isLoading || !passwordsMatch}
                 data-testid="button-reset-submit"
               >
-                {isLoading ? 'Resetting...' : 'Reset Password'}
+                {isLoading ? t('auth.resetPassword.resetting') : t('auth.resetPassword.resetButton')}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">Remember your password? </span>
+              <span className="text-muted-foreground">{t('auth.resetPassword.rememberPassword')} </span>
               <Link href="/sign-in" className="text-primary hover:underline font-medium">
-                Sign in
+                {t('nav.signIn')}
               </Link>
             </div>
           </CardContent>

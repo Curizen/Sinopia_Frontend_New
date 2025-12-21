@@ -37,14 +37,14 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
 }
 
 function getInitialLanguage(): Language {
-  if (typeof window === 'undefined') return 'en';
+  if (typeof window === 'undefined') return 'de';
   
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored === 'en' || stored === 'de') {
     return stored;
   }
   
-  return 'en';
+  return 'de';
 }
 
 interface I18nProviderProps {

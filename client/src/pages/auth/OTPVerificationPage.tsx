@@ -5,11 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { useToast } from '@/hooks/use-toast';
+import { useI18n } from '@/i18n';
 import { ArrowLeft, Shield } from 'lucide-react';
 
 export default function OTPVerificationPage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const { t } = useI18n();
   const search = useSearch();
   const params = new URLSearchParams(search);
   const email = params.get('email') || '';
@@ -24,12 +26,11 @@ export default function OTPVerificationPage() {
 
     setIsLoading(true);
 
-    // todo: remove mock functionality
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     toast({
-      title: 'Code verified!',
-      description: type === 'reset' ? 'You can now reset your password.' : 'Your email has been verified.',
+      title: t('auth.otpVerification.codeVerified'),
+      description: type === 'reset' ? t('auth.otpVerification.codeVerifiedResetDesc') : t('auth.otpVerification.codeVerifiedEmailDesc'),
     });
     
     if (type === 'reset') {
@@ -41,10 +42,9 @@ export default function OTPVerificationPage() {
   };
 
   const handleResend = async () => {
-    // todo: remove mock functionality
     toast({
-      title: 'Code resent',
-      description: 'A new verification code has been sent to your email.',
+      title: t('auth.otpVerification.codeResent'),
+      description: t('auth.otpVerification.codeResentDesc'),
     });
   };
 
@@ -56,9 +56,9 @@ export default function OTPVerificationPage() {
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-4">
               <Shield className="w-6 h-6 text-primary" />
             </div>
-            <CardTitle className="font-display text-2xl">Enter Verification Code</CardTitle>
+            <CardTitle className="font-display text-2xl">{t('auth.otpVerification.title')}</CardTitle>
             <CardDescription>
-              We sent a 6-digit code to <span className="font-medium text-foreground">{email}</span>
+              {t('auth.otpVerification.description')} <span className="font-medium text-foreground">{email}</span>
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -87,19 +87,19 @@ export default function OTPVerificationPage() {
                 disabled={isLoading || otp.length !== 6}
                 data-testid="button-otp-submit"
               >
-                {isLoading ? 'Verifying...' : 'Verify Code'}
+                {isLoading ? t('auth.otpVerification.verifying') : t('auth.otpVerification.verifyButton')}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">Didn't receive the code? </span>
+              <span className="text-muted-foreground">{t('auth.otpVerification.didntReceive')} </span>
               <button
                 type="button"
                 onClick={handleResend}
                 className="text-primary hover:underline font-medium"
                 data-testid="button-resend-otp"
               >
-                Resend
+                {t('auth.otpVerification.resend')}
               </button>
             </div>
 
@@ -109,7 +109,7 @@ export default function OTPVerificationPage() {
                 className="flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Back to Sign In
+                {t('auth.otpVerification.backToSignIn')}
               </Link>
             </div>
           </CardContent>

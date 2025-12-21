@@ -6,11 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { useI18n } from '@/i18n';
 import { ArrowLeft, Mail } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const { t } = useI18n();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
 
@@ -18,12 +20,11 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    // todo: remove mock functionality
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     toast({
-      title: 'Check your email',
-      description: 'We sent a verification code to reset your password.',
+      title: t('auth.forgotPassword.checkEmail'),
+      description: t('auth.forgotPassword.checkEmailDesc'),
     });
     setLocation(`/otp-verification?email=${encodeURIComponent(email)}&type=reset`);
     setIsLoading(false);
@@ -37,19 +38,19 @@ export default function ForgotPasswordPage() {
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-4">
               <Mail className="w-6 h-6 text-primary" />
             </div>
-            <CardTitle className="font-display text-2xl">Forgot Password?</CardTitle>
+            <CardTitle className="font-display text-2xl">{t('auth.forgotPassword.title')}</CardTitle>
             <CardDescription>
-              No worries! Enter your email and we'll send you a reset code.
+              {t('auth.forgotPassword.description')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email">{t('auth.forgotPassword.emailLabel')}</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder={t('auth.forgotPassword.emailPlaceholder')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -58,7 +59,7 @@ export default function ForgotPasswordPage() {
               </div>
 
               <Button type="submit" className="w-full" disabled={isLoading} data-testid="button-forgot-submit">
-                {isLoading ? 'Sending...' : 'Send Reset Code'}
+                {isLoading ? t('auth.forgotPassword.sending') : t('auth.forgotPassword.sendButton')}
               </Button>
             </form>
 
@@ -68,7 +69,7 @@ export default function ForgotPasswordPage() {
                 className="flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Back to Sign In
+                {t('auth.forgotPassword.backToSignIn')}
               </Link>
             </div>
           </CardContent>

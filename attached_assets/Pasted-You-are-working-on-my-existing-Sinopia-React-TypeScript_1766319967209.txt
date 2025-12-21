@@ -1,0 +1,98 @@
+You are working on my existing Sinopia React + TypeScript frontend that already supports EN/DE language switching, but there are issues:
+- "Dashboard" does NOT translate (it stays English).
+- Some UI text is mixed (part German, part English).
+- I want German (de) to be the DEFAULT language on first visit.
+
+IMPORTANT RULES:
+1) FRONTEND ONLY. Do NOT touch backend/server/database.
+2) Do NOT break existing routes, auth flows, or layouts.
+3) Do NOT hardcode German directly inside JSX. All user-facing text must come from i18n keys.
+4) Keep the language toggle working and persist selection in localStorage.
+
+========================================
+TASK 1 — Set German as Default Language
+========================================
+1) In the i18n initialization/provider:
+   - Set default language to "de".
+   - On first visit (no saved preference in localStorage), the site must load in German.
+   - If localStorage has a saved language, respect it.
+2) Use localStorage key already used in the project (or use "sinopia_language" consistently).
+
+========================================
+TASK 2 — Fix "Dashboard" Translation
+========================================
+1) Find every place "Dashboard" is shown:
+   - Header title inside dashboard
+   - Sidebar/menu label
+   - Mobile header title
+   - Any breadcrumbs/titles
+2) Remove any logic that builds the title from the URL (e.g. location.slice(1)...), because it will never translate.
+3) Replace with a route->title mapping using i18n keys, for example:
+   - /dashboard => t("nav.dashboard")
+   - /projects => t("nav.projects")
+   - /offers => t("nav.offers")
+   - /contracts => t("nav.contracts")
+   - /payments => t("nav.payments")
+   - /notifications => t("nav.notifications")
+   - /profile => t("nav.profile")
+4) Add translations:
+   - EN: nav.dashboard = "Dashboard"
+   - DE: nav.dashboard = "Übersicht" (use this consistently)
+
+========================================
+TASK 3 — Fix Mixed German/English Strings
+========================================
+These strings must be handled via proper i18n keys (no inline/mixed text).
+Ensure FULL German in DE mode, FULL English in EN mode:
+
+- Use Cases erstellen
+- Teams verwalten
+- Support
+- KI-gesteuertes Matching
+- Teilen Sie Ihre Expertise
+- Smart gematcht werden
+- Experten-Onboarding
+- Vertrags- & Meilenstein-Management
+- ESCO Skill-Mapping
+- Flexible, Use-Case-basierte Arbeit
+- Fähigkeitensucher
+- Talente finden
+
+Steps:
+1) Locate where these are rendered (features lists, cards, onboarding, dashboard, etc.).
+2) Replace them with i18n keys (e.g. features.useCasesCreate, features.teamManage, etc.).
+3) Add BOTH EN and DE translations for each key:
+   - EN versions must be professional English (e.g. "Create Use Cases", "Manage Teams", "Support", "AI-driven Matching", etc.).
+   - DE versions must stay in correct German (as above, or improved professional German).
+
+========================================
+TASK 4 — Full i18n Coverage Audit (Finish the job)
+========================================
+1) Search the entire frontend for hardcoded user-facing strings (English or German) in:
+   - client/src/pages
+   - client/src/components
+   - client/src/layouts
+2) Convert ALL remaining UI strings into i18n keys and replace JSX literals with t("..."):
+   - headings, paragraphs, buttons, labels
+   - placeholders (very important)
+   - toast messages
+   - validation errors
+   - dropdown items / menu labels
+   - empty state messages
+3) If some text is coming from mock data objects, convert those fields into bilingual objects:
+   - label: { de: "...", en: "..." }
+   and render the correct one based on current language.
+
+========================================
+TASK 5 — Verification Checklist (Must do)
+========================================
+After changes:
+1) In a fresh session (clear localStorage), the site opens in German by default.
+2) "Dashboard" title/label is translated (Übersicht) everywhere.
+3) None of the listed strings appear mixed-language; DE is fully German, EN is fully English.
+4) Switching languages updates all visible text instantly.
+5) No TypeScript/build errors.
+
+If any untranslated strings remain:
+- Output a short report listing the string + file path + location,
+- Then convert them to i18n keys before finishing.
