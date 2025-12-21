@@ -82,21 +82,21 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               className={`text-sm font-medium transition-colors ${location === '/' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
               data-testid="nav-home"
             >
-              Home
+              {t('nav.home')}
             </Link>
             <Link 
               href="/about" 
               className={`text-sm font-medium transition-colors ${location === '/about' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
               data-testid="nav-about"
             >
-              About
+              {t('nav.about')}
             </Link>
             <Link 
               href="/contact" 
               className={`text-sm font-medium transition-colors ${location === '/contact' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
               data-testid="nav-contact"
             >
-              Contact
+              {t('nav.contact')}
             </Link>
           </nav>
 
@@ -120,19 +120,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <DropdownMenuItem asChild className="cursor-pointer">
                 <Link href="/" className="flex items-center gap-2">
                   <Home className="w-4 h-4" />
-                  <span>Home</span>
+                  <span>{t('nav.home')}</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="cursor-pointer">
                 <Link href="/about" className="flex items-center gap-2">
                   <Info className="w-4 h-4" />
-                  <span>About</span>
+                  <span>{t('nav.about')}</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="cursor-pointer">
                 <Link href="/contact" className="flex items-center gap-2">
                   <Mail className="w-4 h-4" />
-                  <span>Contact</span>
+                  <span>{t('nav.contact')}</span>
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>

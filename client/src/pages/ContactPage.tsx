@@ -59,7 +59,7 @@ export default function ContactPage() {
                         <Label htmlFor="name">{t('contact.nameLabel')}</Label>
                         <Input
                           id="name"
-                          placeholder="John Doe"
+                          placeholder={t('contact.namePlaceholder')}
                           value={formData.name}
                           onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                           required
@@ -71,7 +71,7 @@ export default function ContactPage() {
                         <Input
                           id="email"
                           type="email"
-                          placeholder="john@example.com"
+                          placeholder={t('contact.emailPlaceholder')}
                           value={formData.email}
                           onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                           required
@@ -83,7 +83,7 @@ export default function ContactPage() {
                       <Label htmlFor="subject">{t('contact.subjectLabel')}</Label>
                       <Input
                         id="subject"
-                        placeholder="How can we help?"
+                        placeholder={t('contact.subjectPlaceholder')}
                         value={formData.subject}
                         onChange={(e) => setFormData(prev => ({ ...prev, subject: e.target.value }))}
                         required
@@ -94,7 +94,7 @@ export default function ContactPage() {
                       <Label htmlFor="message">{t('contact.messageLabel')}</Label>
                       <Textarea
                         id="message"
-                        placeholder="Tell us more..."
+                        placeholder={t('contact.messagePlaceholder')}
                         rows={6}
                         value={formData.message}
                         onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}

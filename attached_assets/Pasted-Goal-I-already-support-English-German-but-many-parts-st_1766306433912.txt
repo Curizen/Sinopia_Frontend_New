@@ -1,0 +1,128 @@
+Goal: I already support English + German, but many parts still don’t translate when switching to German.
+Please make ALL UI text fully multilingual (EN/DE) and ensure nothing stays hardcoded in English.
+
+1) Fix OTP Page (Skill Giver + Skill Searcher)
+
+Translate all OTP texts:
+
+Title (Verify Your Email)
+
+Description (We sent a 6-digit code…)
+
+Button (Verify & Create Account / Continue / etc.)
+
+“Didn’t receive the code?”, “Resend”, “Back to Sign Up”
+
+Any success/error messages (invalid code, expired code, etc.)
+
+Ensure OTP placeholders / hints / helper texts are also translated.
+
+2) Fix CV Upload Flow (Skill Giver only)
+
+Translate all CV upload UI:
+
+“Please provide your CV”
+
+Drag & drop instructions
+
+Upload button text
+
+File format rules (PDF/DOC/DOCX)
+
+Max size text
+
+Remove file / Replace file / Continue
+
+Any error messages (wrong format, too large, upload failed)
+
+Ensure this page translations switch correctly EN ⇄ DE.
+
+3) Fix Dashboard Top Header (Inside dashboard pages)
+
+Translate everything in the dashboard header/top bar:
+
+Page title
+
+Notifications text / messages
+
+User dropdown menu items (Profile, Settings, Sign out, etc.)
+
+If labels are in arrays like navItems, convert labels to translation keys instead of hardcoded strings.
+
+4) Fix Contact Page (Placeholders + helper text)
+
+Translate ALL placeholders (grey example text) inside inputs and textareas:
+
+Example: “How can we help you?”, “Tell us more…”, “Your name”, “Your email”… etc.
+
+Translate all labels, helper texts, button text, and form success/failure messages.
+
+5) Global Cleanup (Hardcoded text audit)
+
+Scan the entire project and replace any user-facing hardcoded English string with translation keys:
+
+Buttons
+
+Labels
+
+Placeholders
+
+Toast messages
+
+Validation errors
+
+Empty states
+
+Dropdown menu items
+
+Tooltips / aria-labels (if used)
+
+Do NOT write German directly inside components. Use translation keys only.
+
+6) Translation Files Structure (Important)
+
+Add missing keys to the existing locale files (or create them if missing).
+
+Use a clean consistent key structure like:
+
+auth.otp.*
+
+auth.signup.*
+
+auth.cvUpload.*
+
+dashboard.header.*
+
+dashboard.menu.*
+
+contact.form.*
+
+common.* (Back, Continue, Cancel, Submit, Upload, Resend, etc.)
+
+7) Final Verification Checklist (Must do before finishing)
+
+Switch language to DE and confirm:
+
+OTP page is 100% German
+
+CV upload page is 100% German
+
+Dashboard header + dropdown is 100% German
+
+Contact placeholders + helper text are 100% German
+
+Switch back to EN and confirm everything returns to English.
+
+No build errors. No missing translation keys.
+
+8) If any text still remains un-translated (Fallback requirement)
+
+Output a list of:
+
+Remaining hardcoded strings
+
+Exact file paths
+
+Where they appear (component/section)
+
+Then convert them to translation keys.

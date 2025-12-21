@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
 import { usePendingRegistration } from '@/context/PendingRegistrationContext';
+import { useI18n } from '@/i18n';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,7 @@ export default function CVUploadPage() {
   const { register } = useAuth();
   const { pendingData, clearPendingData, setCvFile } = usePendingRegistration();
   const { toast } = useToast();
+  const { t } = useI18n();
   const [, setLocation] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
@@ -46,8 +48,8 @@ export default function CVUploadPage() {
     
     if (!allowedTypes.includes(file.type)) {
       toast({
-        title: 'Invalid File Type',
-        description: 'Please upload a PDF or Word document.',
+        title: t('auth.cvUpload.invalidFileType'),
+        description: t('auth.cvUpload.invalidFileTypeDesc'),
         variant: 'destructive',
       });
       return;
@@ -55,8 +57,8 @@ export default function CVUploadPage() {
     
     if (file.size > 5 * 1024 * 1024) {
       toast({
-        title: 'File Too Large',
-        description: 'Please upload a file smaller than 5MB.',
+        title: t('auth.cvUpload.fileTooLarge'),
+        description: t('auth.cvUpload.fileTooLargeDesc'),
         variant: 'destructive',
       });
       return;
@@ -112,16 +114,16 @@ export default function CVUploadPage() {
       clearPendingData();
       
       toast({
-        title: 'Success!',
-        description: 'Your account has been created successfully.',
+        title: t('auth.otp.accountCreated'),
+        description: t('auth.otp.accountCreatedDesc'),
       });
       
       setLocation('/dashboard');
     } catch (error) {
       console.error(error);
       toast({
-        title: 'Registration Failed',
-        description: 'Something went wrong. Please try again.',
+        title: t('auth.otp.registrationFailed'),
+        description: t('auth.otp.somethingWentWrong'),
         variant: 'destructive',
       });
     } finally {
@@ -147,9 +149,9 @@ export default function CVUploadPage() {
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-4">
               <Upload className="w-6 h-6 text-primary" />
             </div>
-            <CardTitle className="font-display text-2xl">Upload Your CV</CardTitle>
+            <CardTitle className="font-display text-2xl">{t('auth.cvUpload.title')}</CardTitle>
             <CardDescription>
-              Please upload your CV to complete your registration as a Skill Giver
+              {t('auth.cvUpload.description')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -195,7 +197,7 @@ export default function CVUploadPage() {
                       data-testid="button-remove-cv"
                     >
                       <X className="w-4 h-4 mr-2" />
-                      Remove
+                      {t('auth.cvUpload.remove')}
                     </Button>
                   </div>
                 ) : (
@@ -204,8 +206,8 @@ export default function CVUploadPage() {
                       <Upload className="w-6 h-6 text-muted-foreground" />
                     </div>
                     <div>
-                      <p className="font-medium text-foreground">Drop your CV here</p>
-                      <p className="text-sm text-muted-foreground">or click to browse</p>
+                      <p className="font-medium text-foreground">{t('auth.cvUpload.dropHere')}</p>
+                      <p className="text-sm text-muted-foreground">{t('auth.cvUpload.orClickBrowse')}</p>
                     </div>
                     <Button
                       type="button"
@@ -214,10 +216,10 @@ export default function CVUploadPage() {
                       onClick={() => fileInputRef.current?.click()}
                       data-testid="button-browse-cv"
                     >
-                      Browse Files
+                      {t('auth.cvUpload.browseFiles')}
                     </Button>
                     <p className="text-xs text-muted-foreground mt-2">
-                      PDF or Word documents up to 5MB
+                      {t('auth.cvUpload.fileFormat')}
                     </p>
                   </div>
                 )}
@@ -229,7 +231,7 @@ export default function CVUploadPage() {
                 disabled={isLoading || !selectedFile}
                 data-testid="button-cv-upload-submit"
               >
-                {isLoading ? 'Creating Account...' : 'Complete Registration'}
+                {isLoading ? t('auth.cvUpload.creatingAccount') : t('auth.cvUpload.completeRegistration')}
               </Button>
             </form>
 
@@ -239,7 +241,7 @@ export default function CVUploadPage() {
                 className="flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Back
+                {t('auth.cvUpload.back')}
               </Link>
             </div>
           </CardContent>

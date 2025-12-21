@@ -35,7 +35,7 @@ export default function SignUpPage() {
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: t('common.error'),
-        description: 'Passwords do not match',
+        description: t('auth.passwordsDoNotMatch'),
         variant: 'destructive',
       });
       return;
@@ -57,8 +57,8 @@ export default function SignUpPage() {
     console.log('Mock OTP for verification:', otp);
     
     toast({
-      title: 'Verification Required',
-      description: `A verification code has been sent to ${formData.email}`,
+      title: t('auth.verificationRequired'),
+      description: t('auth.verificationCodeSent'),
     });
 
     setIsLoading(false);
@@ -204,12 +204,12 @@ export default function SignUpPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
                 <div className="relative">
                   <Input
                     id="confirmPassword"
                     type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="Re-enter your password"
+                    placeholder={t('auth.confirmPasswordPlaceholder')}
                     value={formData.confirmPassword}
                     onChange={(e) =>
                       setFormData((prev) => ({ ...prev, confirmPassword: e.target.value }))

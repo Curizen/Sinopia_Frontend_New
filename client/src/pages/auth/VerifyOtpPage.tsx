@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
 import { usePendingRegistration } from '@/context/PendingRegistrationContext';
+import { useI18n } from '@/i18n';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,6 +15,7 @@ export default function VerifyOtpPage() {
   const { register } = useAuth();
   const { pendingData, clearPendingData, resendOtp, setOtpVerifiedAndStage } = usePendingRegistration();
   const { toast } = useToast();
+  const { t } = useI18n();
   const [, setLocation] = useLocation();
   
   const [isLoading, setIsLoading] = useState(false);
@@ -29,13 +31,13 @@ export default function VerifyOtpPage() {
     if (pendingData.timestamp < fiveMinutesAgo) {
       clearPendingData();
       toast({
-        title: 'Session Expired',
-        description: 'Please sign up again.',
+        title: t('auth.otp.sessionExpired'),
+        description: t('auth.otp.pleaseSignUpAgain'),
         variant: 'destructive',
       });
       setLocation('/sign-up');
     }
-  }, [pendingData, setLocation, toast, clearPendingData]);
+  }, [pendingData, setLocation, toast, clearPendingData, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,8 +46,8 @@ export default function VerifyOtpPage() {
     // DEV ONLY: Mock OTP = 123456 (no backend/email)
     if (otp !== '123456') {
       toast({
-        title: 'Invalid Code',
-        description: 'Invalid verification code',
+        title: t('auth.otp.invalidCode'),
+        description: t('auth.otp.invalidCodeDesc'),
         variant: 'destructive',
       });
       return;
@@ -57,24 +59,24 @@ export default function VerifyOtpPage() {
       if (pendingData.role === USER_ROLES.SKILL_GIVER) {
         setOtpVerifiedAndStage('cv_upload_required');
         toast({
-          title: 'Email Verified!',
-          description: 'Now please upload your CV to complete registration.',
+          title: t('auth.otp.emailVerified'),
+          description: t('auth.otp.nowUploadCv'),
         });
         setTimeout(() => setLocation('/sign-up/cv'), 50);
       } else {
         await register(pendingData.email, pendingData.password, pendingData.role);
         clearPendingData();
         toast({
-          title: 'Success!',
-          description: 'Your account has been created successfully.',
+          title: t('auth.otp.accountCreated'),
+          description: t('auth.otp.accountCreatedDesc'),
         });
         setLocation('/dashboard');
       }
     } catch (error) {
       console.error(error);
       toast({
-        title: 'Registration Failed',
-        description: 'Something went wrong. Please try again.',
+        title: t('auth.otp.registrationFailed'),
+        description: t('auth.otp.somethingWentWrong'),
         variant: 'destructive',
       });
     } finally {
@@ -87,8 +89,8 @@ export default function VerifyOtpPage() {
     resendOtp();
     console.log('DEV ONLY: Mock OTP is always 123456');
     toast({
-      title: 'Code Resent',
-      description: 'A new verification code has been sent to your email.',
+      title: t('auth.otp.codeResent'),
+      description: t('auth.otp.codeResentDesc'),
     });
   };
 
@@ -110,9 +112,9 @@ export default function VerifyOtpPage() {
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-4">
               <Shield className="w-6 h-6 text-primary" />
             </div>
-            <CardTitle className="font-display text-2xl">Verify Your Email</CardTitle>
+            <CardTitle className="font-display text-2xl">{t('auth.otp.title')}</CardTitle>
             <CardDescription>
-              We sent a 6-digit code to <span className="font-medium text-foreground">{pendingData.email}</span>
+              {t('auth.otp.description')} <span className="font-medium text-foreground">{pendingData.email}</span>
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -141,19 +143,19 @@ export default function VerifyOtpPage() {
                 disabled={isLoading || otp.length !== 6}
                 data-testid="button-verify-otp-submit"
               >
-                {isLoading ? 'Verifying...' : (pendingData?.role === USER_ROLES.SKILL_GIVER ? 'Verify Email' : 'Verify & Create Account')}
+                {isLoading ? t('auth.otp.verifying') : (pendingData?.role === USER_ROLES.SKILL_GIVER ? t('auth.otp.verifyEmail') : t('auth.otp.verifyAndCreate'))}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm">
-              <span className="text-muted-foreground">Didn't receive the code? </span>
+              <span className="text-muted-foreground">{t('auth.otp.didntReceive')} </span>
               <button
                 type="button"
                 onClick={handleResend}
                 className="text-primary hover:underline font-medium"
                 data-testid="button-resend-verify-otp"
               >
-                Resend
+                {t('auth.otp.resend')}
               </button>
             </div>
 
@@ -163,7 +165,7 @@ export default function VerifyOtpPage() {
                 className="flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Back to Sign Up
+                {t('auth.otp.backToSignUp')}
               </Link>
             </div>
           </CardContent>
