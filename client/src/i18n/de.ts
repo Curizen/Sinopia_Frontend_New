@@ -388,7 +388,7 @@ export const de = {
     contactUs: "Kontakt",
     copyright: "Alle Rechte vorbehalten.",
     tagline: "Verbinde Fähigkeiten mit Möglichkeiten. Baue deine Karriere auf oder finde die Talente, die du brauchst.",
-    poweredBy: "powered by curizen",
+    poweredBy: "bereitgestellt von curizen",
   },
   about: {
     title: "Über Sinopia",
