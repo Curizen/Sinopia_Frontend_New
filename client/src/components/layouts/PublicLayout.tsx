@@ -172,6 +172,12 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
             <p>&copy; {new Date().getFullYear()} Sinopia. {t('footer.copyright')}</p>
           </div>
+
+          <div className="mt-6 text-center">
+            <p className="text-xs text-muted-foreground" data-testid="text-powered-by">
+              {t('footer.poweredBy')}
+            </p>
+          </div>
         </div>
       </footer>
     </div>

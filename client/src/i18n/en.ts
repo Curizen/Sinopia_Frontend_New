@@ -390,6 +390,7 @@ export const en = {
     contactUs: "Contact Us",
     copyright: "All rights reserved.",
     tagline: "Connect skills with opportunities. Build your career or find the talent you need.",
+    poweredBy: "powered by curizen",
   },
   about: {
     title: "About Sinopia",
