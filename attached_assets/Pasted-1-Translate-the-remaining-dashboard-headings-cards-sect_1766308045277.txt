@@ -1,0 +1,103 @@
+1) Translate the remaining dashboard headings (cards + sections)
+
+Convert these labels to translation keys (EN/DE) and remove any hardcoded strings:
+
+Recent Projects
+
+Pending Offers
+
+Active Contracts
+
+Total Earnings
+
+Any View All text near those sections (if exists)
+
+Ensure the translations appear correctly when switching language in the dashboard.
+
+2) Translate “Dashboard” everywhere
+
+Find any place where “Dashboard” is rendered (page title, header title, breadcrumb, menu label, route label, mobile title, etc.)
+
+Replace it with a translation key (EN/DE).
+
+Make sure it’s not generated from URL string in a way that bypasses translations.
+
+3) Translate ALL mock profile / mock content fields (example: “Web Developer”)
+
+Search the project for mock/static profile data and translate all user-facing strings, including but not limited to:
+
+job title examples like: Web Developer, Senior Full-Stack Developer, etc.
+
+location examples like: San Francisco, CA (and any city text)
+
+any “About” mock paragraph
+
+skills tags (if they’re display strings)
+
+any hardcoded mock names (if displayed)
+
+Replace them with translation keys OR store mock data in a bilingual structure like:
+
+title: { en: 'Web Developer', de: 'Webentwickler' }
+
+
+and display based on current language.
+
+4) Fix dashboard “header title” logic
+
+If the dashboard title is computed using something like:
+location.slice(1).replace('-', ' ')
+then it will never translate.
+
+Replace this logic with a proper route → i18n title map, e.g.:
+
+/dashboard => nav.dashboard
+
+/projects => nav.projects
+
+/offers => nav.offers
+etc.
+
+Ensure mobile header uses the same translation logic.
+
+5) Add missing keys to translation files
+
+Add keys for both EN and DE (don’t hardcode German in components).
+Example required keys:
+
+dashboard.cards.recentProjects
+
+dashboard.cards.pendingOffers
+
+dashboard.cards.activeContracts
+
+dashboard.cards.totalEarnings
+
+nav.dashboard
+
+profile.jobTitles.webDeveloper (or generic job title keys)
+
+Any other missing text discovered during audit
+
+6) Final audit requirement (must do)
+
+Run a project-wide search for hardcoded English UI strings and migrate them to i18n keys.
+
+After changes, switch to German and confirm:
+
+All dashboard headings + “Dashboard” title are German
+
+Mock profile strings are German
+
+Switch back to English and confirm everything returns correctly.
+
+7) If any untranslated strings still exist
+
+Output a short report listing:
+
+the exact string
+
+file path
+
+line number (or closest location)
+then convert it to i18n keys.

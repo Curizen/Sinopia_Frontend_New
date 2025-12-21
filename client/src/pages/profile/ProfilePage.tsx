@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
 import { useI18n } from '@/i18n';
@@ -26,49 +26,52 @@ import {
   X,
 } from 'lucide-react';
 
-// todo: remove mock functionality
-const mockSkillGiverProfile = {
-  bio: 'Experienced full-stack developer with 8+ years in building web and mobile applications. Passionate about clean code and user-centric design.',
-  title: 'Senior Full-Stack Developer',
-  skills: ['React', 'TypeScript', 'Node.js', 'Python', 'PostgreSQL', 'AWS', 'Docker', 'GraphQL'],
-  location: 'Düsseldorf, NW',
-  availability: 'Full-time',
-  experience: [
-    { id: '1', company: 'TechCorp', role: 'Senior Developer', startDate: '2020-01', endDate: '', current: true, description: 'Leading frontend development' },
-    { id: '2', company: 'StartupXYZ', role: 'Full-Stack Developer', startDate: '2017-03', endDate: '2019-12', current: false, description: 'Built core product features' },
-  ],
-  education: [
-    { id: '1', institution: 'Stanford University', degree: 'M.S.', field: 'Computer Science', startDate: '2014', endDate: '2016' },
-    { id: '2', institution: 'UC Berkeley', degree: 'B.S.', field: 'Computer Science', startDate: '2010', endDate: '2014' },
-  ],
-  certifications: [
-    { id: '1', name: 'AWS Solutions Architect', issuer: 'Amazon Web Services', date: '2023-05' },
-    { id: '2', name: 'Google Cloud Professional', issuer: 'Google', date: '2022-08' },
-  ],
-};
-
-const mockSkillSearcherProfile = {
-  companyName: 'TechCorp Inc.',
-  industry: 'Technology',
-  website: 'https://techcorp.example.com',
-  bio: 'Leading technology company specializing in innovative software solutions for enterprise clients.',
-  contactEmail: 'hiring@techcorp.com',
-  contactPhone: '+49 1512 847 6390',
-  location: 'Düsseldorf, NW',
-};
-
 export default function ProfilePage() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [isEditing, setIsEditing] = useState(false);
   const [newSkill, setNewSkill] = useState('');
 
   const isSkillGiver = user?.role === 'skill_giver';
+
+  const mockSkillGiverProfile = useMemo(() => ({
+    bio: t('profile.mock.giverBio'),
+    title: t('profile.mock.giverTitle'),
+    skills: ['React', 'TypeScript', 'Node.js', 'Python', 'PostgreSQL', 'AWS', 'Docker', 'GraphQL'],
+    location: t('profile.mock.giverLocation'),
+    availability: t('profile.mock.giverAvailability'),
+    experience: [
+      { id: '1', company: t('profile.mock.experience1Company'), role: t('profile.mock.experience1Role'), startDate: '2020-01', endDate: '', current: true, description: t('profile.mock.experience1Desc') },
+      { id: '2', company: t('profile.mock.experience2Company'), role: t('profile.mock.experience2Role'), startDate: '2017-03', endDate: '2019-12', current: false, description: t('profile.mock.experience2Desc') },
+    ],
+    education: [
+      { id: '1', institution: 'Stanford University', degree: 'M.S.', field: 'Computer Science', startDate: '2014', endDate: '2016' },
+      { id: '2', institution: 'UC Berkeley', degree: 'B.S.', field: 'Computer Science', startDate: '2010', endDate: '2014' },
+    ],
+    certifications: [
+      { id: '1', name: 'AWS Solutions Architect', issuer: 'Amazon Web Services', date: '2023-05' },
+      { id: '2', name: 'Google Cloud Professional', issuer: 'Google', date: '2022-08' },
+    ],
+  }), [language, t]);
+
+  const mockSkillSearcherProfile = useMemo(() => ({
+    companyName: t('profile.mock.searcherCompany'),
+    industry: t('profile.mock.searcherIndustry'),
+    website: 'https://techcorp.example.com',
+    bio: t('profile.mock.searcherBio'),
+    contactEmail: 'hiring@techcorp.com',
+    contactPhone: '+49 1512 847 6390',
+    location: t('profile.mock.giverLocation'),
+  }), [language, t]);
+
   const [profile, setProfile] = useState(isSkillGiver ? mockSkillGiverProfile : mockSkillSearcherProfile);
 
+  useEffect(() => {
+    setProfile(isSkillGiver ? mockSkillGiverProfile : mockSkillSearcherProfile);
+  }, [language, isSkillGiver, mockSkillGiverProfile, mockSkillSearcherProfile]);
+
   const handleSave = () => {
-    // todo: remove mock functionality
     toast({
       title: t('profile.profileUpdated'),
       description: t('profile.changesSaved'),

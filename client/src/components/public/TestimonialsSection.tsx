@@ -1,41 +1,55 @@
+import { useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useI18n } from '@/i18n';
 import { Star, Quote } from 'lucide-react';
 
-// todo: remove mock functionality
-const testimonials = [
-  {
-    id: 1,
-    name: 'Sarah Chen',
-    role: 'Full-Stack Developer',
-    type: 'Skill Giver',
-    rating: 5,
-    quote: 'Sinopia has transformed my freelance career. I found consistent high-quality projects and doubled my income within 6 months.',
-    initials: 'SC',
-  },
-  {
-    id: 2,
-    name: 'Michael Torres',
-    role: 'CTO at TechFlow',
-    type: 'Skill Searcher',
-    rating: 5,
-    quote: 'The quality of talent on Sinopia is exceptional. We built our entire mobile app with a team we found here.',
-    initials: 'MT',
-  },
-  {
-    id: 3,
-    name: 'Emily Roberts',
-    role: 'UX Designer',
-    type: 'Skill Giver',
-    rating: 5,
-    quote: 'The platform is intuitive and the payment system is reliable. I love how Sinopia handles contracts and milestones.',
-    initials: 'ER',
-  },
-];
+function getInitials(name: string): string {
+  const words = name.split(' ');
+  if (words.length >= 2) {
+    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+  }
+  return name.substring(0, 2).toUpperCase();
+}
 
 export function TestimonialsSection() {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
+
+  const testimonials = useMemo(() => {
+    const person1Name = t('home.testimonials.mock.person1Name');
+    const person2Name = t('home.testimonials.mock.person2Name');
+    const person3Name = t('home.testimonials.mock.person3Name');
+
+    return [
+      {
+        id: 1,
+        name: person1Name,
+        role: t('home.testimonials.mock.person1Role'),
+        type: t('home.testimonials.mock.person1Type'),
+        rating: 5,
+        quote: t('home.testimonials.mock.person1Quote'),
+        initials: getInitials(person1Name),
+      },
+      {
+        id: 2,
+        name: person2Name,
+        role: t('home.testimonials.mock.person2Role'),
+        type: t('home.testimonials.mock.person2Type'),
+        rating: 5,
+        quote: t('home.testimonials.mock.person2Quote'),
+        initials: getInitials(person2Name),
+      },
+      {
+        id: 3,
+        name: person3Name,
+        role: t('home.testimonials.mock.person3Role'),
+        type: t('home.testimonials.mock.person3Type'),
+        rating: 5,
+        quote: t('home.testimonials.mock.person3Quote'),
+        initials: getInitials(person3Name),
+      },
+    ];
+  }, [language, t]);
   
   return (
     <section className="py-20 bg-muted/30">
