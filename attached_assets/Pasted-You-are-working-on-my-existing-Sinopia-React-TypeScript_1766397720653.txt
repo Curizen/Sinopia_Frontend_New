@@ -1,0 +1,122 @@
+You are working on my existing Sinopia React + TypeScript website with EN/DE language support (i18n).
+Implement TWO new pages: (1) Vision and (2) Privacy Policy.
+Everything must be fully translated and switch correctly with the language toggle (German default behavior should remain as already set in the project).
+
+IMPORTANT RULES:
+- FRONTEND ONLY (no backend/server/database changes).
+- Do NOT hardcode text inside JSX. Use i18n keys for EN and DE.
+- Keep current design system (Tailwind + shadcn/ui) and routing (wouter).
+- Keep existing navbar and footer structure; add links as requested.
+
+====================================================
+1) CREATE NEW PAGE: VISION
+====================================================
+A) Routing
+- Add a new route: /vision
+
+B) Navbar link
+- Add a navbar link in the top bar next to Home / About:
+  - EN: Vision
+  - DE: Vision
+- It must highlight as active when on /vision (same style as other links).
+- Mobile menu must include Vision as well.
+
+C) Page layout (minimal and clean)
+Create a page component (e.g. client/src/pages/VisionPage.tsx) that includes:
+1) Page title:
+   - EN: Vision
+   - DE: Vision
+2) Two-column layout on desktop, stacked on mobile:
+   - Left: Text content (formatted nicely)
+   - Right: An image (the user will upload it into Replit)
+3) Use a clean container with spacing consistent with other pages.
+
+D) Text content (German provided) + English translation
+- Use the following German text exactly as the German version (DE):
+  “Der Fachkräftemangel ist allgegenwertig!
+  Die bisherigen Lösungen dem Mangel an Personal entgegenzuwirken belaufen sich primär auf den Aufbau neuer Arbeitskräfte, Einbindung von Fachkräften aus anderen Ländern oder Förderung von Quereinsteigern.
+  Wir als Sinopia möchten vorhandenes Wissen nutzen.
+  Gerade die Generation der Babyboomer, die jetzt aus dem aktiven Berufsleben in die Rente gehen, bringen mit Ihrem Erfahrungsschatz einen enormen Mehrwert für die Wirtschaft. Laut einer Erhebung aus 2023 sind nur ca. 13% der Rentner nach Renteneintritt noch erwerbstätig. Oft nicht aus dem Willen, noch einen Beitrag leisten zu wollen, sondern aus einem Mangel an zugeschnittenen Angeboten. Zugeschnitten auf eine individuelle Balance zwischen Beitrag und Freizeit.
+  Wir möchten eine Verbindung zwischen Angebot und Nachfrage generieren, allerdings anders als mit standardisierten Arbeitsverträgen.
+  Es geht darum, Arbeitsprozesse neu zu betrachten und in kleinteilige Einzelaufträge (sogenannte Use Cases) zu unterteilen, die speziell auf die Bedürfnisse der Unternehmen sowie Erwerbstätigen (Competence Collective) zugeschnitten sind.”
+
+- Provide a professional English translation for the EN version with the same meaning and tone.
+
+E) Add founders/names section (artistic style)
+Add a small section at the bottom of the Vision page titled:
+- EN: Founding Team
+- DE: Gründungsteam
+Show these names in a tasteful “signature-style” (still readable, minimal design):
+- Eyad Dawood
+- Tobias Bahlinger
+- Jens Uwe Jung
+
+====================================================
+2) CREATE NEW PAGE: PRIVACY POLICY
+====================================================
+A) Routing
+- Add a new route: /privacy (or /privacy-policy, choose one and use it consistently everywhere)
+
+B) Footer link
+- Add a footer link under the “Legal” section:
+  - EN: Privacy Policy
+  - DE: Datenschutz
+This link must navigate to the privacy page.
+
+C) Sign In / Sign Up link
+- Add a small inline link (or checkbox helper text line) on BOTH Sign In and Sign Up pages, near the bottom:
+  - EN: “Privacy Policy”
+  - DE: “Datenschutz”
+This should be a clickable link to the privacy page.
+
+D) Page layout & formatting
+Create a new page component (e.g. client/src/pages/PrivacyPolicyPage.tsx) with:
+- Big headings (larger font)
+- Smaller paragraphs (readable text)
+- Clear sections with titles and spacing
+Use cards or a centered container like other pages.
+
+E) Content (English provided) + German translation
+- Use the provided English privacy policy text as the EN version (keep meaning, minor formatting ok).
+- Create a professional German translation (DE) for the entire content.
+- Structure it with headings such as (use i18n keys):
+  1) Introduction
+  2) Data collection and processing
+  3) IP addresses and log files
+  4) Security notice
+  5) Objection to unsolicited advertising
+  6) Privacy policy for the contact form
+  7) Scope of processing personal data (bullets)
+  8) Legal basis
+  9) Purpose of data processing
+  10) Storage duration
+  11) Contact details
+  12) Your rights as a data subject
+
+- Ensure bullet lists render nicely.
+- Ensure typography is consistent (headings bold/large, paragraphs smaller).
+
+====================================================
+3) i18n REQUIREMENT (CRITICAL)
+====================================================
+- Add translation keys for all new texts in BOTH EN and DE translation sources.
+- Do NOT leave any hardcoded strings in these pages.
+- Ensure language toggle switches all text on Vision and Privacy pages instantly.
+
+====================================================
+4) IMAGE HANDLING FOR VISION PAGE
+====================================================
+- The user will upload the image to Replit.
+- Use a placeholder file path like: /vision-image.png
+- Put the image in the correct public folder (e.g. client/public/) and reference it with:
+  <img src="/vision-image.png" ... />
+- Make it responsive and not stretched; use rounded corners and subtle shadow.
+
+====================================================
+5) FINAL CHECKLIST
+====================================================
+- Navbar includes Vision (desktop + mobile).
+- Footer includes Privacy Policy.
+- Sign In and Sign Up include Privacy Policy link.
+- All new content fully translated EN/DE with i18n keys.
+- App builds with no TypeScript errors.

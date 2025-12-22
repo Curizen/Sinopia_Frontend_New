@@ -14,6 +14,7 @@ import { PaymentProvider } from "@/context/PaymentContext";
 
 import HomePage from "@/pages/HomePage";
 import AboutPage from "@/pages/AboutPage";
+import VisionPage from "@/pages/VisionPage";
 import ContactPage from "@/pages/ContactPage";
 import TermsPage from "@/pages/TermsPage";
 import PrivacyPage from "@/pages/PrivacyPage";
@@ -77,6 +78,7 @@ function Router() {
     <Switch>
       <Route path="/" component={HomePage} />
       <Route path="/about" component={AboutPage} />
+      <Route path="/vision" component={VisionPage} />
       <Route path="/contact" component={ContactPage} />
       <Route path="/terms" component={TermsPage} />
       <Route path="/privacy" component={PrivacyPage} />

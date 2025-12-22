@@ -115,6 +115,12 @@ export default function SignInPage() {
                 {t('nav.signUp')}
               </Link>
             </div>
+
+            <div className="mt-4 text-center text-xs text-muted-foreground">
+              <Link href="/privacy" className="hover:underline hover:text-primary transition-colors" data-testid="link-privacy-signin">
+                {t('privacy.title')}
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </div>

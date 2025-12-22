@@ -16,6 +16,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
   const navLinks = [
     { href: '/', labelKey: 'nav.home' },
     { href: '/about', labelKey: 'nav.about' },
+    { href: '/vision', labelKey: 'nav.vision' },
     { href: '/contact', labelKey: 'nav.contact' },
   ];
 

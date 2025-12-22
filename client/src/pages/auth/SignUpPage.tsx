@@ -238,7 +238,13 @@ export default function SignUpPage() {
               </Button>
 
               <p className="text-xs text-center text-muted-foreground">
-                {t('footer.terms')} & {t('footer.privacy')}
+                <Link href="/terms" className="hover:underline hover:text-primary transition-colors" data-testid="link-terms-signup">
+                  {t('footer.terms')}
+                </Link>
+                {' & '}
+                <Link href="/privacy" className="hover:underline hover:text-primary transition-colors" data-testid="link-privacy-signup">
+                  {t('privacy.title')}
+                </Link>
               </p>
             </form>
 
