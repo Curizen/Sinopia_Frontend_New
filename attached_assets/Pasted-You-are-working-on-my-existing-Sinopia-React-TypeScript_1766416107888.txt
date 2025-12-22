@@ -1,0 +1,142 @@
+You are working on my existing Sinopia React + TypeScript website with EN/DE i18n and wouter routing.
+Implement the following updates. FRONTEND ONLY. Do not break routes/auth/layout. Do not hardcode text in JSX; use i18n keys for EN and DE.
+
+====================================================
+1) NEW PAGE: IMPRESSUM (Imprint)
+====================================================
+A) Routing
+- Add a new route:
+  - /imprint
+
+B) Navbar links (Public + Dashboard)
+- Add a top navbar link (public pages) next to Home/About/Vision:
+  - EN label: "Imprint"
+  - DE label: "Impressum"
+  - URL: /imprint
+- Add the same link to the dashboard top bar / dashboard navigation (desktop + mobile hamburger) so it is reachable from inside the dashboard too.
+
+C) Page component
+- Create a new page component, e.g.:
+  - client/src/pages/ImprintPage.tsx
+- Layout:
+  - Clean centered container (same style as other legal pages)
+  - Large title + section headings
+  - Paragraph text smaller
+  - Use clear spacing
+  - Section headings styled bold and bigger (like “-Kontakt:” etc.)
+  - Keep the hyphen style as visual section title, but make it look professional.
+
+D) Content
+- Use the following content as the German version (DE) exactly in meaning, but format it nicely into sections.
+- Add Eyad Dawood to "Vertreten durch:" (Represented by) list.
+
+German content structure (DE):
+Title: "Impressum"
+Subtitle: "Angaben gemäß § 5 DDG"
+
+Sections (headings should be visually strong):
+- Sinopia Deutschland GmbH
+  Deckerstr. 39
+  70372 Stuttgart
+  Handelsregister: HRA 800342
+  Registergericht: Stuttgart
+
+- Vertreten durch:
+  Jens Uwe Jung, Tobias Bahlinger, Eyad Dawood
+
+- Kontakt:
+  Telefon: 0177-4928319
+  info@sinopia.eu
+
+- Umsatzsteuer-ID:
+  DE455888790
+
+- Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:
+  Jens Uwe Jung
+  Deckerstr. 30
+  70372 Stuttgart
+
+- Haftungsausschluss:
+
+- EU-Streitschlichtung
+  Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
+  https://consumer-redress.ec.europa.eu/index_de
+  Unsere E-Mail-Adresse finden Sie oben im Impressum.
+
+- Verbraucherstreitbeteiligung/Universalschlichtungsstelle
+  Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
+  Verbraucherschlichtungsstelle teilzunehmen.
+
+- Haftung für Inhalte
+  [use the full paragraph exactly as provided]
+
+- Haftung für Links
+  [use the full paragraph exactly as provided]
+
+- Urheberrecht
+  [use the full paragraph exactly as provided]
+
+- Datenschutz
+  Informationen zum Datenschutz erhalten Sie in unserer Datenschutzerklärung.
+  IMPORTANT: "Datenschutzerklärung" must be a clickable link to the privacy policy page route.
+
+E) English translation (EN)
+- Provide a professional English translation for the entire imprint content:
+  - Title EN: "Imprint"
+  - German legal references can remain as-is where appropriate, but the body must be readable professional English.
+- Keep the same section layout and headings translated.
+- Ensure the Privacy reference in EN links to the privacy policy page:
+  EN text: "Privacy Policy" (or “Privacy Statement”), linking to the privacy route.
+
+====================================================
+2) VISION PAGE UPDATES
+====================================================
+A) Add Vision link to Dashboard top bar
+- Ensure Vision appears in the dashboard top navigation (desktop + mobile hamburger) linking to /vision.
+- Keep public navbar Vision link as already requested previously.
+
+B) Reorder names on Vision page
+- On the Vision page “Founding Team / Gründungsteam” section, reorder names from left to right as:
+  1) Jens Uwe Jung
+  2) Tobias Bahlinger
+  3) Eyad Dawood
+- Keep the same minimal “signature style” but ensure the order is correct.
+
+====================================================
+3) Privacy naming change across the whole site (DE)
+====================================================
+- Currently the German label appears as "Datenschutzrichtlinie".
+- Change it everywhere to:
+  "Datenschutzerklärung"
+This includes:
+- Footer legal link
+- Sign-in / Sign-up privacy link text
+- Page title / headings
+- Any menu item / route label
+- Any translation keys where it appears
+
+EN can remain "Privacy Policy".
+
+====================================================
+4) i18n REQUIREMENTS (CRITICAL)
+====================================================
+- Add/Update translation keys for:
+  - navbar.imprint / navbar.vision / navbar.privacy
+  - dashboard.nav.imprint / dashboard.nav.vision
+  - imprint page sections + headings + paragraphs
+  - privacy naming (Datenschutzerklärung)
+- Do not hardcode DE/EN strings in components.
+- Ensure language toggle switches all text on Imprint, Vision, and Privacy pages instantly.
+
+====================================================
+5) FINAL CHECKLIST
+====================================================
+- /imprint page works and shows correct EN/DE content.
+- Link to privacy inside Imprint (“Datenschutzerklärung”) navigates to the privacy policy route.
+- Imprint link appears in:
+  - public navbar
+  - dashboard top bar (desktop + mobile)
+- Vision link appears in dashboard top bar too.
+- Vision names order: Jens -> Tobias -> Eyad.
+- German privacy label is updated everywhere to “Datenschutzerklärung”.
+- No build errors, no missing i18n keys.

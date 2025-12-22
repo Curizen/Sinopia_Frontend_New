@@ -17,6 +17,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
     { href: '/', labelKey: 'nav.home' },
     { href: '/about', labelKey: 'nav.about' },
     { href: '/vision', labelKey: 'nav.vision' },
+    { href: '/imprint', labelKey: 'nav.imprint' },
     { href: '/contact', labelKey: 'nav.contact' },
   ];
 

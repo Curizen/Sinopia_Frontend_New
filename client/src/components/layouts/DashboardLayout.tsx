@@ -28,6 +28,8 @@ import {
   Home,
   Info,
   Mail,
+  Eye,
+  FileSignature,
 } from 'lucide-react';
 
 interface DashboardLayoutProps {
@@ -92,6 +94,20 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               {t('nav.about')}
             </Link>
             <Link 
+              href="/vision" 
+              className={`text-sm font-medium transition-colors ${location === '/vision' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              data-testid="nav-vision"
+            >
+              {t('nav.vision')}
+            </Link>
+            <Link 
+              href="/imprint" 
+              className={`text-sm font-medium transition-colors ${location === '/imprint' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              data-testid="nav-imprint"
+            >
+              {t('nav.imprint')}
+            </Link>
+            <Link 
               href="/contact" 
               className={`text-sm font-medium transition-colors ${location === '/contact' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
               data-testid="nav-contact"
@@ -127,6 +143,18 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 <Link href="/about" className="flex items-center gap-2">
                   <Info className="w-4 h-4" />
                   <span>{t('nav.about')}</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link href="/vision" className="flex items-center gap-2">
+                  <Eye className="w-4 h-4" />
+                  <span>{t('nav.vision')}</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link href="/imprint" className="flex items-center gap-2">
+                  <FileSignature className="w-4 h-4" />
+                  <span>{t('nav.imprint')}</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild className="cursor-pointer">

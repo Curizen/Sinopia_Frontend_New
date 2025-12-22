@@ -5,9 +5,9 @@ export default function VisionPage() {
   const { t } = useI18n();
 
   const founders = [
-    { name: "Eyad Dawood" },
-    { name: "Tobias Bahlinger" },
     { name: "Jens Uwe Jung" },
+    { name: "Tobias Bahlinger" },
+    { name: "Eyad Dawood" },
   ];
 
   return (
