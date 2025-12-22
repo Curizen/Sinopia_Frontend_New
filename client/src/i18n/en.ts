@@ -550,7 +550,7 @@ export const en = {
     companyName: "Sinopia Deutschland GmbH",
     companyAddress: "Deckerstr. 39\n70372 Stuttgart\nCommercial Register: HRA 800342\nRegistry Court: Stuttgart",
     representedByTitle: "Represented by:",
-    representedByNames: "Jens Uwe Jung, Tobias Bahlinger, Eyad Dawood",
+    representedByNames: "Jens Uwe Jung, Tobias Bahlinger, and Eyad Dawood",
     contactTitle: "Contact:",
     contactDetails: "Phone: 0177-4928319\ninfo@sinopia.eu",
     vatIdTitle: "VAT ID:",
