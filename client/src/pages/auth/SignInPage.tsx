@@ -80,7 +80,7 @@ export default function SignInPage() {
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">{t('auth.password')}</Label>
                   <Link href="/forgot-password" className="text-sm text-primary hover:underline">
-                    {t('auth.forgotPassword')}
+                    {t('auth.forgotPasswordTitle')}
                   </Link>
                 </div>
                 <div className="relative">
