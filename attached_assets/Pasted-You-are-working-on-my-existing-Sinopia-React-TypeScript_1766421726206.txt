@@ -1,0 +1,197 @@
+You are working on my existing Sinopia React + TypeScript frontend with full EN/DE i18n support.
+I want to COMPLETELY REPLACE the content of the Privacy Policy page with new, correct content.
+
+CRITICAL RULES:
+- FRONTEND ONLY.
+- Do NOT hardcode text in JSX.
+- Use i18n keys for ALL text (English + German).
+- Remove ANY old privacy content, especially any references to:
+  "curizen GmbH", "Leopoldstr. 36", "40211 Düsseldorf".
+- The new content must be the ONLY privacy policy text shown.
+
+====================================================
+1) REPLACE PRIVACY POLICY CONTENT (FULL OVERRIDE)
+====================================================
+Replace the entire Privacy Policy page content with the following structure and text.
+
+------------------------------------
+SECTION 1 — Introduction
+------------------------------------
+EN:
+"The use of our website is generally possible without providing personal data. Insofar as personal data (e.g., name, address, or email addresses) is collected on our site, this is always done on a voluntary basis, where possible. This data will not be passed on to third parties without your explicit consent."
+
+DE:
+"Die Nutzung unserer Website ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf unseren Seiten personenbezogene Daten (z. B. Name, Anschrift oder E-Mail-Adressen) erhoben werden, erfolgt dies stets auf freiwilliger Basis, soweit möglich. Diese Daten werden ohne Ihre ausdrückliche Zustimmung nicht an Dritte weitergegeben."
+
+------------------------------------
+SECTION 2 — IP addresses and log files
+------------------------------------
+EN:
+"When visitors access this website, their IP addresses are recorded and stored in log files. These IP addresses are stored for a maximum of seven days for the purpose of detecting and preventing attacks."
+
+DE:
+"Beim Aufruf dieser Website werden die IP-Adressen der Besucher erfasst und in Logfiles gespeichert. Diese IP-Adressen werden für maximal sieben Tage gespeichert, um Angriffe zu erkennen und zu verhindern."
+
+------------------------------------
+SECTION 3 — Security notice
+------------------------------------
+EN:
+"Please note that data transmission over the Internet (e.g., communication by email) can have security vulnerabilities. Complete protection of data against access by third parties is not possible."
+
+DE:
+"Wir weisen darauf hin, dass die Datenübertragung im Internet (z. B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein vollständiger Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich."
+
+------------------------------------
+SECTION 4 — Objection to unsolicited advertising
+------------------------------------
+EN:
+"We hereby expressly object to the use of contact data published within the scope of the legal notice by third parties for sending unsolicited advertising and informational materials. The operators of this website expressly reserve the right to take legal action in the event of unsolicited advertising, such as spam emails."
+
+DE:
+"Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten durch Dritte zur Übersendung von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit ausdrücklich widersprochen. Die Betreiber dieser Website behalten sich rechtliche Schritte im Falle unverlangter Zusendung von Werbeinformationen, etwa durch Spam-E-Mails, vor."
+
+------------------------------------
+SECTION 5 — Reference to contact form section
+------------------------------------
+EN:
+"For details regarding the contact form, please refer to the section below in this privacy policy."
+
+DE:
+"Hinweise zum Kontaktformular finden Sie im nachfolgenden Abschnitt dieser Datenschutzerklärung."
+
+------------------------------------
+SECTION 6 — Privacy policy for the contact form
+------------------------------------
+(SECTION TITLE MUST BE BOLD AND SLIGHTLY LARGER)
+
+EN:
+"Privacy policy for the contact form"
+
+DE:
+"Datenschutzbestimmungen zum Kontaktformular"
+
+Body EN:
+"Personal data is collected via the contact form. In accordance with Article 13 of the EU General Data Protection Regulation (GDPR), you are hereby informed about the data processing associated with this collection. In addition to this description, the general data protection declaration for the website of Sinopia Deutschland GmbH applies."
+
+Body DE:
+"Über das Kontaktformular werden personenbezogene Daten erhoben. Gemäß Art. 13 der EU-Datenschutz-Grundverordnung (DSGVO) informieren wir Sie hiermit über die mit dieser Erhebung verbundene Datenverarbeitung. Ergänzend gilt die allgemeine Datenschutzerklärung für die Website der Sinopia Deutschland GmbH."
+
+------------------------------------
+SECTION 7 — Scope of processing personal data
+------------------------------------
+(TITLE BOLD + BIGGER)
+
+EN:
+"Scope of processing personal data"
+
+Bullet list EN:
+- First name
+- Company name
+- E-mail address
+- Telephone number
+- Your message
+- In addition, the following data is automatically collected:
+  - Confirmation of your declaration of consent
+  - Date and time the form was submitted
+
+DE:
+"Umfang der Verarbeitung personenbezogener Daten"
+
+Bullet list DE:
+- Vorname
+- Firmenname
+- E-Mail-Adresse
+- Telefonnummer
+- Ihre Nachricht
+- Zusätzlich werden folgende Daten automatisch erhoben:
+  - Bestätigung Ihrer Einwilligungserklärung
+  - Datum und Uhrzeit der Formularübermittlung
+
+------------------------------------
+SECTION 8 — Legal basis
+------------------------------------
+EN:
+"Legal basis"
+
+"The collection of form data is based on the consent of the data subjects in accordance with Art. 6 para. 1 lit. a EU GDPR."
+
+DE:
+"Rechtsgrundlage"
+
+"Die Erhebung der Formulardaten erfolgt auf Grundlage der Einwilligung der betroffenen Personen gemäß Art. 6 Abs. 1 lit. a DSGVO."
+
+------------------------------------
+SECTION 9 — Purpose of data processing
+------------------------------------
+EN:
+"Purpose of data processing"
+
+"This form is used to contact Sinopia Deutschland GmbH. The data you submit will be used for informational purposes and to send you event notifications from Sinopia Deutschland GmbH. You may object to being contacted and to the processing of your data at any time."
+
+DE:
+"Zweck der Datenverarbeitung"
+
+"Das Formular dient der Kontaktaufnahme mit der Sinopia Deutschland GmbH. Die von Ihnen übermittelten Daten werden zu Informationszwecken sowie zur Zusendung von Veranstaltungsinformationen der Sinopia Deutschland GmbH verwendet. Sie können der Kontaktaufnahme und der Verarbeitung Ihrer Daten jederzeit widersprechen."
+
+------------------------------------
+SECTION 10 — Storage duration
+------------------------------------
+EN:
+"Storage duration"
+
+"Your data will be stored for communication purposes with Sinopia Deutschland GmbH as long as your email address is valid or until you object to its storage. You can object at any time by sending an informal notice to info[at]sinopia.de. Your data will then be completely deleted."
+
+DE:
+"Speicherdauer"
+
+"Ihre Daten werden zum Zwecke der Kommunikation mit der Sinopia Deutschland GmbH gespeichert, solange Ihre E-Mail-Adresse gültig ist oder bis Sie der Speicherung widersprechen. Der Widerspruch kann jederzeit formlos an info[at]sinopia.de erfolgen. Anschließend werden Ihre Daten vollständig gelöscht."
+
+------------------------------------
+SECTION 11 — Contact details
+------------------------------------
+(TITLE BOLD + BIGGER)
+
+EN:
+"Contact details"
+
+"The company responsible for this website is Sinopia Deutschland GmbH (see legal notice)."
+
+DE:
+"Kontaktangaben"
+
+"Verantwortlich für diese Website ist die Sinopia Deutschland GmbH (siehe Impressum)."
+
+IMPORTANT:
+- “legal notice” (EN) and “Impressum” (DE) must be clickable links to /imprint.
+
+------------------------------------
+SECTION 12 — Your rights as a data subject
+------------------------------------
+EN:
+"Your rights as a data subject"
+
+"As a data subject, you can assert your rights under the EU GDPR at any time."
+
+DE:
+"Ihre Rechte als betroffene Person"
+
+"Als betroffene Person können Sie Ihre Rechte gemäß der EU-Datenschutz-Grundverordnung jederzeit geltend machen."
+
+====================================================
+2) STYLING REQUIREMENTS
+====================================================
+- Section titles (the ones marked with “-”) must be:
+  - Bold
+  - Slightly larger font size than paragraphs
+- Paragraph text should be readable, smaller than headings
+- Bullet lists must render cleanly
+- Layout must stay minimal and professional
+
+====================================================
+3) FINAL VERIFICATION
+====================================================
+- No reference to curizen GmbH or Düsseldorf anywhere.
+- Privacy page fully switches EN <-> DE.
+- All headings styled correctly.
+- No hardcoded text.
+- Build passes without errors.
