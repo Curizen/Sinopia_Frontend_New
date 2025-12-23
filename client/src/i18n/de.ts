@@ -508,6 +508,16 @@ export const de = {
     pageNotFoundDesc: "Die gesuchte Seite existiert nicht.",
     goHome: "Zur Startseite",
   },
+  status: {
+    paid: "Bezahlt",
+    pending: "Ausstehend",
+    signed: "Unterzeichnet",
+    overdue: "Überfällig",
+    draft: "Entwurf",
+    accepted: "Angenommen",
+    rejected: "Abgelehnt",
+    sent: "Gesendet",
+  },
   vision: {
     title: "Vision",
     teamPhotoAlt: "Sinopia Gründungsteam",

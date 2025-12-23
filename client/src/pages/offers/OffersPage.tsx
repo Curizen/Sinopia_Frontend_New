@@ -23,7 +23,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { formatCurrency, formatDate, getStatusLabel } from '@/lib/utils/formatters';
+import { formatCurrency, formatDate } from '@/lib/utils/formatters';
 import { Search, FileText, Check, X } from 'lucide-react';
 
 export default function OffersPage() {
@@ -133,7 +133,7 @@ export default function OffersPage() {
                       <div className="flex items-start justify-between gap-4 mb-2">
                         <h3 className="font-semibold text-lg">{offer.projectTitle}</h3>
                         <Badge variant={getStatusBadgeVariant(offer.status)}>
-                          {getStatusLabel(offer.status)}
+                          {t(`status.${offer.status}`)}
                         </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground mb-3">

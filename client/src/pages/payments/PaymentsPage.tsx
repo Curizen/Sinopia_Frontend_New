@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { formatCurrency, formatDate, getStatusLabel } from '@/lib/utils/formatters';
+import { formatCurrency, formatDate } from '@/lib/utils/formatters';
 import { Search, CreditCard, DollarSign, TrendingUp, Clock } from 'lucide-react';
 
 export default function PaymentsPage() {
@@ -158,7 +158,7 @@ export default function PaymentsPage() {
                           <div className="flex items-center gap-3 mb-2">
                             <h3 className="font-semibold">{invoice.projectTitle}</h3>
                             <Badge variant={getStatusBadgeVariant(invoice.status)}>
-                              {getStatusLabel(invoice.status)}
+                              {t(`status.${invoice.status}`)}
                             </Badge>
                           </div>
                           <p className="text-sm text-muted-foreground">

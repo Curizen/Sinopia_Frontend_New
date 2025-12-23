@@ -1,0 +1,117 @@
+You are working on my existing Sinopia React + TypeScript frontend (wouter routing + EN/DE i18n).
+Apply the following dashboard + i18n + footer navigation updates.
+FRONTEND ONLY. Do not break existing auth flows/routes. Do not hardcode strings in JSX—use i18n keys for EN/DE.
+
+====================================================
+1) Dashboard Profile: Add “Edit” for ALL sections
+====================================================
+On the dashboard profile page (and any profile sections/components):
+1) For every profile section (examples: Skills, Education, Experience, Certificates, Languages, Portfolio, etc.):
+   - Add an “Edit” control (button/link) in the section header.
+   - EN: "Edit"
+   - DE: "Bearbeiten"
+   - Minimal UI (small button, subtle, consistent with shadcn/tailwind)
+2) Clicking “Edit” should open an edit UI for that section:
+   - Prefer a modal/dialog or inline edit mode (choose what fits the existing code style).
+   - No backend needed: update local state and optionally persist to localStorage.
+3) If a section is currently read-only mock data, convert it to editable state.
+4) Add “Save” and “Cancel” actions:
+   - EN: Save / Cancel
+   - DE: Speichern / Abbrechen
+5) Ensure translations exist for all new UI texts (Edit/Save/Cancel + section headings if needed).
+
+====================================================
+2) Translate status labels to German (i18n)
+====================================================
+Find where these statuses are displayed (payments, contracts, offers, invoices, etc.) and ensure they use i18n keys.
+Statuses to cover:
+- paid
+- pending
+- signed
+- overdue
+- draft
+- accepted
+- rejected
+
+Requirements:
+1) Replace hardcoded status strings with a translation map, e.g.:
+   t(`status.${status}`)
+2) Add translations:
+EN:
+- status.paid = "Paid"
+- status.pending = "Pending"
+- status.signed = "Signed"
+- status.overdue = "Overdue"
+- status.draft = "Draft"
+- status.accepted = "Accepted"
+- status.rejected = "Rejected"
+
+DE (professional):
+- status.paid = "Bezahlt"
+- status.pending = "Ausstehend"
+- status.signed = "Unterzeichnet"
+- status.overdue = "Überfällig"
+- status.draft = "Entwurf"
+- status.accepted = "Angenommen"
+- status.rejected = "Abgelehnt"
+
+====================================================
+3) Lower Footer Links: route to Sign-in / or to the correct dashboard
+====================================================
+In the public footer "For Talent" and "For Companies" (lower footer links), implement the following behavior:
+
+A) Footer link labels (must be i18n)
+Skill Searcher group items:
+- EN: Post Use Cases
+- EN: Find Talent
+- EN: Manage Teams
+DE:
+- Use Cases erstellen
+- Talente finden
+- Teams verwalten
+
+Skill Giver group items:
+- EN: Find Projects
+- EN: Build Portfolio
+- EN: Get Paid
+DE:
+- Projekte finden
+- Portfolio aufbauen
+- Bezahlt werden
+
+B) Routing behavior (auth-aware)
+When user clicks any of these footer links:
+1) If NOT authenticated:
+   - route to /sign-in
+   - after login, redirect them to the correct dashboard area depending on the link they clicked (skill_giver or skill_searcher).
+2) If already authenticated:
+   - route directly based on the clicked link’s intended role:
+     - Skill Searcher links go to skill_searcher dashboard pages (or /dashboard in skill_searcher mode)
+     - Skill Giver links go to skill_giver dashboard pages (or /dashboard in skill_giver mode)
+
+Implementation hint (frontend-only):
+- Store a "post_login_redirect" route + "intended_role" in localStorage when the footer link is clicked.
+- On login success, if redirect exists, navigate there.
+- If role switching is not supported, at minimum route to /dashboard and show the correct section/page.
+
+C) Scroll-to-top behavior (always)
+After any click on these footer links:
+- Always scroll to the top:
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+This must happen even if the navigation keeps the user on the same page (same route).
+
+====================================================
+4) Global scroll reset on navigation (reinforce)
+====================================================
+Ensure the app has a global route-change scroll reset (ScrollToTop component) so the scroll position never stays at footer when navigating.
+
+====================================================
+5) Final Verification Checklist
+====================================================
+- Profile page: every section has an Edit button with EN/DE, and Save/Cancel works (state updates).
+- Status labels show correct German translations when language is DE.
+- Footer links are translated (EN/DE) and route correctly:
+  - Not logged in => /sign-in then redirect
+  - Logged in => go to correct dashboard area
+- Clicking footer links always moves to top of page (even if same route).
+- No TypeScript/build errors.

@@ -510,6 +510,16 @@ export const en = {
     pageNotFoundDesc: "The page you're looking for doesn't exist.",
     goHome: "Go Home",
   },
+  status: {
+    paid: "Paid",
+    pending: "Pending",
+    signed: "Signed",
+    overdue: "Overdue",
+    draft: "Draft",
+    accepted: "Accepted",
+    rejected: "Rejected",
+    sent: "Sent",
+  },
   vision: {
     title: "Vision",
     teamPhotoAlt: "Sinopia Founding Team",
