@@ -11,6 +11,7 @@ import { ProjectProvider } from "@/context/ProjectContext";
 import { OfferProvider } from "@/context/OfferContext";
 import { ContractProvider } from "@/context/ContractContext";
 import { PaymentProvider } from "@/context/PaymentContext";
+import { ScrollToTop } from "@/components/routing/ScrollToTop";
 
 import HomePage from "@/pages/HomePage";
 import AboutPage from "@/pages/AboutPage";
@@ -155,6 +156,7 @@ function App() {
                 <OfferProvider>
                   <ContractProvider>
                     <PaymentProvider>
+                      <ScrollToTop />
                       <Toaster />
                       <Router />
                     </PaymentProvider>

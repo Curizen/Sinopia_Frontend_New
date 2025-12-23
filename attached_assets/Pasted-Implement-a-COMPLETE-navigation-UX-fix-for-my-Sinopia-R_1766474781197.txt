@@ -1,0 +1,68 @@
+Implement a COMPLETE navigation UX fix for my Sinopia React + TypeScript app using wouter.
+
+PROBLEM (happens on mobile AND desktop):
+- When I navigate to another page, sometimes the scroll position stays where it was (e.g., near footer).
+- If any menu/dropdown/sidebar is open (hamburger menu, dropdown nav, etc.), it stays open after navigation.
+
+GOAL:
+On EVERY route change:
+1) Scroll to the top of the page.
+2) Close any open navigation menus/dropdowns (public navbar + dashboard navbar).
+
+STRICT REQUIREMENTS:
+- FRONTEND ONLY.
+- Do NOT change page content or styling, only navigation behavior.
+- Must work globally across ALL routes, not only some links.
+- Must work even when navigation happens programmatically (redirects) not just by clicking.
+
+====================================================
+1) GLOBAL SCROLL-TO-TOP ON ROUTE CHANGE
+====================================================
+1) Create a reusable component, e.g.:
+   client/src/components/routing/ScrollToTop.tsx
+2) In it, listen to wouter route changes using useLocation.
+3) On every location change, call:
+   window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+   (Use "auto" for a consistent “reset” behavior.)
+4) Mount <ScrollToTop /> once at the top-level of the app (App.tsx or main router layout),
+   so it applies to ALL pages, including dashboard pages.
+
+====================================================
+2) CLOSE MENUS/DROPDOWNS ON ROUTE CHANGE (PUBLIC LAYOUT)
+====================================================
+In PublicLayout:
+1) Ensure mobile menu state closes when location changes:
+   useEffect(() => setMobileMenuOpen(false), [location])
+2) Also close it when any link is clicked (keep existing onClick that sets false).
+3) If there are any other dropdowns/open states in PublicLayout, close them too on route change.
+
+====================================================
+3) CLOSE MENUS/DROPDOWNS ON ROUTE CHANGE (DASHBOARD)
+====================================================
+In DashboardLayout (or wherever the dashboard topbar/menus exist):
+1) Identify any open state for menus (hamburger, dropdown, sidebar state, etc.).
+2) Ensure they close automatically on route change:
+   useEffect(() => closeAllMenus(), [location])
+3) Ensure it also closes on link clicks where relevant.
+4) If a sidebar is controlled by a provider, use its available API to close it on navigation.
+
+====================================================
+4) IMPORTANT: DO NOT LEAVE ANY MENU OPEN AFTER NAVIGATION
+====================================================
+- After clicking ANY navigation link (Home/About/Contact/Vision/Imprint/Dashboard links),
+  the menu must close and the page must start at the top.
+- This must work both on mobile and desktop.
+- This must work both for manual clicks and automatic redirects (setLocation()).
+
+====================================================
+5) FINAL VERIFICATION (MUST PASS)
+====================================================
+Test:
+1) Scroll to bottom of a page.
+2) Open any menu/dropdown.
+3) Navigate to another page.
+Expected:
+- Menu closes immediately.
+- Scroll resets to top.
+- No UI breakage.
+- No TypeScript errors.

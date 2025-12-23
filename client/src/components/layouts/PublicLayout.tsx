@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
@@ -12,6 +12,10 @@ export function PublicLayout({ children }: PublicLayoutProps) {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t, language, setLanguage } = useI18n();
+
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location]);
 
   const navLinks = [
     { href: '/', labelKey: 'nav.home' },
