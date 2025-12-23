@@ -43,3 +43,4 @@ waitForPort = 5000
 
 [userenv.shared]
 VITE_API_BASE_URL = "http://sinopi.eu"
+EXTERNAL_API_URL = "https://sinopi.eu"

@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 
-const EXTERNAL_API_BASE = "http://sinopi.eu";
+const EXTERNAL_API_BASE = process.env.EXTERNAL_API_URL || "https://sinopi.eu";
 
 export async function registerRoutes(
   httpServer: Server,
