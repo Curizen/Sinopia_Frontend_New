@@ -1,0 +1,89 @@
+You are working on my existing Sinopia React + TypeScript frontend (wouter routing + EN/DE i18n).
+Apply these updates. FRONTEND ONLY. No backend. Keep UI minimal and consistent with Sinopia theme.
+No hardcoded strings in JSX—use i18n keys for EN/DE.
+
+====================================================
+1) Update the Under-Development FULL-WIDTH banner design (main + subtitle)
+====================================================
+GOAL:
+The Under Development banner must display TWO lines inside the banner design:
+
+Line 1 (main):
+EN: "The platform is still under development"
+DE: "Die Plattform befindet sich noch in der Entwicklung"
+
+Line 2 (smaller subtitle under it):
+EN: "will be available on February 8"
+DE: "verfügbar ab dem 8. Februar"
+
+REQUIREMENTS:
+A) Use the same unified component everywhere (one UnderDevelopment component).
+B) The banner should be full-width, minimal, and match Sinopia site colors.
+C) The text must be styled like a banner hero:
+- main line bigger, bold
+- subtitle smaller, lighter
+D) Language switching:
+- EN shows EN lines
+- DE shows DE lines instantly
+
+IMPLEMENTATION OPTIONS (choose best and implement cleanly):
+Option 1 (preferred): Use one neutral banner background image (PNG/SVG) WITHOUT text,
+and overlay the translated text with HTML/Tailwind (so we don’t need separate EN/DE images).
+- Put background asset: /under-development-banner.png (minimal shapes, Sinopia colors)
+- Overlay text centered.
+
+Option 2: Use two images with text embedded:
+- /under-development-en.png
+- /under-development-de.png
+(Only if Option 1 is not feasible.)
+
+====================================================
+2) Ensure the unified UnderDevelopment component is used everywhere needed
+====================================================
+Use the same UnderDevelopment component in:
+- /under-development route (post-auth flow after sign-in/sign-up/OTP/CV upload)
+- Dashboard
+- Projects
+- Offers
+- Contracts
+- Payments
+- Notifications
+- Profile
+- Any other pages currently showing “under development”
+
+====================================================
+3) Home page: Success Stories section must be “Under Development” (no mock data)
+====================================================
+GOAL:
+In Home page “Success Stories” section:
+- Remove all existing mock/demo data/cards.
+- Replace the entire Success Stories content with the same UnderDevelopment component style (scaled to fit the section).
+
+REQUIREMENTS:
+A) Keep the section title if it exists, but ensure it is translated EN/DE.
+B) Inside the section, show the UnderDevelopment banner/component (same design language).
+C) No fake story names, ratings, logos, or stats should remain.
+
+====================================================
+4) i18n keys to add/update (EN + DE)
+====================================================
+Add translation keys (example):
+EN:
+underDev.title = "The platform is still under development"
+underDev.subtitle = "will be available on February 8"
+
+DE:
+underDev.title = "Die Plattform befindet sich noch in der Entwicklung"
+underDev.subtitle = "verfügbar ab dem 8. Februar"
+
+Also ensure Home section title (Success Stories) is translated if present.
+
+====================================================
+5) Final Verification
+====================================================
+- Banner now shows title + smaller subtitle under it.
+- Design is minimal and matches site theme.
+- Same UnderDevelopment component is reused everywhere.
+- Success Stories has NO demo data, only UnderDevelopment content.
+- EN/DE toggles translate both lines correctly.
+- No TypeScript/build errors.

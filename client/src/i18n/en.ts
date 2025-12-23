@@ -518,7 +518,7 @@ export const en = {
   },
   underDevelopment: {
     title: "The platform is still under development",
-    subtitle: "We're working hard to bring you new features. Stay tuned!",
+    subtitle: "will be available on February 8",
     featuresNotAvailable: "Some features are not available yet.",
     backToHome: "Back to Home",
   },
