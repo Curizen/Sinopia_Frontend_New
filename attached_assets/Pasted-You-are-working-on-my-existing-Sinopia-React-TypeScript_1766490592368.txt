@@ -1,0 +1,80 @@
+You are working on my existing Sinopia React + TypeScript frontend (wouter routing + EN/DE i18n).
+Update the “Under Development” experience across the entire app.
+FRONTEND ONLY. No backend. No hardcoded strings in JSX (except selecting which image file to show). All labels must remain EN/DE.
+
+====================================================
+1) Replace the current Under Development image with a FULL-WIDTH hero banner
+====================================================
+GOAL:
+“The platform is still under development” must be shown as a FULL-WIDTH banner image that matches the website theme (minimal, modern).
+- The banner should span the full content width (desktop and mobile)
+- It should feel like a hero section (clean, minimal, matching Sinopia colors)
+- The banner itself must contain the message text INSIDE the image (not only as plain text outside)
+
+IMPLEMENTATION:
+A) Create two PNG banners (full-width):
+- /under-development-en.png
+- /under-development-de.png
+
+Design requirements for both:
+- Minimal, modern, consistent with Sinopia theme
+- Full-width hero style (wide aspect ratio)
+- Text inside the image:
+  EN: “The platform is still under development”
+  DE: “Die Plattform befindet sich noch in der Entwicklung”
+- No loud colors, no clutter, subtle shapes/background.
+
+B) Place these images into the correct public folder (e.g. client/public/).
+C) Update the UnderDevelopment component to render:
+- A full-width responsive <img> banner
+- With rounded corners and subtle shadow (optional):
+  className example:
+  "w-full max-w-7xl mx-auto rounded-xl shadow-sm"
+- Ensure it scales properly on mobile:
+  object-fit: cover; with min height that still looks good.
+
+Also add an optional small “Back to Home” button under the banner (i18n) if it fits the UI:
+EN: Back to Home
+DE: Zur Startseite
+
+====================================================
+2) Show the banner everywhere Under Development is required
+====================================================
+A) Dashboard pages:
+- Dashboard
+- Projects
+- Offers
+- Contracts
+- Payments
+- Notifications
+- Profile
+(and any other dashboard sections where Under Development is shown)
+Replace any old under-development UI with the new full-width banner.
+
+B) Post-auth flows:
+Anywhere the app currently redirects to /dashboard after:
+- Sign in success
+- Sign up success
+- OTP verification success
+- CV upload success
+Instead route to /under-development page that displays this SAME full-width banner.
+
+C) Under development route:
+- Ensure /under-development page exists and uses the same banner component.
+
+====================================================
+3) Language behavior (critical)
+====================================================
+- If language is EN, show /under-development-en.png
+- If language is DE, show /under-development-de.png
+- Switching languages must instantly swap the banner.
+
+====================================================
+4) Final verification checklist
+====================================================
+- Banner appears full-width and looks minimal + matches the theme.
+- Banner shows in:
+  - /under-development (post-auth flow)
+  - Dashboard pages (dashboard/profile/etc.)
+- EN/DE banners swap correctly with language toggle.
+- No TypeScript/build errors.
