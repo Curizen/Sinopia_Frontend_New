@@ -4,6 +4,18 @@ import { storage } from "./storage";
 
 const EXTERNAL_API_BASE = process.env.EXTERNAL_API_URL || "https://sinopia.eu";
 
+function forwardCookies(externalResponse: Response, res: any) {
+  const setCookieHeader = externalResponse.headers.get("set-cookie");
+  if (setCookieHeader) {
+    res.setHeader("Set-Cookie", setCookieHeader);
+  }
+}
+
+function getClientCookies(req: any): string {
+  const cookies = req.headers.cookie;
+  return cookies || "";
+}
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
@@ -13,9 +25,13 @@ export async function registerRoutes(
     try {
       const response = await fetch(`${EXTERNAL_API_BASE}/api/users/register`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Cookie": getClientCookies(req),
+        },
         body: JSON.stringify(req.body),
       });
+      forwardCookies(response, res);
       const data = await response.json();
       res.status(response.status).json(data);
     } catch (error) {
@@ -28,9 +44,13 @@ export async function registerRoutes(
     try {
       const response = await fetch(`${EXTERNAL_API_BASE}/api/users/verify-register-otp`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Cookie": getClientCookies(req),
+        },
         body: JSON.stringify(req.body),
       });
+      forwardCookies(response, res);
       const data = await response.json();
       res.status(response.status).json(data);
     } catch (error) {
@@ -43,9 +63,13 @@ export async function registerRoutes(
     try {
       const response = await fetch(`${EXTERNAL_API_BASE}/api/users/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Cookie": getClientCookies(req),
+        },
         body: JSON.stringify(req.body),
       });
+      forwardCookies(response, res);
       const data = await response.json();
       res.status(response.status).json(data);
     } catch (error) {
@@ -58,9 +82,13 @@ export async function registerRoutes(
     try {
       const response = await fetch(`${EXTERNAL_API_BASE}/api/users/forgot-password`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Cookie": getClientCookies(req),
+        },
         body: JSON.stringify(req.body),
       });
+      forwardCookies(response, res);
       const data = await response.json();
       res.status(response.status).json(data);
     } catch (error) {
@@ -73,9 +101,13 @@ export async function registerRoutes(
     try {
       const response = await fetch(`${EXTERNAL_API_BASE}/api/users/verify-forgot-password-otp`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Cookie": getClientCookies(req),
+        },
         body: JSON.stringify(req.body),
       });
+      forwardCookies(response, res);
       const data = await response.json();
       res.status(response.status).json(data);
     } catch (error) {
@@ -87,7 +119,10 @@ export async function registerRoutes(
   app.post("/api/users/reset-password", async (req, res) => {
     try {
       const authHeader = req.headers.authorization;
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
       if (authHeader) {
         headers["Authorization"] = authHeader;
       }
@@ -97,6 +132,7 @@ export async function registerRoutes(
         headers,
         body: JSON.stringify(req.body),
       });
+      forwardCookies(response, res);
       const data = await response.json();
       res.status(response.status).json(data);
     } catch (error) {
@@ -108,7 +144,10 @@ export async function registerRoutes(
   app.post("/api/users/logout", async (req, res) => {
     try {
       const authHeader = req.headers.authorization;
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
       if (authHeader) {
         headers["Authorization"] = authHeader;
       }
@@ -117,6 +156,7 @@ export async function registerRoutes(
         method: "POST",
         headers,
       });
+      forwardCookies(response, res);
       const data = await response.json();
       res.status(response.status).json(data);
     } catch (error) {
