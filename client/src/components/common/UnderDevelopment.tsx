@@ -1,37 +1,41 @@
 import { useI18n } from '@/i18n';
-import { Card, CardContent } from '@/components/ui/card';
-import underDevelopmentImage from '@assets/generated_images/under_development_banner_illustration.png';
+import { Link } from 'wouter';
+import { Button } from '@/components/ui/button';
+import { Home } from 'lucide-react';
+import underDevelopmentEn from '@assets/generated_images/english_under_development_banner.png';
+import underDevelopmentDe from '@assets/generated_images/german_under_development_banner.png';
 
 interface UnderDevelopmentProps {
-  showSubtitle?: boolean;
+  showBackButton?: boolean;
   className?: string;
 }
 
-export function UnderDevelopment({ showSubtitle = true, className = '' }: UnderDevelopmentProps) {
-  const { t } = useI18n();
+export function UnderDevelopment({ showBackButton = false, className = '' }: UnderDevelopmentProps) {
+  const { t, language } = useI18n();
+
+  const bannerImage = language === 'de' ? underDevelopmentDe : underDevelopmentEn;
 
   return (
-    <Card className={`border-dashed ${className}`} data-testid="card-under-development">
-      <CardContent className="flex flex-col items-center justify-center py-8 px-6 text-center">
-        <div className="relative mb-4 w-full max-w-md">
-          <img
-            src={underDevelopmentImage}
-            alt={t('underDevelopment.title')}
-            className="w-full h-auto rounded-lg"
-            data-testid="img-under-development"
-          />
-        </div>
+    <div className={`flex flex-col items-center ${className}`} data-testid="container-under-development">
+      <div className="w-full max-w-7xl mx-auto">
+        <img
+          src={bannerImage}
+          alt={t('underDevelopment.title')}
+          className="w-full h-auto rounded-xl shadow-sm object-cover min-h-[200px]"
+          data-testid="img-under-development-banner"
+        />
+      </div>
 
-        <h3 className="text-lg font-semibold text-foreground mb-2" data-testid="text-under-development-title">
-          {t('underDevelopment.title')}
-        </h3>
-        
-        {showSubtitle && (
-          <p className="text-muted-foreground text-sm max-w-md" data-testid="text-under-development-subtitle">
-            {t('underDevelopment.featuresNotAvailable')}
-          </p>
-        )}
-      </CardContent>
-    </Card>
+      {showBackButton && (
+        <div className="mt-8">
+          <Link href="/">
+            <Button size="lg" data-testid="button-back-to-home">
+              <Home className="w-4 h-4 mr-2" />
+              {t('underDevelopment.backToHome')}
+            </Button>
+          </Link>
+        </div>
+      )}
+    </div>
   );
 }

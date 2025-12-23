@@ -65,7 +65,7 @@ export default function SettingsPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <UnderDevelopment showSubtitle={false} />
+              <UnderDevelopment />
             </CardContent>
           </Card>
 
