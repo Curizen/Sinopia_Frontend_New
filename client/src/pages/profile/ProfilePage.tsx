@@ -24,6 +24,7 @@ import {
   X,
   Building2,
 } from 'lucide-react';
+import { UnderDevelopment } from '@/components/common/UnderDevelopment';
 
 type EditingSection = 'about' | 'skills' | 'experience' | 'education' | 'certifications' | 'company' | null;
 
@@ -194,6 +195,8 @@ export default function ProfilePage() {
             {isSkillGiver ? t('profile.pageSubtitleGiver') : t('profile.pageSubtitleSearcher')}
           </p>
         </div>
+
+        <UnderDevelopment className="mb-6" />
 
         <div className="grid lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-1">

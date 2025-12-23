@@ -37,6 +37,7 @@ import ContractsPage from "@/pages/contracts/ContractsPage";
 import PaymentsPage from "@/pages/payments/PaymentsPage";
 import NotificationsPage from "@/pages/notifications/NotificationsPage";
 import ProfilePage from "@/pages/profile/ProfilePage";
+import SettingsPage from "@/pages/settings/SettingsPage";
 import UnderDevelopmentPage from "@/pages/UnderDevelopmentPage";
 import NotFound from "@/pages/not-found";
 
@@ -139,6 +140,9 @@ function Router() {
       </Route>
       <Route path="/profile">
         <PrivateRoute component={ProfilePage} />
+      </Route>
+      <Route path="/settings">
+        <PrivateRoute component={SettingsPage} />
       </Route>
 
       <Route component={NotFound} />

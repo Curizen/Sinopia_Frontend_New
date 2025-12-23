@@ -519,7 +519,26 @@ export const en = {
   underDevelopment: {
     title: "The platform is still under development",
     subtitle: "We're working hard to bring you new features. Stay tuned!",
+    featuresNotAvailable: "Some features are not available yet.",
     backToHome: "Back to Home",
+  },
+  settings: {
+    title: "Settings",
+    language: "Language",
+    languageDesc: "Choose your preferred language",
+    appearance: "Appearance",
+    appearanceDesc: "Customize the look and feel",
+    lightMode: "Light Mode",
+    darkMode: "Dark Mode",
+    account: "Account",
+    accountDesc: "Your account information",
+    email: "Email",
+    role: "Role",
+    currentLanguage: "Current language",
+  },
+  menu: {
+    menu: "Menu",
+    home: "Home",
   },
   emptyState: {
     notSet: "Not set",

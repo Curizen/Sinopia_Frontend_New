@@ -25,6 +25,8 @@ import {
   LogOut,
   Menu,
   X,
+  Settings,
+  Home,
 } from 'lucide-react';
 
 interface DashboardLayoutProps {
@@ -149,6 +151,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   </Link>
                 </DropdownMenuItem>
 
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link href="/settings" className="flex items-center gap-2" data-testid="link-settings">
+                    <Settings className="w-4 h-4" />
+                    <span>{t('settings.title')}</span>
+                  </Link>
+                </DropdownMenuItem>
+
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem
@@ -158,6 +167,33 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 >
                   <LogOut className="w-4 h-4 mr-2" />
                   {t('nav.signOut')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="hidden lg:flex items-center gap-1"
+                  data-testid="button-menu-dropdown"
+                >
+                  <Menu className="w-4 h-4" />
+                  <span className="text-sm">{t('menu.menu')}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link 
+                    href="/" 
+                    className="flex items-center gap-2"
+                    onClick={() => window.scrollTo(0, 0)}
+                    data-testid="link-home-from-dashboard"
+                  >
+                    <Home className="w-4 h-4" />
+                    <span>{t('menu.home')}</span>
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -175,6 +211,18 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         {mobileMenuOpen && (
           <div className="lg:hidden border-t border-border bg-background">
             <nav className="flex flex-col py-2">
+              <Link
+                href="/"
+                className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  window.scrollTo(0, 0);
+                }}
+                data-testid="mobile-nav-home"
+              >
+                <Home className="w-5 h-5" />
+                <span className="flex-1">{t('menu.home')}</span>
+              </Link>
               {navItems.map((item) => (
                 <Link
                   key={item.href}
@@ -196,6 +244,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   ) : null}
                 </Link>
               ))}
+              <Link
+                href="/settings"
+                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+                  location === '/settings'
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+                data-testid="mobile-nav-settings"
+              >
+                <Settings className="w-5 h-5" />
+                <span className="flex-1">{t('settings.title')}</span>
+              </Link>
             </nav>
           </div>
         )}

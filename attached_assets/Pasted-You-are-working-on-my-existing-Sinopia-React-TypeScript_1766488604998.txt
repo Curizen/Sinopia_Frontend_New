@@ -1,0 +1,114 @@
+You are working on my existing Sinopia React + TypeScript frontend (wouter routing + EN/DE i18n).
+Implement the following UI changes. FRONTEND ONLY. No backend. No hardcoded text in JSX—use i18n keys for EN/DE.
+
+====================================================
+1) Add “Under Development” content inside specific dashboard pages
+====================================================
+Pages:
+- Dashboard
+- Projects
+- Offers
+- Contracts
+- Payments
+- Notifications
+- Profile
+
+GOAL:
+Each of these pages should display a consistent “Under Development” section:
+- A minimal, modern illustration/image (site-appropriate)
+- A styled message: “The platform is still under development”
+- Clean spacing and design consistent with Sinopia
+
+REQUIREMENTS:
+A) Create a reusable component:
+- e.g. client/src/components/common/UnderDevelopment.tsx
+It should include:
+- Title (i18n):
+  EN: "The platform is still under development"
+  DE: "Die Plattform befindet sich noch in der Entwicklung"
+- Optional subtitle (i18n) like:
+  EN: "Some features are not available yet."
+  DE: "Einige Funktionen sind noch nicht verfügbar."
+- A minimal illustration:
+  - Use an existing asset if available OR add a new svg/png in public assets.
+  - Keep it minimal (soft, modern).
+  - Must be responsive.
+
+B) Replace any existing plain text occurrences of:
+"The platform is still under development"
+with this component (so the message always appears in a consistent, “nice” design).
+
+C) On each page listed above:
+- Render the UnderDevelopment component as the main content (or as the first section),
+- Keep page layout intact and consistent.
+
+====================================================
+2) Profile avatar dropdown: add Settings + Sign Out
+====================================================
+When user clicks the profile avatar:
+- Show a simple dropdown menu with (i18n):
+  - EN: "Settings"
+  - DE: "Einstellungen"
+  - EN: "Sign out"
+  - DE: "Abmelden"
+
+Actions:
+- Settings routes to /settings
+- Sign out calls logout() and routes to "/"
+
+====================================================
+3) Create a Settings page (/settings)
+====================================================
+A) Routing
+- Add route: /settings (accessible for authenticated users)
+
+B) Design (minimal and suitable)
+- Use a simple card layout consistent with the site.
+- Include sections like:
+  1) Language (display current language + link to switch)
+  2) Appearance (optional: light/dark toggle if supported; if not supported, show placeholder text as under development)
+  3) Account (show email, role; no mock data)
+
+C) i18n
+All labels must be translated EN/DE.
+
+D) If features aren’t functional yet:
+- Show the same UnderDevelopment component inside settings sections where appropriate.
+
+====================================================
+4) Add a simple dropdown to return to Home from inside dashboard
+====================================================
+GOAL:
+While the user is inside the dashboard pages, provide an easy way to return to Home.
+
+REQUIREMENTS:
+A) In the dashboard top bar (header):
+- Add a small dropdown (or a simple menu button) labeled:
+  EN: "Menu"
+  DE: "Menü"
+- Inside it include:
+  - EN: "Home"
+  - DE: "Startseite"
+This must route to "/" and close the dropdown.
+
+B) Make it minimal and not cluttered.
+C) Ensure on click:
+- Navigate to "/"
+- Close dropdown
+- Scroll to top
+
+====================================================
+5) Global behavior
+====================================================
+- Ensure scroll-to-top on route change remains active.
+- Close any open menus/dropdowns on navigation.
+
+====================================================
+6) Final verification
+====================================================
+- All listed pages show the UnderDevelopment component with an illustration, translated EN/DE.
+- Any under-development text is displayed only via the component (consistent styling).
+- Avatar dropdown shows Settings + Sign out (translated).
+- /settings page exists, looks good, translated.
+- Dashboard top bar includes a dropdown to go back Home.
+- No TypeScript/build errors.

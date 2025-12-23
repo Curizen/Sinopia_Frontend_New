@@ -517,7 +517,26 @@ export const de = {
   underDevelopment: {
     title: "Die Plattform befindet sich noch in der Entwicklung",
     subtitle: "Wir arbeiten intensiv daran, Ihnen neue Funktionen bereitzustellen. Bleiben Sie dran!",
+    featuresNotAvailable: "Einige Funktionen sind noch nicht verfügbar.",
     backToHome: "Zur Startseite",
+  },
+  settings: {
+    title: "Einstellungen",
+    language: "Sprache",
+    languageDesc: "Wählen Sie Ihre bevorzugte Sprache",
+    appearance: "Erscheinungsbild",
+    appearanceDesc: "Passen Sie das Aussehen an",
+    lightMode: "Hellmodus",
+    darkMode: "Dunkelmodus",
+    account: "Konto",
+    accountDesc: "Ihre Kontoinformationen",
+    email: "E-Mail-Adresse",
+    role: "Rolle",
+    currentLanguage: "Aktuelle Sprache",
+  },
+  menu: {
+    menu: "Menü",
+    home: "Startseite",
   },
   emptyState: {
     notSet: "Nicht gesetzt",

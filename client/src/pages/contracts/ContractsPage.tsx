@@ -25,6 +25,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { formatCurrency, formatDate } from '@/lib/utils/formatters';
 import { Search, Handshake, FileSignature, Calendar, DollarSign } from 'lucide-react';
+import { UnderDevelopment } from '@/components/common/UnderDevelopment';
 
 export default function ContractsPage() {
   const { user } = useAuth();
@@ -75,6 +76,8 @@ export default function ContractsPage() {
             {t('contracts.pageSubtitle')}
           </p>
         </div>
+
+        <UnderDevelopment className="mb-6" />
 
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">

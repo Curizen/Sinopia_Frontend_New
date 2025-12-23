@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Link } from 'wouter';
 import { formatCurrency, formatDate } from '@/lib/utils/formatters';
+import { UnderDevelopment } from '@/components/common/UnderDevelopment';
 import {
   FolderKanban,
   FileText,
@@ -120,6 +121,8 @@ export default function DashboardPage() {
             </Link>
           </div>
         </div>
+
+        <UnderDevelopment className="mb-6" />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((stat) => (
