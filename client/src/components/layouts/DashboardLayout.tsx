@@ -209,7 +209,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 data-testid="mobile-nav-home"
               >
                 <Home className="w-5 h-5" />
-                <span className="flex-1">{t('menu.home')}</span>
+                <span className="flex-1">{t('nav.home')}</span>
               </Link>
               {navItems.map((item) => (
                 <Link
