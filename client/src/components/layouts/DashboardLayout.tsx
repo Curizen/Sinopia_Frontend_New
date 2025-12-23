@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
 import { useNotifications } from '@/context/NotificationContext';
@@ -23,13 +23,8 @@ import {
   Bell,
   User,
   LogOut,
-  Settings,
   Menu,
-  Home,
-  Info,
-  Mail,
-  Eye,
-  FileSignature,
+  X,
 } from 'lucide-react';
 
 interface DashboardLayoutProps {
@@ -41,8 +36,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { unreadCount } = useNotifications();
   const [location, setLocation] = useLocation();
   const { t, language, setLanguage } = useI18n();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isSkillGiver = user?.role === 'skill_giver';
+
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location]);
 
   const navItems = [
     { href: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard },
@@ -63,212 +63,145 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     setLanguage(language === 'en' ? 'de' : 'en');
   };
 
-  const currentNav = navItems.find((item) => item.href === location);
-  const pageTitle = currentNav ? t(currentNav.labelKey) : t('nav.dashboard');
-
   return (
     <div className="flex min-h-screen flex-col bg-muted/30">
-      <header className="flex items-center justify-between gap-4 px-6 py-4 border-b border-border bg-background">
-        <div className="flex items-center gap-4">
-          <Link href="/" className="flex items-center gap-2">
-            <img 
-              src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
-              alt="Sinopia Logo" 
-              className="w-16 h-auto rounded-md object-cover"
-            />
-          </Link>
-
-          <nav className="hidden md:flex items-center gap-4 ml-2">
-            <Link 
-              href="/" 
-              className={`text-sm font-medium transition-colors ${location === '/' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
-              data-testid="nav-home"
-            >
-              {t('nav.home')}
+      <header className="sticky top-0 z-50 border-b border-border bg-background">
+        <div className="flex items-center justify-between gap-4 px-4 py-3">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="flex items-center gap-2">
+              <img 
+                src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+                alt="Sinopia Logo" 
+                className="w-12 h-auto rounded-md object-cover"
+              />
             </Link>
-            <Link 
-              href="/about" 
-              className={`text-sm font-medium transition-colors ${location === '/about' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
-              data-testid="nav-about"
-            >
-              {t('nav.about')}
-            </Link>
-            <Link 
-              href="/vision" 
-              className={`text-sm font-medium transition-colors ${location === '/vision' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
-              data-testid="nav-vision"
-            >
-              {t('nav.vision')}
-            </Link>
-            <Link 
-              href="/imprint" 
-              className={`text-sm font-medium transition-colors ${location === '/imprint' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
-              data-testid="nav-imprint"
-            >
-              {t('nav.imprint')}
-            </Link>
-            <Link 
-              href="/contact" 
-              className={`text-sm font-medium transition-colors ${location === '/contact' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
-              data-testid="nav-contact"
-            >
-              {t('nav.contact')}
-            </Link>
-          </nav>
 
-          <span className="hidden md:inline text-muted-foreground">|</span>
-          <h1 className="text-xl font-semibold capitalize hidden md:block">
-            {pageTitle}
-          </h1>
+            <nav className="hidden lg:flex items-center gap-1">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    location === item.href
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                  }`}
+                  data-testid={`nav-${item.labelKey.split('.')[1]}`}
+                >
+                  <item.icon className="w-4 h-4" />
+                  <span>{t(item.labelKey)}</span>
+                  {item.badge ? (
+                    <span className="bg-primary text-primary-foreground text-xs font-medium px-1.5 py-0.5 rounded-full">
+                      {item.badge}
+                    </span>
+                  ) : null}
+                </Link>
+              ))}
+            </nav>
+          </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden"
-                data-testid="button-mobile-menu"
-              >
-                <Menu className="w-5 h-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48">
-              <DropdownMenuItem asChild className="cursor-pointer">
-                <Link href="/" className="flex items-center gap-2">
-                  <Home className="w-4 h-4" />
-                  <span>{t('nav.home')}</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="cursor-pointer">
-                <Link href="/about" className="flex items-center gap-2">
-                  <Info className="w-4 h-4" />
-                  <span>{t('nav.about')}</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="cursor-pointer">
-                <Link href="/vision" className="flex items-center gap-2">
-                  <Eye className="w-4 h-4" />
-                  <span>{t('nav.vision')}</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="cursor-pointer">
-                <Link href="/imprint" className="flex items-center gap-2">
-                  <FileSignature className="w-4 h-4" />
-                  <span>{t('nav.imprint')}</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild className="cursor-pointer">
-                <Link href="/contact" className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  <span>{t('nav.contact')}</span>
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleLanguage}
-            className="text-xs font-medium px-2"
-            data-testid="button-language-toggle-dashboard"
-          >
-            {language === 'en' ? 'DE' : 'EN'}
-          </Button>
-
-          <Link href="/notifications">
+          <div className="flex items-center gap-2">
             <Button
               variant="ghost"
-              size="icon"
-              className="relative"
-              data-testid="button-notifications"
+              size="sm"
+              onClick={toggleLanguage}
+              className="text-xs font-medium px-2"
+              data-testid="button-language-toggle-dashboard"
             >
-              <Bell className="w-5 h-5" />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs font-medium rounded-full flex items-center justify-center">
-                  {unreadCount}
-                </span>
-              )}
+              {language === 'en' ? 'DE' : 'EN'}
             </Button>
-          </Link>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="flex items-center gap-2"
-                data-testid="button-user-menu"
-              >
-                <Avatar className="w-8 h-8">
-                  <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                    {user?.firstName?.[0]}
-                    {user?.lastName?.[0]}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent align="end" className="w-64">
-              <div className="px-2 py-1.5">
-                <p className="text-sm font-medium">
-                  {user?.firstName} {user?.lastName}
-                </p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {user?.email}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {isSkillGiver ? t('auth.skillGiver') : t('auth.skillSearcher')}
-                </p>
-              </div>
-
-              <DropdownMenuSeparator />
-
-              {navItems.map((item) => (
-                <DropdownMenuItem
-                  key={item.href}
-                  asChild
-                  className="cursor-pointer"
-                  data-testid={`dropdown-nav-${item.labelKey.split('.')[1]}`}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="flex items-center gap-2"
+                  data-testid="button-user-menu"
                 >
-                  <Link href={item.href} className="flex items-center gap-2">
-                    <item.icon className="w-4 h-4" />
-                    <span className="flex-1">{t(item.labelKey)}</span>
-                    {item.badge ? (
-                      <span className="bg-primary text-primary-foreground text-xs font-medium px-2 py-0.5 rounded-full">
-                        {item.badge}
-                      </span>
-                    ) : null}
+                  <Avatar className="w-8 h-8">
+                    <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                      {user?.firstName?.[0]}
+                      {user?.lastName?.[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="px-2 py-1.5">
+                  <p className="text-sm font-medium">
+                    {user?.firstName} {user?.lastName}
+                  </p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {user?.email}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {isSkillGiver ? t('auth.skillGiver') : t('auth.skillSearcher')}
+                  </p>
+                </div>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem asChild className="cursor-pointer">
+                  <Link href="/profile" className="flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    <span>{t('nav.profile')}</span>
                   </Link>
                 </DropdownMenuItem>
-              ))}
 
-              <DropdownMenuSeparator />
+                <DropdownMenuSeparator />
 
-              <DropdownMenuItem asChild className="cursor-pointer">
-                <Link href="/settings" className="flex items-center gap-2">
-                  <Settings className="w-4 h-4" />
-                  <span>{t('profile.settings')}</span>
-                </Link>
-              </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="text-destructive cursor-pointer"
+                  data-testid="button-logout"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  {t('nav.signOut')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem
-                onClick={handleLogout}
-                className="text-destructive cursor-pointer"
-                data-testid="button-logout"
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                {t('nav.signOut')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            <button
+              className="lg:hidden p-2"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              data-testid="button-mobile-menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
+
+        {mobileMenuOpen && (
+          <div className="lg:hidden border-t border-border bg-background">
+            <nav className="flex flex-col py-2">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+                    location === item.href
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                  data-testid={`mobile-nav-${item.labelKey.split('.')[1]}`}
+                >
+                  <item.icon className="w-5 h-5" />
+                  <span className="flex-1">{t(item.labelKey)}</span>
+                  {item.badge ? (
+                    <span className="bg-primary text-primary-foreground text-xs font-medium px-2 py-0.5 rounded-full">
+                      {item.badge}
+                    </span>
+                  ) : null}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        )}
       </header>
 
-      <main className="flex-1 overflow-auto p-6">
+      <main className="flex-1 overflow-auto p-4 md:p-6">
         {children}
       </main>
     </div>

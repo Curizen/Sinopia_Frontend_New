@@ -1,0 +1,150 @@
+You are working on my existing Sinopia React + TypeScript frontend (wouter routing + EN/DE i18n).
+Apply ALL updates below. FRONTEND ONLY. Do not add backend. Do not hardcode strings in JSX—use i18n keys for EN/DE.
+
+====================================================
+0) GLOBAL RULES (IMPORTANT)
+====================================================
+- Remove ALL mock/fake/demo data from the UI. Everything should be empty states by default.
+- If a list has no data (projects/offers/contracts/payments/etc.), show a clean empty state (EN/DE).
+- Keep design consistent with the existing Sinopia style (minimal, modern).
+
+====================================================
+1) “Under Development” Gate Page after auth flows (Dashboard access)
+====================================================
+GOAL:
+Any flow that would normally route the user into the dashboard should instead show an “Under Development” page.
+
+A) Create a new page route:
+- /under-development
+
+B) Page content (must be i18n):
+- EN title: "The platform is still under development"
+- DE title: "Die Plattform befindet sich noch in der Entwicklung"
+- Optional small subtitle (EN/DE) explaining features are coming soon (minimal).
+
+C) When to redirect to this page:
+- After successful Sign In
+- After successful Sign Up
+- After OTP verification success
+- After CV upload success (Skill Giver)
+- After any step that currently navigates to /dashboard or dashboard routes
+Instead of navigating to /dashboard, navigate to /under-development.
+
+D) Design:
+- Centered, clean, consistent, minimal
+- A single primary button:
+  - EN: "Back to Home"
+  - DE: "Zur Startseite"
+  that routes to "/"
+
+====================================================
+2) Remove all fake/mock data (make everything empty)
+====================================================
+A) Auth mock user
+- Remove any UI that depends on fake names/roles/titles like “Web Developer”.
+- If user data fields are missing, show placeholders like:
+  EN: "Not set"
+  DE: "Nicht gesetzt"
+- Ensure no “sample” job titles, locations, earnings, example projects, etc.
+
+B) Dashboard widgets/lists/cards
+- Remove any default demo items.
+- Replace with empty state text (translated).
+
+C) Profile sections
+- Skills/Education/Experience/Certificates should initially be empty.
+- Editing should allow the user to add entries, but default should show empty state.
+
+====================================================
+3) Footer redesign (global UI style)
+====================================================
+Replace the current footer content with a universal minimal footer containing ONLY:
+- Terms of Service
+- Privacy Policy
+- Contact Us
+
+Requirements:
+- These must be links.
+- Must be translated EN/DE:
+  EN: Terms of Service / Privacy Policy / Contact Us
+  DE: Nutzungsbedingungen / Datenschutzerklärung / Kontakt
+- Remove all other footer columns and links (Skill Searcher/Skill Giver sections must be removed).
+- Keep a clean minimal layout, centered or evenly spaced, responsive.
+- Keep the existing "powered by curizen" line (translated and clickable) if it exists, but ensure it still works.
+
+====================================================
+4) Dashboard top bar: Move navigation items from dropdown into top bar
+====================================================
+Currently, the dashboard has a top-right dropdown containing items like:
+- Dashboard
+- Payments
+- Contracts
+- Offers
+- Projects
+- Notifications
+- Profile
+(and similar)
+
+GOAL:
+- Put these navigation links directly into the dashboard top bar as visible items (desktop).
+- On mobile, place them inside a hamburger menu (responsive).
+
+Requirements:
+A) Desktop:
+- Show a horizontal nav in the top bar with these items.
+- The current route should highlight as active.
+- All labels must be i18n EN/DE.
+
+B) Mobile:
+- Replace/keep a hamburger menu that opens/closes.
+- Clicking any menu item must:
+  1) Navigate
+  2) Close the menu
+  3) Scroll to top
+
+C) Remove duplicates:
+- If the dropdown becomes redundant after adding top-bar nav, simplify dropdown to only user actions (Profile/Settings/Logout) OR remove it.
+
+====================================================
+5) Home page when signed in: show profile avatar instead of Sign In / Get Started
+====================================================
+When user is authenticated:
+- On the public navbar (Home/About/Vision/Imprint/Contact):
+  - Replace “Sign In” and “Get Started” buttons with the user’s profile avatar.
+  - Clicking the avatar opens a small menu with:
+    - EN/DE: Dashboard, Profile, Log out
+- If user has no avatar image, show fallback initials.
+- All menu labels must be i18n EN/DE.
+
+When user is NOT authenticated:
+- Keep current “Sign In” and “Get Started” buttons.
+
+====================================================
+6) Keep scroll-to-top and menu-close behavior global
+====================================================
+- On every route change: scroll to top.
+- Close any open mobile menus/dropdowns on route change.
+- Ensure this works on both public layout and dashboard layout.
+
+====================================================
+7) i18n (English + German) coverage
+====================================================
+- Add translation keys for all new UI text:
+  - Under Development page
+  - Empty states
+  - Footer labels
+  - Dashboard top bar nav labels
+  - Avatar dropdown labels
+- Ensure German terms use:
+  - Privacy Policy: "Datenschutzerklärung"
+
+====================================================
+8) Final verification checklist
+====================================================
+- After login/signup/otp/cv upload => user lands on /under-development (not dashboard).
+- No mock data appears anywhere; default UI shows empty states.
+- Footer contains ONLY Terms / Privacy / Contact (translated).
+- Dashboard top bar shows nav items (desktop) and hamburger menu (mobile), all translated.
+- Home navbar shows avatar when signed in; otherwise shows Sign In/Get Started.
+- Global scroll resets to top; menus close on navigation.
+- No TypeScript/build errors.

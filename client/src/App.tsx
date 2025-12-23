@@ -37,6 +37,7 @@ import ContractsPage from "@/pages/contracts/ContractsPage";
 import PaymentsPage from "@/pages/payments/PaymentsPage";
 import NotificationsPage from "@/pages/notifications/NotificationsPage";
 import ProfilePage from "@/pages/profile/ProfilePage";
+import UnderDevelopmentPage from "@/pages/UnderDevelopmentPage";
 import NotFound from "@/pages/not-found";
 
 function PrivateRoute({ component: Component }: { component: React.ComponentType }) {
@@ -69,7 +70,7 @@ function PublicOnlyRoute({ component: Component }: { component: React.ComponentT
   }
 
   if (isAuthenticated) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to="/under-development" />;
   }
 
   return <Component />;
@@ -85,6 +86,7 @@ function Router() {
       <Route path="/contact" component={ContactPage} />
       <Route path="/terms" component={TermsPage} />
       <Route path="/privacy" component={PrivacyPage} />
+      <Route path="/under-development" component={UnderDevelopmentPage} />
       
       <Route path="/sign-in">
         <PublicOnlyRoute component={SignInPage} />

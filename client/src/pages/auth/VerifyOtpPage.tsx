@@ -70,7 +70,7 @@ export default function VerifyOtpPage() {
           title: t('auth.otp.accountCreated'),
           description: t('auth.otp.accountCreatedDesc'),
         });
-        setLocation('/dashboard');
+        setLocation('/under-development');
       }
     } catch (error) {
       console.error(error);

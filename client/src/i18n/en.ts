@@ -516,6 +516,23 @@ export const en = {
     pageNotFoundDesc: "The page you're looking for doesn't exist.",
     goHome: "Go Home",
   },
+  underDevelopment: {
+    title: "The platform is still under development",
+    subtitle: "We're working hard to bring you new features. Stay tuned!",
+    backToHome: "Back to Home",
+  },
+  emptyState: {
+    notSet: "Not set",
+    noData: "No data available",
+    noProjects: "No projects yet",
+    noOffers: "No offers yet",
+    noContracts: "No contracts yet",
+    noPayments: "No payments yet",
+    noSkills: "No skills added",
+    noExperience: "No experience added",
+    noEducation: "No education added",
+    noCertifications: "No certifications added",
+  },
   status: {
     paid: "Paid",
     pending: "Pending",

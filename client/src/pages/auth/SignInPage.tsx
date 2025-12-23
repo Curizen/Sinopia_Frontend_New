@@ -32,7 +32,7 @@ export default function SignInPage() {
         title: t('common.success'),
         description: t('auth.signInTitle'),
       });
-      setLocation('/dashboard');
+      setLocation('/under-development');
     } catch (error) {
       toast({
         title: t('common.error'),

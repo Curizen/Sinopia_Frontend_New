@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState } from 'react';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
 import { useI18n } from '@/i18n';
@@ -27,51 +27,91 @@ import {
 
 type EditingSection = 'about' | 'skills' | 'experience' | 'education' | 'certifications' | 'company' | null;
 
+interface Experience {
+  id: string;
+  company: string;
+  role: string;
+  startDate: string;
+  endDate: string;
+  current: boolean;
+  description: string;
+}
+
+interface Education {
+  id: string;
+  institution: string;
+  degree: string;
+  field: string;
+  startDate: string;
+  endDate: string;
+}
+
+interface Certification {
+  id: string;
+  name: string;
+  issuer: string;
+  date: string;
+}
+
+interface SkillGiverProfile {
+  bio: string;
+  title: string;
+  skills: string[];
+  location: string;
+  availability: string;
+  experience: Experience[];
+  education: Education[];
+  certifications: Certification[];
+}
+
+interface SkillSearcherProfile {
+  companyName: string;
+  industry: string;
+  website: string;
+  bio: string;
+  contactEmail: string;
+  contactPhone: string;
+  location: string;
+}
+
 export default function ProfilePage() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const { t, language } = useI18n();
+  const { t } = useI18n();
   const [editingSection, setEditingSection] = useState<EditingSection>(null);
   const [newSkill, setNewSkill] = useState('');
 
   const isSkillGiver = user?.role === 'skill_giver';
 
-  const mockSkillGiverProfile = useMemo(() => ({
-    bio: t('profile.mock.giverBio'),
-    title: t('profile.mock.giverTitle'),
-    skills: ['React', 'TypeScript', 'Node.js', 'Python', 'PostgreSQL', 'AWS', 'Docker', 'GraphQL'],
-    location: t('profile.mock.giverLocation'),
-    availability: t('profile.mock.giverAvailability'),
-    experience: [
-      { id: '1', company: t('profile.mock.experience1Company'), role: t('profile.mock.experience1Role'), startDate: '2020-01', endDate: '', current: true, description: t('profile.mock.experience1Desc') },
-      { id: '2', company: t('profile.mock.experience2Company'), role: t('profile.mock.experience2Role'), startDate: '2017-03', endDate: '2019-12', current: false, description: t('profile.mock.experience2Desc') },
-    ],
-    education: [
-      { id: '1', institution: 'Stanford University', degree: 'M.S.', field: 'Computer Science', startDate: '2014', endDate: '2016' },
-      { id: '2', institution: 'UC Berkeley', degree: 'B.S.', field: 'Computer Science', startDate: '2010', endDate: '2014' },
-    ],
-    certifications: [
-      { id: '1', name: 'AWS Solutions Architect', issuer: 'Amazon Web Services', date: '2023-05' },
-      { id: '2', name: 'Google Cloud Professional', issuer: 'Google', date: '2022-08' },
-    ],
-  }), [language, t]);
+  const emptySkillGiverProfile: SkillGiverProfile = {
+    bio: '',
+    title: '',
+    skills: [],
+    location: '',
+    availability: '',
+    experience: [],
+    education: [],
+    certifications: [],
+  };
 
-  const mockSkillSearcherProfile = useMemo(() => ({
-    companyName: t('profile.mock.searcherCompany'),
-    industry: t('profile.mock.searcherIndustry'),
-    website: 'https://techcorp.example.com',
-    bio: t('profile.mock.searcherBio'),
-    contactEmail: 'hiring@techcorp.com',
-    contactPhone: '+49 1512 847 6390',
-    location: t('profile.mock.giverLocation'),
-  }), [language, t]);
+  const emptySkillSearcherProfile: SkillSearcherProfile = {
+    companyName: '',
+    industry: '',
+    website: '',
+    bio: '',
+    contactEmail: '',
+    contactPhone: '',
+    location: '',
+  };
 
-  const [profile, setProfile] = useState(isSkillGiver ? mockSkillGiverProfile : mockSkillSearcherProfile);
-  const [editBuffer, setEditBuffer] = useState<typeof profile | null>(null);
+  const [giverProfile, setGiverProfile] = useState<SkillGiverProfile>(emptySkillGiverProfile);
+  const [searcherProfile, setSearcherProfile] = useState<SkillSearcherProfile>(emptySkillSearcherProfile);
+  const [editBuffer, setEditBuffer] = useState<SkillGiverProfile | SkillSearcherProfile | null>(null);
 
-  useEffect(() => {
-    setProfile(isSkillGiver ? mockSkillGiverProfile : mockSkillSearcherProfile);
-  }, [language, isSkillGiver, mockSkillGiverProfile, mockSkillSearcherProfile]);
+  const profile = isSkillGiver ? giverProfile : searcherProfile;
+  const setProfile = isSkillGiver 
+    ? (p: SkillGiverProfile | SkillSearcherProfile) => setGiverProfile(p as SkillGiverProfile)
+    : (p: SkillGiverProfile | SkillSearcherProfile) => setSearcherProfile(p as SkillSearcherProfile);
 
   const startEditing = (section: EditingSection) => {
     setEditBuffer({ ...profile });
@@ -141,6 +181,10 @@ export default function ProfilePage() {
 
   const currentData = editBuffer || profile;
 
+  const displayValue = (value: string | undefined) => {
+    return value?.trim() ? value : t('emptyState.notSet');
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -163,28 +207,28 @@ export default function ProfilePage() {
                 {user?.firstName} {user?.lastName}
               </h2>
               {isSkillGiver && 'title' in profile && (
-                <p className="text-muted-foreground">{profile.title}</p>
+                <p className="text-muted-foreground">{displayValue(profile.title)}</p>
               )}
               {!isSkillGiver && 'companyName' in profile && (
-                <p className="text-muted-foreground">{profile.companyName}</p>
+                <p className="text-muted-foreground">{displayValue(profile.companyName)}</p>
               )}
 
               <div className="mt-6 space-y-3 text-left">
                 <div className="flex items-center gap-3 text-sm">
                   <MapPin className="w-4 h-4 text-muted-foreground" />
-                  <span>{profile.location}</span>
+                  <span>{displayValue(profile.location)}</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <Mail className="w-4 h-4 text-muted-foreground" />
-                  <span>{user?.email}</span>
+                  <span>{user?.email || t('emptyState.notSet')}</span>
                 </div>
                 {!isSkillGiver && 'contactPhone' in profile && (
                   <div className="flex items-center gap-3 text-sm">
                     <Phone className="w-4 h-4 text-muted-foreground" />
-                    <span>{profile.contactPhone}</span>
+                    <span>{displayValue(profile.contactPhone)}</span>
                   </div>
                 )}
-                {!isSkillGiver && 'website' in profile && (
+                {!isSkillGiver && 'website' in profile && profile.website && (
                   <div className="flex items-center gap-3 text-sm">
                     <Globe className="w-4 h-4 text-muted-foreground" />
                     <a href={profile.website} className="text-primary hover:underline">
@@ -215,10 +259,13 @@ export default function ProfilePage() {
                     value={editBuffer.bio}
                     onChange={(e) => setEditBuffer({ ...editBuffer, bio: e.target.value })}
                     rows={4}
+                    placeholder={t('profile.bio')}
                     data-testid="input-profile-bio"
                   />
                 ) : (
-                  <p className="text-muted-foreground">{profile.bio}</p>
+                  <p className="text-muted-foreground">
+                    {profile.bio?.trim() ? profile.bio : t('emptyState.notSet')}
+                  </p>
                 )}
               </CardContent>
             </Card>
@@ -289,19 +336,19 @@ export default function ProfilePage() {
                     <div className="grid sm:grid-cols-2 gap-4 text-sm">
                       <div>
                         <span className="text-muted-foreground">{t('profile.companyName')}: </span>
-                        <span className="font-medium">{profile.companyName}</span>
+                        <span className="font-medium">{displayValue(profile.companyName)}</span>
                       </div>
                       <div>
                         <span className="text-muted-foreground">{t('profile.industry')}: </span>
-                        <span className="font-medium">{profile.industry}</span>
+                        <span className="font-medium">{displayValue(profile.industry)}</span>
                       </div>
                       <div>
                         <span className="text-muted-foreground">{t('profile.contactEmail')}: </span>
-                        <span className="font-medium">{profile.contactEmail}</span>
+                        <span className="font-medium">{displayValue(profile.contactEmail)}</span>
                       </div>
                       <div>
                         <span className="text-muted-foreground">{t('profile.contactPhone')}: </span>
-                        <span className="font-medium">{profile.contactPhone}</span>
+                        <span className="font-medium">{displayValue(profile.contactPhone)}</span>
                       </div>
                     </div>
                   )}
@@ -320,21 +367,30 @@ export default function ProfilePage() {
                   )}
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {(editingSection === 'skills' && editBuffer && 'skills' in editBuffer
-                      ? editBuffer.skills
-                      : profile.skills
-                    ).map((skill) => (
-                      <Badge key={skill} variant="secondary" className="gap-1">
-                        {skill}
-                        {editingSection === 'skills' && (
-                          <button onClick={() => handleRemoveSkill(skill)} data-testid={`button-remove-skill-${skill}`}>
-                            <X className="w-3 h-3" />
-                          </button>
-                        )}
-                      </Badge>
-                    ))}
-                  </div>
+                  {(editingSection === 'skills' && editBuffer && 'skills' in editBuffer
+                    ? editBuffer.skills
+                    : profile.skills
+                  ).length === 0 ? (
+                    <p className="text-muted-foreground text-center py-4">
+                      {t('emptyState.noSkills')}
+                    </p>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      {(editingSection === 'skills' && editBuffer && 'skills' in editBuffer
+                        ? editBuffer.skills
+                        : profile.skills
+                      ).map((skill) => (
+                        <Badge key={skill} variant="secondary" className="gap-1">
+                          {skill}
+                          {editingSection === 'skills' && (
+                            <button onClick={() => handleRemoveSkill(skill)} data-testid={`button-remove-skill-${skill}`}>
+                              <X className="w-3 h-3" />
+                            </button>
+                          )}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
                   {editingSection === 'skills' && (
                     <div className="flex gap-2 mt-4">
                       <Input
@@ -367,23 +423,29 @@ export default function ProfilePage() {
                   )}
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {profile.experience.map((exp) => (
-                    <div key={exp.id} className="flex gap-4 p-4 rounded-lg border border-border">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        <Briefcase className="w-5 h-5 text-primary" />
+                  {profile.experience.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-4">
+                      {t('emptyState.noExperience')}
+                    </p>
+                  ) : (
+                    profile.experience.map((exp) => (
+                      <div key={exp.id} className="flex gap-4 p-4 rounded-lg border border-border">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                          <Briefcase className="w-5 h-5 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-semibold">{exp.role}</h4>
+                          <p className="text-sm text-muted-foreground">{exp.company}</p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {exp.startDate} - {exp.current ? t('profile.present') : exp.endDate}
+                          </p>
+                          {exp.description && (
+                            <p className="text-sm mt-2">{exp.description}</p>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold">{exp.role}</h4>
-                        <p className="text-sm text-muted-foreground">{exp.company}</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {exp.startDate} - {exp.current ? t('profile.present') : exp.endDate}
-                        </p>
-                        {exp.description && (
-                          <p className="text-sm mt-2">{exp.description}</p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </CardContent>
               </Card>
             )}
@@ -402,20 +464,26 @@ export default function ProfilePage() {
                   )}
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {profile.education.map((edu) => (
-                    <div key={edu.id} className="flex gap-4 p-4 rounded-lg border border-border">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        <GraduationCap className="w-5 h-5 text-primary" />
+                  {profile.education.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-4">
+                      {t('emptyState.noEducation')}
+                    </p>
+                  ) : (
+                    profile.education.map((edu) => (
+                      <div key={edu.id} className="flex gap-4 p-4 rounded-lg border border-border">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                          <GraduationCap className="w-5 h-5 text-primary" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold">{edu.degree} in {edu.field}</h4>
+                          <p className="text-sm text-muted-foreground">{edu.institution}</p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {edu.startDate} - {edu.endDate}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-semibold">{edu.degree} in {edu.field}</h4>
-                        <p className="text-sm text-muted-foreground">{edu.institution}</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {edu.startDate} - {edu.endDate}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </CardContent>
               </Card>
             )}
@@ -434,18 +502,24 @@ export default function ProfilePage() {
                   )}
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {profile.certifications.map((cert) => (
-                    <div key={cert.id} className="flex gap-4 p-4 rounded-lg border border-border">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        <Award className="w-5 h-5 text-primary" />
+                  {profile.certifications.length === 0 ? (
+                    <p className="text-muted-foreground text-center py-4">
+                      {t('emptyState.noCertifications')}
+                    </p>
+                  ) : (
+                    profile.certifications.map((cert) => (
+                      <div key={cert.id} className="flex gap-4 p-4 rounded-lg border border-border">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                          <Award className="w-5 h-5 text-primary" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold">{cert.name}</h4>
+                          <p className="text-sm text-muted-foreground">{cert.issuer}</p>
+                          <p className="text-xs text-muted-foreground mt-1">{cert.date}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-semibold">{cert.name}</h4>
-                        <p className="text-sm text-muted-foreground">{cert.issuer}</p>
-                        <p className="text-xs text-muted-foreground mt-1">{cert.date}</p>
-                      </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </CardContent>
               </Card>
             )}

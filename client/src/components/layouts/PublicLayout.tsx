@@ -1,7 +1,15 @@
 import { type ReactNode, useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Menu, X, LayoutDashboard, User, LogOut } from 'lucide-react';
 import { useI18n } from '@/i18n';
 import { useAuth } from '@/context/AuthContext';
 
@@ -10,12 +18,10 @@ interface PublicLayoutProps {
 }
 
 export function PublicLayout({ children }: PublicLayoutProps) {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t, language, setLanguage } = useI18n();
-  const { isAuthenticated, user } = useAuth();
-
-  const isSkillGiver = user?.role === 'skill_giver';
+  const { isAuthenticated, user, logout } = useAuth();
 
   useEffect(() => {
     setMobileMenuOpen(false);
@@ -31,6 +37,11 @@ export function PublicLayout({ children }: PublicLayoutProps) {
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'de' : 'en');
+  };
+
+  const handleLogout = () => {
+    logout();
+    setLocation('/');
   };
 
   return (
@@ -73,14 +84,63 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               >
                 {language === 'en' ? 'DE' : 'EN'}
               </Button>
-              <Link href="/sign-in">
-                <Button variant="ghost" data-testid="button-sign-in">
-                  {t('nav.signIn')}
-                </Button>
-              </Link>
-              <Link href="/sign-up">
-                <Button data-testid="button-sign-up">{t('nav.getStarted')}</Button>
-              </Link>
+
+              {isAuthenticated ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="flex items-center gap-2"
+                      data-testid="button-user-avatar"
+                    >
+                      <Avatar className="w-8 h-8">
+                        <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                          {user?.firstName?.[0]}
+                          {user?.lastName?.[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem asChild className="cursor-pointer">
+                      <Link href="/dashboard" className="flex items-center gap-2">
+                        <LayoutDashboard className="w-4 h-4" />
+                        <span>{t('nav.dashboard')}</span>
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem asChild className="cursor-pointer">
+                      <Link href="/profile" className="flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        <span>{t('nav.profile')}</span>
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      className="text-destructive cursor-pointer"
+                      data-testid="button-logout-public"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      {t('nav.signOut')}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <>
+                  <Link href="/sign-in">
+                    <Button variant="ghost" data-testid="button-sign-in">
+                      {t('nav.signIn')}
+                    </Button>
+                  </Link>
+                  <Link href="/sign-up">
+                    <Button data-testid="button-sign-up">{t('nav.getStarted')}</Button>
+                  </Link>
+                </>
+              )}
             </div>
 
             <button
@@ -118,14 +178,40 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                     {language === 'en' ? 'Deutsch' : 'English'}
                   </Button>
                 </div>
-                <div className="flex flex-col gap-2 pt-4 border-t border-border">
-                  <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="ghost" className="w-full">{t('nav.signIn')}</Button>
-                  </Link>
-                  <Link href="/sign-up" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full">{t('nav.getStarted')}</Button>
-                  </Link>
-                </div>
+
+                {isAuthenticated ? (
+                  <div className="flex flex-col gap-2 pt-4 border-t border-border">
+                    <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start gap-2">
+                        <LayoutDashboard className="w-4 h-4" />
+                        {t('nav.dashboard')}
+                      </Button>
+                    </Link>
+                    <Link href="/profile" onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full justify-start gap-2">
+                        <User className="w-4 h-4" />
+                        {t('nav.profile')}
+                      </Button>
+                    </Link>
+                    <Button 
+                      variant="ghost" 
+                      className="w-full justify-start gap-2 text-destructive" 
+                      onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      {t('nav.signOut')}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-2 pt-4 border-t border-border">
+                    <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>
+                      <Button variant="ghost" className="w-full">{t('nav.signIn')}</Button>
+                    </Link>
+                    <Link href="/sign-up" onClick={() => setMobileMenuOpen(false)}>
+                      <Button className="w-full">{t('nav.getStarted')}</Button>
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -135,114 +221,47 @@ export function PublicLayout({ children }: PublicLayoutProps) {
       <main className="flex-1">{children}</main>
 
       <footer className="bg-card border-t border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="md:col-span-1">
-              <Link href="/" className="flex items-center gap-2 mb-4">
-                <img 
-                  src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
-                  alt="Sinopia Logo" 
-                  className="w-16 h-auto rounded-md object-cover"
-                />
-                <span className="font-display font-bold text-xl">Sinopia</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex flex-wrap justify-center gap-6 text-sm">
+              <Link 
+                href="/terms" 
+                className="text-muted-foreground hover:text-foreground transition-colors" 
+                data-testid="link-footer-terms"
+              >
+                {t('footer.terms')}
               </Link>
-              <p className="text-sm text-muted-foreground">
-                {t('footer.tagline')}
-              </p>
+              <Link 
+                href="/privacy" 
+                className="text-muted-foreground hover:text-foreground transition-colors" 
+                data-testid="link-footer-privacy"
+              >
+                {t('footer.privacy')}
+              </Link>
+              <Link 
+                href="/contact" 
+                className="text-muted-foreground hover:text-foreground transition-colors" 
+                data-testid="link-footer-contact"
+              >
+                {t('footer.contactUs')}
+              </Link>
             </div>
 
-            <div>
-              <h4 className="font-semibold mb-4">{t('footer.skillGiver')}</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <Link 
-                    href={isAuthenticated && isSkillGiver ? "/dashboard/use-cases" : "/sign-up"} 
-                    className="hover:text-foreground"
-                    data-testid="link-footer-find-projects"
-                  >
-                    {t('footer.findProjects')}
-                  </Link>
-                </li>
-                <li>
-                  <Link 
-                    href={isAuthenticated && isSkillGiver ? "/dashboard/profile" : "/sign-up"} 
-                    className="hover:text-foreground"
-                    data-testid="link-footer-build-portfolio"
-                  >
-                    {t('footer.buildPortfolio')}
-                  </Link>
-                </li>
-                <li>
-                  <Link 
-                    href={isAuthenticated && isSkillGiver ? "/dashboard/payments" : "/sign-up"} 
-                    className="hover:text-foreground"
-                    data-testid="link-footer-get-paid"
-                  >
-                    {t('footer.getPaid')}
-                  </Link>
-                </li>
-              </ul>
+            <div className="text-center text-sm text-muted-foreground">
+              <p>&copy; {new Date().getFullYear()} Sinopia. {t('footer.copyright')}</p>
             </div>
 
-            <div>
-              <h4 className="font-semibold mb-4">{t('footer.skillSearcher')}</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>
-                  <Link 
-                    href={isAuthenticated && !isSkillGiver ? "/dashboard/use-cases" : "/sign-up"} 
-                    className="hover:text-foreground"
-                    data-testid="link-footer-post-projects"
-                  >
-                    {t('footer.postProjects')}
-                  </Link>
-                </li>
-                <li>
-                  <Link 
-                    href={isAuthenticated && !isSkillGiver ? "/dashboard/matching" : "/sign-up"} 
-                    className="hover:text-foreground"
-                    data-testid="link-footer-find-talent"
-                  >
-                    {t('footer.findTalent')}
-                  </Link>
-                </li>
-                <li>
-                  <Link 
-                    href={isAuthenticated && !isSkillGiver ? "/dashboard/contracts" : "/sign-up"} 
-                    className="hover:text-foreground"
-                    data-testid="link-footer-manage-teams"
-                  >
-                    {t('footer.manageTeams')}
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4">{t('footer.legal')}</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/terms" className="hover:text-foreground" data-testid="link-footer-terms">{t('footer.terms')}</Link></li>
-                <li><Link href="/privacy" className="hover:text-foreground" data-testid="link-footer-privacy">{t('footer.privacy')}</Link></li>
-                <li><Link href="/contact" className="hover:text-foreground" data-testid="link-footer-contact">{t('footer.contactUs')}</Link></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-            <p>&copy; {new Date().getFullYear()} Sinopia. {t('footer.copyright')}</p>
-          </div>
-
-          <div className="mt-6 text-center">
-            <p className="text-xs text-muted-foreground">
+            <div className="text-center">
               <a
                 href="https://curizen.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-primary transition-colors underline-offset-4 hover:underline"
+                className="text-xs text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
                 data-testid="link-powered-by"
               >
                 {t('footer.poweredBy')}
               </a>
-            </p>
+            </div>
           </div>
         </div>
       </footer>

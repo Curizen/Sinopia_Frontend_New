@@ -118,7 +118,7 @@ export default function CVUploadPage() {
         description: t('auth.otp.accountCreatedDesc'),
       });
       
-      setLocation('/dashboard');
+      setLocation('/under-development');
     } catch (error) {
       console.error(error);
       toast({
