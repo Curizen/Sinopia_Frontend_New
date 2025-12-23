@@ -2,7 +2,7 @@ import { useI18n } from '@/i18n';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Home } from 'lucide-react';
-import bannerBackground from '@assets/generated_images/neutral_banner_background_image.png';
+import bannerBackground from '@assets/generated_images/clean_cropped_abstract_banner.png';
 
 interface UnderDevelopmentProps {
   showBackButton?: boolean;
