@@ -1,10 +1,8 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://sinopi.eu';
-
 interface RegisterPayload {
   email: string;
   password: string;
   confirmPassword: string;
-  account_type: 'skill_searcher' | 'skill_giver';
+  account_type: string;
 }
 
 interface VerifyOtpPayload {
@@ -18,42 +16,35 @@ interface LoginPayload {
 }
 
 interface ResetPasswordPayload {
-  email: string;
   password: string;
   confirmPassword: string;
 }
 
-interface ApiResponse<T = unknown> {
+interface ApiResponse {
   status: 'success' | 'error';
-  message: string;
-  data?: T;
+  message?: string;
   token?: string;
+  data?: unknown;
 }
 
-async function apiRequest<T = unknown>(
-  endpoint: string,
-  options: RequestInit = {}
-): Promise<ApiResponse<T>> {
+async function apiRequest(endpoint: string, options: RequestInit = {}): Promise<ApiResponse> {
   const token = localStorage.getItem('sinopia_token');
   
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    ...(token && { Authorization: `Bearer ${token}` }),
-    ...options.headers,
+    ...(options.headers as Record<string, string>),
   };
+  
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const response = await fetch(endpoint, {
     ...options,
     headers,
   });
 
-  const data = await response.json();
-  
-  if (!response.ok) {
-    throw new Error(data.message || `API Error: ${response.status}`);
-  }
-  
-  return data;
+  return response.json();
 }
 
 export const authService = {
@@ -71,7 +62,7 @@ export const authService = {
     });
   },
 
-  async loginUser(payload: LoginPayload): Promise<ApiResponse<{ token: string }>> {
+  async loginUser(payload: LoginPayload): Promise<ApiResponse> {
     return apiRequest('/api/users/login', {
       method: 'POST',
       body: JSON.stringify(payload),
@@ -101,7 +92,7 @@ export const authService = {
 
   async logoutUser(): Promise<ApiResponse> {
     const token = localStorage.getItem('sinopia_token');
-    const response = await fetch(`${API_BASE_URL}/api/users/logout`, {
+    const response = await fetch('/api/users/logout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
