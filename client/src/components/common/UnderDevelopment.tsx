@@ -11,7 +11,7 @@ export function UnderDevelopment({ showSubtitle = true, className = '' }: UnderD
   const { t } = useI18n();
 
   return (
-    <Card className={`border-dashed ${className}`}>
+    <Card className={`border-dashed ${className}`} data-testid="card-under-development">
       <CardContent className="flex flex-col items-center justify-center py-12 px-6 text-center">
         <div className="relative mb-6">
           <svg

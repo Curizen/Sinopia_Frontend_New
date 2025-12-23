@@ -27,7 +27,7 @@ export default function SettingsPage() {
         </div>
 
         <div className="grid gap-6">
-          <Card>
+          <Card data-testid="card-settings-language">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -43,7 +43,7 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">{t('settings.currentLanguage')}</p>
-                  <p className="font-medium">{language === 'en' ? 'English' : 'Deutsch'}</p>
+                  <p className="font-medium" data-testid="text-current-language">{language === 'en' ? 'English' : 'Deutsch'}</p>
                 </div>
                 <Button variant="outline" onClick={toggleLanguage} data-testid="button-toggle-language">
                   {language === 'en' ? 'Deutsch' : 'English'}
@@ -52,7 +52,7 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card data-testid="card-settings-appearance">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -69,7 +69,7 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card data-testid="card-settings-account">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -86,11 +86,11 @@ export default function SettingsPage() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-muted-foreground">{t('settings.email')}</p>
-                    <p className="font-medium">{user?.email || t('emptyState.notSet')}</p>
+                    <p className="font-medium" data-testid="text-account-email">{user?.email || t('emptyState.notSet')}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">{t('settings.role')}</p>
-                    <p className="font-medium">
+                    <p className="font-medium" data-testid="text-account-role">
                       {isSkillGiver ? t('auth.skillGiver') : t('auth.skillSearcher')}
                     </p>
                   </div>
