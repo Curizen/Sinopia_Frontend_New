@@ -42,7 +42,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(async (email: string, password: string) => {
     const response = await authService.loginUser({ email, password });
     
-    if (response.token) {
+    const isSuccess = response.message?.toLowerCase().includes('successful') || 
+                      response.message?.toLowerCase().includes('session already active') ||
+                      response.status === 'success';
+    
+    if (isSuccess) {
       const userData = response.data as { id?: string; email?: string; account_type?: string; role?: string } | undefined;
       const newUser: User = {
         id: userData?.id || Date.now().toString(),
@@ -51,12 +55,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         avatar: undefined,
       };
       
-      setToken(response.token);
+      const sessionToken = response.token || 'session_' + Date.now();
+      setToken(sessionToken);
       setUser(newUser);
-      localStorage.setItem('sinopia_token', response.token);
+      localStorage.setItem('sinopia_token', sessionToken);
       localStorage.setItem('sinopia_user', JSON.stringify(newUser));
     } else {
-      throw new Error(response.message || 'No token received from server');
+      throw new Error(response.message || 'Login failed');
     }
   }, []);
 
