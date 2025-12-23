@@ -58,7 +58,18 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const handleLogout = () => {
     logout();
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     setLocation('/');
+  };
+
+  const handleHomeClick = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    setLocation('/');
+  };
+
+  const handleSettingsClick = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    setLocation('/settings');
   };
 
   const toggleLanguage = () => {
@@ -144,18 +155,22 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem asChild className="cursor-pointer">
-                  <Link href="/profile" className="flex items-center gap-2">
-                    <User className="w-4 h-4" />
-                    <span>{t('nav.profile')}</span>
-                  </Link>
+                <DropdownMenuItem
+                  onClick={handleHomeClick}
+                  className="cursor-pointer"
+                  data-testid="link-home-from-dropdown"
+                >
+                  <Home className="w-4 h-4 mr-2" />
+                  {t('nav.home')}
                 </DropdownMenuItem>
 
-                <DropdownMenuItem asChild className="cursor-pointer">
-                  <Link href="/settings" className="flex items-center gap-2" data-testid="link-settings">
-                    <Settings className="w-4 h-4" />
-                    <span>{t('settings.title')}</span>
-                  </Link>
+                <DropdownMenuItem
+                  onClick={handleSettingsClick}
+                  className="cursor-pointer"
+                  data-testid="link-settings"
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  {t('settings.title')}
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
@@ -167,33 +182,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 >
                   <LogOut className="w-4 h-4 mr-2" />
                   {t('nav.signOut')}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="hidden lg:flex items-center gap-1"
-                  data-testid="button-menu-dropdown"
-                >
-                  <Menu className="w-4 h-4" />
-                  <span className="text-sm">{t('menu.menu')}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild className="cursor-pointer">
-                  <Link 
-                    href="/" 
-                    className="flex items-center gap-2"
-                    onClick={() => window.scrollTo(0, 0)}
-                    data-testid="link-home-from-dashboard"
-                  >
-                    <Home className="w-4 h-4" />
-                    <span>{t('menu.home')}</span>
-                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

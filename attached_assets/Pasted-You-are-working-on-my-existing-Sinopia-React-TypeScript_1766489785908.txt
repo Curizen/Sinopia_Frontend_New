@@ -1,0 +1,79 @@
+You are working on my existing Sinopia React + TypeScript frontend (wouter routing + EN/DE i18n).
+Apply the following updates. FRONTEND ONLY. No backend. No hardcoded strings in JSX—use i18n keys for EN/DE.
+
+====================================================
+1) Remove “Home” menu from Profile page
+====================================================
+Current behavior:
+There is a menu on the Profile page that includes “Home”.
+
+Required change:
+- Do NOT show any extra “Home” menu/button inside the Profile page itself.
+- Remove/hide that Profile-page-specific “Home” menu completely.
+
+====================================================
+2) Put “Home” inside the avatar dropdown (same dropdown that has Sign out)
+====================================================
+Required:
+When clicking the user profile avatar (top-right), the dropdown must include:
+- Home (Startseite)
+- Settings (Einstellungen)
+- Sign out (Abmelden)
+
+Rules:
+- Home routes to "/"
+- Settings routes to "/settings"
+- Sign out calls logout() and routes to "/"
+- Must close dropdown after clicking any item
+- Must scroll to top after clicking any item:
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+
+All labels must be translated EN/DE via i18n keys.
+
+====================================================
+3) “Under Development” must appear INSIDE a PNG image (not plain text)
+====================================================
+Current behavior:
+Sometimes "The platform is still under development" appears as text.
+
+Required change:
+A) Everywhere this message is shown (Dashboard, Projects, Offers, Contracts, Payments, Notifications, Profile, Settings sections, etc.):
+- Remove the plain text UI.
+- Replace it with a PNG-based “banner/card” component.
+
+B) Create/Use a PNG asset:
+- Add a new PNG image in the public assets (e.g. /under-development.png).
+- The PNG must be minimal and suitable for Sinopia design.
+- The component should display the PNG and then show translated text BELOW it (optional),
+  BUT the main message must be visually presented inside the PNG itself (as designed image).
+
+C) i18n requirement:
+- Provide TWO PNG versions OR a single neutral PNG + translated text:
+  Option 1 (preferred): two images:
+    - /under-development-en.png
+    - /under-development-de.png
+    Render the correct one depending on selected language.
+  Option 2: one neutral image without text + translated text below (ONLY if Option 1 is not feasible).
+- Choose the best option and implement it cleanly.
+
+D) Reusable component:
+Create a reusable component (UnderDevelopment) that:
+- Selects the correct PNG (EN/DE)
+- Uses minimal spacing and responsive sizing
+- Looks good on mobile and desktop
+
+====================================================
+4) Remove “Welcome back” from Dashboard
+====================================================
+- Find “Welcome back” (and any similar greeting text) on the dashboard page.
+- Remove it completely.
+- Ensure no empty gap remains; the page should look clean.
+
+====================================================
+5) Final Verification
+====================================================
+- Profile page has NO extra “Home” menu.
+- Avatar dropdown includes Home + Settings + Sign out (translated EN/DE), closes on click, scrolls to top.
+- Under-development message is presented via PNG banner/card everywhere it appears (EN/DE).
+- “Welcome back” is removed from Dashboard.
+- No TypeScript/build errors.
