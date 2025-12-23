@@ -6,10 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import {
   User,
@@ -24,13 +22,16 @@ import {
   Edit2,
   Save,
   X,
+  Building2,
 } from 'lucide-react';
+
+type EditingSection = 'about' | 'skills' | 'experience' | 'education' | 'certifications' | 'company' | null;
 
 export default function ProfilePage() {
   const { user } = useAuth();
   const { toast } = useToast();
   const { t, language } = useI18n();
-  const [isEditing, setIsEditing] = useState(false);
+  const [editingSection, setEditingSection] = useState<EditingSection>(null);
   const [newSkill, setNewSkill] = useState('');
 
   const isSkillGiver = user?.role === 'skill_giver';
@@ -66,65 +67,88 @@ export default function ProfilePage() {
   }), [language, t]);
 
   const [profile, setProfile] = useState(isSkillGiver ? mockSkillGiverProfile : mockSkillSearcherProfile);
+  const [editBuffer, setEditBuffer] = useState<typeof profile | null>(null);
 
   useEffect(() => {
     setProfile(isSkillGiver ? mockSkillGiverProfile : mockSkillSearcherProfile);
   }, [language, isSkillGiver, mockSkillGiverProfile, mockSkillSearcherProfile]);
 
-  const handleSave = () => {
+  const startEditing = (section: EditingSection) => {
+    setEditBuffer({ ...profile });
+    setEditingSection(section);
+  };
+
+  const handleSave = (section: EditingSection) => {
+    if (editBuffer) {
+      setProfile(editBuffer);
+    }
     toast({
       title: t('profile.profileUpdated'),
       description: t('profile.changesSaved'),
     });
-    setIsEditing(false);
+    setEditingSection(null);
+    setEditBuffer(null);
+  };
+
+  const handleCancel = () => {
+    setEditingSection(null);
+    setEditBuffer(null);
+    setNewSkill('');
   };
 
   const handleAddSkill = () => {
-    if (newSkill.trim() && isSkillGiver && 'skills' in profile) {
-      setProfile(prev => ({
-        ...prev,
-        skills: [...(prev as typeof mockSkillGiverProfile).skills, newSkill.trim()],
-      }));
+    if (newSkill.trim() && editBuffer && 'skills' in editBuffer) {
+      setEditBuffer({
+        ...editBuffer,
+        skills: [...editBuffer.skills, newSkill.trim()],
+      });
       setNewSkill('');
     }
   };
 
   const handleRemoveSkill = (skill: string) => {
-    if (isSkillGiver && 'skills' in profile) {
-      setProfile(prev => ({
-        ...prev,
-        skills: (prev as typeof mockSkillGiverProfile).skills.filter(s => s !== skill),
-      }));
+    if (editBuffer && 'skills' in editBuffer) {
+      setEditBuffer({
+        ...editBuffer,
+        skills: editBuffer.skills.filter(s => s !== skill),
+      });
     }
   };
+
+  const SectionEditButton = ({ section }: { section: EditingSection }) => (
+    <Button
+      size="icon"
+      variant="ghost"
+      onClick={() => startEditing(section)}
+      data-testid={`button-edit-${section}`}
+    >
+      <Edit2 className="w-4 h-4" />
+    </Button>
+  );
+
+  const SectionActions = ({ section }: { section: EditingSection }) => (
+    <div className="flex gap-2">
+      <Button size="sm" variant="outline" onClick={handleCancel} data-testid={`button-cancel-${section}`}>
+        <X className="w-4 h-4 mr-1" />
+        {t('common.cancel')}
+      </Button>
+      <Button size="sm" onClick={() => handleSave(section)} data-testid={`button-save-${section}`}>
+        <Save className="w-4 h-4 mr-1" />
+        {t('common.save')}
+      </Button>
+    </div>
+  );
+
+  const currentData = editBuffer || profile;
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-display font-bold">{t('profile.pageTitle')}</h1>
-            <p className="text-muted-foreground">
-              {isSkillGiver ? t('profile.pageSubtitleGiver') : t('profile.pageSubtitleSearcher')}
-            </p>
-          </div>
-          {isEditing ? (
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={() => setIsEditing(false)}>
-                <X className="w-4 h-4 mr-2" />
-                {t('common.cancel')}
-              </Button>
-              <Button onClick={handleSave} data-testid="button-save-profile">
-                <Save className="w-4 h-4 mr-2" />
-                {t('profile.saveChanges')}
-              </Button>
-            </div>
-          ) : (
-            <Button onClick={() => setIsEditing(true)} data-testid="button-edit-profile">
-              <Edit2 className="w-4 h-4 mr-2" />
-              {t('profile.editProfile')}
-            </Button>
-          )}
+        <div>
+          <h1 className="text-2xl font-display font-bold">{t('profile.pageTitle')}</h1>
+          <p className="text-muted-foreground">
+            {isSkillGiver ? t('profile.pageSubtitleGiver') : t('profile.pageSubtitleSearcher')}
+          </p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
@@ -169,24 +193,27 @@ export default function ProfilePage() {
                   </div>
                 )}
               </div>
-
-             
             </CardContent>
           </Card>
 
           <div className="lg:col-span-2 space-y-6">
             <Card>
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
                 <CardTitle className="flex items-center gap-2">
                   <User className="w-5 h-5" />
                   {t('profile.about')}
                 </CardTitle>
+                {editingSection === 'about' ? (
+                  <SectionActions section="about" />
+                ) : (
+                  <SectionEditButton section="about" />
+                )}
               </CardHeader>
               <CardContent>
-                {isEditing ? (
+                {editingSection === 'about' && editBuffer ? (
                   <Textarea
-                    value={profile.bio}
-                    onChange={(e) => setProfile(prev => ({ ...prev, bio: e.target.value }))}
+                    value={editBuffer.bio}
+                    onChange={(e) => setEditBuffer({ ...editBuffer, bio: e.target.value })}
                     rows={4}
                     data-testid="input-profile-bio"
                   />
@@ -196,25 +223,119 @@ export default function ProfilePage() {
               </CardContent>
             </Card>
 
+            {!isSkillGiver && 'companyName' in profile && (
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
+                  <CardTitle className="flex items-center gap-2">
+                    <Building2 className="w-5 h-5" />
+                    {t('profile.companyInfo')}
+                  </CardTitle>
+                  {editingSection === 'company' ? (
+                    <SectionActions section="company" />
+                  ) : (
+                    <SectionEditButton section="company" />
+                  )}
+                </CardHeader>
+                <CardContent>
+                  {editingSection === 'company' && editBuffer && 'companyName' in editBuffer ? (
+                    <div className="space-y-4">
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">{t('profile.companyName')}</label>
+                          <Input
+                            value={editBuffer.companyName}
+                            onChange={(e) => setEditBuffer({ ...editBuffer, companyName: e.target.value })}
+                            data-testid="input-company-name"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">{t('profile.industry')}</label>
+                          <Input
+                            value={editBuffer.industry}
+                            onChange={(e) => setEditBuffer({ ...editBuffer, industry: e.target.value })}
+                            data-testid="input-industry"
+                          />
+                        </div>
+                      </div>
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">{t('profile.contactEmail')}</label>
+                          <Input
+                            type="email"
+                            value={editBuffer.contactEmail}
+                            onChange={(e) => setEditBuffer({ ...editBuffer, contactEmail: e.target.value })}
+                            data-testid="input-contact-email"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">{t('profile.contactPhone')}</label>
+                          <Input
+                            value={editBuffer.contactPhone}
+                            onChange={(e) => setEditBuffer({ ...editBuffer, contactPhone: e.target.value })}
+                            data-testid="input-contact-phone"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">{t('profile.website')}</label>
+                        <Input
+                          value={editBuffer.website}
+                          onChange={(e) => setEditBuffer({ ...editBuffer, website: e.target.value })}
+                          data-testid="input-website"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid sm:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">{t('profile.companyName')}: </span>
+                        <span className="font-medium">{profile.companyName}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">{t('profile.industry')}: </span>
+                        <span className="font-medium">{profile.industry}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">{t('profile.contactEmail')}: </span>
+                        <span className="font-medium">{profile.contactEmail}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">{t('profile.contactPhone')}: </span>
+                        <span className="font-medium">{profile.contactPhone}</span>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             {isSkillGiver && 'skills' in profile && (
               <Card>
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
                   <CardTitle>{t('profile.skills')}</CardTitle>
+                  {editingSection === 'skills' ? (
+                    <SectionActions section="skills" />
+                  ) : (
+                    <SectionEditButton section="skills" />
+                  )}
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {profile.skills.map((skill) => (
+                    {(editingSection === 'skills' && editBuffer && 'skills' in editBuffer
+                      ? editBuffer.skills
+                      : profile.skills
+                    ).map((skill) => (
                       <Badge key={skill} variant="secondary" className="gap-1">
                         {skill}
-                        {isEditing && (
-                          <button onClick={() => handleRemoveSkill(skill)}>
+                        {editingSection === 'skills' && (
+                          <button onClick={() => handleRemoveSkill(skill)} data-testid={`button-remove-skill-${skill}`}>
                             <X className="w-3 h-3" />
                           </button>
                         )}
                       </Badge>
                     ))}
                   </div>
-                  {isEditing && (
+                  {editingSection === 'skills' && (
                     <div className="flex gap-2 mt-4">
                       <Input
                         placeholder={t('profile.addSkill')}
@@ -223,7 +344,7 @@ export default function ProfilePage() {
                         onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddSkill())}
                         data-testid="input-add-skill"
                       />
-                      <Button type="button" variant="outline" onClick={handleAddSkill}>
+                      <Button type="button" variant="outline" onClick={handleAddSkill} data-testid="button-add-skill">
                         <Plus className="w-4 h-4" />
                       </Button>
                     </div>
@@ -234,11 +355,16 @@ export default function ProfilePage() {
 
             {isSkillGiver && 'experience' in profile && (
               <Card>
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
                   <CardTitle className="flex items-center gap-2">
                     <Briefcase className="w-5 h-5" />
                     {t('profile.experience')}
                   </CardTitle>
+                  {editingSection === 'experience' ? (
+                    <SectionActions section="experience" />
+                  ) : (
+                    <SectionEditButton section="experience" />
+                  )}
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {profile.experience.map((exp) => (
@@ -264,11 +390,16 @@ export default function ProfilePage() {
 
             {isSkillGiver && 'education' in profile && (
               <Card>
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
                   <CardTitle className="flex items-center gap-2">
                     <GraduationCap className="w-5 h-5" />
                     {t('profile.education')}
                   </CardTitle>
+                  {editingSection === 'education' ? (
+                    <SectionActions section="education" />
+                  ) : (
+                    <SectionEditButton section="education" />
+                  )}
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {profile.education.map((edu) => (
@@ -291,11 +422,16 @@ export default function ProfilePage() {
 
             {isSkillGiver && 'certifications' in profile && (
               <Card>
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
                   <CardTitle className="flex items-center gap-2">
                     <Award className="w-5 h-5" />
                     {t('profile.certifications')}
                   </CardTitle>
+                  {editingSection === 'certifications' ? (
+                    <SectionActions section="certifications" />
+                  ) : (
+                    <SectionEditButton section="certifications" />
+                  )}
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {profile.certifications.map((cert) => (

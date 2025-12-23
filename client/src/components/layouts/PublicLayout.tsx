@@ -3,6 +3,7 @@ import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
 import { useI18n } from '@/i18n';
+import { useAuth } from '@/context/AuthContext';
 
 interface PublicLayoutProps {
   children: ReactNode;
@@ -12,6 +13,9 @@ export function PublicLayout({ children }: PublicLayoutProps) {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t, language, setLanguage } = useI18n();
+  const { isAuthenticated, user } = useAuth();
+
+  const isSkillGiver = user?.role === 'skill_giver';
 
   useEffect(() => {
     setMobileMenuOpen(false);
@@ -150,27 +154,75 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             <div>
               <h4 className="font-semibold mb-4">{t('footer.skillGiver')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/sign-up" className="hover:text-foreground">{t('footer.findProjects')}</Link></li>
-                <li><Link href="/sign-up" className="hover:text-foreground">{t('footer.buildPortfolio')}</Link></li>
-                <li><Link href="/sign-up" className="hover:text-foreground">{t('footer.getPaid')}</Link></li>
+                <li>
+                  <Link 
+                    href={isAuthenticated && isSkillGiver ? "/dashboard/use-cases" : "/sign-up"} 
+                    className="hover:text-foreground"
+                    data-testid="link-footer-find-projects"
+                  >
+                    {t('footer.findProjects')}
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    href={isAuthenticated && isSkillGiver ? "/dashboard/profile" : "/sign-up"} 
+                    className="hover:text-foreground"
+                    data-testid="link-footer-build-portfolio"
+                  >
+                    {t('footer.buildPortfolio')}
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    href={isAuthenticated && isSkillGiver ? "/dashboard/payments" : "/sign-up"} 
+                    className="hover:text-foreground"
+                    data-testid="link-footer-get-paid"
+                  >
+                    {t('footer.getPaid')}
+                  </Link>
+                </li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-semibold mb-4">{t('footer.skillSearcher')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/sign-up" className="hover:text-foreground">{t('footer.postProjects')}</Link></li>
-                <li><Link href="/sign-up" className="hover:text-foreground">{t('footer.findTalent')}</Link></li>
-                <li><Link href="/sign-up" className="hover:text-foreground">{t('footer.manageTeams')}</Link></li>
+                <li>
+                  <Link 
+                    href={isAuthenticated && !isSkillGiver ? "/dashboard/use-cases" : "/sign-up"} 
+                    className="hover:text-foreground"
+                    data-testid="link-footer-post-projects"
+                  >
+                    {t('footer.postProjects')}
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    href={isAuthenticated && !isSkillGiver ? "/dashboard/matching" : "/sign-up"} 
+                    className="hover:text-foreground"
+                    data-testid="link-footer-find-talent"
+                  >
+                    {t('footer.findTalent')}
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    href={isAuthenticated && !isSkillGiver ? "/dashboard/contracts" : "/sign-up"} 
+                    className="hover:text-foreground"
+                    data-testid="link-footer-manage-teams"
+                  >
+                    {t('footer.manageTeams')}
+                  </Link>
+                </li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-semibold mb-4">{t('footer.legal')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/terms" className="hover:text-foreground">{t('footer.terms')}</Link></li>
-                <li><Link href="/privacy" className="hover:text-foreground">{t('footer.privacy')}</Link></li>
-                <li><Link href="/contact" className="hover:text-foreground">{t('footer.contactUs')}</Link></li>
+                <li><Link href="/terms" className="hover:text-foreground" data-testid="link-footer-terms">{t('footer.terms')}</Link></li>
+                <li><Link href="/privacy" className="hover:text-foreground" data-testid="link-footer-privacy">{t('footer.privacy')}</Link></li>
+                <li><Link href="/contact" className="hover:text-foreground" data-testid="link-footer-contact">{t('footer.contactUs')}</Link></li>
               </ul>
             </div>
           </div>

@@ -374,6 +374,12 @@ export const de = {
     changesSaved: "Ihre Änderungen wurden erfolgreich gespeichert.",
     addSkill: "Fähigkeit hinzufügen",
     present: "Heute",
+    companyInfo: "Unternehmensinformationen",
+    companyName: "Unternehmensname",
+    industry: "Branche",
+    contactEmail: "Kontakt-E-Mail",
+    contactPhone: "Kontakttelefon",
+    website: "Webseite",
   },
   footer: {
     skillGiver: "Fähigkeitengeber",

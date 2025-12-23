@@ -376,6 +376,12 @@ export const en = {
     changesSaved: "Your changes have been saved successfully.",
     addSkill: "Add a skill",
     present: "Present",
+    companyInfo: "Company Information",
+    companyName: "Company Name",
+    industry: "Industry",
+    contactEmail: "Contact Email",
+    contactPhone: "Contact Phone",
+    website: "Website",
   },
   footer: {
     skillGiver: "Skill Giver",
