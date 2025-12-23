@@ -30,13 +30,14 @@ export default function SignInPage() {
       await login(formData.email, formData.password);
       toast({
         title: t('common.success'),
-        description: t('auth.signInTitle'),
+        description: t('auth.signInSuccess'),
       });
       setLocation('/under-development');
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('auth.signInError');
       toast({
         title: t('common.error'),
-        description: t('auth.signInSubtitle'),
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {

@@ -56,10 +56,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { href: '/profile', labelKey: 'nav.profile', icon: User },
   ];
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    setLocation('/');
+    setLocation('/sign-in');
   };
 
   const handleHomeClick = () => {

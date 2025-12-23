@@ -84,6 +84,8 @@ export const de = {
   auth: {
     signInTitle: "Willkommen zurück",
     signInSubtitle: "Melden Sie sich bei Ihrem Sinopia-Konto an",
+    signInSuccess: "Erfolgreich angemeldet!",
+    signInError: "Ungültige E-Mail oder Passwort. Bitte versuchen Sie es erneut.",
     signUpTitle: "Konto erstellen",
     signUpSubtitle: "Treten Sie Sinopia bei und starten Sie Ihre Reise",
     email: "E-Mail",

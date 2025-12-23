@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'wouter';
+import { Link, useLocation, useSearch } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
-import { usePendingRegistration } from '@/context/PendingRegistrationContext';
 import { useI18n } from '@/i18n';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,74 +8,65 @@ import { Button } from '@/components/ui/button';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Shield } from 'lucide-react';
+import { authService } from '@/services/authService';
 import { USER_ROLES } from '@/lib/utils/constants';
+import type { UserRole } from '@/lib/utils/constants';
 
 export default function VerifyOtpPage() {
-  const { register } = useAuth();
-  const { pendingData, clearPendingData, resendOtp, setOtpVerifiedAndStage } = usePendingRegistration();
+  const { completeRegistration } = useAuth();
   const { toast } = useToast();
   const { t } = useI18n();
   const [, setLocation] = useLocation();
+  const search = useSearch();
+  const params = new URLSearchParams(search);
+  const email = params.get('email') || '';
+  const role = (params.get('role') || 'skill_giver') as UserRole;
   
   const [isLoading, setIsLoading] = useState(false);
   const [otp, setOtp] = useState('');
 
   useEffect(() => {
-    if (!pendingData) {
-      setLocation('/sign-up');
-      return;
-    }
-    
-    const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
-    if (pendingData.timestamp < fiveMinutesAgo) {
-      clearPendingData();
-      toast({
-        title: t('auth.otp.sessionExpired'),
-        description: t('auth.otp.pleaseSignUpAgain'),
-        variant: 'destructive',
-      });
+    if (!email) {
       setLocation('/sign-up');
     }
-  }, [pendingData, setLocation, toast, clearPendingData, t]);
+  }, [email, setLocation]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (otp.length !== 6 || !pendingData) return;
-
-    // DEV ONLY: Mock OTP = 123456 (no backend/email)
-    if (otp !== '123456') {
-      toast({
-        title: t('auth.otp.invalidCode'),
-        description: t('auth.otp.invalidCodeDesc'),
-        variant: 'destructive',
-      });
-      return;
-    }
+    if (otp.length !== 6 || !email) return;
 
     setIsLoading(true);
 
     try {
-      if (pendingData.role === USER_ROLES.SKILL_GIVER) {
-        setOtpVerifiedAndStage('cv_upload_required');
-        toast({
-          title: t('auth.otp.emailVerified'),
-          description: t('auth.otp.nowUploadCv'),
-        });
-        setTimeout(() => setLocation('/sign-up/cv'), 50);
+      const response = await authService.verifyRegisterOtp({ email, otp });
+      
+      if (response.status === 'success') {
+        if (role === USER_ROLES.SKILL_GIVER) {
+          toast({
+            title: t('auth.otp.emailVerified'),
+            description: t('auth.otp.nowUploadCv'),
+          });
+          setLocation('/sign-up/cv?email=' + encodeURIComponent(email));
+        } else {
+          completeRegistration(email, role, response.token);
+          toast({
+            title: t('auth.otp.accountCreated'),
+            description: t('auth.otp.accountCreatedDesc'),
+          });
+          setLocation('/under-development');
+        }
       } else {
-        await register(pendingData.email, pendingData.password, pendingData.role);
-        clearPendingData();
         toast({
-          title: t('auth.otp.accountCreated'),
-          description: t('auth.otp.accountCreatedDesc'),
+          title: t('auth.otp.invalidCode'),
+          description: response.message || t('auth.otp.invalidCodeDesc'),
+          variant: 'destructive',
         });
-        setLocation('/under-development');
       }
     } catch (error) {
-      console.error(error);
+      const errorMessage = error instanceof Error ? error.message : t('auth.otp.somethingWentWrong');
       toast({
-        title: t('auth.otp.registrationFailed'),
-        description: t('auth.otp.somethingWentWrong'),
+        title: t('auth.otp.invalidCode'),
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
@@ -84,17 +74,27 @@ export default function VerifyOtpPage() {
     }
   };
 
-  // DEV ONLY: Mock OTP = 123456 (no backend/email)
-  const handleResend = () => {
-    resendOtp();
-    console.log('DEV ONLY: Mock OTP is always 123456');
-    toast({
-      title: t('auth.otp.codeResent'),
-      description: t('auth.otp.codeResentDesc'),
-    });
+  const handleResend = async () => {
+    try {
+      await authService.registerUser({
+        email,
+        password: '',
+        confirmPassword: '',
+        account_type: role,
+      });
+      toast({
+        title: t('auth.otp.codeResent'),
+        description: t('auth.otp.codeResentDesc'),
+      });
+    } catch {
+      toast({
+        title: t('auth.otp.codeResent'),
+        description: t('auth.otp.codeResentDesc'),
+      });
+    }
   };
 
-  if (!pendingData) {
+  if (!email) {
     return (
       <PublicLayout>
         <div className="min-h-[80vh] flex items-center justify-center">
@@ -114,7 +114,7 @@ export default function VerifyOtpPage() {
             </div>
             <CardTitle className="font-display text-2xl">{t('auth.otp.title')}</CardTitle>
             <CardDescription>
-              {t('auth.otp.description')} <span className="font-medium text-foreground">{pendingData.email}</span>
+              {t('auth.otp.description')} <span className="font-medium text-foreground">{email}</span>
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -143,7 +143,7 @@ export default function VerifyOtpPage() {
                 disabled={isLoading || otp.length !== 6}
                 data-testid="button-verify-otp-submit"
               >
-                {isLoading ? t('auth.otp.verifying') : (pendingData?.role === USER_ROLES.SKILL_GIVER ? t('auth.otp.verifyEmail') : t('auth.otp.verifyAndCreate'))}
+                {isLoading ? t('auth.otp.verifying') : (role === USER_ROLES.SKILL_GIVER ? t('auth.otp.verifyEmail') : t('auth.otp.verifyAndCreate'))}
               </Button>
             </form>
 

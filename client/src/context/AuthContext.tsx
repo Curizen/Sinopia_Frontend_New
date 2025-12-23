@@ -8,6 +8,7 @@ import {
 } from 'react';
 import type { User } from '@/types';
 import type { UserRole } from '@/lib/utils/constants';
+import { authService } from '@/services/authService';
 
 interface AuthContextType {
   user: User | null;
@@ -16,30 +17,12 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, role: UserRole, cvFile?: File | null) => Promise<void>;
-  logout: () => void;
-  setMockUser: (role: UserRole) => void;
+  logout: () => Promise<void>;
+  setUserFromToken: (token: string, user: User) => void;
+  completeRegistration: (email: string, role: UserRole, token?: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// todo: remove mock functionality (still used for login / setMockUser)
-const mockUsers: Record<UserRole, User> = {
-  skill_giver: {
-    id: '1',
-    email: 'john@example.com',
-    role: 'skill_giver',
-    avatar: undefined,
-  },
-  skill_searcher: {
-    id: '2',
-    email: 'sarah@techcorp.com',
-    role: 'skill_searcher',
-    avatar: undefined,
-  },
-};
-
-// you can configure this in your .env as VITE_API_BASE_URL
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -56,52 +39,78 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  const login = useCallback(async (email: string, _password: string) => {
-    // todo: replace with real backend login
-    const mockToken = 'mock_token_' + Date.now();
-    const mockUser = email.includes('searcher') ? mockUsers.skill_searcher : mockUsers.skill_giver;
-
-    setToken(mockToken);
-    setUser(mockUser);
-    localStorage.setItem('sinopia_token', mockToken);
-    localStorage.setItem('sinopia_user', JSON.stringify(mockUser));
+  const login = useCallback(async (email: string, password: string) => {
+    const response = await authService.loginUser({ email, password });
+    
+    if (response.token) {
+      const userData = response.data as { id?: string; email?: string; account_type?: string; role?: string } | undefined;
+      const newUser: User = {
+        id: userData?.id || Date.now().toString(),
+        email: userData?.email || email,
+        role: (userData?.account_type || userData?.role || 'skill_giver') as UserRole,
+        avatar: undefined,
+      };
+      
+      setToken(response.token);
+      setUser(newUser);
+      localStorage.setItem('sinopia_token', response.token);
+      localStorage.setItem('sinopia_user', JSON.stringify(newUser));
+    } else {
+      throw new Error(response.message || 'No token received from server');
+    }
   }, []);
 
   const register = useCallback(
-    async (email: string, _password: string, role: UserRole, _cvFile?: File | null) => {
-      // todo: replace with real backend registration
-      // For now, use mock registration like login
-      const mockToken = 'mock_token_' + Date.now();
-      const mockUser: User = {
-        id: Date.now().toString(),
+    async (email: string, password: string, role: UserRole, _cvFile?: File | null) => {
+      const response = await authService.registerUser({
         email,
-        role,
-        avatar: undefined,
-      };
-
-      setToken(mockToken);
-      setUser(mockUser);
-      localStorage.setItem('sinopia_token', mockToken);
-      localStorage.setItem('sinopia_user', JSON.stringify(mockUser));
+        password,
+        confirmPassword: password,
+        account_type: role,
+      });
+      
+      if (response.status === 'error') {
+        throw new Error(response.message || 'Registration failed');
+      }
+      
+      return;
     },
     [],
   );
 
-  const logout = useCallback(() => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('sinopia_token');
-    localStorage.removeItem('sinopia_user');
+  const completeRegistration = useCallback((email: string, role: UserRole, receivedToken?: string) => {
+    const newUser: User = {
+      id: Date.now().toString(),
+      email,
+      role,
+      avatar: undefined,
+    };
+    
+    const tokenToUse = receivedToken || 'registered_token_' + Date.now();
+    setToken(tokenToUse);
+    setUser(newUser);
+    localStorage.setItem('sinopia_token', tokenToUse);
+    localStorage.setItem('sinopia_user', JSON.stringify(newUser));
   }, []);
 
-  // todo: remove mock functionality
-  const setMockUser = useCallback((role: UserRole) => {
-    const mockToken = 'mock_token_' + Date.now();
-    const mockUser = mockUsers[role];
-    setToken(mockToken);
-    setUser(mockUser);
-    localStorage.setItem('sinopia_token', mockToken);
-    localStorage.setItem('sinopia_user', JSON.stringify(mockUser));
+  const logout = useCallback(async () => {
+    try {
+      await authService.logoutUser();
+    } catch (error) {
+      console.error('Logout API error:', error);
+    } finally {
+      setToken(null);
+      setUser(null);
+      localStorage.removeItem('sinopia_token');
+      localStorage.removeItem('sinopia_user');
+    }
+  }, []);
+
+  const setUserFromToken = useCallback((newToken: string, newUser: User) => {
+    setToken(newToken);
+    setUser(newUser);
+    localStorage.setItem('sinopia_token', newToken);
+    localStorage.setItem('sinopia_user', JSON.stringify(newUser));
   }, []);
 
   return (
@@ -114,7 +123,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
-        setMockUser,
+        setUserFromToken,
+        completeRegistration,
       }}
     >
       {children}

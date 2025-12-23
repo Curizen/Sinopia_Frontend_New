@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { usePendingRegistration } from '@/context/PendingRegistrationContext';
 import { useI18n } from '@/i18n';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,10 +9,10 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, UserPlus, Briefcase, User } from 'lucide-react';
+import { authService } from '@/services/authService';
 import type { UserRole } from '@/lib/utils/constants';
 
 export default function SignUpPage() {
-  const { setPendingData, generateOtp } = usePendingRegistration();
   const { toast } = useToast();
   const { t } = useI18n();
   const [, setLocation] = useLocation();
@@ -43,26 +42,37 @@ export default function SignUpPage() {
 
     setIsLoading(true);
 
-    const otp = generateOtp();
-    setPendingData({
-      email: formData.email,
-      password: formData.password,
-      role: formData.role,
-      otp,
-      timestamp: Date.now(),
-      stage: 'otp_pending',
-      otpVerified: false,
-    });
-    
-    console.log('Mock OTP for verification:', otp);
-    
-    toast({
-      title: t('auth.verificationRequired'),
-      description: t('auth.verificationCodeSent'),
-    });
+    try {
+      const response = await authService.registerUser({
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+        account_type: formData.role,
+      });
 
-    setIsLoading(false);
-    setLocation('/verify-otp');
+      if (response.message === "We are sending your OTP to your email. It should arrive shortly. ✅") {
+        toast({
+          title: t('auth.verificationRequired'),
+          description: t('auth.verificationCodeSent'),
+        });
+        setLocation('/verify-otp?email=' + encodeURIComponent(formData.email) + '&role=' + formData.role);
+      } else {
+        toast({
+          title: t('common.success'),
+          description: response.message || t('auth.verificationCodeSent'),
+        });
+        setLocation('/verify-otp?email=' + encodeURIComponent(formData.email) + '&role=' + formData.role);
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('common.error');
+      toast({
+        title: t('common.error'),
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

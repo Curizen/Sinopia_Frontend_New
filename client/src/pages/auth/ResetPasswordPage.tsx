@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'wouter';
+import { Link, useLocation, useSearch } from 'wouter';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,11 +8,16 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useI18n } from '@/i18n';
 import { Eye, EyeOff, Lock, Check } from 'lucide-react';
+import { authService } from '@/services/authService';
 
 export default function ResetPasswordPage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const { t } = useI18n();
+  const search = useSearch();
+  const params = new URLSearchParams(search);
+  const email = params.get('email') || '';
+  
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,14 +34,27 @@ export default function ResetPasswordPage() {
 
     setIsLoading(true);
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    toast({
-      title: t('auth.resetPassword.success'),
-      description: t('auth.resetPassword.successDesc'),
-    });
-    setLocation('/sign-in');
-    setIsLoading(false);
+    try {
+      await authService.resetPassword({
+        email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+      });
+      toast({
+        title: t('auth.resetPassword.success'),
+        description: t('auth.resetPassword.successDesc'),
+      });
+      setLocation('/sign-in');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('common.error');
+      toast({
+        title: t('common.error'),
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

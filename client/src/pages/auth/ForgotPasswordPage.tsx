@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useI18n } from '@/i18n';
 import { ArrowLeft, Mail } from 'lucide-react';
+import { authService } from '@/services/authService';
 
 export default function ForgotPasswordPage() {
   const { toast } = useToast();
@@ -20,14 +21,23 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    toast({
-      title: t('auth.forgotPassword.checkEmail'),
-      description: t('auth.forgotPassword.checkEmailDesc'),
-    });
-    setLocation(`/otp-verification?email=${encodeURIComponent(email)}&type=reset`);
-    setIsLoading(false);
+    try {
+      await authService.forgotPassword(email);
+      toast({
+        title: t('auth.forgotPassword.checkEmail'),
+        description: t('auth.forgotPassword.checkEmailDesc'),
+      });
+      setLocation(`/otp-verification?email=${encodeURIComponent(email)}&type=reset`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('common.error');
+      toast({
+        title: t('common.error'),
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

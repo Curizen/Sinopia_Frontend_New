@@ -39,9 +39,9 @@ export function PublicLayout({ children }: PublicLayoutProps) {
     setLanguage(language === 'en' ? 'de' : 'en');
   };
 
-  const handleLogout = () => {
-    logout();
-    setLocation('/');
+  const handleLogout = async () => {
+    await logout();
+    setLocation('/sign-in');
   };
 
   return (

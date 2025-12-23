@@ -86,6 +86,8 @@ export const en = {
   auth: {
     signInTitle: "Welcome Back",
     signInSubtitle: "Sign in to your Sinopia account",
+    signInSuccess: "Successfully signed in!",
+    signInError: "Invalid email or password. Please try again.",
     signUpTitle: "Create Account",
     signUpSubtitle: "Join Sinopia and start your journey",
     email: "Email",

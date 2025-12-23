@@ -1,21 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'wouter';
+import { useState, useRef, useEffect } from 'react';
+import { Link, useLocation, useSearch } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
-import { usePendingRegistration } from '@/context/PendingRegistrationContext';
 import { useI18n } from '@/i18n';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Upload, FileText, X } from 'lucide-react';
-import { USER_ROLES } from '@/lib/utils/constants';
 
 export default function CVUploadPage() {
-  const { register } = useAuth();
-  const { pendingData, clearPendingData, setCvFile } = usePendingRegistration();
+  const { completeRegistration } = useAuth();
   const { toast } = useToast();
   const { t } = useI18n();
   const [, setLocation] = useLocation();
+  const search = useSearch();
+  const params = new URLSearchParams(search);
+  const email = params.get('email') || '';
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [isLoading, setIsLoading] = useState(false);
@@ -23,21 +23,10 @@ export default function CVUploadPage() {
   const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
-    if (!pendingData) {
+    if (!email) {
       setLocation('/sign-up');
-      return;
     }
-    
-    if (pendingData.role !== USER_ROLES.SKILL_GIVER) {
-      setLocation('/sign-up');
-      return;
-    }
-    
-    if (!pendingData.otpVerified) {
-      setLocation('/verify-otp');
-      return;
-    }
-  }, [pendingData, setLocation]);
+  }, [email, setLocation]);
 
   const handleFileSelect = (file: File) => {
     const allowedTypes = [
@@ -103,15 +92,12 @@ export default function CVUploadPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedFile || !pendingData) return;
+    if (!selectedFile || !email) return;
 
     setIsLoading(true);
 
     try {
-      setCvFile(selectedFile);
-      await register(pendingData.email, pendingData.password, pendingData.role, selectedFile);
-      
-      clearPendingData();
+      completeRegistration(email, 'skill_giver');
       
       toast({
         title: t('auth.otp.accountCreated'),
@@ -131,7 +117,7 @@ export default function CVUploadPage() {
     }
   };
 
-  if (!pendingData || pendingData.role !== USER_ROLES.SKILL_GIVER || !pendingData.otpVerified) {
+  if (!email) {
     return (
       <PublicLayout>
         <div className="min-h-[80vh] flex items-center justify-center">
@@ -237,7 +223,7 @@ export default function CVUploadPage() {
 
             <div className="mt-4">
               <Link
-                href="/verify-otp"
+                href={`/verify-otp?email=${encodeURIComponent(email)}&role=skill_giver`}
                 className="flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground"
               >
                 <ArrowLeft className="w-4 h-4" />
