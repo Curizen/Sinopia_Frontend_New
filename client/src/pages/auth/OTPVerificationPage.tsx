@@ -30,7 +30,11 @@ export default function OTPVerificationPage() {
     try {
       const response = await authService.verifyForgotPasswordOtp({ email, otp });
       
-      if (response.status === 'success') {
+      const isSuccess = response.status === 'success' || 
+                        response.message?.toLowerCase().includes('verified') ||
+                        response.message?.toLowerCase().includes('successful');
+      
+      if (isSuccess) {
         toast({
           title: t('auth.otpVerification.codeVerified'),
           description: type === 'reset' ? t('auth.otpVerification.codeVerifiedResetDesc') : t('auth.otpVerification.codeVerifiedEmailDesc'),

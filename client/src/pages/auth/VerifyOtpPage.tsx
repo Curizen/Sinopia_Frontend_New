@@ -40,7 +40,11 @@ export default function VerifyOtpPage() {
     try {
       const response = await authService.verifyRegisterOtp({ email, otp });
       
-      if (response.status === 'success') {
+      const isSuccess = response.status === 'success' || 
+                        response.message?.toLowerCase().includes('successful') ||
+                        response.message?.toLowerCase().includes('verified');
+      
+      if (isSuccess) {
         if (role === USER_ROLES.SKILL_GIVER) {
           toast({
             title: t('auth.otp.emailVerified'),
