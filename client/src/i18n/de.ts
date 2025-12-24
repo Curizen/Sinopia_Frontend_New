@@ -411,7 +411,7 @@ export const de = {
     subtitle: "Verbindung von Talent mit Möglichkeiten seit 2024",
     storyTitle: "Unsere Geschichte",
     storyText1: "Sinopia ist ein junges und innovatives Unternehmen mit einer klaren Vision: bestehendes gesellschaftliches Potenzial neu zu denken und auf neue, sinnvolle Weise zugänglich zu machen.",
-    storyText2: "Unsere Mission ist es, alternative und manchmal disruptive Ansätze zu entwickeln, um wertvolle Ressourcen – insbesondere menschliche Expertise und Erfahrung – wieder in den sozialen und wirtschaftlichen Kreislauf zu integrieren.",
+    storyText2: "Unsere Mission ist es, alternative und manchmal disruptive Ansätze zu entwickeln, um wertvolle Ressourcen - insbesondere menschliche Expertise und Erfahrung - wieder in den sozialen und wirtschaftlichen Kreislauf zu integrieren.",
     storyText3: "Die Idee hinter Sinopia wurde von einem einfachen, aber tiefgründigen Bild inspiriert: uralte Höhlenmalereien, die menschliche Hände darstellen – ein zeitloses Symbol für Verbindung, Unterstützung und die Weitergabe von Wissen.",
     storyText4: "Aus dieser Symbolik entstand die Vision, die umfangreiche Erfahrung von Rentnern und erfahrenen Fachleuten der heutigen Arbeitswelt zur Verfügung zu stellen – flexibel, gezielt und wirkungsvoll. Als Gründer sind wir überzeugt, dass unser Ansatz nicht nur die Herausforderungen des demografischen Wandels adressiert, sondern auch zur sozialen Teilhabe, zum Wissenserhalt und zu einem nachhaltigeren Arbeitsmarkt beiträgt.",
     value1Title: "Verborgene Expertise erschließen",
