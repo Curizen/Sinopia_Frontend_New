@@ -524,7 +524,7 @@ export const de = {
   },
   underDevelopment: {
     title: "Die Plattform befindet sich noch in der Entwicklung",
-    subtitle: "verfügbar ab dem 8. Februar",
+    subtitle: "",
     featuresNotAvailable: "Einige Funktionen sind noch nicht verfügbar.",
     backToHome: "Zur Startseite",
   },
