@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, UserPlus, Briefcase, User } from 'lucide-react';
 import { authService } from '@/services/authService';
 import type { UserRole } from '@/lib/utils/constants';
+import { PasswordRequirements, isPasswordValid } from '@/components/auth/PasswordRequirements';
 
 export default function SignUpPage() {
   const { toast } = useToast();
@@ -215,6 +216,7 @@ export default function SignUpPage() {
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
+                {formData.password && <PasswordRequirements password={formData.password} />}
               </div>
 
               <div className="space-y-2">
@@ -244,7 +246,7 @@ export default function SignUpPage() {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={isLoading}
+                disabled={isLoading || !isPasswordValid(formData.password) || formData.password !== formData.confirmPassword}
                 data-testid="button-signup-submit"
               >
                 {isLoading ? t('common.loading') : t('auth.signUpButton')}

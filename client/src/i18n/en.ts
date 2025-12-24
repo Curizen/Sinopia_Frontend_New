@@ -185,6 +185,12 @@ export const en = {
       codeResent: "Code resent",
       codeResentDesc: "A new verification code has been sent to your email.",
     },
+    passwordValidation: {
+      minLength: "At least 8 characters",
+      uppercase: "At least one uppercase letter",
+      number: "At least one number",
+      specialChar: "At least one special character (!@#$%^&*)",
+    },
     cvUpload: {
       title: "Upload Your CV",
       description: "Please upload your CV to complete your registration as a Skill Giver",

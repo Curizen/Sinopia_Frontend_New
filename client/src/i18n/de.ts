@@ -183,6 +183,12 @@ export const de = {
       codeResent: "Code erneut gesendet",
       codeResentDesc: "Ein neuer Verifizierungscode wurde an Ihre E-Mail gesendet.",
     },
+    passwordValidation: {
+      minLength: "Mindestens 8 Zeichen",
+      uppercase: "Mindestens ein Großbuchstabe",
+      number: "Mindestens eine Zahl",
+      specialChar: "Mindestens ein Sonderzeichen (!@#$%^&*)",
+    },
     cvUpload: {
       title: "Lebenslauf hochladen",
       description: "Bitte laden Sie Ihren Lebenslauf hoch, um Ihre Registrierung als Fähigkeitengeber abzuschließen",
