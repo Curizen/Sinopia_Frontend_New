@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation, useSearch } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,9 +15,6 @@ export default function ResetPasswordPage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const { t } = useI18n();
-  const search = useSearch();
-  const params = new URLSearchParams(search);
-  const email = params.get('email') || '';
   
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

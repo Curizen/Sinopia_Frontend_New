@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, LogIn } from 'lucide-react';
-import { PasswordRequirements, isPasswordValid } from '@/components/auth/PasswordRequirements';
 
 export default function SignInPage() {
   const { login } = useAuth();
@@ -103,10 +102,9 @@ export default function SignInPage() {
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-                {formData.password && <PasswordRequirements password={formData.password} />}
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading || !isPasswordValid(formData.password)} data-testid="button-signin-submit">
+              <Button type="submit" className="w-full" disabled={isLoading || !formData.password} data-testid="button-signin-submit">
                 {isLoading ? `${t('common.loading')}` : t('auth.signInButton')}
                 <LogIn className="ml-2 w-4 h-4" />
               </Button>
