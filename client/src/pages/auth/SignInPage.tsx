@@ -3,6 +3,7 @@ import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
 import { useI18n } from '@/i18n';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
+import sinopiaLogo from '@assets/sinopia_logo.png';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -53,7 +54,7 @@ export default function SignInPage() {
             <div className="flex items-center justify-center mx-auto mb-4">
               <Link href="/" className="flex items-center gap-2">
                 <img 
-                  src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+                  src={sinopiaLogo} 
                   alt="Sinopia Logo" 
                   className="w-16 h-auto rounded-md object-cover"
                 />
