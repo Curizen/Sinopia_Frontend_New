@@ -50,7 +50,11 @@ export default function SignUpPage() {
         account_type: formData.role,
       });
 
-      if (response.message === "We are sending your OTP to your email. It should arrive shortly. ✅") {
+      const isOtpSent = response.message?.toLowerCase().includes('otp') || 
+                        response.message?.toLowerCase().includes('sending') ||
+                        response.status === 'success';
+
+      if (isOtpSent) {
         toast({
           title: t('auth.verificationRequired'),
           description: t('auth.verificationCodeSent'),
@@ -58,10 +62,10 @@ export default function SignUpPage() {
         setLocation('/verify-otp?email=' + encodeURIComponent(formData.email) + '&role=' + formData.role);
       } else {
         toast({
-          title: t('common.success'),
-          description: response.message || t('auth.verificationCodeSent'),
+          title: t('common.error'),
+          description: response.message || t('common.error'),
+          variant: 'destructive',
         });
-        setLocation('/verify-otp?email=' + encodeURIComponent(formData.email) + '&role=' + formData.role);
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : t('common.error');
