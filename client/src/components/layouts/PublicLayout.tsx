@@ -2,6 +2,7 @@ import { type ReactNode, useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import sinopiaLogo from '@assets/sinopia_logo.png';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,7 +52,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-2">
               <img 
-                src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+                src={sinopiaLogo} 
                 alt="Sinopia Logo" 
                 className="w-16 h-auto rounded-md object-cover"
               />

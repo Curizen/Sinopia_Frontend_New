@@ -3,6 +3,7 @@ import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
 import { useNotifications } from '@/context/NotificationContext';
 import { useI18n } from '@/i18n';
+import sinopiaLogo from '@assets/sinopia_logo.png';
 
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -83,7 +84,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
               <img 
-                src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+                src={sinopiaLogo} 
                 alt="Sinopia Logo" 
                 className="w-12 h-auto rounded-md object-cover"
               />
