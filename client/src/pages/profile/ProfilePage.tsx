@@ -99,12 +99,12 @@ export default function ProfilePage() {
   };
 
   const emptySkillSearcherProfile: SkillSearcherProfile = {
-    companyName: '',
-    industry: '',
+    companyName: user?.companyName || '',
+    industry: user?.industry || '',
     website: '',
-    bio: '',
-    contactEmail: '',
-    contactPhone: '',
+    bio: user?.bio || '',
+    contactEmail: user?.contactEmail || '',
+    contactPhone: user?.contactPhone || '',
     location: '',
     city: user?.city || '',
     country: user?.country || '',
