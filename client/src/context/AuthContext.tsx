@@ -10,6 +10,12 @@ import type { User } from '@/types';
 import type { UserRole } from '@/lib/utils/constants';
 import { authService } from '@/services/authService';
 
+interface CompanyInfoData {
+  city: string;
+  country: string;
+  companySize: string;
+}
+
 interface AuthContextType {
   user: User | null;
   token: string | null;
@@ -20,6 +26,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   setUserFromToken: (token: string, user: User) => void;
   completeRegistration: (email: string, role: UserRole, token?: string) => void;
+  updateUserCompanyInfo: (data: CompanyInfoData) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -118,6 +125,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('sinopia_user', JSON.stringify(newUser));
   }, []);
 
+  const updateUserCompanyInfo = useCallback(async (data: CompanyInfoData) => {
+    if (!user) throw new Error('No user logged in');
+    
+    const updatedUser: User = {
+      ...user,
+      city: data.city,
+      country: data.country,
+      companySize: data.companySize,
+      companyInfoCompleted: true,
+    };
+    
+    setUser(updatedUser);
+    localStorage.setItem('sinopia_user', JSON.stringify(updatedUser));
+  }, [user]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -130,6 +152,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logout,
         setUserFromToken,
         completeRegistration,
+        updateUserCompanyInfo,
       }}
     >
       {children}

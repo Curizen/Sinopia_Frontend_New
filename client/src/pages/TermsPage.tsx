@@ -9,7 +9,7 @@ export default function TermsPage() {
           
           <div className="prose prose-lg max-w-none text-muted-foreground">
             <p className="text-sm text-muted-foreground mb-8">
-              Last updated: November 2024
+              Last updated: November 2025
             </p>
 
             <section className="mb-8">

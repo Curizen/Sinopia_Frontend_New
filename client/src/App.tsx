@@ -27,6 +27,7 @@ import OTPVerificationPage from "@/pages/auth/OTPVerificationPage";
 import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
 import VerifyOtpPage from "@/pages/auth/VerifyOtpPage";
 import CVUploadPage from "@/pages/auth/CVUploadPage";
+import CompanyInfoPage from "@/pages/auth/CompanyInfoPage";
 import DashboardPage from "@/pages/dashboard/DashboardPage";
 import ProjectsPage from "@/pages/projects/ProjectsPage";
 import ProjectDetailPage from "@/pages/projects/ProjectDetailPage";
@@ -42,7 +43,7 @@ import UnderDevelopmentPage from "@/pages/UnderDevelopmentPage";
 import NotFound from "@/pages/not-found";
 
 function PrivateRoute({ component: Component }: { component: React.ComponentType }) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   if (isLoading) {
     return (
@@ -54,6 +55,10 @@ function PrivateRoute({ component: Component }: { component: React.ComponentType
 
   if (!isAuthenticated) {
     return <Redirect to="/sign-in" />;
+  }
+
+  if (user?.role === 'skill_searcher' && !user?.companyInfoCompleted) {
+    return <Redirect to="/onboarding/company" />;
   }
 
   return <Component />;
@@ -110,6 +115,7 @@ function Router() {
       <Route path="/sign-up/cv">
         <PublicOnlyRoute component={CVUploadPage} />
       </Route>
+      <Route path="/onboarding/company" component={CompanyInfoPage} />
 
       <Route path="/dashboard">
         <PrivateRoute component={DashboardPage} />

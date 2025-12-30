@@ -1,7 +1,7 @@
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { useI18n } from '@/i18n';
 import { Card, CardContent } from '@/components/ui/card';
-import { Target, Heart, Users, Globe, Lightbulb, FileSearch, ClipboardCheck, Shield, UserCheck, Cog } from 'lucide-react';
+import { Target, Heart, Users, Globe, Lightbulb, FileSearch, ClipboardCheck, Shield, UserCheck, Cog, Sparkles, Handshake, Award } from 'lucide-react';
 import heroImage from '@assets/generated_images/team_collaboration_coworking_hero.png';
 
 const skills = [
@@ -18,9 +18,12 @@ export default function AboutPage() {
 
   const values = [
     { icon: Target, titleKey: 'about.value1Title', descKey: 'about.value1Desc' },
-    { icon: Heart, titleKey: 'about.value2Title', descKey: 'about.value2Desc' },
-    { icon: Users, titleKey: 'about.value3Title', descKey: 'about.value3Desc' },
-    { icon: Globe, titleKey: 'about.value4Title', descKey: 'about.value4Desc' },
+    { icon: Lightbulb, titleKey: 'about.value2Title', descKey: 'about.value2Desc' },
+    { icon: Sparkles, titleKey: 'about.value3Title', descKey: 'about.value3Desc' },
+    { icon: Cog, titleKey: 'about.value4Title', descKey: 'about.value4Desc' },
+    { icon: Handshake, titleKey: 'about.value5Title', descKey: 'about.value5Desc' },
+    { icon: Shield, titleKey: 'about.value6Title', descKey: 'about.value6Desc' },
+    { icon: Award, titleKey: 'about.value7Title', descKey: 'about.value7Desc' },
   ];
 
   return (
@@ -57,7 +60,7 @@ export default function AboutPage() {
       <section className="py-16 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="font-display text-3xl font-bold text-center mb-12">{t('about.valuesTitle')}</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {values.map((value, index) => (
               <Card key={index} className="hover-elevate">
                 <CardContent className="pt-6 text-center">

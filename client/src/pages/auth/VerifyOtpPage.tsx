@@ -57,7 +57,7 @@ export default function VerifyOtpPage() {
             title: t('auth.otp.accountCreated'),
             description: t('auth.otp.accountCreatedDesc'),
           });
-          setLocation('/under-development');
+          setLocation('/onboarding/company');
         }
       } else {
         toast({

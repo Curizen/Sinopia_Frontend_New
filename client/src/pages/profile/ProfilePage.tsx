@@ -73,6 +73,9 @@ interface SkillSearcherProfile {
   contactEmail: string;
   contactPhone: string;
   location: string;
+  city: string;
+  country: string;
+  companySize: string;
 }
 
 export default function ProfilePage() {
@@ -103,6 +106,9 @@ export default function ProfilePage() {
     contactEmail: '',
     contactPhone: '',
     location: '',
+    city: user?.city || '',
+    country: user?.country || '',
+    companySize: user?.companySize || '',
   };
 
   const [giverProfile, setGiverProfile] = useState<SkillGiverProfile>(emptySkillGiverProfile);
@@ -244,35 +250,6 @@ export default function ProfilePage() {
           </Card>
 
           <div className="lg:col-span-2 space-y-6">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
-                <CardTitle className="flex items-center gap-2">
-                  <User className="w-5 h-5" />
-                  {t('profile.about')}
-                </CardTitle>
-                {editingSection === 'about' ? (
-                  <SectionActions section="about" />
-                ) : (
-                  <SectionEditButton section="about" />
-                )}
-              </CardHeader>
-              <CardContent>
-                {editingSection === 'about' && editBuffer ? (
-                  <Textarea
-                    value={editBuffer.bio}
-                    onChange={(e) => setEditBuffer({ ...editBuffer, bio: e.target.value })}
-                    rows={4}
-                    placeholder={t('profile.bio')}
-                    data-testid="input-profile-bio"
-                  />
-                ) : (
-                  <p className="text-muted-foreground">
-                    {profile.bio?.trim() ? profile.bio : t('emptyState.notSet')}
-                  </p>
-                )}
-              </CardContent>
-            </Card>
-
             {!isSkillGiver && 'companyName' in profile && (
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
@@ -309,6 +286,42 @@ export default function ProfilePage() {
                       </div>
                       <div className="grid sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
+                          <label className="text-sm font-medium">{t('profile.city')}</label>
+                          <Input
+                            value={editBuffer.city}
+                            onChange={(e) => setEditBuffer({ ...editBuffer, city: e.target.value })}
+                            data-testid="input-profile-city"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">{t('profile.country')}</label>
+                          <Input
+                            value={editBuffer.country}
+                            onChange={(e) => setEditBuffer({ ...editBuffer, country: e.target.value })}
+                            data-testid="input-profile-country"
+                          />
+                        </div>
+                      </div>
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">{t('profile.companySize')}</label>
+                          <Input
+                            value={editBuffer.companySize}
+                            onChange={(e) => setEditBuffer({ ...editBuffer, companySize: e.target.value })}
+                            data-testid="input-profile-company-size"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">{t('profile.website')}</label>
+                          <Input
+                            value={editBuffer.website}
+                            onChange={(e) => setEditBuffer({ ...editBuffer, website: e.target.value })}
+                            data-testid="input-website"
+                          />
+                        </div>
+                      </div>
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
                           <label className="text-sm font-medium">{t('profile.contactEmail')}</label>
                           <Input
                             type="email"
@@ -326,24 +339,28 @@ export default function ProfilePage() {
                           />
                         </div>
                       </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">{t('profile.website')}</label>
-                        <Input
-                          value={editBuffer.website}
-                          onChange={(e) => setEditBuffer({ ...editBuffer, website: e.target.value })}
-                          data-testid="input-website"
-                        />
-                      </div>
                     </div>
                   ) : (
                     <div className="grid sm:grid-cols-2 gap-4 text-sm">
                       <div>
-                        <span className="text-muted-foreground">{t('profile.companyName')}: </span>
-                        <span className="font-medium">{displayValue(profile.companyName)}</span>
+                        <span className="text-muted-foreground">{t('profile.companySize')}: </span>
+                        <span className="font-medium">{displayValue(profile.companySize)}</span>
                       </div>
                       <div>
                         <span className="text-muted-foreground">{t('profile.industry')}: </span>
                         <span className="font-medium">{displayValue(profile.industry)}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">{t('profile.city')}: </span>
+                        <span className="font-medium">{displayValue(profile.city)}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">{t('profile.country')}: </span>
+                        <span className="font-medium">{displayValue(profile.country)}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">{t('profile.companyName')}: </span>
+                        <span className="font-medium">{displayValue(profile.companyName)}</span>
                       </div>
                       <div>
                         <span className="text-muted-foreground">{t('profile.contactEmail')}: </span>
@@ -358,6 +375,35 @@ export default function ProfilePage() {
                 </CardContent>
               </Card>
             )}
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
+                <CardTitle className="flex items-center gap-2">
+                  <User className="w-5 h-5" />
+                  {t('profile.about')}
+                </CardTitle>
+                {editingSection === 'about' ? (
+                  <SectionActions section="about" />
+                ) : (
+                  <SectionEditButton section="about" />
+                )}
+              </CardHeader>
+              <CardContent>
+                {editingSection === 'about' && editBuffer ? (
+                  <Textarea
+                    value={editBuffer.bio}
+                    onChange={(e) => setEditBuffer({ ...editBuffer, bio: e.target.value })}
+                    rows={4}
+                    placeholder={t('profile.bio')}
+                    data-testid="input-profile-bio"
+                  />
+                ) : (
+                  <p className="text-muted-foreground">
+                    {profile.bio?.trim() ? profile.bio : t('emptyState.notSet')}
+                  </p>
+                )}
+              </CardContent>
+            </Card>
 
             {isSkillGiver && 'skills' in profile && (
               <Card>
