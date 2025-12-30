@@ -635,14 +635,18 @@ export const de = {
     confirmPasswordPlaceholder: "Neues Kennwort bestätigen",
     updatePassword: "Kennwort aktualisieren",
     deleteAccount: "Konto löschen",
-    deleteAccountDesc: "Ihr Konto und alle zugehörigen Daten dauerhaft entfernen",
-    deleteAccountWarning: "Sobald Sie Ihr Konto löschen, gibt es kein Zurück. Bitte seien Sie sich sicher.",
+    deleteAccountDesc:
+      "Ihr Konto und alle zugehörigen Daten dauerhaft entfernen",
+    deleteAccountWarning:
+      "Sobald Sie Ihr Konto löschen, gibt es kein Zurück. Bitte seien Sie sich sicher.",
     deleteAccountButton: "Konto löschen",
     deleteConfirmTitle: "Sind Sie absolut sicher?",
-    deleteConfirmDesc: "Diese Aktion kann nicht rückgängig gemacht werden. Ihr Konto wird dauerhaft gelöscht und Ihre Daten werden von unseren Servern entfernt.",
+    deleteConfirmDesc:
+      "Diese Aktion kann nicht rückgängig gemacht werden. Ihr Konto wird dauerhaft gelöscht und Ihre Daten werden von unseren Servern entfernt.",
     accountDeleted: "Konto gelöscht",
     accountDeletedDesc: "Ihr Konto wurde erfolgreich gelöscht.",
-    deleteAccountFailed: "Konto konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
+    deleteAccountFailed:
+      "Konto konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
     passwordTooShort: "Kennwort muss mindestens 8 Zeichen lang sein.",
     passwordMismatch: "Kennwörter stimmen nicht überein.",
     passwordChanged: "Kennwort geändert",
@@ -730,7 +734,7 @@ export const de = {
     subtitle: "Angaben gemäß § 5 DDG",
     companyName: "Sinopia Deutschland GmbH",
     companyAddress:
-      "Deckerstr. 39\n70372 Stuttgart\nHandelsregister: HRA 800342\nRegistergericht: Stuttgart",
+      "Deckerstr. 30\n70372 Stuttgart\nHandelsregister: HRA 800342\nRegistergericht: Stuttgart",
     representedByTitle: "Vertreten durch:",
     representedByNames: "Jens Uwe Jung, Tobias Bahlinger und Eyad Dawood",
     contactTitle: "Kontakt:",

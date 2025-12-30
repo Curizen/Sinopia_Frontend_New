@@ -151,7 +151,7 @@ export default function ContactPage() {
                       <p className="text-sm text-muted-foreground">
                         Sinopia Deutschland GmbH
                         <br />
-                        Deckerstr. 39
+                        Deckerstr. 30
                         <br />
                         70372 Stuttgart
                       </p>

@@ -624,11 +624,14 @@ export const en = {
     confirmPasswordPlaceholder: "Confirm new password",
     updatePassword: "Update Password",
     deleteAccount: "Delete Account",
-    deleteAccountDesc: "Permanently remove your account and all associated data",
-    deleteAccountWarning: "Once you delete your account, there is no going back. Please be certain.",
+    deleteAccountDesc:
+      "Permanently remove your account and all associated data",
+    deleteAccountWarning:
+      "Once you delete your account, there is no going back. Please be certain.",
     deleteAccountButton: "Delete account",
     deleteConfirmTitle: "Are you absolutely sure?",
-    deleteConfirmDesc: "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
+    deleteConfirmDesc:
+      "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
     accountDeleted: "Account deleted",
     accountDeletedDesc: "Your account has been successfully deleted.",
     deleteAccountFailed: "Failed to delete account. Please try again.",
@@ -718,7 +721,7 @@ export const en = {
     subtitle: "Information according to § 5 DDG",
     companyName: "Sinopia Deutschland GmbH",
     companyAddress:
-      "Deckerstr. 39\n70372 Stuttgart\nCommercial Register: HRA 800342\nRegistry Court: Stuttgart",
+      "Deckerstr. 30\n70372 Stuttgart\nCommercial Register: HRA 800342\nRegistry Court: Stuttgart",
     representedByTitle: "Represented by:",
     representedByNames: "Jens Uwe Jung, Tobias Bahlinger, and Eyad Dawood",
     contactTitle: "Contact:",
