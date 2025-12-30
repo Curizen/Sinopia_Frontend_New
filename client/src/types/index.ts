@@ -9,8 +9,11 @@ export interface User {
   avatar?: string;
   firstName?: string;
   lastName?: string;
-
-  cvUrl?: string;        
+  cvUrl?: string;
+  city?: string;
+  country?: string;
+  companySize?: string;
+  companyInfoCompleted?: boolean;
 }
 
 
@@ -39,6 +42,9 @@ export interface SkillSearcherProfile {
   contactEmail: string;
   contactPhone: string;
   location: string;
+  city?: string;
+  country?: string;
+  companySize?: string;
 }
 
 export interface Experience {
