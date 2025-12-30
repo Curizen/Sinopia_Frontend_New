@@ -76,7 +76,7 @@ function PublicOnlyRoute({ component: Component }: { component: React.ComponentT
   }
 
   if (isAuthenticated) {
-    return <Redirect to="/under-development" />;
+    return <Redirect to="/dashboard" />;
   }
 
   return <Component />;
