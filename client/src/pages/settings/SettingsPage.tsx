@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useLocation } from 'wouter';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
 import { useI18n } from '@/i18n';
@@ -7,14 +8,27 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { Globe, Palette, User, Lock, Camera, Eye, EyeOff } from 'lucide-react';
+import { Globe, User, Lock, Camera, Eye, EyeOff, Trash2 } from 'lucide-react';
 
 export default function SettingsPage() {
-  const { user, updateUserProfile } = useAuth();
+  const { user, updateUserProfile, logout } = useAuth();
   const { t, language, setLanguage } = useI18n();
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   
   const [isUploading, setIsUploading] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
@@ -340,6 +354,72 @@ export default function SettingsPage() {
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card data-testid="card-settings-delete-account" className="border-destructive/50">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-destructive/10 flex items-center justify-center">
+                  <Trash2 className="w-5 h-5 text-destructive" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg text-destructive">{t('settings.deleteAccount')}</CardTitle>
+                  <CardDescription>{t('settings.deleteAccountDesc')}</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                {t('settings.deleteAccountWarning')}
+              </p>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" data-testid="button-delete-account">
+                    {t('settings.deleteAccountButton')}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t('settings.deleteConfirmTitle')}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t('settings.deleteConfirmDesc')}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel data-testid="button-cancel-delete">{t('common.cancel')}</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-destructive text-white hover:bg-destructive/90"
+                      disabled={isDeleting}
+                      onClick={async () => {
+                        setIsDeleting(true);
+                        try {
+                          localStorage.removeItem('sinopia_token');
+                          localStorage.removeItem('sinopia_user');
+                          await logout();
+                          toast({
+                            title: t('settings.accountDeleted'),
+                            description: t('settings.accountDeletedDesc'),
+                          });
+                          setLocation('/');
+                          window.scrollTo(0, 0);
+                        } catch (error) {
+                          toast({
+                            title: t('common.error'),
+                            description: t('settings.deleteAccountFailed'),
+                            variant: 'destructive',
+                          });
+                        } finally {
+                          setIsDeleting(false);
+                        }
+                      }}
+                      data-testid="button-confirm-delete"
+                    >
+                      {isDeleting ? t('common.loading') : t('settings.deleteAccountButton')}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </CardContent>
           </Card>
         </div>

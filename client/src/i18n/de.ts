@@ -1,6 +1,6 @@
 /**
  * German translations for Sinopia
- * 
+ *
  * Struktur:
  * - common: Gemeinsame Texte in der App
  * - nav: Navigationsbeschriftungen
@@ -50,35 +50,45 @@ export const de = {
   home: {
     heroTitle: "Verbinde deine Fähigkeiten mit",
     heroTitleHighlight: "Möglichkeiten",
-    heroSubtitle: "Sinopia ermöglicht es Unternehmen, einen geschäftlichen Anwendungsfall in ein konkretes Ergebnis zu verwandeln, indem Anforderungen in die benötigten Fähigkeiten aufgeteilt werden, diese Fähigkeiten über die Agentic-KI-Plattform sofort verfügbar gemacht werden und die passenden Kompetenzen gezielt zur Lösung der Aufgabe orchestriert wird.",
+    heroSubtitle:
+      "Sinopia ermöglicht es Unternehmen, einen geschäftlichen Anwendungsfall in ein konkretes Ergebnis zu verwandeln, indem Anforderungen in die benötigten Fähigkeiten aufgeteilt werden, diese Fähigkeiten über die Agentic-KI-Plattform sofort verfügbar gemacht werden und die passenden Kompetenzen gezielt zur Lösung der Aufgabe orchestriert wird.",
     learnMore: "Mehr erfahren",
     featuresTitle: "Warum Sinopia wählen?",
-    featuresSubtitle: "Alles, was Sie brauchen, um Fähigkeiten mit Möglichkeiten zu verbinden",
+    featuresSubtitle:
+      "Alles, was Sie brauchen, um Fähigkeiten mit Möglichkeiten zu verbinden",
     feature1Title: "Perfekte Übereinstimmungen finden",
-    feature1Desc: "Unser intelligenter Zuordnungs-Algorithmus verbindet Sie mit den richtigen Projekten oder Talenten basierend auf Ihren Fähigkeiten und Anforderungen.",
+    feature1Desc:
+      "Unser intelligenter Zuordnungs-Algorithmus verbindet Sie mit den richtigen Projekten oder Talenten basierend auf Ihren Fähigkeiten und Anforderungen.",
     feature2Title: "Sichere Zahlungen",
-    feature2Desc: "Geschützte Transaktionen mit meilensteinbasierten Zahlungen stellen sicher, dass beide Parteien zufrieden sind, bevor Gelder freigegeben werden.",
+    feature2Desc:
+      "Geschützte Transaktionen mit meilensteinbasierten Zahlungen stellen sicher, dass beide Parteien zufrieden sind, bevor Gelder freigegeben werden.",
     feature3Title: "Professionelle Verträge",
-    feature3Desc: "Rechtlich bindende digitale Verträge, die sowohl Fähigkeitengeber als auch -sucher während des gesamten Projekts schützen.",
+    feature3Desc:
+      "Rechtlich bindende digitale Verträge, die sowohl Fähigkeitengeber als auch -sucher während des gesamten Projekts schützen.",
     ctaTitle: "Bereit anzufangen?",
-    ctaSubtitle: "Schließen Sie sich Tausenden von Fachleuten an, die Sinopia bereits nutzen",
+    ctaSubtitle:
+      "Schließen Sie sich Tausenden von Fachleuten an, die Sinopia bereits nutzen",
     ctaButton: "Konto erstellen",
     testimonials: {
       title: "Erfolgsgeschichten",
-      subtitle: "Erfahren Sie von Fachleuten und Unternehmen, die ihre Ziele mit Sinopia erreicht haben.",
+      subtitle:
+        "Erfahren Sie von Fachleuten und Unternehmen, die ihre Ziele mit Sinopia erreicht haben.",
       mock: {
         person1Name: "Sarah Chen",
         person1Role: "Full-Stack-Entwicklerin",
         person1Type: "Fähigkeitengeber",
-        person1Quote: "Sinopia hat meine Freelance-Karriere verändert. Ich habe beständige, hochwertige Projekte gefunden und mein Einkommen innerhalb von 6 Monaten verdoppelt.",
+        person1Quote:
+          "Sinopia hat meine Freelance-Karriere verändert. Ich habe beständige, hochwertige Projekte gefunden und mein Einkommen innerhalb von 6 Monaten verdoppelt.",
         person2Name: "Michael Torres",
         person2Role: "CTO bei TechFlow",
         person2Type: "Fähigkeitensucher",
-        person2Quote: "Die Qualität der Talente auf Sinopia ist außergewöhnlich. Wir haben unsere gesamte mobile App mit einem Team aufgebaut, das wir hier gefunden haben.",
+        person2Quote:
+          "Die Qualität der Talente auf Sinopia ist außergewöhnlich. Wir haben unsere gesamte mobile App mit einem Team aufgebaut, das wir hier gefunden haben.",
         person3Name: "Emily Roberts",
         person3Role: "UX-Designerin",
         person3Type: "Fähigkeitengeber",
-        person3Quote: "Die Plattform ist intuitiv und das Zahlungssystem ist zuverlässig. Ich liebe, wie Sinopia Verträge und Meilensteine handhabt.",
+        person3Quote:
+          "Die Plattform ist intuitiv und das Zahlungssystem ist zuverlässig. Ich liebe, wie Sinopia Verträge und Meilensteine handhabt.",
       },
     },
   },
@@ -86,7 +96,8 @@ export const de = {
     signInTitle: "Willkommen zurück",
     signInSubtitle: "Melden Sie sich bei Ihrem Sinopia-Konto an",
     signInSuccess: "Erfolgreich angemeldet!",
-    signInError: "Ungültige E-Mail oder Passwort. Bitte versuchen Sie es erneut.",
+    signInError:
+      "Ungültige E-Mail oder Passwort. Bitte versuchen Sie es erneut.",
     signUpTitle: "Konto erstellen",
     signUpSubtitle: "Treten Sie Sinopia bei und starten Sie Ihre Reise",
     email: "E-Mail",
@@ -109,18 +120,21 @@ export const de = {
     skillSearcherDesc: "Ich möchte talentierte Fachleute finden",
     selectRole: "Wählen Sie Ihre Rolle",
     forgotPasswordTitle: "Passwort vergessen",
-    forgotPasswordSubtitle: "Geben Sie Ihre E-Mail ein, um einen Reset-Code zu erhalten",
+    forgotPasswordSubtitle:
+      "Geben Sie Ihre E-Mail ein, um einen Reset-Code zu erhalten",
     sendCode: "Reset-Code senden",
     resetPasswordTitle: "Passwort zurücksetzen",
     resetPasswordSubtitle: "Geben Sie Ihr neues Passwort ein",
     resetButton: "Passwort zurücksetzen",
     otpTitle: "E-Mail bestätigen",
-    otpSubtitle: "Geben Sie den 6-stelligen Code ein, der an Ihre E-Mail gesendet wurde",
+    otpSubtitle:
+      "Geben Sie den 6-stelligen Code ein, der an Ihre E-Mail gesendet wurde",
     verifyButton: "Bestätigen",
     resendCode: "Code erneut senden",
     passwordsDoNotMatch: "Passwörter stimmen nicht überein",
     verificationRequired: "Verifizierung erforderlich",
-    verificationCodeSent: "Ein Verifizierungscode wurde an Ihre E-Mail gesendet",
+    verificationCodeSent:
+      "Ein Verifizierungscode wurde an Ihre E-Mail gesendet",
     otp: {
       title: "E-Mail bestätigen",
       description: "Wir haben einen 6-stelligen Code gesendet an",
@@ -135,24 +149,29 @@ export const de = {
       invalidCode: "Ungültiger Code",
       invalidCodeDesc: "Ungültiger Verifizierungscode",
       emailVerified: "E-Mail bestätigt!",
-      nowUploadCv: "Bitte laden Sie jetzt Ihren Lebenslauf hoch, um die Registrierung abzuschließen.",
+      nowUploadCv:
+        "Bitte laden Sie jetzt Ihren Lebenslauf hoch, um die Registrierung abzuschließen.",
       accountCreated: "Erfolgreich!",
       accountCreatedDesc: "Ihr Konto wurde erfolgreich erstellt.",
       registrationFailed: "Registrierung fehlgeschlagen",
-      somethingWentWrong: "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut.",
+      somethingWentWrong:
+        "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut.",
       codeResent: "Code erneut gesendet",
-      codeResentDesc: "Ein neuer Verifizierungscode wurde an Ihre E-Mail gesendet.",
+      codeResentDesc:
+        "Ein neuer Verifizierungscode wurde an Ihre E-Mail gesendet.",
     },
     forgotPassword: {
       title: "Passwort vergessen?",
-      description: "Kein Problem! Geben Sie Ihre E-Mail ein und wir senden Ihnen einen Reset-Code.",
+      description:
+        "Kein Problem! Geben Sie Ihre E-Mail ein und wir senden Ihnen einen Reset-Code.",
       emailLabel: "E-Mail-Adresse",
       emailPlaceholder: "sie@beispiel.de",
       sendButton: "Reset-Code senden",
       sending: "Senden...",
       backToSignIn: "Zurück zur Anmeldung",
       checkEmail: "Prüfen Sie Ihre E-Mails",
-      checkEmailDesc: "Wir haben Ihnen einen Verifizierungscode zum Zurücksetzen Ihres Passworts gesendet.",
+      checkEmailDesc:
+        "Wir haben Ihnen einen Verifizierungscode zum Zurücksetzen Ihres Passworts gesendet.",
     },
     resetPassword: {
       title: "Passwort zurücksetzen",
@@ -161,7 +180,8 @@ export const de = {
       newPasswordPlaceholder: "Erstellen Sie ein sicheres Passwort",
       confirmPassword: "Passwort bestätigen",
       confirmPasswordPlaceholder: "Bestätigen Sie Ihr Passwort",
-      passwordHint: "Mindestens 8 Zeichen mit Groß-, Kleinbuchstaben und einer Zahl",
+      passwordHint:
+        "Mindestens 8 Zeichen mit Groß-, Kleinbuchstaben und einer Zahl",
       passwordsMatch: "Passwörter stimmen überein",
       passwordsDoNotMatch: "Passwörter stimmen nicht überein",
       resetButton: "Passwort zurücksetzen",
@@ -182,7 +202,8 @@ export const de = {
       codeVerifiedResetDesc: "Sie können jetzt Ihr Passwort zurücksetzen.",
       codeVerifiedEmailDesc: "Ihre E-Mail wurde verifiziert.",
       codeResent: "Code erneut gesendet",
-      codeResentDesc: "Ein neuer Verifizierungscode wurde an Ihre E-Mail gesendet.",
+      codeResentDesc:
+        "Ein neuer Verifizierungscode wurde an Ihre E-Mail gesendet.",
     },
     passwordValidation: {
       minLength: "Mindestens 8 Zeichen",
@@ -192,7 +213,8 @@ export const de = {
     },
     cvUpload: {
       title: "Lebenslauf hochladen",
-      description: "Bitte laden Sie Ihren Lebenslauf hoch, um Ihre Registrierung als Fähigkeitengeber abzuschließen",
+      description:
+        "Bitte laden Sie Ihren Lebenslauf hoch, um Ihre Registrierung als Fähigkeitengeber abzuschließen",
       dropHere: "Lebenslauf hier ablegen",
       orClickBrowse: "oder klicken zum Durchsuchen",
       browseFiles: "Dateien durchsuchen",
@@ -282,8 +304,10 @@ export const de = {
     confirm: "Bestätigen",
     sent: "Gesendet",
     offerAmount: "Angebotsbetrag",
-    acceptConfirmDesc: "Sind Sie sicher, dass Sie dieses Angebot annehmen möchten? Ein Vertrag wird erstellt.",
-    rejectConfirmDesc: "Sind Sie sicher, dass Sie dieses Angebot ablehnen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+    acceptConfirmDesc:
+      "Sind Sie sicher, dass Sie dieses Angebot annehmen möchten? Ein Vertrag wird erstellt.",
+    rejectConfirmDesc:
+      "Sind Sie sicher, dass Sie dieses Angebot ablehnen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
   },
   contracts: {
     title: "Verträge",
@@ -308,7 +332,8 @@ export const de = {
     contractSigned: "Vertrag unterzeichnet!",
     contractActive: "Der Vertrag ist jetzt aktiv.",
     signContractDialog: "Vertrag unterzeichnen",
-    signContractDesc: "Sie sind dabei, den Vertrag für \"{projectTitle}\" zu unterzeichnen. Dies macht den Vertrag rechtlich bindend.",
+    signContractDesc:
+      'Sie sind dabei, den Vertrag für "{projectTitle}" zu unterzeichnen. Dies macht den Vertrag rechtlich bindend.',
     contractValue: "Vertragswert",
     duration: "Laufzeit",
   },
@@ -355,7 +380,8 @@ export const de = {
     certifications: "Zertifizierungen",
     mock: {
       giverTitle: "Senior Full-Stack-Entwickler",
-      giverBio: "Erfahrener Full-Stack-Entwickler mit über 8 Jahren Erfahrung in der Entwicklung von Web- und Mobilanwendungen. Begeistert von sauberem Code und benutzerorientiertem Design.",
+      giverBio:
+        "Erfahrener Full-Stack-Entwickler mit über 8 Jahren Erfahrung in der Entwicklung von Web- und Mobilanwendungen. Begeistert von sauberem Code und benutzerorientiertem Design.",
       giverLocation: "Düsseldorf, NW",
       giverAvailability: "Vollzeit",
       experience1Company: "TechCorp",
@@ -366,7 +392,8 @@ export const de = {
       experience2Desc: "Entwicklung von Kernproduktfunktionen",
       searcherCompany: "TechCorp GmbH",
       searcherIndustry: "Technologie",
-      searcherBio: "Führendes Technologieunternehmen, spezialisiert auf innovative Softwarelösungen für Unternehmenskunden.",
+      searcherBio:
+        "Führendes Technologieunternehmen, spezialisiert auf innovative Softwarelösungen für Unternehmenskunden.",
     },
     personalInfo: "Persönliche Informationen",
     professionalInfo: "Berufliche Informationen",
@@ -392,6 +419,7 @@ export const de = {
     city: "Stadt",
     country: "Land",
     companySize: "Unternehmensgröße",
+    locationNotSet: "—",
   },
   footer: {
     skillGiver: "Fähigkeitengeber",
@@ -407,45 +435,62 @@ export const de = {
     privacy: "Datenschutzerklärung",
     contactUs: "Kontakt",
     copyright: "Alle Rechte vorbehalten.",
-    tagline: "Verbinde Fähigkeiten mit Möglichkeiten. Baue deine Karriere auf oder finde die Talente, die du brauchst.",
+    tagline:
+      "Verbinde Fähigkeiten mit Möglichkeiten. Baue deine Karriere auf oder finde die Talente, die du brauchst.",
     poweredBy: "bereitgestellt von curizen",
   },
   about: {
     title: "Über Sinopia",
-    subtitle: "Verbindung von Talent mit Möglichkeiten seit 2024",
+    subtitle: "Verbindung von Talent mit Möglichkeiten seit 2025",
     storyTitle: "Unsere Geschichte",
-    storyText1: "Sinopia ist ein junges und innovatives Unternehmen mit einer klaren Vision: bestehendes gesellschaftliches Potenzial neu zu denken und auf neue, sinnvolle Weise zugänglich zu machen.",
-    storyText2: "Unsere Mission ist es, alternative und manchmal disruptive Ansätze zu entwickeln, um wertvolle Ressourcen - insbesondere menschliche Expertise und Erfahrung - wieder in den sozialen und wirtschaftlichen Kreislauf zu integrieren.",
-    storyText3: "Die Idee hinter Sinopia wurde von einem einfachen, aber tiefgründigen Bild inspiriert: uralte Höhlenmalereien, die menschliche Hände darstellen – ein zeitloses Symbol für Verbindung, Unterstützung und die Weitergabe von Wissen.",
-    storyText4: "Aus dieser Symbolik entstand die Vision, die umfangreiche Erfahrung von Rentnern und erfahrenen Fachleuten der heutigen Arbeitswelt zur Verfügung zu stellen – flexibel, gezielt und wirkungsvoll. Als Gründer sind wir überzeugt, dass unser Ansatz nicht nur die Herausforderungen des demografischen Wandels adressiert, sondern auch zur sozialen Teilhabe, zum Wissenserhalt und zu einem nachhaltigeren Arbeitsmarkt beiträgt.",
+    storyText1:
+      "Sinopia ist ein junges und innovatives Unternehmen mit einer klaren Vision: bestehendes gesellschaftliches Potenzial neu zu denken und auf neue, sinnvolle Weise zugänglich zu machen.",
+    storyText2:
+      "Unsere Mission ist es, alternative und manchmal disruptive Ansätze zu entwickeln, um wertvolle Ressourcen - insbesondere menschliche Expertise und Erfahrung - wieder in den sozialen und wirtschaftlichen Kreislauf zu integrieren.",
+    storyText3:
+      "Die Idee hinter Sinopia wurde von einem einfachen, aber tiefgründigen Bild inspiriert: uralte Höhlenmalereien, die menschliche Hände darstellen – ein zeitloses Symbol für Verbindung, Unterstützung und die Weitergabe von Wissen.",
+    storyText4:
+      "Aus dieser Symbolik entstand die Vision, die umfangreiche Erfahrung von Rentnern und erfahrenen Fachleuten der heutigen Arbeitswelt zur Verfügung zu stellen – flexibel, gezielt und wirkungsvoll. Als Gründer sind wir überzeugt, dass unser Ansatz nicht nur die Herausforderungen des demografischen Wandels adressiert, sondern auch zur sozialen Teilhabe, zum Wissenserhalt und zu einem nachhaltigeren Arbeitsmarkt beiträgt.",
     value1Title: "Service-Expertise",
-    value1Desc: "Hervorragenden Service durch tiefes Fachwissen und professionelle Exzellenz liefern.",
+    value1Desc:
+      "Hervorragenden Service durch tiefes Fachwissen und professionelle Exzellenz liefern.",
     value2Title: "Innovation",
-    value2Desc: "Kontinuierliche Verbesserung und Erforschung neuer Ansätze für bessere Lösungen.",
+    value2Desc:
+      "Kontinuierliche Verbesserung und Erforschung neuer Ansätze für bessere Lösungen.",
     value3Title: "Neues Denken",
-    value3Desc: "Konventionen hinterfragen und neue Perspektiven für bedeutsame Veränderungen annehmen.",
+    value3Desc:
+      "Konventionen hinterfragen und neue Perspektiven für bedeutsame Veränderungen annehmen.",
     value4Title: "Orchestrierung",
-    value4Desc: "Nahtlose Koordination von Fähigkeiten, Ressourcen und Prozessen für optimale Ergebnisse.",
+    value4Desc:
+      "Nahtlose Koordination von Fähigkeiten, Ressourcen und Prozessen für optimale Ergebnisse.",
     value5Title: "Partnerschaft",
-    value5Desc: "Aufbau starker, kollaborativer Beziehungen auf Basis von gegenseitigem Vertrauen.",
+    value5Desc:
+      "Aufbau starker, kollaborativer Beziehungen auf Basis von gegenseitigem Vertrauen.",
     value6Title: "Integrität",
-    value6Desc: "Mit Ehrlichkeit, Transparenz und ethischer Verantwortung in allem, was wir tun.",
+    value6Desc:
+      "Mit Ehrlichkeit, Transparenz und ethischer Verantwortung in allem, was wir tun.",
     value7Title: "Leistung",
     value7Desc: "Messbare Ergebnisse liefern und gemeinsam Erfolge feiern.",
     valuesTitle: "Unsere Werte",
     skillsTitle: "Unsere Stärken",
     skill1Name: "Experten-Zuordnung",
-    skill1Desc: "Verbindung der richtigen Fachleute mit spezifischen Aufgaben basierend auf verifizierter Expertise.",
+    skill1Desc:
+      "Verbindung der richtigen Fachleute mit spezifischen Aufgaben basierend auf verifizierter Expertise.",
     skill2Name: "ESCO Kompetenz-Zuordnung",
-    skill2Desc: "Nutzung des europäischen Rahmens für Fähigkeiten, Kompetenzen und Berufe zur standardisierten Klassifizierung.",
+    skill2Desc:
+      "Nutzung des europäischen Rahmens für Fähigkeiten, Kompetenzen und Berufe zur standardisierten Klassifizierung.",
     skill3Name: "Projektumfang-Definition",
-    skill3Desc: "Definition klarer Ziele, Liefergegenstände und Meilensteine für erfolgreiche Projektergebnisse.",
+    skill3Desc:
+      "Definition klarer Ziele, Liefergegenstände und Meilensteine für erfolgreiche Projektergebnisse.",
     skill4Name: "Vertrags- & Meilenstein-Verwaltung",
-    skill4Desc: "Strukturierte Vereinbarungen mit transparenter Fortschrittsverfolgung und Zahlungsplänen.",
+    skill4Desc:
+      "Strukturierte Vereinbarungen mit transparenter Fortschrittsverfolgung und Zahlungsplänen.",
     skill5Name: "Qualitätssicherung",
-    skill5Desc: "Sicherstellung der Standardkonformität durch systematische Überprüfungs- und Verifizierungsprozesse.",
+    skill5Desc:
+      "Sicherstellung der Standardkonformität durch systematische Überprüfungs- und Verifizierungsprozesse.",
     skill6Name: "Experten-Einarbeitung",
-    skill6Desc: "Nahtlose Integration von Fachleuten in Projekte mit klaren Erwartungen und Unterstützung.",
+    skill6Desc:
+      "Nahtlose Integration von Fachleuten in Projekte mit klaren Erwartungen und Unterstützung.",
   },
   time: {
     justNow: "Gerade eben",
@@ -459,7 +504,8 @@ export const de = {
     allCaughtUp: "Alles erledigt!",
     markAllRead: "Alle als gelesen markieren",
     noNotifications: "Keine Benachrichtigungen",
-    noNotificationsDesc: "Alles erledigt! Neue Benachrichtigungen erscheinen hier.",
+    noNotificationsDesc:
+      "Alles erledigt! Neue Benachrichtigungen erscheinen hier.",
     recentActivity: "Letzte Aktivität",
     viewDetails: "Details anzeigen",
     markAsRead: "Als gelesen markieren",
@@ -476,7 +522,8 @@ export const de = {
     messageLabel: "Nachricht",
     messagePlaceholder: "Erzählen Sie uns mehr über Ihre Anfrage...",
     sendButton: "Nachricht senden",
-    successMessage: "Vielen Dank für Ihre Nachricht. Wir melden uns bald bei Ihnen!",
+    successMessage:
+      "Vielen Dank für Ihre Nachricht. Wir melden uns bald bei Ihnen!",
     info: {
       email: "E-Mail",
       phone: "Telefon",
@@ -485,36 +532,49 @@ export const de = {
   },
   features: {
     forSkillGivers: "Für Fähigkeitengeber",
-    skillGiversDesc: "Rentner, erfahrene Experten und Fachleute, die ihre Erfahrung anbieten.",
+    skillGiversDesc:
+      "Rentner, erfahrene Experten und Fachleute, die ihre Erfahrung anbieten.",
     forSkillSearchers: "Für Fähigkeitensucher",
-    skillSearchersDesc: "Unternehmen, die präzise Expertise für Aufgaben, Prozesse oder Projekte suchen.",
+    skillSearchersDesc:
+      "Unternehmen, die präzise Expertise für Aufgaben, Prozesse oder Projekte suchen.",
     howItWorks: "So funktioniert es",
-    howItWorksDesc: "Der Einstieg bei Sinopia ist einfach. Folgen Sie diesen einfachen Schritten, um Ihre Reise zu beginnen.",
+    howItWorksDesc:
+      "Der Einstieg bei Sinopia ist einfach. Folgen Sie diesen einfachen Schritten, um Ihre Reise zu beginnen.",
     fastMatching: "Schnelle Zuordnung",
     securePayments: "Sichere Zahlungen",
     support247: "24/7 Unterstützung",
     sg1Title: "Teilen Sie Ihr Fachwissen",
-    sg1Desc: "Bringen Sie Ihr lebenslanges Wissen in bedeutungsvolle, flexible Projekte ein.",
+    sg1Desc:
+      "Bringen Sie Ihr lebenslanges Wissen in bedeutungsvolle, flexible Projekte ein.",
     sg2Title: "Aufgabenbasierte Arbeit",
-    sg2Desc: "Werden Sie mit gezielten, modularen Aufgaben abgestimmt, die auf Ihre Fähigkeiten zugeschnitten sind.",
+    sg2Desc:
+      "Werden Sie mit gezielten, modularen Aufgaben abgestimmt, die auf Ihre Fähigkeiten zugeschnitten sind.",
     sg3Title: "Faire & sichere Vergütung",
-    sg3Desc: "Erhalten Sie transparente Preise und zuverlässige Zahlungen basierend auf Aufwand und Expertise.",
+    sg3Desc:
+      "Erhalten Sie transparente Preise und zuverlässige Zahlungen basierend auf Aufwand und Expertise.",
     ss1Title: "Zugang zu erfahrenen Fachleuten",
-    ss1Desc: "Finden Sie erfahrene Experten mit verifizierten Fähigkeiten und tiefem Branchenwissen.",
+    ss1Desc:
+      "Finden Sie erfahrene Experten mit verifizierten Fähigkeiten und tiefem Branchenwissen.",
     ss2Title: "KI-gesteuerte Zuordnung",
-    ss2Desc: "Erhalten Sie maßgeschneiderte Aufgabenempfehlungen, Kompetenz-Zuordnungen (ESCO) und Aufwandsschätzungen.",
+    ss2Desc:
+      "Erhalten Sie maßgeschneiderte Aufgabenempfehlungen, Kompetenz-Zuordnungen (ESCO) und Aufwandsschätzungen.",
     ss3Title: "Modulare Projektabwicklung",
-    ss3Desc: "Unterteilen Sie Arbeit in klare Aufgaben und Meilensteine für vorhersehbare Ergebnisse.",
+    ss3Desc:
+      "Unterteilen Sie Arbeit in klare Aufgaben und Meilensteine für vorhersehbare Ergebnisse.",
     step1Title: "Erstellen Sie Ihr Profil",
-    step1Desc: "Erstellen Sie Ihr Profil und skizzieren Sie Ihre Fähigkeiten oder reichen Sie Ihr Projekt ein.",
+    step1Desc:
+      "Erstellen Sie Ihr Profil und skizzieren Sie Ihre Fähigkeiten oder reichen Sie Ihr Projekt ein.",
     step2Title: "Intelligent zugeordnet werden",
-    step2Desc: "KI analysiert Anforderungen und empfiehlt die richtigen Experten basierend auf Fähigkeiten.",
+    step2Desc:
+      "KI analysiert Anforderungen und empfiehlt die richtigen Experten basierend auf Fähigkeiten.",
     step3Title: "Mit Klarheit zusammenarbeiten",
-    step3Desc: "Arbeiten Sie durch strukturierte Aufgaben mit transparenter Preisgestaltung und sicherer Zahlung.",
+    step3Desc:
+      "Arbeiten Sie durch strukturierte Aufgaben mit transparenter Preisgestaltung und sicherer Zahlung.",
   },
   cta: {
     title: "Bereit, Ihre Reise zu starten?",
-    subtitle: "Schließen Sie sich Tausenden von Fachleuten und Unternehmen an, die ihre Ziele bereits mit Sinopia erreichen.",
+    subtitle:
+      "Schließen Sie sich Tausenden von Fachleuten und Unternehmen an, die ihre Ziele bereits mit Sinopia erreichen.",
     createAccount: "Kostenloses Konto erstellen",
     contactSales: "Vertrieb kontaktieren",
   },
@@ -553,16 +613,20 @@ export const de = {
     role: "Rolle",
     currentLanguage: "Aktuelle Sprache",
     profilePicture: "Profilbild",
-    profilePictureDesc: "Laden Sie ein Profilbild hoch, um Ihr Konto zu personalisieren",
+    profilePictureDesc:
+      "Laden Sie ein Profilbild hoch, um Ihr Konto zu personalisieren",
     uploadPicture: "Bild hochladen",
     imageFormats: "JPG, PNG, GIF oder WebP. Maximal 5MB.",
-    invalidImageType: "Ungültiger Bildtyp. Bitte verwenden Sie JPG, PNG, GIF oder WebP.",
+    invalidImageType:
+      "Ungültiger Bildtyp. Bitte verwenden Sie JPG, PNG, GIF oder WebP.",
     imageTooLarge: "Bild ist zu groß. Maximale Größe ist 5MB.",
     profilePictureUpdated: "Profilbild aktualisiert",
     profilePictureUpdatedDesc: "Ihr Profilbild wurde erfolgreich aktualisiert.",
-    uploadFailed: "Hochladen des Bildes fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    uploadFailed:
+      "Hochladen des Bildes fehlgeschlagen. Bitte versuchen Sie es erneut.",
     changePassword: "Kennwort ändern",
-    changePasswordDesc: "Aktualisieren Sie Ihr Kennwort, um Ihr Konto zu schützen",
+    changePasswordDesc:
+      "Aktualisieren Sie Ihr Kennwort, um Ihr Konto zu schützen",
     currentPassword: "Aktuelles Kennwort",
     currentPasswordPlaceholder: "Aktuelles Kennwort eingeben",
     newPassword: "Neues Kennwort",
@@ -570,11 +634,21 @@ export const de = {
     confirmPassword: "Neues Kennwort bestätigen",
     confirmPasswordPlaceholder: "Neues Kennwort bestätigen",
     updatePassword: "Kennwort aktualisieren",
+    deleteAccount: "Konto löschen",
+    deleteAccountDesc: "Ihr Konto und alle zugehörigen Daten dauerhaft entfernen",
+    deleteAccountWarning: "Sobald Sie Ihr Konto löschen, gibt es kein Zurück. Bitte seien Sie sich sicher.",
+    deleteAccountButton: "Konto löschen",
+    deleteConfirmTitle: "Sind Sie absolut sicher?",
+    deleteConfirmDesc: "Diese Aktion kann nicht rückgängig gemacht werden. Ihr Konto wird dauerhaft gelöscht und Ihre Daten werden von unseren Servern entfernt.",
+    accountDeleted: "Konto gelöscht",
+    accountDeletedDesc: "Ihr Konto wurde erfolgreich gelöscht.",
+    deleteAccountFailed: "Konto konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
     passwordTooShort: "Kennwort muss mindestens 8 Zeichen lang sein.",
     passwordMismatch: "Kennwörter stimmen nicht überein.",
     passwordChanged: "Kennwort geändert",
     passwordChangedDesc: "Ihr Kennwort wurde erfolgreich aktualisiert.",
-    passwordChangeFailed: "Änderung des Kennworts fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    passwordChangeFailed:
+      "Änderung des Kennworts fehlgeschlagen. Bitte versuchen Sie es erneut.",
   },
   menu: {
     menu: "Menü",
@@ -605,42 +679,58 @@ export const de = {
   vision: {
     title: "Vision",
     teamPhotoAlt: "Sinopia Gründungsteam",
-    content: "Der Fachkräftemangel ist allgegenwärtig! Die bisherigen Lösungen dem Mangel an Personal entgegenzuwirken belaufen sich primär auf den Aufbau neuer Arbeitskräfte, Einbindung von Fachkräften aus anderen Ländern oder Förderung von Quereinsteigern. Wir als Sinopia möchten vorhandenes Wissen nutzen. Gerade die Generation der Babyboomer, die jetzt aus dem aktiven Berufsleben in die Rente gehen, bringen mit Ihrem Erfahrungsschatz einen enormen Mehrwert für die Wirtschaft. Laut einer Erhebung aus 2023 sind nur ca. 13% der Rentner nach Renteneintritt noch erwerbstätig. Oft nicht aus dem Willen, noch einen Beitrag leisten zu wollen, sondern aus einem Mangel an zugeschnittenen Angeboten. Zugeschnitten auf eine individuelle Balance zwischen Beitrag und Freizeit. Wir möchten eine Verbindung zwischen Angebot und Nachfrage generieren, allerdings anders als mit standardisierten Arbeitsverträgen. Es geht darum, Arbeitsprozesse neu zu betrachten und in kleinteilige Einzelaufträge (sogenannte Aufgaben) zu unterteilen, die speziell auf die Bedürfnisse der Unternehmen sowie Erwerbstätigen (Kompetenz-Kollektiv) zugeschnitten sind.",
+    content:
+      "Der Fachkräftemangel ist allgegenwärtig! Die bisherigen Lösungen dem Mangel an Personal entgegenzuwirken belaufen sich primär auf den Aufbau neuer Arbeitskräfte, Einbindung von Fachkräften aus anderen Ländern oder Förderung von Quereinsteigern. Wir als Sinopia möchten vorhandenes Wissen nutzen. Gerade die Generation der Babyboomer, die jetzt aus dem aktiven Berufsleben in die Rente gehen, bringen mit Ihrem Erfahrungsschatz einen enormen Mehrwert für die Wirtschaft. Laut einer Erhebung aus 2023 sind nur ca. 13% der Rentner nach Renteneintritt noch erwerbstätig. Oft nicht aus dem Willen, noch einen Beitrag leisten zu wollen, sondern aus einem Mangel an zugeschnittenen Angeboten. Zugeschnitten auf eine individuelle Balance zwischen Beitrag und Freizeit. Wir möchten eine Verbindung zwischen Angebot und Nachfrage generieren, allerdings anders als mit standardisierten Arbeitsverträgen. Es geht darum, Arbeitsprozesse neu zu betrachten und in kleinteilige Einzelaufträge (sogenannte Aufgaben) zu unterteilen, die speziell auf die Bedürfnisse der Unternehmen sowie Erwerbstätigen (Kompetenz-Kollektiv) zugeschnitten sind.",
     foundingTeam: "Gründungsteam",
   },
   privacy: {
     title: "Datenschutzerklärung",
-    introductionText: "Die Nutzung unserer Website ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf unseren Seiten personenbezogene Daten (z. B. Name, Anschrift oder E-Mail-Adressen) erhoben werden, erfolgt dies stets auf freiwilliger Basis, soweit möglich. Diese Daten werden ohne Ihre ausdrückliche Zustimmung nicht an Dritte weitergegeben.",
+    introductionText:
+      "Die Nutzung unserer Website ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf unseren Seiten personenbezogene Daten (z. B. Name, Anschrift oder E-Mail-Adressen) erhoben werden, erfolgt dies stets auf freiwilliger Basis, soweit möglich. Diese Daten werden ohne Ihre ausdrückliche Zustimmung nicht an Dritte weitergegeben.",
     ipAddresses: "IP-Adressen und Protokolldateien",
-    ipAddressesText: "Beim Aufruf dieser Website werden die IP-Adressen der Besucher erfasst und in Logfiles gespeichert. Diese IP-Adressen werden für maximal sieben Tage gespeichert, um Angriffe zu erkennen und zu verhindern.",
+    ipAddressesText:
+      "Beim Aufruf dieser Website werden die IP-Adressen der Besucher erfasst und in Logfiles gespeichert. Diese IP-Adressen werden für maximal sieben Tage gespeichert, um Angriffe zu erkennen und zu verhindern.",
     security: "Sicherheitshinweis",
-    securityText: "Wir weisen darauf hin, dass die Datenübertragung im Internet (z. B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein vollständiger Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.",
+    securityText:
+      "Wir weisen darauf hin, dass die Datenübertragung im Internet (z. B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein vollständiger Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.",
     advertising: "Widerspruch gegen unerwünschte Werbung",
-    advertisingText: "Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten durch Dritte zur Übersendung von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit ausdrücklich widersprochen. Die Betreiber dieser Website behalten sich rechtliche Schritte im Falle unverlangter Zusendung von Werbeinformationen, etwa durch Spam-E-Mails, vor.",
-    contactFormReference: "Hinweise zum Kontaktformular finden Sie im nachfolgenden Abschnitt dieser Datenschutzerklärung.",
+    advertisingText:
+      "Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten durch Dritte zur Übersendung von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit ausdrücklich widersprochen. Die Betreiber dieser Website behalten sich rechtliche Schritte im Falle unverlangter Zusendung von Werbeinformationen, etwa durch Spam-E-Mails, vor.",
+    contactFormReference:
+      "Hinweise zum Kontaktformular finden Sie im nachfolgenden Abschnitt dieser Datenschutzerklärung.",
     contactFormTitle: "Datenschutzbestimmungen zum Kontaktformular",
-    contactFormText: "Über das Kontaktformular werden personenbezogene Daten erhoben. Gemäß Art. 13 der EU-Datenschutz-Grundverordnung (DSGVO) informieren wir Sie hiermit über die mit dieser Erhebung verbundene Datenverarbeitung. Ergänzend gilt die allgemeine Datenschutzerklärung für die Website der Sinopia Deutschland GmbH.",
+    contactFormText:
+      "Über das Kontaktformular werden personenbezogene Daten erhoben. Gemäß Art. 13 der EU-Datenschutz-Grundverordnung (DSGVO) informieren wir Sie hiermit über die mit dieser Erhebung verbundene Datenverarbeitung. Ergänzend gilt die allgemeine Datenschutzerklärung für die Website der Sinopia Deutschland GmbH.",
     processingScope: "Umfang der Verarbeitung personenbezogener Daten",
-    processingItems: "Vorname|Firmenname|E-Mail-Adresse|Telefonnummer|Ihre Nachricht",
-    processingItemsAuto: "Zusätzlich werden folgende Daten automatisch erhoben:",
-    processingItemsAutoList: "Bestätigung Ihrer Einwilligungserklärung|Datum und Uhrzeit der Formularübermittlung",
+    processingItems:
+      "Vorname|Firmenname|E-Mail-Adresse|Telefonnummer|Ihre Nachricht",
+    processingItemsAuto:
+      "Zusätzlich werden folgende Daten automatisch erhoben:",
+    processingItemsAutoList:
+      "Bestätigung Ihrer Einwilligungserklärung|Datum und Uhrzeit der Formularübermittlung",
     legalBasis: "Rechtsgrundlage",
-    legalBasisText: "Die Erhebung der Formulardaten erfolgt auf Grundlage der Einwilligung der betroffenen Personen gemäß Art. 6 Abs. 1 lit. a DSGVO.",
+    legalBasisText:
+      "Die Erhebung der Formulardaten erfolgt auf Grundlage der Einwilligung der betroffenen Personen gemäß Art. 6 Abs. 1 lit. a DSGVO.",
     purpose: "Zweck der Datenverarbeitung",
-    purposeText: "Das Formular dient der Kontaktaufnahme mit der Sinopia Deutschland GmbH. Die von Ihnen übermittelten Daten werden zu Informationszwecken sowie zur Zusendung von Veranstaltungsinformationen der Sinopia Deutschland GmbH verwendet. Sie können der Kontaktaufnahme und der Verarbeitung Ihrer Daten jederzeit widersprechen.",
+    purposeText:
+      "Das Formular dient der Kontaktaufnahme mit der Sinopia Deutschland GmbH. Die von Ihnen übermittelten Daten werden zu Informationszwecken sowie zur Zusendung von Veranstaltungsinformationen der Sinopia Deutschland GmbH verwendet. Sie können der Kontaktaufnahme und der Verarbeitung Ihrer Daten jederzeit widersprechen.",
     storageDuration: "Speicherdauer",
-    storageDurationText: "Ihre Daten werden zum Zwecke der Kommunikation mit der Sinopia Deutschland GmbH gespeichert, solange Ihre E-Mail-Adresse gültig ist oder bis Sie der Speicherung widersprechen. Der Widerspruch kann jederzeit formlos an info[at]sinopia.de erfolgen. Anschließend werden Ihre Daten vollständig gelöscht.",
+    storageDurationText:
+      "Ihre Daten werden zum Zwecke der Kommunikation mit der Sinopia Deutschland GmbH gespeichert, solange Ihre E-Mail-Adresse gültig ist oder bis Sie der Speicherung widersprechen. Der Widerspruch kann jederzeit formlos an info[at]sinopia.de erfolgen. Anschließend werden Ihre Daten vollständig gelöscht.",
     contactDetails: "Kontaktangaben",
-    contactDetailsText: "Verantwortlich für diese Website ist die Sinopia Deutschland GmbH (siehe",
+    contactDetailsText:
+      "Verantwortlich für diese Website ist die Sinopia Deutschland GmbH (siehe",
     contactDetailsLink: "Impressum",
     yourRights: "Ihre Rechte als betroffene Person",
-    yourRightsText: "Als betroffene Person können Sie Ihre Rechte gemäß der EU-Datenschutz-Grundverordnung jederzeit geltend machen.",
+    yourRightsText:
+      "Als betroffene Person können Sie Ihre Rechte gemäß der EU-Datenschutz-Grundverordnung jederzeit geltend machen.",
   },
   imprint: {
     title: "Impressum",
     subtitle: "Angaben gemäß § 5 DDG",
     companyName: "Sinopia Deutschland GmbH",
-    companyAddress: "Deckerstr. 39\n70372 Stuttgart\nHandelsregister: HRA 800342\nRegistergericht: Stuttgart",
+    companyAddress:
+      "Deckerstr. 39\n70372 Stuttgart\nHandelsregister: HRA 800342\nRegistergericht: Stuttgart",
     representedByTitle: "Vertreten durch:",
     representedByNames: "Jens Uwe Jung, Tobias Bahlinger und Eyad Dawood",
     contactTitle: "Kontakt:",
@@ -651,16 +741,22 @@ export const de = {
     responsibleDetails: "Jens Uwe Jung\nDeckerstr. 30\n70372 Stuttgart",
     disclaimerTitle: "Haftungsausschluss:",
     euDisputeTitle: "EU-Streitschlichtung",
-    euDisputeText: "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:",
+    euDisputeText:
+      "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:",
     euDisputeEmail: "Unsere E-Mail-Adresse finden Sie oben im Impressum.",
-    consumerDisputeTitle: "Verbraucherstreitbeilegung / Universalschlichtungsstelle",
-    consumerDisputeText: "Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
+    consumerDisputeTitle:
+      "Verbraucherstreitbeilegung / Universalschlichtungsstelle",
+    consumerDisputeText:
+      "Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
     contentLiabilityTitle: "Haftung für Inhalte",
-    contentLiabilityText: "Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.",
+    contentLiabilityText:
+      "Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.",
     linkLiabilityTitle: "Haftung für Links",
-    linkLiabilityText: "Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.",
+    linkLiabilityText:
+      "Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.",
     copyrightTitle: "Urheberrecht",
-    copyrightText: "Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.",
+    copyrightText:
+      "Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.",
     privacyTitle: "Datenschutz",
     privacyText: "Informationen zum Datenschutz erhalten Sie in unserer",
   },
@@ -669,7 +765,8 @@ export const de = {
     step2: "Unternehmensdaten",
     step2of2: "Schritt 2/2",
     companyInfoTitle: "Unternehmensinformationen",
-    companyInfoSubtitle: "Erzählen Sie uns von Ihrem Unternehmen, um Ihre Registrierung abzuschließen",
+    companyInfoSubtitle:
+      "Erzählen Sie uns von Ihrem Unternehmen, um Ihre Registrierung abzuschließen",
     companyName: "Unternehmensname",
     companyNamePlaceholder: "Geben Sie Ihren Unternehmensnamen ein",
     industry: "Branche",
@@ -694,8 +791,10 @@ export const de = {
     bioPlaceholder: "Erzählen Sie uns von Ihrem Unternehmen (freiwillig)",
     continueButton: "Weiter zur Übersicht",
     companyInfoSaved: "Unternehmensinformationen gespeichert",
-    companyInfoSavedDesc: "Ihre Unternehmensdaten wurden erfolgreich gespeichert.",
-    companyInfoRequired: "Bitte vervollständigen Sie Ihre Unternehmensdaten, um fortzufahren.",
+    companyInfoSavedDesc:
+      "Ihre Unternehmensdaten wurden erfolgreich gespeichert.",
+    companyInfoRequired:
+      "Bitte vervollständigen Sie Ihre Unternehmensdaten, um fortzufahren.",
     fillAllRequired: "Bitte füllen Sie alle erforderlichen Felder aus.",
     invalidEmail: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
   },
@@ -703,7 +802,8 @@ export const de = {
     uploadUseCase: "Aufgabe hochladen",
     postUseCase: "Aufgabe erstellen",
     uploadTitle: "Aufgabe hochladen",
-    uploadSubtitle: "Laden Sie ein PDF- oder Word-Dokument hoch, das Ihre Aufgabe beschreibt",
+    uploadSubtitle:
+      "Laden Sie ein PDF- oder Word-Dokument hoch, das Ihre Aufgabe beschreibt",
     selectFile: "Datei auswählen",
     dragDropText: "Datei hierher ziehen und ablegen",
     orBrowse: "oder klicken zum Durchsuchen",
@@ -712,21 +812,25 @@ export const de = {
     uploadedFiles: "Hochgeladene Dateien",
     uploadSuccess: "Datei erfolgreich hochgeladen",
     uploadError: {
-      invalidType: "Ungültiger Dateityp. Bitte laden Sie ein PDF- oder Word-Dokument hoch.",
+      invalidType:
+        "Ungültiger Dateityp. Bitte laden Sie ein PDF- oder Word-Dokument hoch.",
       tooLarge: "Datei ist zu groß. Maximale Größe ist 10MB.",
     },
     filesProcessed: "Dateien erfolgreich verarbeitet",
     filesProcessedDesc: "Ihre Aufgabe wurde zur Überprüfung eingereicht.",
     submitUpload: "Aufgabe einreichen",
     postTitle: "Aufgabe erstellen",
-    postSubtitle: "Erstellen Sie eine neue Aufgabe, um den richtigen Experten zu finden",
+    postSubtitle:
+      "Erstellen Sie eine neue Aufgabe, um den richtigen Experten zu finden",
     details: "Aufgabendetails",
     titleLabel: "Titel",
     titlePlaceholder: "z.B. Prozessoptimierung in der Fertigung",
     descriptionLabel: "Beschreibung",
-    descriptionPlaceholder: "Beschreiben Sie Ihre Aufgabe im Detail. Wie ist die aktuelle Situation? Welche Herausforderungen gibt es?",
+    descriptionPlaceholder:
+      "Beschreiben Sie Ihre Aufgabe im Detail. Wie ist die aktuelle Situation? Welche Herausforderungen gibt es?",
     objectiveLabel: "Ziel",
-    objectivePlaceholder: "Was möchten Sie erreichen? Was ist das gewünschte Ergebnis?",
+    objectivePlaceholder:
+      "Was möchten Sie erreichen? Was ist das gewünschte Ergebnis?",
     objective: "Ziel",
     createButton: "Aufgabe erstellen",
     created: "Aufgabe erstellt!",

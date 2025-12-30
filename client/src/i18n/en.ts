@@ -1,6 +1,6 @@
 /**
  * English translations for Sinopia
- * 
+ *
  * Structure:
  * - common: Shared strings across the app
  * - nav: Navigation labels
@@ -8,7 +8,7 @@
  * - auth: Authentication pages
  * - dashboard: Dashboard and protected pages
  * - footer: Footer content
- * 
+ *
  * To add a new key: Add it here and in de.ts with the German translation
  */
 export const en = {
@@ -52,35 +52,44 @@ export const en = {
   home: {
     heroTitle: "Connect Your Skills with",
     heroTitleHighlight: "Opportunities",
-    heroSubtitle: "Sinopia enables companies to turn a business use case into an outcome, by breaking the request down into the required skills, making those skills instantly available through the Agentic AI platform, and orchestrating the right skill set to solve the use case.",
+    heroSubtitle:
+      "Sinopia enables companies to turn a business use case into an outcome, by breaking the request down into the required skills, making those skills instantly available through the Agentic AI platform, and orchestrating the right skill set to solve the use case.",
     learnMore: "Learn More",
     featuresTitle: "Why Choose Sinopia?",
-    featuresSubtitle: "Everything you need to connect skills with opportunities",
+    featuresSubtitle:
+      "Everything you need to connect skills with opportunities",
     feature1Title: "Find Perfect Matches",
-    feature1Desc: "Our smart matching algorithm connects you with the right projects or talents based on your skills and requirements.",
+    feature1Desc:
+      "Our smart matching algorithm connects you with the right projects or talents based on your skills and requirements.",
     feature2Title: "Secure Payments",
-    feature2Desc: "Protected transactions with milestone-based payments ensure both parties are satisfied before funds are released.",
+    feature2Desc:
+      "Protected transactions with milestone-based payments ensure both parties are satisfied before funds are released.",
     feature3Title: "Professional Contracts",
-    feature3Desc: "Legally binding digital contracts that protect both skill givers and searchers throughout the project.",
+    feature3Desc:
+      "Legally binding digital contracts that protect both skill givers and searchers throughout the project.",
     ctaTitle: "Ready to Get Started?",
     ctaSubtitle: "Join thousands of professionals already using Sinopia",
     ctaButton: "Create Your Account",
     testimonials: {
       title: "Success Stories",
-      subtitle: "Hear from professionals and companies who have achieved their goals with Sinopia.",
+      subtitle:
+        "Hear from professionals and companies who have achieved their goals with Sinopia.",
       mock: {
         person1Name: "Sarah Chen",
         person1Role: "Full-Stack Developer",
         person1Type: "Skill Giver",
-        person1Quote: "Sinopia has transformed my freelance career. I found consistent high-quality projects and doubled my income within 6 months.",
+        person1Quote:
+          "Sinopia has transformed my freelance career. I found consistent high-quality projects and doubled my income within 6 months.",
         person2Name: "Michael Torres",
         person2Role: "CTO at TechFlow",
         person2Type: "Skill Searcher",
-        person2Quote: "The quality of talent on Sinopia is exceptional. We built our entire mobile app with a team we found here.",
+        person2Quote:
+          "The quality of talent on Sinopia is exceptional. We built our entire mobile app with a team we found here.",
         person3Name: "Emily Roberts",
         person3Role: "UX Designer",
         person3Type: "Skill Giver",
-        person3Quote: "The platform is intuitive and the payment system is reliable. I love how Sinopia handles contracts and milestones.",
+        person3Quote:
+          "The platform is intuitive and the payment system is reliable. I love how Sinopia handles contracts and milestones.",
       },
     },
   },
@@ -147,7 +156,8 @@ export const en = {
     },
     forgotPassword: {
       title: "Forgot Password?",
-      description: "No worries! Enter your email and we'll send you a reset code.",
+      description:
+        "No worries! Enter your email and we'll send you a reset code.",
       emailLabel: "Email Address",
       emailPlaceholder: "you@example.com",
       sendButton: "Send Reset Code",
@@ -163,7 +173,8 @@ export const en = {
       newPasswordPlaceholder: "Create a strong password",
       confirmPassword: "Confirm Password",
       confirmPasswordPlaceholder: "Confirm your password",
-      passwordHint: "At least 8 characters with uppercase, lowercase, and a number",
+      passwordHint:
+        "At least 8 characters with uppercase, lowercase, and a number",
       passwordsMatch: "Passwords match",
       passwordsDoNotMatch: "Passwords do not match",
       resetButton: "Reset Password",
@@ -194,7 +205,8 @@ export const en = {
     },
     cvUpload: {
       title: "Upload Your CV",
-      description: "Please upload your CV to complete your registration as a Skill Giver",
+      description:
+        "Please upload your CV to complete your registration as a Skill Giver",
       dropHere: "Drop your CV here",
       orClickBrowse: "or click to browse",
       browseFiles: "Browse Files",
@@ -284,8 +296,10 @@ export const en = {
     confirm: "Confirm",
     sent: "Sent",
     offerAmount: "Offer Amount",
-    acceptConfirmDesc: "Are you sure you want to accept this offer? A contract will be created.",
-    rejectConfirmDesc: "Are you sure you want to reject this offer? This action cannot be undone.",
+    acceptConfirmDesc:
+      "Are you sure you want to accept this offer? A contract will be created.",
+    rejectConfirmDesc:
+      "Are you sure you want to reject this offer? This action cannot be undone.",
   },
   contracts: {
     title: "Contracts",
@@ -310,7 +324,8 @@ export const en = {
     contractSigned: "Contract signed!",
     contractActive: "The contract is now active.",
     signContractDialog: "Sign Contract",
-    signContractDesc: "You are about to sign the contract for \"{projectTitle}\". This will make the contract legally binding.",
+    signContractDesc:
+      'You are about to sign the contract for "{projectTitle}". This will make the contract legally binding.',
     contractValue: "Contract Value",
     duration: "Duration",
   },
@@ -357,7 +372,8 @@ export const en = {
     certifications: "Certifications",
     mock: {
       giverTitle: "Senior Full-Stack Developer",
-      giverBio: "Experienced full-stack developer with 8+ years in building web and mobile applications. Passionate about clean code and user-centric design.",
+      giverBio:
+        "Experienced full-stack developer with 8+ years in building web and mobile applications. Passionate about clean code and user-centric design.",
       giverLocation: "Düsseldorf, NW",
       giverAvailability: "Full-time",
       experience1Company: "TechCorp",
@@ -368,7 +384,8 @@ export const en = {
       experience2Desc: "Built core product features",
       searcherCompany: "TechCorp Inc.",
       searcherIndustry: "Technology",
-      searcherBio: "Leading technology company specializing in innovative software solutions for enterprise clients.",
+      searcherBio:
+        "Leading technology company specializing in innovative software solutions for enterprise clients.",
     },
     personalInfo: "Personal Information",
     professionalInfo: "Professional Information",
@@ -394,6 +411,7 @@ export const en = {
     city: "City",
     country: "Country",
     companySize: "Company Size",
+    locationNotSet: "—",
   },
   footer: {
     skillGiver: "Skill Giver",
@@ -409,45 +427,63 @@ export const en = {
     privacy: "Privacy Policy",
     contactUs: "Contact Us",
     copyright: "All rights reserved.",
-    tagline: "Connect skills with opportunities. Build your career or find the talent you need.",
+    tagline:
+      "Connect skills with opportunities. Build your career or find the talent you need.",
     poweredBy: "powered by curizen",
   },
   about: {
     title: "About Sinopia",
-    subtitle: "Connecting talent with opportunity since 2024",
+    subtitle: "Connecting talent with opportunity since 2025",
     storyTitle: "Our Story",
-    storyText1: "Sinopia is a young and innovative company with a clear vision: to rethink existing societal potential and make it accessible in new, meaningful ways.",
-    storyText2: "Our mission is to develop alternative and sometimes disruptive approaches to reintegrate valuable resources, especially human expertise and experience, back into the social and economic cycle.",
-    storyText3: "The idea behind Sinopia was inspired by a simple yet profound image: ancient cave paintings depicting human hands - a timeless symbol of connection, support, and the passing on of knowledge.",
-    storyText4: "From this symbolism, the vision emerged to make the vast experience of retirees and senior professionals available to today's working world - flexible, targeted, and impactful. As founders, we are convinced that our approach not only addresses the challenges of demographic change but also contributes to social participation, knowledge preservation, and a more sustainable labor market.",
+    storyText1:
+      "Sinopia is a young and innovative company with a clear vision: to rethink existing societal potential and make it accessible in new, meaningful ways.",
+    storyText2:
+      "Our mission is to develop alternative and sometimes disruptive approaches to reintegrate valuable resources, especially human expertise and experience, back into the social and economic cycle.",
+    storyText3:
+      "The idea behind Sinopia was inspired by a simple yet profound image: ancient cave paintings depicting human hands - a timeless symbol of connection, support, and the passing on of knowledge.",
+    storyText4:
+      "From this symbolism, the vision emerged to make the vast experience of retirees and senior professionals available to today's working world - flexible, targeted, and impactful. As founders, we are convinced that our approach not only addresses the challenges of demographic change but also contributes to social participation, knowledge preservation, and a more sustainable labor market.",
     value1Title: "Service Expertise",
-    value1Desc: "Delivering exceptional service through deep domain knowledge and professional excellence.",
+    value1Desc:
+      "Delivering exceptional service through deep domain knowledge and professional excellence.",
     value2Title: "Innovation",
-    value2Desc: "Continuously improving and exploring new approaches to create better solutions.",
+    value2Desc:
+      "Continuously improving and exploring new approaches to create better solutions.",
     value3Title: "New Thinking",
-    value3Desc: "Challenging conventions and embracing fresh perspectives to drive meaningful change.",
+    value3Desc:
+      "Challenging conventions and embracing fresh perspectives to drive meaningful change.",
     value4Title: "Orchestration",
-    value4Desc: "Seamlessly coordinating skills, resources, and processes for optimal outcomes.",
+    value4Desc:
+      "Seamlessly coordinating skills, resources, and processes for optimal outcomes.",
     value5Title: "Partnership",
-    value5Desc: "Building strong, collaborative relationships based on mutual trust and shared goals.",
+    value5Desc:
+      "Building strong, collaborative relationships based on mutual trust and shared goals.",
     value6Title: "Integrity",
-    value6Desc: "Acting with honesty, transparency, and ethical responsibility in all we do.",
+    value6Desc:
+      "Acting with honesty, transparency, and ethical responsibility in all we do.",
     value7Title: "Achievement",
-    value7Desc: "Delivering measurable results and celebrating success together.",
+    value7Desc:
+      "Delivering measurable results and celebrating success together.",
     valuesTitle: "Our Values",
     skillsTitle: "Our Skills",
     skill1Name: "Expert Matching",
-    skill1Desc: "Connecting the right professionals with specific use cases based on verified expertise and experience.",
+    skill1Desc:
+      "Connecting the right professionals with specific use cases based on verified expertise and experience.",
     skill2Name: "ESCO Skill Mapping",
-    skill2Desc: "Utilizing the European Skills, Competences and Occupations framework for standardized skill classification.",
+    skill2Desc:
+      "Utilizing the European Skills, Competences and Occupations framework for standardized skill classification.",
     skill3Name: "Project Scoping",
-    skill3Desc: "Defining clear objectives, deliverables, and milestones for successful project outcomes.",
+    skill3Desc:
+      "Defining clear objectives, deliverables, and milestones for successful project outcomes.",
     skill4Name: "Contract & Milestone Management",
-    skill4Desc: "Structured agreements with transparent progress tracking and payment schedules.",
+    skill4Desc:
+      "Structured agreements with transparent progress tracking and payment schedules.",
     skill5Name: "Quality Assurance",
-    skill5Desc: "Ensuring deliverables meet standards through systematic review and verification processes.",
+    skill5Desc:
+      "Ensuring deliverables meet standards through systematic review and verification processes.",
     skill6Name: "Expert Onboarding",
-    skill6Desc: "Seamless integration of professionals into projects with clear expectations and support.",
+    skill6Desc:
+      "Seamless integration of professionals into projects with clear expectations and support.",
   },
   time: {
     justNow: "Just now",
@@ -461,7 +497,8 @@ export const en = {
     allCaughtUp: "All caught up!",
     markAllRead: "Mark all as read",
     noNotifications: "No notifications",
-    noNotificationsDesc: "You're all caught up! New notifications will appear here.",
+    noNotificationsDesc:
+      "You're all caught up! New notifications will appear here.",
     recentActivity: "Recent Activity",
     viewDetails: "View details",
     markAsRead: "Mark as read",
@@ -487,36 +524,49 @@ export const en = {
   },
   features: {
     forSkillGivers: "For Skill Givers",
-    skillGiversDesc: "Retirees, senior experts, and professionals offering their experience.",
+    skillGiversDesc:
+      "Retirees, senior experts, and professionals offering their experience.",
     forSkillSearchers: "For Skill Searchers",
-    skillSearchersDesc: "Companies seeking precise expertise for tasks, processes, or projects.",
+    skillSearchersDesc:
+      "Companies seeking precise expertise for tasks, processes, or projects.",
     howItWorks: "How It Works",
-    howItWorksDesc: "Getting started with Sinopia is easy. Follow these simple steps to begin your journey.",
+    howItWorksDesc:
+      "Getting started with Sinopia is easy. Follow these simple steps to begin your journey.",
     fastMatching: "Fast Matching",
     securePayments: "Secure Payments",
     support247: "24/7 Support",
     sg1Title: "Share Your Expertise",
-    sg1Desc: "Bring your lifelong knowledge into meaningful, flexible projects.",
+    sg1Desc:
+      "Bring your lifelong knowledge into meaningful, flexible projects.",
     sg2Title: "UseCase Based Work",
-    sg2Desc: "Get matched to targeted, modular Use Cases tailored to your skills not generic jobs.",
+    sg2Desc:
+      "Get matched to targeted, modular Use Cases tailored to your skills not generic jobs.",
     sg3Title: "Fair & Secure Compensation",
-    sg3Desc: "Receive transparent pricing and reliable payments based on effort and expertise.",
+    sg3Desc:
+      "Receive transparent pricing and reliable payments based on effort and expertise.",
     ss1Title: "Access Experienced Professionals",
-    ss1Desc: "Find senior experts with verified skills, proven track records, and deep industry knowledge.",
+    ss1Desc:
+      "Find senior experts with verified skills, proven track records, and deep industry knowledge.",
     ss2Title: "AI Driven Matching",
-    ss2Desc: "Receive tailored Use Case recommendations, skill mappings (ESCO), and effort estimations.",
+    ss2Desc:
+      "Receive tailored Use Case recommendations, skill mappings (ESCO), and effort estimations.",
     ss3Title: "Modular Project Delivery",
-    ss3Desc: "Break work into clear tasks, milestones, and factory style processes for predictable outcomes.",
+    ss3Desc:
+      "Break work into clear tasks, milestones, and factory style processes for predictable outcomes.",
     step1Title: "Create Your Profile, Define Your Expertise or Need",
-    step1Desc: "Create your profile and outline your skills or submit your project as a clear Use Case.",
+    step1Desc:
+      "Create your profile and outline your skills or submit your project as a clear Use Case.",
     step2Title: "Get Smart Matched",
-    step2Desc: "AI analyzes requirements and recommends the right experts or Use Cases based on skills and experience.",
+    step2Desc:
+      "AI analyzes requirements and recommends the right experts or Use Cases based on skills and experience.",
     step3Title: "Collaborate with Clarity",
-    step3Desc: "Work through structured tasks and milestones, with transparent pricing and secure payment upon delivery.",
+    step3Desc:
+      "Work through structured tasks and milestones, with transparent pricing and secure payment upon delivery.",
   },
   cta: {
     title: "Ready to Start Your Journey?",
-    subtitle: "Join thousands of professionals and companies who are already achieving their goals with Sinopia.",
+    subtitle:
+      "Join thousands of professionals and companies who are already achieving their goals with Sinopia.",
     createAccount: "Create Free Account",
     contactSales: "Contact Sales",
   },
@@ -561,7 +611,8 @@ export const en = {
     invalidImageType: "Invalid image type. Please use JPG, PNG, GIF or WebP.",
     imageTooLarge: "Image is too large. Maximum size is 5MB.",
     profilePictureUpdated: "Profile picture updated",
-    profilePictureUpdatedDesc: "Your profile picture has been updated successfully.",
+    profilePictureUpdatedDesc:
+      "Your profile picture has been updated successfully.",
     uploadFailed: "Failed to upload image. Please try again.",
     changePassword: "Change Password",
     changePasswordDesc: "Update your password to keep your account secure",
@@ -572,6 +623,15 @@ export const en = {
     confirmPassword: "Confirm New Password",
     confirmPasswordPlaceholder: "Confirm new password",
     updatePassword: "Update Password",
+    deleteAccount: "Delete Account",
+    deleteAccountDesc: "Permanently remove your account and all associated data",
+    deleteAccountWarning: "Once you delete your account, there is no going back. Please be certain.",
+    deleteAccountButton: "Delete account",
+    deleteConfirmTitle: "Are you absolutely sure?",
+    deleteConfirmDesc: "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
+    accountDeleted: "Account deleted",
+    accountDeletedDesc: "Your account has been successfully deleted.",
+    deleteAccountFailed: "Failed to delete account. Please try again.",
     passwordTooShort: "Password must be at least 8 characters long.",
     passwordMismatch: "Passwords do not match.",
     passwordChanged: "Password changed",
@@ -607,42 +667,58 @@ export const en = {
   vision: {
     title: "Vision",
     teamPhotoAlt: "Sinopia Founding Team",
-    content: "The skills shortage is omnipresent! Previous solutions to counteract the lack of personnel primarily focus on building new workforces, integrating skilled workers from other countries, or supporting career changers. We at Sinopia want to leverage existing knowledge. The baby boomer generation, who are now retiring from active working life, bring enormous value to the economy with their wealth of experience. According to a 2023 survey, only about 13% of retirees remain employed after retirement. Often not because they lack the desire to contribute, but because there is a lack of tailored opportunities. Tailored to an individual balance between contribution and leisure. We want to create a connection between supply and demand, but differently than with standardized employment contracts. It's about viewing work processes in a new way and breaking them down into smaller individual assignments (so-called Use Cases) that are specifically tailored to the needs of companies as well as workers (Competence Collective).",
+    content:
+      "The skills shortage is omnipresent! Previous solutions to counteract the lack of personnel primarily focus on building new workforces, integrating skilled workers from other countries, or supporting career changers. We at Sinopia want to leverage existing knowledge. The baby boomer generation, who are now retiring from active working life, bring enormous value to the economy with their wealth of experience. According to a 2023 survey, only about 13% of retirees remain employed after retirement. Often not because they lack the desire to contribute, but because there is a lack of tailored opportunities. Tailored to an individual balance between contribution and leisure. We want to create a connection between supply and demand, but differently than with standardized employment contracts. It's about viewing work processes in a new way and breaking them down into smaller individual assignments (so-called Use Cases) that are specifically tailored to the needs of companies as well as workers (Competence Collective).",
     foundingTeam: "Founding Team",
   },
   privacy: {
     title: "Privacy Policy",
-    introductionText: "The use of our website is generally possible without providing personal data. Insofar as personal data (e.g., name, address, or email addresses) is collected on our site, this is always done on a voluntary basis, where possible. This data will not be passed on to third parties without your explicit consent.",
+    introductionText:
+      "The use of our website is generally possible without providing personal data. Insofar as personal data (e.g., name, address, or email addresses) is collected on our site, this is always done on a voluntary basis, where possible. This data will not be passed on to third parties without your explicit consent.",
     ipAddresses: "IP addresses and log files",
-    ipAddressesText: "When visitors access this website, their IP addresses are recorded and stored in log files. These IP addresses are stored for a maximum of seven days for the purpose of detecting and preventing attacks.",
+    ipAddressesText:
+      "When visitors access this website, their IP addresses are recorded and stored in log files. These IP addresses are stored for a maximum of seven days for the purpose of detecting and preventing attacks.",
     security: "Security notice",
-    securityText: "Please note that data transmission over the Internet (e.g., communication by email) can have security vulnerabilities. Complete protection of data against access by third parties is not possible.",
+    securityText:
+      "Please note that data transmission over the Internet (e.g., communication by email) can have security vulnerabilities. Complete protection of data against access by third parties is not possible.",
     advertising: "Objection to unsolicited advertising",
-    advertisingText: "We hereby expressly object to the use of contact data published within the scope of the legal notice by third parties for sending unsolicited advertising and informational materials. The operators of this website expressly reserve the right to take legal action in the event of unsolicited advertising, such as spam emails.",
-    contactFormReference: "For details regarding the contact form, please refer to the section below in this privacy policy.",
+    advertisingText:
+      "We hereby expressly object to the use of contact data published within the scope of the legal notice by third parties for sending unsolicited advertising and informational materials. The operators of this website expressly reserve the right to take legal action in the event of unsolicited advertising, such as spam emails.",
+    contactFormReference:
+      "For details regarding the contact form, please refer to the section below in this privacy policy.",
     contactFormTitle: "Privacy policy for the contact form",
-    contactFormText: "Personal data is collected via the contact form. In accordance with Article 13 of the EU General Data Protection Regulation (GDPR), you are hereby informed about the data processing associated with this collection. In addition to this description, the general data protection declaration for the website of Sinopia Deutschland GmbH applies.",
+    contactFormText:
+      "Personal data is collected via the contact form. In accordance with Article 13 of the EU General Data Protection Regulation (GDPR), you are hereby informed about the data processing associated with this collection. In addition to this description, the general data protection declaration for the website of Sinopia Deutschland GmbH applies.",
     processingScope: "Scope of processing personal data",
-    processingItems: "First name|Company name|E-mail address|Telephone number|Your message",
-    processingItemsAuto: "In addition, the following data is automatically collected:",
-    processingItemsAutoList: "Confirmation of your declaration of consent|Date and time the form was submitted",
+    processingItems:
+      "First name|Company name|E-mail address|Telephone number|Your message",
+    processingItemsAuto:
+      "In addition, the following data is automatically collected:",
+    processingItemsAutoList:
+      "Confirmation of your declaration of consent|Date and time the form was submitted",
     legalBasis: "Legal basis",
-    legalBasisText: "The collection of form data is based on the consent of the data subjects in accordance with Art. 6 para. 1 lit. a EU GDPR.",
+    legalBasisText:
+      "The collection of form data is based on the consent of the data subjects in accordance with Art. 6 para. 1 lit. a EU GDPR.",
     purpose: "Purpose of data processing",
-    purposeText: "This form is used to contact Sinopia Deutschland GmbH. The data you submit will be used for informational purposes and to send you event notifications from Sinopia Deutschland GmbH. You may object to being contacted and to the processing of your data at any time.",
+    purposeText:
+      "This form is used to contact Sinopia Deutschland GmbH. The data you submit will be used for informational purposes and to send you event notifications from Sinopia Deutschland GmbH. You may object to being contacted and to the processing of your data at any time.",
     storageDuration: "Storage duration",
-    storageDurationText: "Your data will be stored for communication purposes with Sinopia Deutschland GmbH as long as your email address is valid or until you object to its storage. You can object at any time by sending an informal notice to info[at]sinopia.de. Your data will then be completely deleted.",
+    storageDurationText:
+      "Your data will be stored for communication purposes with Sinopia Deutschland GmbH as long as your email address is valid or until you object to its storage. You can object at any time by sending an informal notice to info[at]sinopia.de. Your data will then be completely deleted.",
     contactDetails: "Contact details",
-    contactDetailsText: "The company responsible for this website is Sinopia Deutschland GmbH (see",
+    contactDetailsText:
+      "The company responsible for this website is Sinopia Deutschland GmbH (see",
     contactDetailsLink: "legal notice",
     yourRights: "Your rights as a data subject",
-    yourRightsText: "As a data subject, you can assert your rights under the EU GDPR at any time.",
+    yourRightsText:
+      "As a data subject, you can assert your rights under the EU GDPR at any time.",
   },
   imprint: {
     title: "Imprint",
     subtitle: "Information according to § 5 DDG",
     companyName: "Sinopia Deutschland GmbH",
-    companyAddress: "Deckerstr. 39\n70372 Stuttgart\nCommercial Register: HRA 800342\nRegistry Court: Stuttgart",
+    companyAddress:
+      "Deckerstr. 39\n70372 Stuttgart\nCommercial Register: HRA 800342\nRegistry Court: Stuttgart",
     representedByTitle: "Represented by:",
     representedByNames: "Jens Uwe Jung, Tobias Bahlinger, and Eyad Dawood",
     contactTitle: "Contact:",
@@ -653,16 +729,22 @@ export const en = {
     responsibleDetails: "Jens Uwe Jung\nDeckerstr. 30\n70372 Stuttgart",
     disclaimerTitle: "Disclaimer:",
     euDisputeTitle: "EU Dispute Resolution",
-    euDisputeText: "The European Commission provides a platform for online dispute resolution (OS):",
+    euDisputeText:
+      "The European Commission provides a platform for online dispute resolution (OS):",
     euDisputeEmail: "You can find our email address in the imprint above.",
-    consumerDisputeTitle: "Consumer Dispute Resolution / Universal Arbitration Board",
-    consumerDisputeText: "We are neither willing nor obliged to participate in dispute resolution proceedings before a consumer arbitration board.",
+    consumerDisputeTitle:
+      "Consumer Dispute Resolution / Universal Arbitration Board",
+    consumerDisputeText:
+      "We are neither willing nor obliged to participate in dispute resolution proceedings before a consumer arbitration board.",
     contentLiabilityTitle: "Liability for Content",
-    contentLiabilityText: "As a service provider, we are responsible for our own content on these pages in accordance with general laws pursuant to § 7 Abs.1 TMG. According to §§ 8 to 10 TMG, however, we are not obliged as a service provider to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity. Obligations to remove or block the use of information under general law remain unaffected. However, liability in this regard is only possible from the time of knowledge of a specific infringement. Upon becoming aware of such infringements, we will remove this content immediately.",
+    contentLiabilityText:
+      "As a service provider, we are responsible for our own content on these pages in accordance with general laws pursuant to § 7 Abs.1 TMG. According to §§ 8 to 10 TMG, however, we are not obliged as a service provider to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity. Obligations to remove or block the use of information under general law remain unaffected. However, liability in this regard is only possible from the time of knowledge of a specific infringement. Upon becoming aware of such infringements, we will remove this content immediately.",
     linkLiabilityTitle: "Liability for Links",
-    linkLiabilityText: "Our offer contains links to external websites of third parties, on whose contents we have no influence. Therefore, we cannot assume any liability for these external contents. The respective provider or operator of the pages is always responsible for the contents of the linked pages. The linked pages were checked for possible legal violations at the time of linking. Illegal contents were not recognizable at the time of linking. However, permanent monitoring of the content of the linked pages is not reasonable without concrete evidence of an infringement. Upon becoming aware of legal violations, we will remove such links immediately.",
+    linkLiabilityText:
+      "Our offer contains links to external websites of third parties, on whose contents we have no influence. Therefore, we cannot assume any liability for these external contents. The respective provider or operator of the pages is always responsible for the contents of the linked pages. The linked pages were checked for possible legal violations at the time of linking. Illegal contents were not recognizable at the time of linking. However, permanent monitoring of the content of the linked pages is not reasonable without concrete evidence of an infringement. Upon becoming aware of legal violations, we will remove such links immediately.",
     copyrightTitle: "Copyright",
-    copyrightText: "The content and works on these pages created by the site operators are subject to German copyright law. The reproduction, editing, distribution, and any kind of exploitation outside the limits of copyright require the written consent of the respective author or creator. Downloads and copies of this site are only permitted for private, non-commercial use. Insofar as the content on this site was not created by the operator, the copyrights of third parties are respected. In particular, third-party content is identified as such. Should you nevertheless become aware of a copyright infringement, please inform us accordingly. Upon becoming aware of infringements, we will remove such content immediately.",
+    copyrightText:
+      "The content and works on these pages created by the site operators are subject to German copyright law. The reproduction, editing, distribution, and any kind of exploitation outside the limits of copyright require the written consent of the respective author or creator. Downloads and copies of this site are only permitted for private, non-commercial use. Insofar as the content on this site was not created by the operator, the copyrights of third parties are respected. In particular, third-party content is identified as such. Should you nevertheless become aware of a copyright infringement, please inform us accordingly. Upon becoming aware of infringements, we will remove such content immediately.",
     privacyTitle: "Privacy",
     privacyText: "Information about data protection can be found in our",
   },
@@ -671,7 +753,8 @@ export const en = {
     step2: "Company Info",
     step2of2: "Step 2/2",
     companyInfoTitle: "Company Information",
-    companyInfoSubtitle: "Tell us about your company to complete your registration",
+    companyInfoSubtitle:
+      "Tell us about your company to complete your registration",
     companyName: "Company Name",
     companyNamePlaceholder: "Enter your company name",
     industry: "Industry",
@@ -697,7 +780,8 @@ export const en = {
     continueButton: "Continue to Dashboard",
     companyInfoSaved: "Company information saved",
     companyInfoSavedDesc: "Your company details have been saved successfully.",
-    companyInfoRequired: "Please complete your company information to continue.",
+    companyInfoRequired:
+      "Please complete your company information to continue.",
     fillAllRequired: "Please fill in all required fields.",
     invalidEmail: "Please enter a valid email address.",
   },
@@ -726,9 +810,11 @@ export const en = {
     titleLabel: "Title",
     titlePlaceholder: "e.g., Process Optimization in Manufacturing",
     descriptionLabel: "Description",
-    descriptionPlaceholder: "Describe your use case in detail. What is the current situation? What challenges are you facing?",
+    descriptionPlaceholder:
+      "Describe your use case in detail. What is the current situation? What challenges are you facing?",
     objectiveLabel: "Objective",
-    objectivePlaceholder: "What do you want to achieve? What is the desired outcome?",
+    objectivePlaceholder:
+      "What do you want to achieve? What is the desired outcome?",
     objective: "Objective",
     createButton: "Create Use Case",
     created: "Use Case created!",

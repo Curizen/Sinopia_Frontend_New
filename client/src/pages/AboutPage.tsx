@@ -6,7 +6,7 @@ import heroImage from '@assets/generated_images/team_collaboration_coworking_her
 
 const skills = [
   { icon: UserCheck, nameKey: 'about.skill1Name', descKey: 'about.skill1Desc' },
-  { icon: FileSearch, nameKey: 'about.skill2Name', descKey: 'about.skill2Desc' },
+  { icon: FileSearch, nameKey: 'about.skill2Name', descKey: 'asincdbout.skill2Desc' },
   { icon: Lightbulb, nameKey: 'about.skill3Name', descKey: 'about.skill3Desc' },
   { icon: ClipboardCheck, nameKey: 'about.skill4Name', descKey: 'about.skill4Desc' },
   { icon: Shield, nameKey: 'about.skill5Name', descKey: 'about.skill5Desc' },

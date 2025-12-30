@@ -223,10 +223,22 @@ export default function ProfilePage() {
               )}
 
               <div className="mt-6 space-y-3 text-left">
-                <div className="flex items-center gap-3 text-sm">
-                  <MapPin className="w-4 h-4 text-muted-foreground" />
-                  <span>{displayValue(profile.location)}</span>
-                </div>
+                {isSkillGiver && 'location' in profile && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <MapPin className="w-4 h-4 text-muted-foreground" />
+                    <span>{displayValue(profile.location)}</span>
+                  </div>
+                )}
+                {!isSkillGiver && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <MapPin className="w-4 h-4 text-muted-foreground" />
+                    <span data-testid="text-profile-location">
+                      {user?.city && user?.country 
+                        ? `${user.city}, ${user.country}`
+                        : t('profile.locationNotSet')}
+                    </span>
+                  </div>
+                )}
                 <div className="flex items-center gap-3 text-sm">
                   <Mail className="w-4 h-4 text-muted-foreground" />
                   <span>{user?.email || t('emptyState.notSet')}</span>

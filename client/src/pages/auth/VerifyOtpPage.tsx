@@ -51,6 +51,7 @@ export default function VerifyOtpPage() {
             description: t('auth.otp.nowUploadCv'),
           });
           setLocation('/sign-up/cv?email=' + encodeURIComponent(email));
+          window.scrollTo(0, 0);
         } else {
           completeRegistration(email, role, response.token);
           toast({
@@ -58,6 +59,7 @@ export default function VerifyOtpPage() {
             description: t('auth.otp.accountCreatedDesc'),
           });
           setLocation('/onboarding/company');
+          window.scrollTo(0, 0);
         }
       } else {
         toast({
