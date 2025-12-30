@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation } from 'wouter';
+import { useLocation, Redirect } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
 import { useI18n } from '@/i18n';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
@@ -7,21 +7,27 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { Building2, CheckCircle2 } from 'lucide-react';
 
 export default function CompanyInfoPage() {
-  const { user, updateUserCompanyInfo } = useAuth();
+  const { user, updateUserCompanyInfo, isAuthenticated, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
   const { t } = useI18n();
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
+    companyName: '',
+    industry: '',
+    contactEmail: user?.email || '',
+    contactPhone: '',
+    companySize: '',
     city: '',
     country: '',
-    companySize: '',
+    bio: '',
   });
 
   const companySizeOptions = [
@@ -33,19 +39,73 @@ export default function CompanyInfoPage() {
     { value: '1000+', labelKey: 'onboarding.companySize1000plus' },
   ];
 
-  const isFormValid = formData.city.trim() && formData.country.trim() && formData.companySize;
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Redirect to="/sign-in" />;
+  }
+
+  if (user?.role !== 'skill_searcher') {
+    return <Redirect to="/dashboard" />;
+  }
+
+  if (user?.companyOnboardingCompleted) {
+    return <Redirect to="/dashboard" />;
+  }
+
+  const isEmailValid = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const isFormValid = 
+    formData.companyName.trim() && 
+    formData.industry.trim() && 
+    formData.contactEmail.trim() && 
+    isEmailValid(formData.contactEmail) &&
+    formData.contactPhone.trim() && 
+    formData.companySize && 
+    formData.city.trim() && 
+    formData.country.trim();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isFormValid) return;
+    
+    if (!isFormValid) {
+      toast({
+        title: t('common.error'),
+        description: t('onboarding.fillAllRequired'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!isEmailValid(formData.contactEmail)) {
+      toast({
+        title: t('common.error'),
+        description: t('onboarding.invalidEmail'),
+        variant: 'destructive',
+      });
+      return;
+    }
 
     setIsLoading(true);
 
     try {
       await updateUserCompanyInfo({
+        companyName: formData.companyName.trim(),
+        industry: formData.industry.trim(),
+        contactEmail: formData.contactEmail.trim(),
+        contactPhone: formData.contactPhone.trim(),
+        companySize: formData.companySize,
         city: formData.city.trim(),
         country: formData.country.trim(),
-        companySize: formData.companySize,
+        bio: formData.bio.trim() || undefined,
       });
 
       toast({
@@ -69,7 +129,7 @@ export default function CompanyInfoPage() {
   return (
     <PublicLayout>
       <div className="min-h-[80vh] flex items-center justify-center py-12 px-4">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-lg">
           <CardHeader className="text-center">
             <div className="flex items-center justify-center gap-4 mb-4">
               <div className="flex items-center gap-2">
@@ -78,12 +138,12 @@ export default function CompanyInfoPage() {
                 </div>
                 <span className="text-sm font-medium text-muted-foreground">{t('onboarding.step1')}</span>
               </div>
-              <div className="h-0.5 w-8 bg-border" />
+              <div className="h-0.5 w-8 bg-primary" />
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
                   <span className="text-sm font-bold text-primary-foreground">2</span>
                 </div>
-                <span className="text-sm font-medium">{t('onboarding.step2')}</span>
+                <span className="text-sm font-medium">{t('onboarding.step2of2')}</span>
               </div>
             </div>
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-4">
@@ -94,30 +154,58 @@ export default function CompanyInfoPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="city">{t('onboarding.city')} *</Label>
-                <Input
-                  id="city"
-                  type="text"
-                  placeholder={t('onboarding.cityPlaceholder')}
-                  value={formData.city}
-                  onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
-                  required
-                  data-testid="input-company-city"
-                />
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="companyName">{t('onboarding.companyName')} *</Label>
+                  <Input
+                    id="companyName"
+                    type="text"
+                    placeholder={t('onboarding.companyNamePlaceholder')}
+                    value={formData.companyName}
+                    onChange={(e) => setFormData(prev => ({ ...prev, companyName: e.target.value }))}
+                    required
+                    data-testid="input-company-name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="industry">{t('onboarding.industry')} *</Label>
+                  <Input
+                    id="industry"
+                    type="text"
+                    placeholder={t('onboarding.industryPlaceholder')}
+                    value={formData.industry}
+                    onChange={(e) => setFormData(prev => ({ ...prev, industry: e.target.value }))}
+                    required
+                    data-testid="input-industry"
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="country">{t('onboarding.country')} *</Label>
-                <Input
-                  id="country"
-                  type="text"
-                  placeholder={t('onboarding.countryPlaceholder')}
-                  value={formData.country}
-                  onChange={(e) => setFormData(prev => ({ ...prev, country: e.target.value }))}
-                  required
-                  data-testid="input-company-country"
-                />
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="contactEmail">{t('onboarding.contactEmail')} *</Label>
+                  <Input
+                    id="contactEmail"
+                    type="email"
+                    placeholder={t('onboarding.contactEmailPlaceholder')}
+                    value={formData.contactEmail}
+                    onChange={(e) => setFormData(prev => ({ ...prev, contactEmail: e.target.value }))}
+                    required
+                    data-testid="input-contact-email"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contactPhone">{t('onboarding.contactPhone')} *</Label>
+                  <Input
+                    id="contactPhone"
+                    type="tel"
+                    placeholder={t('onboarding.contactPhonePlaceholder')}
+                    value={formData.contactPhone}
+                    onChange={(e) => setFormData(prev => ({ ...prev, contactPhone: e.target.value }))}
+                    required
+                    data-testid="input-contact-phone"
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -137,6 +225,45 @@ export default function CompanyInfoPage() {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="city">{t('onboarding.city')} *</Label>
+                  <Input
+                    id="city"
+                    type="text"
+                    placeholder={t('onboarding.cityPlaceholder')}
+                    value={formData.city}
+                    onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
+                    required
+                    data-testid="input-company-city"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="country">{t('onboarding.country')} *</Label>
+                  <Input
+                    id="country"
+                    type="text"
+                    placeholder={t('onboarding.countryPlaceholder')}
+                    value={formData.country}
+                    onChange={(e) => setFormData(prev => ({ ...prev, country: e.target.value }))}
+                    required
+                    data-testid="input-company-country"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="bio">{t('onboarding.bio')} ({t('common.optional')})</Label>
+                <Textarea
+                  id="bio"
+                  placeholder={t('onboarding.bioPlaceholder')}
+                  value={formData.bio}
+                  onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
+                  rows={3}
+                  data-testid="input-company-bio"
+                />
               </div>
 
               <Button

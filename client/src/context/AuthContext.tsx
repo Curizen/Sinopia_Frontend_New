@@ -14,6 +14,11 @@ interface CompanyInfoData {
   city: string;
   country: string;
   companySize: string;
+  companyName: string;
+  industry: string;
+  contactEmail: string;
+  contactPhone: string;
+  bio?: string;
 }
 
 interface AuthContextType {
@@ -27,6 +32,7 @@ interface AuthContextType {
   setUserFromToken: (token: string, user: User) => void;
   completeRegistration: (email: string, role: UserRole, token?: string) => void;
   updateUserCompanyInfo: (data: CompanyInfoData) => Promise<void>;
+  updateUserProfile: (data: Partial<User>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -133,7 +139,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       city: data.city,
       country: data.country,
       companySize: data.companySize,
-      companyInfoCompleted: true,
+      companyName: data.companyName,
+      industry: data.industry,
+      contactEmail: data.contactEmail,
+      contactPhone: data.contactPhone,
+      bio: data.bio,
+      companyOnboardingCompleted: true,
+    };
+    
+    setUser(updatedUser);
+    localStorage.setItem('sinopia_user', JSON.stringify(updatedUser));
+  }, [user]);
+
+  const updateUserProfile = useCallback(async (data: Partial<User>) => {
+    if (!user) throw new Error('No user logged in');
+    
+    const updatedUser: User = {
+      ...user,
+      ...data,
     };
     
     setUser(updatedUser);
@@ -153,6 +176,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUserFromToken,
         completeRegistration,
         updateUserCompanyInfo,
+        updateUserProfile,
       }}
     >
       {children}

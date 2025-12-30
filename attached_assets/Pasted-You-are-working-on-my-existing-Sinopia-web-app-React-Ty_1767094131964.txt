@@ -1,0 +1,141 @@
+You are working on my existing Sinopia web app (React + TypeScript). Please read the codebase first, then implement the following changes with clean minimal edits. IMPORTANT: Any new UI text must have full translations in BOTH English and German (use existing i18n approach). Replace any hardcoded strings in the modified areas with translation keys.
+
+====================================================
+1) Skill Searcher Sign-up flow: after OTP collect company/contact info
+====================================================
+1.1) After successful Sign Up + OTP verification (ONLY role = "skill_searcher"), route the user to a required onboarding page (company/contact info) BEFORE dashboard.
+    - Route: /onboarding/company (or the existing company-info route you created).
+    - Skill searcher must not access /dashboard until this is completed.
+    - If a skill_searcher tries to open /dashboard without completing onboarding, redirect to /onboarding/company.
+
+1.2) The onboarding form must include these REQUIRED fields:
+    - Contact Phone
+    - Company Name
+    - Industry
+    - Contact Email
+    - Company Size (keep existing)
+    - City (keep existing)
+    - Country (keep existing)
+
+1.3) Optional field:
+    - About (Bio) (optional)
+
+1.4) Validation rules:
+    - Required: contactPhone, companyName, industry, contactEmail, companySize, city, country
+    - contactEmail must be valid email format
+    - contactPhone must be non-empty (basic validation is enough)
+
+1.5) Persisting data:
+    - Save these fields into the user's profile (same storage mechanism currently used: localStorage + auth context mock user OR backend API if exists).
+    - Ensure the data is available in Profile page and Settings page.
+    - Add a boolean flag to indicate company onboarding is complete, e.g. user.companyOnboardingCompleted = true.
+
+1.6) UX:
+    - Keep design consistent with existing UI components (Card, Input, Label, Button).
+    - Add a step indicator for skill_searcher: "Step 2/2" (or similar), translated EN/DE.
+
+====================================================
+2) Update User/Profile model to include the new fields
+====================================================
+2.1) Update the User interface/type to include:
+    - companyName?: string
+    - industry?: string
+    - contactEmail?: string
+    - contactPhone?: string
+    - companySize?: string
+    - city?: string
+    - country?: string
+    - bio?: string
+    - companyOnboardingCompleted?: boolean
+    - profileImageUrl?: string (for settings/profile picture)
+
+2.2) Ensure AuthContext register/login persistence supports these fields (localStorage serialization, etc.).
+
+====================================================
+3) Profile page (skill_searcher): show company/contact info
+====================================================
+3.1) Add a “Company Information” section ABOVE “About”.
+3.2) Show:
+    - Company Name
+    - Industry
+    - Contact Email
+    - Contact Phone
+    - Company Size
+    - City
+    - Country
+3.3) The About/Bio section should show bio if present, otherwise show “—” or empty state (translated).
+3.4) Keep existing styling and edit patterns (if you already have edit buttons/flows, extend them; otherwise create minimal edit modal/inline edit consistent with project).
+
+====================================================
+4) About page updates (values only + year update)
+====================================================
+4.1) In About page, the “Our Values” section MUST ONLY list the subjects (NO descriptions). Keep exactly these items:
+    - Service Expertise
+    - Innovation
+    - New Thinking
+    - Orchestration
+    - Partnership
+    - Integrity
+    - Achievement
+
+4.2) Translate those items to German keys (professional German):
+    - Service Expertise → Service-Expertise
+    - Innovation → Innovation
+    - New Thinking → Neues Denken
+    - Orchestration → Orchestrierung
+    - Partnership → Partnerschaft
+    - Integrity → Integrität
+    - Achievement → Leistung
+
+4.3) Update the About page line:
+    “Connecting talent with opportunity since 2024.”
+    to:
+    “Connecting talent with opportunity since 2025.”
+    and ensure the German version also reflects 2025.
+
+====================================================
+5) Settings page improvements
+====================================================
+5.1) Add a settings page (or update existing Settings page) to include:
+
+A) Profile picture / avatar edit
+   - Allow user to upload/change profile picture.
+   - If no image exists, show a fallback avatar with initials (first letter of firstName + lastName).
+   - This avatar (image or initials) must appear as a small circle in the top-right header area (already used for the profile icon).
+   - Store image URL (base64 or object URL is fine for now; keep consistent with how you store other mock data).
+   - Add translations for labels/buttons.
+
+B) Password change (UI only if backend not available)
+   - Add fields: Current Password, New Password, Confirm New Password
+   - Validate:
+     * New password must match confirm
+     * enforce your existing password rules (>=8 chars + uppercase + number + special char) if you already have that rule; if not, implement it here.
+   - If there is no backend, show a toast: “Password change is not available yet (development mode).” (EN/DE)
+   - If backend exists, call the correct endpoint and handle errors.
+
+5.2) Make sure Settings is accessible from the profile circle dropdown (top-right menu) and translated.
+
+====================================================
+6) i18n requirements (strict)
+====================================================
+6.1) Add translation keys in BOTH English and German for:
+    - All new form labels/placeholders/buttons/errors
+    - Settings UI strings
+    - About page year line and values section title
+
+6.2) Ensure switching language changes ALL strings in:
+    - OTP flow screens
+    - onboarding/company screen
+    - About page
+    - Settings page
+    - header dropdown
+
+====================================================
+7) Final verification
+====================================================
+7.1) Verify flow:
+    - Skill Searcher: Sign up → OTP → Company/Contact Info onboarding → Dashboard
+    - Skill Searcher cannot access dashboard until onboarding complete
+    - Settings shows avatar circle on top-right, can upload image, and password change UI works (with mock toast if no backend)
+    - About page values are only list items, and the “since 2025” line is correct
+    - All newly added content works in EN and DE

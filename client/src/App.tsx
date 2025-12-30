@@ -57,7 +57,7 @@ function PrivateRoute({ component: Component }: { component: React.ComponentType
     return <Redirect to="/sign-in" />;
   }
 
-  if (user?.role === 'skill_searcher' && !user?.companyInfoCompleted) {
+  if (user?.role === 'skill_searcher' && !user?.companyOnboardingCompleted) {
     return <Redirect to="/onboarding/company" />;
   }
 

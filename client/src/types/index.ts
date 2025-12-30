@@ -13,7 +13,13 @@ export interface User {
   city?: string;
   country?: string;
   companySize?: string;
-  companyInfoCompleted?: boolean;
+  companyName?: string;
+  industry?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  bio?: string;
+  profileImageUrl?: string;
+  companyOnboardingCompleted?: boolean;
 }
 
 
