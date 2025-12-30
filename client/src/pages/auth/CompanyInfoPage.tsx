@@ -113,7 +113,8 @@ export default function CompanyInfoPage() {
         description: t('onboarding.companyInfoSavedDesc'),
       });
 
-      setLocation('/dashboard');
+      setLocation('/profile');
+      window.scrollTo(0, 0);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : t('common.error');
       toast({
