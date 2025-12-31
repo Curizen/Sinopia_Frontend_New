@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,17 +19,15 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { Globe, User, Lock, Camera, Eye, EyeOff, Trash2 } from 'lucide-react';
+import { Globe, User, Lock, Eye, EyeOff, Trash2 } from 'lucide-react';
 
 export default function SettingsPage() {
-  const { user, updateUserProfile, logout } = useAuth();
+  const { user, logout } = useAuth();
   const { t, language, setLanguage } = useI18n();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   
-  const [isUploading, setIsUploading] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -46,57 +43,6 @@ export default function SettingsPage() {
 
   const toggleLanguage = () => {
     setLanguage(language === 'en' ? 'de' : 'en');
-  };
-
-  const handleProfilePictureClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    if (!validTypes.includes(file.type)) {
-      toast({
-        title: t('common.error'),
-        description: t('settings.invalidImageType'),
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: t('common.error'),
-        description: t('settings.imageTooLarge'),
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    setIsUploading(true);
-    
-    try {
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const dataUrl = event.target?.result as string;
-        await updateUserProfile({ profileImageUrl: dataUrl });
-        toast({
-          title: t('settings.profilePictureUpdated'),
-          description: t('settings.profilePictureUpdatedDesc'),
-        });
-        setIsUploading(false);
-      };
-      reader.readAsDataURL(file);
-    } catch (error) {
-      toast({
-        title: t('common.error'),
-        description: t('settings.uploadFailed'),
-        variant: 'destructive',
-      });
-      setIsUploading(false);
-    }
   };
 
   const validatePassword = () => {
@@ -161,53 +107,6 @@ export default function SettingsPage() {
         </div>
 
         <div className="grid gap-6">
-          <Card data-testid="card-settings-profile-picture">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Camera className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <CardTitle className="text-lg">{t('settings.profilePicture')}</CardTitle>
-                  <CardDescription>{t('settings.profilePictureDesc')}</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-6">
-                <Avatar className="w-20 h-20">
-                  {user?.profileImageUrl ? (
-                    <AvatarImage src={user.profileImageUrl} alt={user.email} />
-                  ) : null}
-                  <AvatarFallback className="bg-primary/10 text-primary text-xl">
-                    {user?.firstName?.[0] || user?.email?.[0]?.toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="space-y-2">
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/jpeg,image/png,image/gif,image/webp"
-                    className="hidden"
-                    onChange={handleFileChange}
-                    data-testid="input-profile-picture"
-                  />
-                  <Button 
-                    variant="outline" 
-                    onClick={handleProfilePictureClick}
-                    disabled={isUploading}
-                    data-testid="button-upload-picture"
-                  >
-                    {isUploading ? t('common.loading') : t('settings.uploadPicture')}
-                  </Button>
-                  <p className="text-xs text-muted-foreground">
-                    {t('settings.imageFormats')}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
           <Card data-testid="card-settings-password">
             <CardHeader>
               <div className="flex items-center gap-3">

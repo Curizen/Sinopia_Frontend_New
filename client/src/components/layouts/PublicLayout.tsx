@@ -96,8 +96,9 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                     >
                       <Avatar className="w-8 h-8">
                         <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                          {user?.firstName?.[0]}
-                          {user?.lastName?.[0]}
+                          {user?.firstName?.[0] || user?.lastName?.[0] ? (
+                            <>{user?.firstName?.[0]}{user?.lastName?.[0]}</>
+                          ) : 'U'}
                         </AvatarFallback>
                       </Avatar>
                     </Button>

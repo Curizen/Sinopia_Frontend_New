@@ -18,7 +18,6 @@ export interface User {
   contactEmail?: string;
   contactPhone?: string;
   bio?: string;
-  profileImageUrl?: string;
   companyOnboardingCompleted?: boolean;
 }
 

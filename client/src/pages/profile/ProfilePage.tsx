@@ -209,7 +209,9 @@ export default function ProfilePage() {
             <CardContent className="pt-6 text-center">
               <Avatar className="w-24 h-24 mx-auto mb-4">
                 <AvatarFallback className="bg-primary/10 text-primary text-2xl">
-                  {user?.firstName?.[0]}{user?.lastName?.[0]}
+                  {user?.firstName?.[0] || user?.lastName?.[0] ? (
+                    <>{user?.firstName?.[0]}{user?.lastName?.[0]}</>
+                  ) : 'U'}
                 </AvatarFallback>
               </Avatar>
               <h2 className="font-semibold text-xl">
