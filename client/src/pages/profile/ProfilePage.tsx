@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
 import { useI18n } from '@/i18n';
+import { getInitials } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -209,9 +210,7 @@ export default function ProfilePage() {
             <CardContent className="pt-6 text-center">
               <Avatar className="w-24 h-24 mx-auto mb-4">
                 <AvatarFallback className="bg-primary/10 text-primary text-2xl">
-                  {user?.firstName?.[0] || user?.lastName?.[0] ? (
-                    <>{user?.firstName?.[0]}{user?.lastName?.[0]}</>
-                  ) : 'U'}
+                  {getInitials(user?.firstName, user?.lastName)}
                 </AvatarFallback>
               </Avatar>
               <h2 className="font-semibold text-xl">

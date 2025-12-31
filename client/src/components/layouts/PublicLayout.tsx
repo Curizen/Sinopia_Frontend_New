@@ -2,6 +2,7 @@ import { type ReactNode, useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { getInitials } from '@/lib/utils';
 import sinopiaLogo from '@assets/sinopia_logo.png';
 import {
   DropdownMenu,
@@ -96,9 +97,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                     >
                       <Avatar className="w-8 h-8">
                         <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                          {user?.firstName?.[0] || user?.lastName?.[0] ? (
-                            <>{user?.firstName?.[0]}{user?.lastName?.[0]}</>
-                          ) : 'U'}
+                          {getInitials(user?.firstName, user?.lastName)}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
