@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { useI18n } from '@/i18n';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
@@ -8,11 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, UserPlus, Briefcase, User } from 'lucide-react';
+import { Eye, EyeOff, UserPlus, Briefcase, User, FileText } from 'lucide-react';
 import { authService } from '@/services/authService';
 import type { UserRole } from '@/lib/utils/constants';
 import { PasswordRequirements, isPasswordValid } from '@/components/auth/PasswordRequirements';
+import { TermsModal } from '@/components/auth/TermsModal';
 
 export default function SignUpPage() {
   const { toast } = useToast();
@@ -22,6 +24,9 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [termsModalOpen, setTermsModalOpen] = useState(false);
+  const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -30,8 +35,36 @@ export default function SignUpPage() {
     role: 'skill_giver' as UserRole,
   });
 
+  useEffect(() => {
+    const accepted = localStorage.getItem('sinopia_terms_accepted');
+    if (accepted === 'true') {
+      setHasScrolledToBottom(true);
+      setTermsAccepted(true);
+    }
+  }, []);
+
+  const handleTermsAcceptedChange = (checked: boolean) => {
+    setTermsAccepted(checked);
+    if (checked) {
+      localStorage.setItem('sinopia_terms_accepted', 'true');
+      localStorage.setItem('sinopia_terms_accepted_at', new Date().toISOString());
+    } else {
+      localStorage.removeItem('sinopia_terms_accepted');
+      localStorage.removeItem('sinopia_terms_accepted_at');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!termsAccepted) {
+      toast({
+        title: t('common.error'),
+        description: t('terms.acceptError'),
+        variant: 'destructive',
+      });
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
       toast({
@@ -244,10 +277,46 @@ export default function SignUpPage() {
                 </div>
               </div>
 
+              <div className="space-y-3 border rounded-lg p-4 bg-muted/30">
+                <div className="flex items-start gap-3">
+                  <Checkbox
+                    id="terms-checkbox"
+                    checked={termsAccepted}
+                    onCheckedChange={handleTermsAcceptedChange}
+                    disabled={!hasScrolledToBottom}
+                    data-testid="checkbox-terms-accept"
+                  />
+                  <div className="flex-1 space-y-1">
+                    <Label
+                      htmlFor="terms-checkbox"
+                      className={`text-sm leading-relaxed cursor-pointer ${!hasScrolledToBottom ? 'text-muted-foreground' : ''}`}
+                    >
+                      {t('terms.agreeLabel')}
+                    </Label>
+                    {!hasScrolledToBottom && (
+                      <p className="text-xs text-muted-foreground">
+                        {t('terms.scrollToAccept')}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setTermsModalOpen(true)}
+                  className="w-full"
+                  data-testid="button-view-terms"
+                >
+                  <FileText className="w-4 h-4 mr-2" />
+                  {t('terms.viewTerms')}
+                </Button>
+              </div>
+
               <Button
                 type="submit"
                 className="w-full"
-                disabled={isLoading || !isPasswordValid(formData.password) || formData.password !== formData.confirmPassword}
+                disabled={isLoading || !isPasswordValid(formData.password) || formData.password !== formData.confirmPassword || !termsAccepted}
                 data-testid="button-signup-submit"
               >
                 {isLoading ? t('common.loading') : t('auth.signUpButton')}
@@ -264,6 +333,13 @@ export default function SignUpPage() {
                 </Link>
               </p>
             </form>
+
+            <TermsModal
+              open={termsModalOpen}
+              onOpenChange={setTermsModalOpen}
+              onScrolledToBottom={() => setHasScrolledToBottom(true)}
+              hasScrolledToBottom={hasScrolledToBottom}
+            />
 
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">{t('auth.hasAccount')} </span>

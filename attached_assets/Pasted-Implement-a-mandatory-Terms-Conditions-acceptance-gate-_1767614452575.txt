@@ -1,0 +1,87 @@
+Implement a mandatory “Terms & Conditions” acceptance gate during Sign Up (for BOTH skill_giver and skill_searcher) in my Sinopia React + TypeScript app (wouter + EN/DE i18n).
+FRONTEND ONLY. No backend required. No hardcoded strings in JSX—use i18n keys for EN/DE.
+
+====================================================
+1) Add a Terms & Conditions modal with scroll-to-enable checkbox
+====================================================
+1.1) On the Sign Up page, add a checkbox section:
+- Label (EN): “I have read and agree to the Terms & Conditions”
+- Label (DE): “Ich habe die Nutzungsbedingungen gelesen und stimme ihnen zu”
+
+1.2) The user MUST open the Terms modal and SCROLL to the bottom before they are allowed to check the box.
+- The checkbox is disabled until the modal is opened and scrolled to the bottom.
+- After scroll-to-bottom is detected, enable the checkbox.
+- If the user closes the modal without reaching bottom, checkbox stays disabled.
+
+1.3) Provide a “View Terms” link/button next to the checkbox that opens the modal.
+
+1.4) Modal content must be bilingual:
+- Show the English terms when app language is EN.
+- Show the German terms when app language is DE.
+
+1.5) UI details:
+- Use existing UI components (Dialog/Modal, Button, Checkbox) consistent with the project.
+- Inside the modal: a scrollable container with fixed height (e.g., max-h-[60vh]) and overflow-y-auto.
+- Detect scroll bottom reliably:
+  scrolledToBottom = scrollTop + clientHeight >= scrollHeight - 5
+
+====================================================
+2) Block account creation until accepted
+====================================================
+2.1) Disable the “Create Account” submit button until:
+- The user has scrolled to the bottom of the terms modal
+AND
+- The user has checked the “agree” checkbox
+
+2.2) If user tries to submit without acceptance (edge cases), show a toast error (EN/DE):
+EN: “Please read and accept the Terms & Conditions to continue.”
+DE: “Bitte lesen und akzeptieren Sie die Nutzungsbedingungen, um fortzufahren.”
+
+2.3) Persist acceptance locally:
+- Save in localStorage a boolean like: sinopia_terms_accepted = true
+- Also store a timestamp: sinopia_terms_accepted_at
+- On next visit, if accepted exists, keep the checkbox enabled and checked (optional but preferred).
+
+====================================================
+3) Create a basic Terms & Conditions page + link it
+====================================================
+3.1) Create a new route/page:
+- /terms
+3.2) Put a placeholder Terms & Conditions text (professional but simple) in BOTH languages.
+- Use headings + short paragraphs.
+- I will edit later, so keep it clean and easy to replace.
+
+3.3) In the modal, include a small link “Open full Terms page” that routes to /terms.
+
+====================================================
+4) Provide placeholder Terms content (EN + DE)
+====================================================
+Use the following temporary structure (you can write the text yourself, keep it short and professional):
+Sections:
+- 1. Scope
+- 2. User Accounts
+- 3. Use of the Platform
+- 4. User Content
+- 5. Privacy
+- 6. Payments (placeholder)
+- 7. Disclaimer
+- 8. Governing Law
+- 9. Contact
+
+Make sure the German version is natural and professional.
+
+====================================================
+5) i18n (strict)
+====================================================
+- Add translation keys for all new UI text:
+  “View Terms”, checkbox label, modal buttons, error toast, headings.
+- Ensure the terms modal content switches EN/DE based on language.
+
+====================================================
+6) Final verification
+====================================================
+- User cannot create account unless:
+  open modal → scroll to bottom → checkbox becomes enabled → check it → submit enabled.
+- Works for both roles.
+- /terms page exists with placeholder EN/DE text.
+- No TypeScript/build errors.
