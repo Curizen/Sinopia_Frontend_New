@@ -2,7 +2,7 @@ import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { useI18n } from '@/i18n';
-import heroImage from '@assets/generated_images/team_collaboration_coworking_hero.png';
+import heroImage from '@assets/sinopia_herosection_1767790544247.jpeg';
 
 export function HeroSection() {
   const { t } = useI18n();
