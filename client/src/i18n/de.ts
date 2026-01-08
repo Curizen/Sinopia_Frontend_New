@@ -857,10 +857,13 @@ export const de = {
     descriptionLabel: "Beschreibung",
     descriptionPlaceholder:
       "Beschreiben Sie Ihre Aufgabe im Detail. Wie ist die aktuelle Situation? Welche Herausforderungen gibt es?",
-    objectiveLabel: "Ziel",
+    objectiveLabel: "Ziele",
     objectivePlaceholder:
       "Was möchten Sie erreichen? Was ist das gewünschte Ergebnis?",
     objective: "Ziel",
+    addObjective: "Ziel hinzufügen",
+    removeObjective: "Entfernen",
+    atLeastOneObjective: "Bitte fügen Sie mindestens ein Ziel hinzu.",
     createButton: "Aufgabe erstellen",
     created: "Aufgabe erstellt!",
     createdDesc: "Ihre Aufgabe wurde erfolgreich veröffentlicht.",

@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useI18n } from '@/i18n';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Plus, X } from 'lucide-react';
 
 export default function AddProjectPage() {
   const { t } = useI18n();
@@ -17,16 +17,36 @@ export default function AddProjectPage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    objective: '',
-  });
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [objectives, setObjectives] = useState<string[]>(['']);
+
+  const addObjective = () => {
+    setObjectives([...objectives, '']);
+  };
+
+  const removeObjective = (index: number) => {
+    if (objectives.length > 1) {
+      setObjectives(objectives.filter((_, i) => i !== index));
+    }
+  };
+
+  const updateObjective = (index: number, value: string) => {
+    const newObjectives = [...objectives];
+    newObjectives[index] = value;
+    setObjectives(newObjectives);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title.trim() || !formData.description.trim() || !formData.objective.trim()) {
+    const trimmedTitle = title.trim();
+    const trimmedDescription = description.trim();
+    const filteredObjectives = objectives
+      .map(obj => obj.trim())
+      .filter(obj => obj.length > 0);
+
+    if (!trimmedTitle || !trimmedDescription) {
       toast({
         title: t('common.error'),
         description: t('useCases.allFieldsRequired'),
@@ -34,15 +54,34 @@ export default function AddProjectPage() {
       });
       return;
     }
+
+    if (filteredObjectives.length === 0) {
+      toast({
+        title: t('common.error'),
+        description: t('useCases.atLeastOneObjective'),
+        variant: 'destructive',
+      });
+      return;
+    }
     
     setIsLoading(true);
+
+    const payload = {
+      use_case: {
+        title: trimmedTitle,
+        description: trimmedDescription,
+        objectives: filteredObjectives,
+      }
+    };
+
+    console.log('Submitting payload:', JSON.stringify(payload, null, 2));
 
     // todo: remove mock functionality
     await new Promise(resolve => setTimeout(resolve, 500));
 
     addProject({
-      title: formData.title,
-      description: `${formData.description}\n\n${t('useCases.objective')}: ${formData.objective}`,
+      title: trimmedTitle,
+      description: `${trimmedDescription}\n\n${t('useCases.objective')}: ${filteredObjectives.join(', ')}`,
       status: 'open',
       budget: 0,
       deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -86,8 +125,8 @@ export default function AddProjectPage() {
                 <Input
                   id="title"
                   placeholder={t('useCases.titlePlaceholder')}
-                  value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                   required
                   data-testid="input-usecase-title"
                 />
@@ -99,24 +138,52 @@ export default function AddProjectPage() {
                   id="description"
                   placeholder={t('useCases.descriptionPlaceholder')}
                   rows={5}
-                  value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                   required
                   data-testid="input-usecase-description"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="objective">{t('useCases.objectiveLabel')}</Label>
-                <Textarea
-                  id="objective"
-                  placeholder={t('useCases.objectivePlaceholder')}
-                  rows={3}
-                  value={formData.objective}
-                  onChange={(e) => setFormData(prev => ({ ...prev, objective: e.target.value }))}
-                  required
-                  data-testid="input-usecase-objective"
-                />
+              <div className="space-y-3">
+                <Label>{t('useCases.objectiveLabel')}</Label>
+                <div className="space-y-3">
+                  {objectives.map((objective, index) => (
+                    <div key={index} className="flex gap-2">
+                      <Input
+                        placeholder={t('useCases.objectivePlaceholder')}
+                        value={objective}
+                        onChange={(e) => updateObjective(index, e.target.value)}
+                        className="flex-1"
+                        data-testid={`input-usecase-objective-${index}`}
+                      />
+                      {objectives.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeObjective(index)}
+                          className="shrink-0 text-muted-foreground hover:text-destructive"
+                          data-testid={`button-remove-objective-${index}`}
+                        >
+                          <X className="w-4 h-4" />
+                          <span className="sr-only">{t('useCases.removeObjective')}</span>
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addObjective}
+                  className="mt-2"
+                  data-testid="button-add-objective"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  {t('useCases.addObjective')}
+                </Button>
               </div>
 
               <div className="flex gap-4 pt-4">

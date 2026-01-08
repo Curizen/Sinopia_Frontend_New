@@ -840,10 +840,13 @@ export const en = {
     descriptionLabel: "Description",
     descriptionPlaceholder:
       "Describe your use case in detail. What is the current situation? What challenges are you facing?",
-    objectiveLabel: "Objective",
+    objectiveLabel: "Objectives",
     objectivePlaceholder:
       "What do you want to achieve? What is the desired outcome?",
     objective: "Objective",
+    addObjective: "Add objective",
+    removeObjective: "Remove",
+    atLeastOneObjective: "Please add at least one objective.",
     createButton: "Create Use Case",
     created: "Use Case created!",
     createdDesc: "Your use case has been posted successfully.",
