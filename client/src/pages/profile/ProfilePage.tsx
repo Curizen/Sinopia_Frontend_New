@@ -30,10 +30,6 @@ import {
   Building2,
   Linkedin,
   Code,
-  Palette,
-  Database,
-  Cloud,
-  Megaphone,
   FolderKanban,
   Trash2,
 } from 'lucide-react';
@@ -41,13 +37,11 @@ import { UnderDevelopment } from '@/components/common/UnderDevelopment';
 
 type EditingSection = 'about' | 'skills' | 'experience' | 'education' | 'certifications' | 'company' | 'contact' | 'projects' | null;
 type SkillLevel = 'junior' | 'intermediate' | 'advance' | 'expert';
-type SkillIconKey = 'code' | 'design' | 'database' | 'cloud' | 'marketing' | 'pm';
 
 interface Skill {
   id: string;
   name: string;
   level: SkillLevel;
-  icon: SkillIconKey;
 }
 
 interface Experience {
@@ -85,11 +79,12 @@ interface PersonalProject {
 
 interface SkillGiverProfile {
   bio: string;
-  title: string;
-  location: string;
-  availability: string;
+  jobTitle: string;
+  address: string;
+  email: string;
   phone: string;
   linkedinUrl: string;
+  availability: string;
   skills: Skill[];
   experience: Experience[];
   education: Education[];
@@ -112,24 +107,16 @@ interface SkillSearcherProfile {
 
 const STORAGE_KEY = 'sinopia_skill_giver_profile';
 
-const skillIcons: Record<SkillIconKey, React.ComponentType<{ className?: string }>> = {
-  code: Code,
-  design: Palette,
-  database: Database,
-  cloud: Cloud,
-  marketing: Megaphone,
-  pm: FolderKanban,
-};
-
 const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
 
 const createEmptySkillGiverProfile = (): SkillGiverProfile => ({
   bio: '',
-  title: '',
-  location: '',
-  availability: '',
+  jobTitle: '',
+  address: '',
+  email: '',
   phone: '',
   linkedinUrl: '',
+  availability: '',
   skills: [],
   experience: [],
   education: [],
@@ -145,12 +132,17 @@ const loadGiverProfileFromStorage = (): SkillGiverProfile => {
       const parsed = JSON.parse(stored);
       return {
         bio: parsed.bio ?? defaults.bio,
-        title: parsed.title ?? defaults.title,
-        location: parsed.location ?? defaults.location,
-        availability: parsed.availability ?? defaults.availability,
+        jobTitle: parsed.jobTitle ?? parsed.title ?? defaults.jobTitle,
+        address: parsed.address ?? parsed.location ?? defaults.address,
+        email: parsed.email ?? defaults.email,
         phone: parsed.phone ?? defaults.phone,
         linkedinUrl: parsed.linkedinUrl ?? defaults.linkedinUrl,
-        skills: Array.isArray(parsed.skills) ? parsed.skills : defaults.skills,
+        availability: parsed.availability ?? defaults.availability,
+        skills: Array.isArray(parsed.skills) ? parsed.skills.map((s: { id?: string; name?: string; level?: SkillLevel; icon?: string }) => ({
+          id: s.id || generateId(),
+          name: s.name || '',
+          level: s.level || 'intermediate',
+        })).filter(s => s.name) : defaults.skills,
         experience: Array.isArray(parsed.experience) ? parsed.experience : defaults.experience,
         education: Array.isArray(parsed.education) ? parsed.education : defaults.education,
         certifications: Array.isArray(parsed.certifications) ? parsed.certifications : defaults.certifications,
@@ -195,7 +187,13 @@ export default function ProfilePage() {
   const [projDialog, setProjDialog] = useState<{ open: boolean; proj: PersonalProject | null }>({ open: false, proj: null });
   const [contactDialog, setContactDialog] = useState(false);
 
-  const [contactForm, setContactForm] = useState({ phone: '', linkedinUrl: '' });
+  const [contactForm, setContactForm] = useState({ 
+    jobTitle: '', 
+    address: '', 
+    email: '', 
+    phone: '', 
+    linkedinUrl: '' 
+  });
 
   useEffect(() => {
     if (isSkillGiver) {
@@ -268,18 +266,6 @@ export default function ProfilePage() {
       expert: t('profile.levelExpert'),
     };
     return labels[level];
-  };
-
-  const getIconLabel = (icon: SkillIconKey) => {
-    const labels: Record<SkillIconKey, string> = {
-      code: t('profile.iconCode'),
-      design: t('profile.iconDesign'),
-      database: t('profile.iconDatabase'),
-      cloud: t('profile.iconCloud'),
-      marketing: t('profile.iconMarketing'),
-      pm: t('profile.iconPM'),
-    };
-    return labels[icon];
   };
 
   const handleSaveSkill = (skill: Skill) => {
@@ -421,6 +407,9 @@ export default function ProfilePage() {
     const normalizedUrl = normalizeLinkedInUrl(contactForm.linkedinUrl);
     setGiverProfile(prev => ({
       ...prev,
+      jobTitle: contactForm.jobTitle.trim(),
+      address: contactForm.address.trim(),
+      email: contactForm.email.trim(),
       phone: contactForm.phone.trim(),
       linkedinUrl: normalizedUrl,
     }));
@@ -429,7 +418,13 @@ export default function ProfilePage() {
   };
 
   const openContactDialog = () => {
-    setContactForm({ phone: giverProfile.phone, linkedinUrl: giverProfile.linkedinUrl });
+    setContactForm({ 
+      jobTitle: giverProfile.jobTitle, 
+      address: giverProfile.address, 
+      email: giverProfile.email || user?.email || '',
+      phone: giverProfile.phone, 
+      linkedinUrl: giverProfile.linkedinUrl 
+    });
     setContactDialog(true);
   };
 
@@ -457,7 +452,7 @@ export default function ProfilePage() {
                 {user?.firstName} {user?.lastName}
               </h2>
               {isSkillGiver && (
-                <p className="text-muted-foreground">{displayValue(giverProfile.title)}</p>
+                <p className="text-muted-foreground" data-testid="text-profile-job-title">{displayValue(giverProfile.jobTitle)}</p>
               )}
               {!isSkillGiver && (
                 <p className="text-muted-foreground">{displayValue(searcherProfile.companyName)}</p>
@@ -465,28 +460,15 @@ export default function ProfilePage() {
 
               <div className="mt-6 space-y-3 text-left">
                 {isSkillGiver && (
-                  <div className="flex items-center gap-3 text-sm">
-                    <MapPin className="w-4 h-4 text-muted-foreground" />
-                    <span>{displayValue(giverProfile.location)}</span>
-                  </div>
-                )}
-                {!isSkillGiver && (
-                  <div className="flex items-center gap-3 text-sm">
-                    <MapPin className="w-4 h-4 text-muted-foreground" />
-                    <span data-testid="text-profile-location">
-                      {user?.city && user?.country
-                        ? `${user.city}, ${user.country}`
-                        : t('profile.locationNotSet')}
-                    </span>
-                  </div>
-                )}
-                <div className="flex items-center gap-3 text-sm">
-                  <Mail className="w-4 h-4 text-muted-foreground" />
-                  <span>{user?.email || t('emptyState.notSet')}</span>
-                </div>
-
-                {isSkillGiver && (
                   <>
+                    <div className="flex items-center gap-3 text-sm">
+                      <MapPin className="w-4 h-4 text-muted-foreground" />
+                      <span data-testid="text-profile-address">{displayValue(giverProfile.address)}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-sm">
+                      <Mail className="w-4 h-4 text-muted-foreground" />
+                      <span data-testid="text-profile-email">{displayValue(giverProfile.email) !== t('emptyState.notSet') ? giverProfile.email : (user?.email || t('emptyState.notSet'))}</span>
+                    </div>
                     <div className="flex items-center gap-3 text-sm">
                       <Phone className="w-4 h-4 text-muted-foreground" />
                       <span data-testid="text-profile-phone">{displayValue(giverProfile.phone)}</span>
@@ -522,6 +504,18 @@ export default function ProfilePage() {
 
                 {!isSkillGiver && (
                   <>
+                    <div className="flex items-center gap-3 text-sm">
+                      <MapPin className="w-4 h-4 text-muted-foreground" />
+                      <span data-testid="text-profile-location">
+                        {user?.city && user?.country
+                          ? `${user.city}, ${user.country}`
+                          : t('profile.locationNotSet')}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3 text-sm">
+                      <Mail className="w-4 h-4 text-muted-foreground" />
+                      <span>{user?.email || t('emptyState.notSet')}</span>
+                    </div>
                     <div className="flex items-center gap-3 text-sm">
                       <Phone className="w-4 h-4 text-muted-foreground" />
                       <span>{displayValue(searcherProfile.contactPhone)}</span>
@@ -699,7 +693,10 @@ export default function ProfilePage() {
             {isSkillGiver && (
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
-                  <CardTitle>{t('profile.skills')}</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Code className="w-5 h-5" />
+                    {t('profile.skills')}
+                  </CardTitle>
                   <Button
                     size="sm"
                     variant="outline"
@@ -717,47 +714,41 @@ export default function ProfilePage() {
                     </p>
                   ) : (
                     <div className="space-y-2">
-                      {giverProfile.skills.map((skill) => {
-                        const IconComponent = skillIcons[skill.icon];
-                        return (
-                          <div
-                            key={skill.id}
-                            className="flex items-center justify-between gap-3 p-3 rounded-lg border border-border"
-                            data-testid={`skill-item-${skill.id}`}
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
-                                <IconComponent className="w-4 h-4 text-primary" />
-                              </div>
-                              <div>
-                                <p className="font-medium">{skill.name}</p>
-                                <Badge variant="secondary" className="text-xs">
-                                  {getLevelLabel(skill.level)}
-                                </Badge>
-                              </div>
-                            </div>
-                            <div className="flex gap-1">
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => setSkillDialog({ open: true, skill })}
-                                data-testid={`button-edit-skill-${skill.id}`}
-                              >
-                                <Edit2 className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => handleDeleteSkill(skill.id)}
-                                className="text-destructive hover:text-destructive"
-                                data-testid={`button-delete-skill-${skill.id}`}
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
+                      {giverProfile.skills.map((skill) => (
+                        <div
+                          key={skill.id}
+                          className="flex items-center justify-between gap-3 p-3 rounded-lg border border-border"
+                          data-testid={`skill-item-${skill.id}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div>
+                              <p className="font-medium">{skill.name}</p>
+                              <Badge variant="secondary" className="text-xs">
+                                {getLevelLabel(skill.level)}
+                              </Badge>
                             </div>
                           </div>
-                        );
-                      })}
+                          <div className="flex gap-1">
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => setSkillDialog({ open: true, skill })}
+                              data-testid={`button-edit-skill-${skill.id}`}
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => handleDeleteSkill(skill.id)}
+                              className="text-destructive hover:text-destructive"
+                              data-testid={`button-delete-skill-${skill.id}`}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </CardContent>
@@ -1037,7 +1028,6 @@ export default function ProfilePage() {
         onSave={handleSaveSkill}
         t={t}
         getLevelLabel={getLevelLabel}
-        getIconLabel={getIconLabel}
       />
 
       <ExperienceDialog
@@ -1078,8 +1068,8 @@ export default function ProfilePage() {
 function ContactDialog({ open, onOpenChange, form, setForm, onSave, t }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  form: { phone: string; linkedinUrl: string };
-  setForm: (form: { phone: string; linkedinUrl: string }) => void;
+  form: { jobTitle: string; address: string; email: string; phone: string; linkedinUrl: string };
+  setForm: (form: { jobTitle: string; address: string; email: string; phone: string; linkedinUrl: string }) => void;
   onSave: () => void;
   t: (key: string) => string;
 }) {
@@ -1090,6 +1080,34 @@ function ContactDialog({ open, onOpenChange, form, setForm, onSave, t }: {
           <DialogTitle>{t('profile.editContactInfo')}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>{t('profile.jobTitle')}</Label>
+            <Input
+              value={form.jobTitle}
+              onChange={(e) => setForm({ ...form, jobTitle: e.target.value })}
+              placeholder={t('profile.jobTitlePlaceholder')}
+              data-testid="input-contact-job-title"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>{t('profile.address')}</Label>
+            <Input
+              value={form.address}
+              onChange={(e) => setForm({ ...form, address: e.target.value })}
+              placeholder={t('profile.addressPlaceholder')}
+              data-testid="input-contact-address"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>{t('profile.email')}</Label>
+            <Input
+              type="email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              placeholder={t('profile.emailPlaceholder')}
+              data-testid="input-contact-email"
+            />
+          </div>
           <div className="space-y-2">
             <Label>{t('profile.phone')}</Label>
             <Input
@@ -1118,22 +1136,21 @@ function ContactDialog({ open, onOpenChange, form, setForm, onSave, t }: {
   );
 }
 
-function SkillDialog({ open, onOpenChange, skill, onSave, t, getLevelLabel, getIconLabel }: {
+function SkillDialog({ open, onOpenChange, skill, onSave, t, getLevelLabel }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   skill: Skill | null;
   onSave: (skill: Skill) => void;
   t: (key: string) => string;
   getLevelLabel: (level: SkillLevel) => string;
-  getIconLabel: (icon: SkillIconKey) => string;
 }) {
-  const [form, setForm] = useState<Skill>({ id: '', name: '', level: 'intermediate', icon: 'code' });
+  const [form, setForm] = useState<Skill>({ id: '', name: '', level: 'intermediate' });
 
   useEffect(() => {
     if (skill) {
       setForm(skill);
     } else {
-      setForm({ id: '', name: '', level: 'intermediate', icon: 'code' });
+      setForm({ id: '', name: '', level: 'intermediate' });
     }
   }, [skill, open]);
 
@@ -1164,22 +1181,6 @@ function SkillDialog({ open, onOpenChange, skill, onSave, t, getLevelLabel, getI
                 <SelectItem value="intermediate">{getLevelLabel('intermediate')}</SelectItem>
                 <SelectItem value="advance">{getLevelLabel('advance')}</SelectItem>
                 <SelectItem value="expert">{getLevelLabel('expert')}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label>{t('profile.skillIcon')}</Label>
-            <Select value={form.icon} onValueChange={(v) => setForm({ ...form, icon: v as SkillIconKey })}>
-              <SelectTrigger data-testid="select-skill-icon">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="code">{getIconLabel('code')}</SelectItem>
-                <SelectItem value="design">{getIconLabel('design')}</SelectItem>
-                <SelectItem value="database">{getIconLabel('database')}</SelectItem>
-                <SelectItem value="cloud">{getIconLabel('cloud')}</SelectItem>
-                <SelectItem value="marketing">{getIconLabel('marketing')}</SelectItem>
-                <SelectItem value="pm">{getIconLabel('pm')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
