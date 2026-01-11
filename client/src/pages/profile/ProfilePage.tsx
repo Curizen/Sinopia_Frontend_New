@@ -123,6 +123,46 @@ const skillIcons: Record<SkillIconKey, React.ComponentType<{ className?: string 
 
 const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
 
+const createEmptySkillGiverProfile = (): SkillGiverProfile => ({
+  bio: '',
+  title: '',
+  location: '',
+  availability: '',
+  phone: '',
+  linkedinUrl: '',
+  skills: [],
+  experience: [],
+  education: [],
+  certifications: [],
+  personalProjects: [],
+});
+
+const loadGiverProfileFromStorage = (): SkillGiverProfile => {
+  const defaults = createEmptySkillGiverProfile();
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return {
+        bio: parsed.bio ?? defaults.bio,
+        title: parsed.title ?? defaults.title,
+        location: parsed.location ?? defaults.location,
+        availability: parsed.availability ?? defaults.availability,
+        phone: parsed.phone ?? defaults.phone,
+        linkedinUrl: parsed.linkedinUrl ?? defaults.linkedinUrl,
+        skills: Array.isArray(parsed.skills) ? parsed.skills : defaults.skills,
+        experience: Array.isArray(parsed.experience) ? parsed.experience : defaults.experience,
+        education: Array.isArray(parsed.education) ? parsed.education : defaults.education,
+        certifications: Array.isArray(parsed.certifications) ? parsed.certifications : defaults.certifications,
+        personalProjects: Array.isArray(parsed.personalProjects) ? parsed.personalProjects : defaults.personalProjects,
+      };
+    }
+  } catch (e) {
+    console.error('Failed to load profile from localStorage:', e);
+  }
+  return defaults;
+};
+
 export default function ProfilePage() {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -131,21 +171,7 @@ export default function ProfilePage() {
 
   const isSkillGiver = user?.role === 'skill_giver';
 
-  const emptySkillGiverProfile: SkillGiverProfile = {
-    bio: '',
-    title: '',
-    location: '',
-    availability: '',
-    phone: '',
-    linkedinUrl: '',
-    skills: [],
-    experience: [],
-    education: [],
-    certifications: [],
-    personalProjects: [],
-  };
-
-  const emptySkillSearcherProfile: SkillSearcherProfile = {
+  const createEmptySearcherProfile = (): SkillSearcherProfile => ({
     companyName: user?.companyName || '',
     industry: user?.industry || '',
     website: '',
@@ -156,22 +182,10 @@ export default function ProfilePage() {
     city: user?.city || '',
     country: user?.country || '',
     companySize: user?.companySize || '',
-  };
+  });
 
-  const loadGiverProfile = (): SkillGiverProfile => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        return { ...emptySkillGiverProfile, ...JSON.parse(stored) };
-      }
-    } catch (e) {
-      console.error('Failed to load profile:', e);
-    }
-    return emptySkillGiverProfile;
-  };
-
-  const [giverProfile, setGiverProfile] = useState<SkillGiverProfile>(loadGiverProfile);
-  const [searcherProfile, setSearcherProfile] = useState<SkillSearcherProfile>(emptySkillSearcherProfile);
+  const [giverProfile, setGiverProfile] = useState<SkillGiverProfile>(loadGiverProfileFromStorage);
+  const [searcherProfile, setSearcherProfile] = useState<SkillSearcherProfile>(createEmptySearcherProfile);
   const [editBuffer, setEditBuffer] = useState<SkillGiverProfile | SkillSearcherProfile | null>(null);
 
   const [skillDialog, setSkillDialog] = useState<{ open: boolean; skill: Skill | null }>({ open: false, skill: null });
@@ -388,15 +402,27 @@ export default function ProfilePage() {
     toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
   };
 
-  const handleSaveContact = () => {
-    let url = contactForm.linkedinUrl.trim();
-    if (url && !url.startsWith('http')) {
-      url = 'https://' + url;
+  const normalizeLinkedInUrl = (url: string): string => {
+    url = url.trim();
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
     }
+    if (url.startsWith('linkedin.com') || url.startsWith('www.linkedin.com')) {
+      return 'https://' + url;
+    }
+    if (url.includes('linkedin.com')) {
+      return url;
+    }
+    return 'https://linkedin.com/in/' + url;
+  };
+
+  const handleSaveContact = () => {
+    const normalizedUrl = normalizeLinkedInUrl(contactForm.linkedinUrl);
     setGiverProfile(prev => ({
       ...prev,
       phone: contactForm.phone.trim(),
-      linkedinUrl: url,
+      linkedinUrl: normalizedUrl,
     }));
     setContactDialog(false);
     toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
