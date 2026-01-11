@@ -1,0 +1,132 @@
+Update the Skill Giver Profile page to support detailed editable sections + extra fields in the left summary.
+
+SCOPE
+- Only for Skill Giver profile.
+- Keep current UI style/components (shadcn/ui: Card, Input, Label, Button, Select, etc.).
+- Save data locally (same pattern used in the app: mock/localStorage). No backend needed.
+- All new labels/placeholders/buttons must be translated EN + DE and use the existing i18n system.
+- Ensure no fixed/mock “example data” is shown by default (empty state until user adds items).
+
+1) DATA MODEL (types)
+Extend the Skill Giver profile type (where profile data is stored) to include:
+
+A) Summary (left side):
+- phone: string
+- linkedinUrl: string
+
+B) Skills:
+skills: Array<{
+  name: string;
+  level: "junior" | "intermediate" | "advance" | "expert";
+  icon?: string; // store icon key (e.g. "code", "design", "database") or lucide name
+}>
+
+C) Experience:
+experience: Array<{
+  title: string;
+  company: string;
+  startDate: string; // YYYY-MM
+  endDate: string;   // YYYY-MM or empty for “Present”
+  details: string;
+}>
+
+D) Education:
+education: Array<{
+  degree: string;
+  institution: string;
+  graduationYear: string; // YYYY
+  gpa: string;            // allow decimals and text
+}>
+
+E) Certifications:
+certifications: Array<{
+  name: string;
+  authority: string;
+  date: string; // YYYY-MM
+}>
+
+F) Personal Projects:
+personalProjects: Array<{
+  name: string;
+  description: string;
+  technologies: string; // comma separated or tag-like
+  duration: string;     // e.g. "3 months" or "2024-01 to 2024-03"
+}>
+
+2) UI CHANGES (Profile page)
+A) Left Summary card:
+- Add editable fields for Phone Number + LinkedIn URL.
+- Display them under email with icons.
+- Validate LinkedIn URL lightly (must start with http(s):// or allow "linkedin.com/..." and normalize).
+
+B) Skills section:
+- Add “Add Skill” action opens edit form/modal/drawer (use existing pattern).
+- Each skill item row shows:
+  - Skill icon
+  - Skill name
+  - Level badge/text
+- In edit form for each skill:
+  - Skill name input
+  - Level dropdown (Select) with: Junior / Intermediate / Advance / Expert
+  - Icon picker:
+    - A simple dropdown with a few icon options (Code, Design, Database, Cloud, Marketing, PM) mapped to lucide icons.
+- Allow add/edit/delete.
+
+C) Experience section:
+- Add “Add Experience”
+- Form fields:
+  - Title
+  - Company
+  - Start Date (month input)
+  - End Date (month input) + checkbox “Present” (if checked, endDate empty)
+  - Details (textarea)
+- List items show title + company + date range.
+
+D) Education section:
+- Add “Add Education”
+- Form fields:
+  - Degree
+  - Institution
+  - Graduation Year (YYYY)
+  - GPA
+- List items show degree + institution + year.
+
+E) Certifications section:
+- Add “Add Certification”
+- Form fields:
+  - Certification name
+  - Authority
+  - Date (month input)
+- List items show name + authority + date.
+
+F) Personal Projects section:
+- Create new section “Personal Projects” (same layout as others) with edit icon.
+- Form fields:
+  - Project Name
+  - Description (textarea)
+  - Technologies (Input; comma-separated) OR chips if easy
+  - Duration (Input)
+- List items show name + technologies + duration.
+
+3) STORAGE / STATE
+- Store Skill Giver profile edits in localStorage (same storage key scheme used elsewhere).
+- On refresh, data persists.
+- When user is not skill_giver, keep current behavior (do not show these extra fields).
+
+4) i18n (IMPORTANT)
+- Add EN and DE keys for:
+  - Phone Number, LinkedIn URL
+  - Skills / Add Skill / Skill Level / Icon / etc.
+  - Junior, Intermediate, Advance, Expert
+  - Experience fields (Title, Company, Start Date, End Date, Present, Details)
+  - Education fields (Degree, Institution, Graduation Year, GPA)
+  - Certifications fields (Certification Name, Authority, Date)
+  - Personal Projects fields (Project Name, Description, Technologies, Duration)
+  - Empty states (“No skills added”, “No experience added”, etc.) in EN+DE
+- Use translation keys everywhere (no hardcoded strings).
+
+5) ACCEPTANCE CHECKLIST
+- Skill Giver can add/edit/remove: Skills (with level dropdown + icon), Experience, Education, Certifications, Personal Projects.
+- Left summary shows Phone + LinkedIn (editable) and persists.
+- Works in EN and DE (all new text fully translated).
+- No TypeScript errors, builds successfully, responsive UI.
