@@ -467,6 +467,13 @@ export const en = {
     projectDuration: "Duration",
     projectDurationPlaceholder: "e.g., 3 months or Jan 2024 - Mar 2024",
     editContactInfo: "Edit Contact Info",
+    editCompanyInfo: "Edit Company Info",
+    websitePlaceholder: "https://www.example.com",
+    companyNamePlaceholder: "Your company name",
+    cityPlaceholder: "City",
+    countryPlaceholder: "Country",
+    companySizePlaceholder: "e.g., 10-50 employees",
+    invalidWebsiteUrl: "Please enter a valid website URL",
   },
   footer: {
     skillGiver: "Skill Giver",

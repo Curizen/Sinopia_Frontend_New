@@ -106,8 +106,26 @@ interface SkillSearcherProfile {
 }
 
 const STORAGE_KEY = 'sinopia_skill_giver_profile';
+const SEARCHER_STORAGE_KEY = 'sinopia_skill_searcher_profile';
 
 const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
+
+const isValidUrl = (url: string): boolean => {
+  if (!url.trim()) return true;
+  try {
+    const urlToTest = url.startsWith('http') ? url : `https://${url}`;
+    new URL(urlToTest);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const normalizeUrl = (url: string): string => {
+  if (!url.trim()) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  return `https://${url}`;
+};
 
 const createEmptySkillGiverProfile = (): SkillGiverProfile => ({
   bio: '',
@@ -142,7 +160,7 @@ const loadGiverProfileFromStorage = (): SkillGiverProfile => {
           id: s.id || generateId(),
           name: s.name || '',
           level: s.level || 'intermediate',
-        })).filter(s => s.name) : defaults.skills,
+        })).filter((s: Skill) => s.name) : defaults.skills,
         experience: Array.isArray(parsed.experience) ? parsed.experience : defaults.experience,
         education: Array.isArray(parsed.education) ? parsed.education : defaults.education,
         certifications: Array.isArray(parsed.certifications) ? parsed.certifications : defaults.certifications,
@@ -176,8 +194,33 @@ export default function ProfilePage() {
     companySize: user?.companySize || '',
   });
 
+  const loadSearcherProfileFromStorage = (): SkillSearcherProfile => {
+    const defaults = createEmptySearcherProfile();
+    try {
+      const stored = localStorage.getItem(SEARCHER_STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        return {
+          companyName: parsed.companyName ?? defaults.companyName,
+          industry: parsed.industry ?? defaults.industry,
+          website: parsed.website ?? defaults.website,
+          bio: parsed.bio ?? defaults.bio,
+          contactEmail: parsed.contactEmail ?? defaults.contactEmail,
+          contactPhone: parsed.contactPhone ?? defaults.contactPhone,
+          location: parsed.location ?? defaults.location,
+          city: parsed.city ?? defaults.city,
+          country: parsed.country ?? defaults.country,
+          companySize: parsed.companySize ?? defaults.companySize,
+        };
+      }
+    } catch (e) {
+      console.error('Failed to load searcher profile from localStorage:', e);
+    }
+    return defaults;
+  };
+
   const [giverProfile, setGiverProfile] = useState<SkillGiverProfile>(loadGiverProfileFromStorage);
-  const [searcherProfile, setSearcherProfile] = useState<SkillSearcherProfile>(createEmptySearcherProfile);
+  const [searcherProfile, setSearcherProfile] = useState<SkillSearcherProfile>(() => loadSearcherProfileFromStorage());
   const [editBuffer, setEditBuffer] = useState<SkillGiverProfile | SkillSearcherProfile | null>(null);
 
   const [skillDialog, setSkillDialog] = useState<{ open: boolean; skill: Skill | null }>({ open: false, skill: null });
@@ -186,6 +229,7 @@ export default function ProfilePage() {
   const [certDialog, setCertDialog] = useState<{ open: boolean; cert: Certification | null }>({ open: false, cert: null });
   const [projDialog, setProjDialog] = useState<{ open: boolean; proj: PersonalProject | null }>({ open: false, proj: null });
   const [contactDialog, setContactDialog] = useState(false);
+  const [companySummaryDialog, setCompanySummaryDialog] = useState(false);
 
   const [contactForm, setContactForm] = useState({ 
     jobTitle: '', 
@@ -195,11 +239,27 @@ export default function ProfilePage() {
     linkedinUrl: '' 
   });
 
+  const [companySummaryForm, setCompanySummaryForm] = useState({
+    companyName: '',
+    website: '',
+    city: '',
+    country: '',
+    companySize: '',
+    contactEmail: '',
+    contactPhone: '',
+  });
+
   useEffect(() => {
     if (isSkillGiver) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(giverProfile));
     }
   }, [giverProfile, isSkillGiver]);
+
+  useEffect(() => {
+    if (!isSkillGiver) {
+      localStorage.setItem(SEARCHER_STORAGE_KEY, JSON.stringify(searcherProfile));
+    }
+  }, [searcherProfile, isSkillGiver]);
 
   const profile = isSkillGiver ? giverProfile : searcherProfile;
   const setProfile = isSkillGiver
@@ -428,6 +488,38 @@ export default function ProfilePage() {
     setContactDialog(true);
   };
 
+  const openCompanySummaryDialog = () => {
+    setCompanySummaryForm({
+      companyName: searcherProfile.companyName,
+      website: searcherProfile.website,
+      city: searcherProfile.city,
+      country: searcherProfile.country,
+      companySize: searcherProfile.companySize,
+      contactEmail: searcherProfile.contactEmail || user?.email || '',
+      contactPhone: searcherProfile.contactPhone,
+    });
+    setCompanySummaryDialog(true);
+  };
+
+  const handleSaveCompanySummary = () => {
+    if (companySummaryForm.website && !isValidUrl(companySummaryForm.website)) {
+      toast({ title: t('common.error'), description: t('profile.invalidWebsiteUrl'), variant: 'destructive' });
+      return;
+    }
+    setSearcherProfile(prev => ({
+      ...prev,
+      companyName: companySummaryForm.companyName.trim(),
+      website: normalizeUrl(companySummaryForm.website),
+      city: companySummaryForm.city.trim(),
+      country: companySummaryForm.country.trim(),
+      companySize: companySummaryForm.companySize.trim(),
+      contactEmail: companySummaryForm.contactEmail.trim(),
+      contactPhone: companySummaryForm.contactPhone.trim(),
+    }));
+    setCompanySummaryDialog(false);
+    toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -507,27 +599,45 @@ export default function ProfilePage() {
                     <div className="flex items-center gap-3 text-sm">
                       <MapPin className="w-4 h-4 text-muted-foreground" />
                       <span data-testid="text-profile-location">
-                        {user?.city && user?.country
-                          ? `${user.city}, ${user.country}`
+                        {searcherProfile.city && searcherProfile.country
+                          ? `${searcherProfile.city}, ${searcherProfile.country}`
                           : t('profile.locationNotSet')}
                       </span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <Mail className="w-4 h-4 text-muted-foreground" />
-                      <span>{user?.email || t('emptyState.notSet')}</span>
+                      <span data-testid="text-searcher-email">{displayValue(searcherProfile.contactEmail) !== t('emptyState.notSet') ? searcherProfile.contactEmail : (user?.email || t('emptyState.notSet'))}</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <Phone className="w-4 h-4 text-muted-foreground" />
-                      <span>{displayValue(searcherProfile.contactPhone)}</span>
+                      <span data-testid="text-searcher-phone">{displayValue(searcherProfile.contactPhone)}</span>
                     </div>
-                    {searcherProfile.website && (
-                      <div className="flex items-center gap-3 text-sm">
-                        <Globe className="w-4 h-4 text-muted-foreground" />
-                        <a href={searcherProfile.website} className="text-primary hover:underline">
-                          {searcherProfile.website.replace('https://', '')}
+                    <div className="flex items-center gap-3 text-sm">
+                      <Globe className="w-4 h-4 text-muted-foreground" />
+                      {searcherProfile.website ? (
+                        <a 
+                          href={searcherProfile.website} 
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline truncate"
+                          data-testid="link-searcher-website"
+                        >
+                          {searcherProfile.website.replace('https://', '').replace('http://', '')}
                         </a>
-                      </div>
-                    )}
+                      ) : (
+                        <span>{t('emptyState.notSet')}</span>
+                      )}
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full mt-2"
+                      onClick={openCompanySummaryDialog}
+                      data-testid="button-edit-company-summary"
+                    >
+                      <Edit2 className="w-4 h-4 mr-2" />
+                      {t('profile.editCompanyInfo')}
+                    </Button>
                   </>
                 )}
               </div>
@@ -646,6 +756,22 @@ export default function ProfilePage() {
                       <div>
                         <span className="text-muted-foreground">{t('profile.companyName')}: </span>
                         <span className="font-medium">{displayValue(searcherProfile.companyName)}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">{t('profile.website')}: </span>
+                        {searcherProfile.website ? (
+                          <a 
+                            href={searcherProfile.website} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="font-medium text-primary hover:underline"
+                            data-testid="link-company-website"
+                          >
+                            {searcherProfile.website.replace('https://', '').replace('http://', '')}
+                          </a>
+                        ) : (
+                          <span className="font-medium">{t('emptyState.notSet')}</span>
+                        )}
                       </div>
                       <div>
                         <span className="text-muted-foreground">{t('profile.contactEmail')}: </span>
@@ -1059,6 +1185,15 @@ export default function ProfilePage() {
         onOpenChange={(open) => setProjDialog({ open, proj: null })}
         proj={projDialog.proj}
         onSave={handleSaveProject}
+        t={t}
+      />
+
+      <CompanySummaryDialog
+        open={companySummaryDialog}
+        onOpenChange={setCompanySummaryDialog}
+        form={companySummaryForm}
+        setForm={setCompanySummaryForm}
+        onSave={handleSaveCompanySummary}
         t={t}
       />
     </DashboardLayout>
@@ -1484,6 +1619,98 @@ function ProjectDialog({ open, onOpenChange, proj, onSave, t }: {
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>{t('common.cancel')}</Button>
           <Button onClick={() => onSave(form)} disabled={!form.name.trim()}>{t('common.save')}</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function CompanySummaryDialog({ open, onOpenChange, form, setForm, onSave, t }: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  form: { companyName: string; website: string; city: string; country: string; companySize: string; contactEmail: string; contactPhone: string };
+  setForm: (form: { companyName: string; website: string; city: string; country: string; companySize: string; contactEmail: string; contactPhone: string }) => void;
+  onSave: () => void;
+  t: (key: string) => string;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>{t('profile.editCompanyInfo')}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>{t('profile.companyName')}</Label>
+            <Input
+              value={form.companyName}
+              onChange={(e) => setForm({ ...form, companyName: e.target.value })}
+              placeholder={t('profile.companyNamePlaceholder')}
+              data-testid="input-summary-company-name"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>{t('profile.website')}</Label>
+            <Input
+              type="url"
+              value={form.website}
+              onChange={(e) => setForm({ ...form, website: e.target.value })}
+              placeholder={t('profile.websitePlaceholder')}
+              data-testid="input-summary-website"
+            />
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>{t('profile.city')}</Label>
+              <Input
+                value={form.city}
+                onChange={(e) => setForm({ ...form, city: e.target.value })}
+                placeholder={t('profile.cityPlaceholder')}
+                data-testid="input-summary-city"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>{t('profile.country')}</Label>
+              <Input
+                value={form.country}
+                onChange={(e) => setForm({ ...form, country: e.target.value })}
+                placeholder={t('profile.countryPlaceholder')}
+                data-testid="input-summary-country"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>{t('profile.companySize')}</Label>
+            <Input
+              value={form.companySize}
+              onChange={(e) => setForm({ ...form, companySize: e.target.value })}
+              placeholder={t('profile.companySizePlaceholder')}
+              data-testid="input-summary-company-size"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>{t('profile.contactEmail')}</Label>
+            <Input
+              type="email"
+              value={form.contactEmail}
+              onChange={(e) => setForm({ ...form, contactEmail: e.target.value })}
+              placeholder={t('profile.emailPlaceholder')}
+              data-testid="input-summary-contact-email"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>{t('profile.contactPhone')}</Label>
+            <Input
+              value={form.contactPhone}
+              onChange={(e) => setForm({ ...form, contactPhone: e.target.value })}
+              placeholder={t('profile.phonePlaceholder')}
+              data-testid="input-summary-contact-phone"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>{t('common.cancel')}</Button>
+          <Button onClick={onSave} data-testid="button-save-company-summary">{t('common.save')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -475,6 +475,13 @@ export const de = {
     projectDuration: "Dauer",
     projectDurationPlaceholder: "z.B. 3 Monate oder Jan 2024 - März 2024",
     editContactInfo: "Kontaktdaten bearbeiten",
+    editCompanyInfo: "Unternehmensdaten bearbeiten",
+    websitePlaceholder: "https://www.beispiel.de",
+    companyNamePlaceholder: "Ihr Unternehmensname",
+    cityPlaceholder: "Stadt",
+    countryPlaceholder: "Land",
+    companySizePlaceholder: "z.B. 10-50 Mitarbeiter",
+    invalidWebsiteUrl: "Bitte geben Sie eine gültige Webseiten-URL ein",
   },
   footer: {
     skillGiver: "Fähigkeitengeber",
