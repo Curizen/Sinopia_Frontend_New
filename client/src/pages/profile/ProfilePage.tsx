@@ -1056,27 +1056,14 @@ export default function ProfilePage() {
                   )}
                   
                   {!cvUploaded && !cvUploading && (
-                    <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                    <div className="mt-4">
                       <Button
                         onClick={() => cvInputRef.current?.click()}
-                        className="flex-1"
+                        className="w-full"
                         data-testid="button-upload-cv-ai"
                       >
                         <Sparkles className="w-4 h-4 mr-2" />
                         {t('profile.cvUploadButton')}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          toast({
-                            title: t('common.success'),
-                            description: t('profile.cvExtractionPartial'),
-                          });
-                        }}
-                        className="flex-1 sm:flex-none"
-                        data-testid="button-skip-cv"
-                      >
-                        {t('profile.cvSkipButton')}
                       </Button>
                     </div>
                   )}
