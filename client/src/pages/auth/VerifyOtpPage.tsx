@@ -53,7 +53,7 @@ export default function VerifyOtpPage() {
           setLocation('/sign-up/cv?email=' + encodeURIComponent(email));
           window.scrollTo(0, 0);
         } else {
-          completeRegistration(email, role, response.token);
+          completeRegistration(email, role, false, response.token);
           toast({
             title: t('auth.otp.accountCreated'),
             description: t('auth.otp.accountCreatedDesc'),

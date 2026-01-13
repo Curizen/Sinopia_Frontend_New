@@ -10,6 +10,7 @@ export interface User {
   firstName?: string;
   lastName?: string;
   cvUrl?: string;
+  cvUploaded?: boolean;
   city?: string;
   country?: string;
   companySize?: string;

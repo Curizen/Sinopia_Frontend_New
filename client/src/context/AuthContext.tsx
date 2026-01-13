@@ -30,7 +30,8 @@ interface AuthContextType {
   register: (email: string, password: string, role: UserRole, cvFile?: File | null) => Promise<void>;
   logout: () => Promise<void>;
   setUserFromToken: (token: string, user: User) => void;
-  completeRegistration: (email: string, role: UserRole, token?: string) => void;
+  completeRegistration: (email: string, role: UserRole, cvUploaded?: boolean, serverToken?: string) => void;
+  updateCvStatus: (uploaded: boolean) => void;
   updateUserCompanyInfo: (data: CompanyInfoData) => Promise<void>;
   updateUserProfile: (data: Partial<User>) => Promise<void>;
 }
@@ -96,20 +97,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [],
   );
 
-  const completeRegistration = useCallback((email: string, role: UserRole, receivedToken?: string) => {
+  const completeRegistration = useCallback((email: string, role: UserRole, cvUploaded: boolean = false, serverToken?: string) => {
     const newUser: User = {
       id: Date.now().toString(),
       email,
       role,
       avatar: undefined,
+      cvUploaded,
     };
     
-    const tokenToUse = receivedToken || 'registered_token_' + Date.now();
+    const tokenToUse = serverToken || 'registered_token_' + Date.now();
     setToken(tokenToUse);
     setUser(newUser);
     localStorage.setItem('sinopia_token', tokenToUse);
     localStorage.setItem('sinopia_user', JSON.stringify(newUser));
   }, []);
+
+  const updateCvStatus = useCallback((uploaded: boolean) => {
+    if (!user) return;
+    const updatedUser: User = {
+      ...user,
+      cvUploaded: uploaded,
+    };
+    setUser(updatedUser);
+    localStorage.setItem('sinopia_user', JSON.stringify(updatedUser));
+  }, [user]);
 
   const logout = useCallback(async () => {
     try {
@@ -175,6 +187,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logout,
         setUserFromToken,
         completeRegistration,
+        updateCvStatus,
         updateUserCompanyInfo,
         updateUserProfile,
       }}

@@ -97,14 +97,40 @@ export default function CVUploadPage() {
     setIsLoading(true);
 
     try {
-      completeRegistration(email, 'skill_giver');
+      completeRegistration(email, 'skill_giver', true);
       
       toast({
         title: t('auth.otp.accountCreated'),
         description: t('auth.otp.accountCreatedDesc'),
       });
       
-      setLocation('/under-development');
+      setLocation('/profile');
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: t('auth.otp.registrationFailed'),
+        description: t('auth.otp.somethingWentWrong'),
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSkip = async () => {
+    if (!email) return;
+
+    setIsLoading(true);
+
+    try {
+      completeRegistration(email, 'skill_giver', false);
+      
+      toast({
+        title: t('auth.otp.accountCreated'),
+        description: t('auth.otp.accountCreatedDesc'),
+      });
+      
+      setLocation('/profile');
     } catch (error) {
       console.error(error);
       toast({
@@ -218,6 +244,21 @@ export default function CVUploadPage() {
                 data-testid="button-cv-upload-submit"
               >
                 {isLoading ? t('auth.cvUpload.creatingAccount') : t('auth.cvUpload.completeRegistration')}
+              </Button>
+
+              <p className="text-sm text-muted-foreground text-center">
+                {t('auth.cvUpload.skipHelperText')}
+              </p>
+
+              <Button 
+                type="button" 
+                variant="outline"
+                className="w-full" 
+                disabled={isLoading}
+                onClick={handleSkip}
+                data-testid="button-cv-skip"
+              >
+                {t('auth.cvUpload.skipForNow')}
               </Button>
             </form>
 

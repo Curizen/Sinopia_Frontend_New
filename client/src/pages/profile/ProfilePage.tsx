@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useAuth } from '@/context/AuthContext';
 import { useI18n } from '@/i18n';
@@ -32,6 +32,10 @@ import {
   Code,
   FolderKanban,
   Trash2,
+  Upload,
+  FileText,
+  Sparkles,
+  CheckCircle,
 } from 'lucide-react';
 import { UnderDevelopment } from '@/components/common/UnderDevelopment';
 
@@ -174,7 +178,7 @@ const loadGiverProfileFromStorage = (): SkillGiverProfile => {
 };
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, updateCvStatus } = useAuth();
   const { toast } = useToast();
   const { t } = useI18n();
   const [editingSection, setEditingSection] = useState<EditingSection>(null);
@@ -230,6 +234,10 @@ export default function ProfilePage() {
   const [projDialog, setProjDialog] = useState<{ open: boolean; proj: PersonalProject | null }>({ open: false, proj: null });
   const [contactDialog, setContactDialog] = useState(false);
   const [companySummaryDialog, setCompanySummaryDialog] = useState(false);
+  const [cvUploading, setCvUploading] = useState(false);
+  const [cvUploaded, setCvUploaded] = useState(user?.cvUploaded || false);
+  const [cvFileName, setCvFileName] = useState<string | null>(null);
+  const cvInputRef = useRef<HTMLInputElement>(null);
 
   const [contactForm, setContactForm] = useState({ 
     jobTitle: '', 
@@ -518,6 +526,105 @@ export default function ProfilePage() {
     }));
     setCompanySummaryDialog(false);
     toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+  };
+
+  const handleCvUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+    
+    if (!allowedTypes.includes(file.type)) {
+      toast({
+        title: t('common.error'),
+        description: t('profile.cvInvalidFileType'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: t('common.error'),
+        description: t('profile.cvFileTooLarge'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setCvUploading(true);
+    setCvFileName(file.name);
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const mockExtractedData = {
+        skills: [
+          { id: generateId(), name: 'JavaScript', level: 'expert' as SkillLevel },
+          { id: generateId(), name: 'React', level: 'advance' as SkillLevel },
+          { id: generateId(), name: 'Node.js', level: 'intermediate' as SkillLevel },
+        ],
+        experience: [
+          {
+            id: generateId(),
+            title: 'Senior Developer',
+            company: 'Tech Company',
+            startDate: '2020-01',
+            endDate: '',
+            current: true,
+            details: 'Full-stack development with modern technologies.',
+          },
+        ],
+        education: [
+          {
+            id: generateId(),
+            degree: 'Bachelor of Science',
+            institution: 'University',
+            graduationYear: '2018',
+            gpa: '',
+          },
+        ],
+        certifications: [] as Certification[],
+      };
+
+      setGiverProfile(prev => ({
+        ...prev,
+        skills: [...prev.skills, ...mockExtractedData.skills.filter(newSkill => 
+          !prev.skills.some(existingSkill => existingSkill.name.toLowerCase() === newSkill.name.toLowerCase())
+        )],
+        experience: mockExtractedData.experience.length > 0 && prev.experience.length === 0 
+          ? mockExtractedData.experience 
+          : prev.experience,
+        education: mockExtractedData.education.length > 0 && prev.education.length === 0 
+          ? mockExtractedData.education 
+          : prev.education,
+        certifications: mockExtractedData.certifications.length > 0 && prev.certifications.length === 0 
+          ? mockExtractedData.certifications 
+          : prev.certifications,
+      }));
+
+      setCvUploaded(true);
+      updateCvStatus(true);
+      toast({
+        title: t('profile.cvUploadSuccess'),
+        description: t('profile.cvExtractionComplete'),
+      });
+    } catch {
+      toast({
+        title: t('common.error'),
+        description: t('profile.cvExtractionFailed'),
+        variant: 'destructive',
+      });
+    } finally {
+      setCvUploading(false);
+      if (cvInputRef.current) {
+        cvInputRef.current.value = '';
+      }
+    }
   };
 
   return (
@@ -815,6 +922,72 @@ export default function ProfilePage() {
                 )}
               </CardContent>
             </Card>
+
+            {isSkillGiver && (
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
+                  <CardTitle className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5" />
+                    {t('profile.cvUploadTitle')}
+                  </CardTitle>
+                  {cvUploaded && (
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3" />
+                      {t('profile.cvUploaded')}
+                    </Badge>
+                  )}
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      {t('profile.cvUploadDescription')}
+                    </p>
+                    
+                    <input
+                      ref={cvInputRef}
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      onChange={handleCvUpload}
+                      className="hidden"
+                      id="profile-cv-upload"
+                      data-testid="input-profile-cv"
+                    />
+                    
+                    {cvFileName && (
+                      <div className="flex items-center gap-2 p-3 rounded-lg border border-border bg-muted/30">
+                        <FileText className="w-5 h-5 text-muted-foreground" />
+                        <span className="text-sm">{cvFileName}</span>
+                      </div>
+                    )}
+                    
+                    <Button
+                      onClick={() => cvInputRef.current?.click()}
+                      disabled={cvUploading}
+                      className="w-full"
+                      data-testid="button-upload-cv-ai"
+                    >
+                      {cvUploading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                          {t('profile.cvExtracting')}
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="w-4 h-4 mr-2" />
+                          {t('profile.cvUploadButton')}
+                        </>
+                      )}
+                    </Button>
+                    
+                    {!cvUploaded && (
+                      <p className="text-xs text-muted-foreground text-center">
+                        {t('profile.cvNotUploaded')}
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {isSkillGiver && (
               <Card>
