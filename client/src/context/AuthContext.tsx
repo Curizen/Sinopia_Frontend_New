@@ -31,7 +31,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   setUserFromToken: (token: string, user: User) => void;
   completeRegistration: (email: string, role: UserRole, cvUploaded?: boolean, serverToken?: string) => void;
-  updateCvStatus: (uploaded: boolean) => void;
+  updateCvStatus: (uploaded: boolean, fileName?: string, fileSize?: number) => void;
   updateUserCompanyInfo: (data: CompanyInfoData) => Promise<void>;
   updateUserProfile: (data: Partial<User>) => Promise<void>;
 }
@@ -113,11 +113,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('sinopia_user', JSON.stringify(newUser));
   }, []);
 
-  const updateCvStatus = useCallback((uploaded: boolean) => {
+  const updateCvStatus = useCallback((uploaded: boolean, fileName?: string, fileSize?: number) => {
     if (!user) return;
     const updatedUser: User = {
       ...user,
       cvUploaded: uploaded,
+      cvFileName: fileName,
+      cvFileSize: fileSize,
     };
     setUser(updatedUser);
     localStorage.setItem('sinopia_user', JSON.stringify(updatedUser));

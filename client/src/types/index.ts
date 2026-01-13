@@ -11,6 +11,8 @@ export interface User {
   lastName?: string;
   cvUrl?: string;
   cvUploaded?: boolean;
+  cvFileName?: string;
+  cvFileSize?: number;
   city?: string;
   country?: string;
   companySize?: string;
