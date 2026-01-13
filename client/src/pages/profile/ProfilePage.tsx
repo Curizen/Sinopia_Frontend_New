@@ -236,8 +236,11 @@ export default function ProfilePage() {
   const [companySummaryDialog, setCompanySummaryDialog] = useState(false);
   const [cvUploading, setCvUploading] = useState(false);
   const [cvUploaded, setCvUploaded] = useState(user?.cvUploaded || false);
-  const [cvFileName, setCvFileName] = useState<string | null>(null);
+  const [cvFileName, setCvFileName] = useState<string | null>(user?.cvFileName || null);
+  const [cvFileSize, setCvFileSize] = useState<number | null>(user?.cvFileSize || null);
+  const [isDragOver, setIsDragOver] = useState(false);
   const cvInputRef = useRef<HTMLInputElement>(null);
+  const dropzoneRef = useRef<HTMLDivElement>(null);
 
   const [contactForm, setContactForm] = useState({ 
     jobTitle: '', 
@@ -528,16 +531,19 @@ export default function ProfilePage() {
     toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
   };
 
-  const handleCvUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const allowedTypes = [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  ];
 
-    const allowedTypes = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ];
-    
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  };
+
+  const processFile = async (file: File) => {
     if (!allowedTypes.includes(file.type)) {
       toast({
         title: t('common.error'),
@@ -558,6 +564,7 @@ export default function ProfilePage() {
 
     setCvUploading(true);
     setCvFileName(file.name);
+    setCvFileSize(file.size);
 
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -608,12 +615,14 @@ export default function ProfilePage() {
       }));
 
       setCvUploaded(true);
-      updateCvStatus(true);
+      updateCvStatus(true, file.name, file.size);
       toast({
         title: t('profile.cvUploadSuccess'),
         description: t('profile.cvExtractionComplete'),
       });
     } catch {
+      setCvFileName(null);
+      setCvFileSize(null);
       toast({
         title: t('common.error'),
         description: t('profile.cvExtractionFailed'),
@@ -624,6 +633,45 @@ export default function ProfilePage() {
       if (cvInputRef.current) {
         cvInputRef.current.value = '';
       }
+    }
+  };
+
+  const handleCvUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    await processFile(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+    
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      await processFile(file);
+    }
+  };
+
+  const handleRemoveFile = () => {
+    setCvFileName(null);
+    setCvFileSize(null);
+    setCvUploaded(false);
+    updateCvStatus(false, undefined, undefined);
+    if (cvInputRef.current) {
+      cvInputRef.current.value = '';
     }
   };
 
@@ -894,6 +942,148 @@ export default function ProfilePage() {
               </Card>
             )}
 
+            {isSkillGiver && (
+              <Card className="border-2 border-dashed border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+                <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0 pb-2">
+                  <CardTitle className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                    {t('profile.cvUploadTitle')}
+                  </CardTitle>
+                  {cvUploaded && (
+                    <Badge variant="default" className="flex items-center gap-1 bg-green-600">
+                      <CheckCircle className="w-3 h-3" />
+                      {t('profile.cvUploaded')}
+                    </Badge>
+                  )}
+                </CardHeader>
+                <CardContent>
+                  <input
+                    ref={cvInputRef}
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleCvUpload}
+                    className="hidden"
+                    id="profile-cv-upload"
+                    data-testid="input-profile-cv"
+                  />
+                  
+                  {!cvUploaded && !cvFileName ? (
+                    <div
+                      ref={dropzoneRef}
+                      role="button"
+                      tabIndex={0}
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleDrop}
+                      onClick={() => !cvUploading && cvInputRef.current?.click()}
+                      onKeyDown={(e) => {
+                        if ((e.key === 'Enter' || e.key === ' ') && !cvUploading) {
+                          e.preventDefault();
+                          cvInputRef.current?.click();
+                        }
+                      }}
+                      className={`
+                        relative cursor-pointer rounded-lg border-2 border-dashed p-8 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+                        ${isDragOver 
+                          ? 'border-primary bg-primary/10 scale-[1.02]' 
+                          : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-primary/5'
+                        }
+                        ${cvUploading ? 'pointer-events-none opacity-60' : ''}
+                      `}
+                      data-testid="dropzone-cv"
+                    >
+                      <div className="flex flex-col items-center justify-center gap-4 text-center">
+                        {cvUploading ? (
+                          <>
+                            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                            <div className="space-y-1">
+                              <p className="text-sm font-medium">{t('profile.cvUploading')}</p>
+                              <p className="text-xs text-muted-foreground">{t('profile.cvExtracting')}</p>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                              <Upload className="w-8 h-8 text-primary" />
+                            </div>
+                            <div className="space-y-1">
+                              <p className="text-sm font-medium">
+                                {isDragOver ? t('profile.cvDropHere') : t('profile.cvUploadDescription')}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {t('profile.cvUploadSupported')}
+                              </p>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3 p-4 rounded-lg border border-border bg-muted/30">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <FileText className="w-5 h-5 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{cvFileName}</p>
+                          {cvFileSize && (
+                            <p className="text-xs text-muted-foreground">{formatFileSize(cvFileSize)}</p>
+                          )}
+                        </div>
+                        {!cvUploading && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRemoveFile();
+                            }}
+                            className="text-muted-foreground hover:text-destructive"
+                            data-testid="button-remove-cv"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </div>
+                      
+                      {cvUploaded && (
+                        <div className="flex items-center gap-2 p-3 rounded-lg bg-green-500/10 text-green-700 dark:text-green-400">
+                          <CheckCircle className="w-4 h-4" />
+                          <p className="text-sm">{t('profile.cvExtractionComplete')}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
+                  {!cvUploaded && !cvUploading && (
+                    <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                      <Button
+                        onClick={() => cvInputRef.current?.click()}
+                        className="flex-1"
+                        data-testid="button-upload-cv-ai"
+                      >
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        {t('profile.cvUploadButton')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          toast({
+                            title: t('common.success'),
+                            description: t('profile.cvExtractionPartial'),
+                          });
+                        }}
+                        className="flex-1 sm:flex-none"
+                        data-testid="button-skip-cv"
+                      >
+                        {t('profile.cvSkipButton')}
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             <Card>
               <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
                 <CardTitle className="flex items-center gap-2">
@@ -923,71 +1113,6 @@ export default function ProfilePage() {
               </CardContent>
             </Card>
 
-            {isSkillGiver && (
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
-                  <CardTitle className="flex items-center gap-2">
-                    <Sparkles className="w-5 h-5" />
-                    {t('profile.cvUploadTitle')}
-                  </CardTitle>
-                  {cvUploaded && (
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      <CheckCircle className="w-3 h-3" />
-                      {t('profile.cvUploaded')}
-                    </Badge>
-                  )}
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <p className="text-sm text-muted-foreground">
-                      {t('profile.cvUploadDescription')}
-                    </p>
-                    
-                    <input
-                      ref={cvInputRef}
-                      type="file"
-                      accept=".pdf,.doc,.docx"
-                      onChange={handleCvUpload}
-                      className="hidden"
-                      id="profile-cv-upload"
-                      data-testid="input-profile-cv"
-                    />
-                    
-                    {cvFileName && (
-                      <div className="flex items-center gap-2 p-3 rounded-lg border border-border bg-muted/30">
-                        <FileText className="w-5 h-5 text-muted-foreground" />
-                        <span className="text-sm">{cvFileName}</span>
-                      </div>
-                    )}
-                    
-                    <Button
-                      onClick={() => cvInputRef.current?.click()}
-                      disabled={cvUploading}
-                      className="w-full"
-                      data-testid="button-upload-cv-ai"
-                    >
-                      {cvUploading ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                          {t('profile.cvExtracting')}
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="w-4 h-4 mr-2" />
-                          {t('profile.cvUploadButton')}
-                        </>
-                      )}
-                    </Button>
-                    
-                    {!cvUploaded && (
-                      <p className="text-xs text-muted-foreground text-center">
-                        {t('profile.cvNotUploaded')}
-                      </p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
 
             {isSkillGiver && (
               <Card>
