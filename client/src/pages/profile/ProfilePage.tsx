@@ -413,18 +413,28 @@ export default function ProfilePage() {
 
   const handleSaveCertification = async (cert: Certification) => {
     const token = localStorage.getItem('sinopia_token');
+    console.log('Sending token:', token);
+    console.log('Certificate ID:', cert.id);
     
     if (cert.id) {
       // Update existing certification via API
       try {
         const dateForApi = cert.date ? (cert.date.length === 7 ? `${cert.date}-01` : cert.date) : '';
         
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        console.log('Request headers:', headers);
+        
         const response = await fetch(`/api/certificates/${cert.id}`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token && { 'Authorization': `Bearer ${token}` }),
-          },
+          headers,
+          credentials: 'include',
           body: JSON.stringify({
             name: cert.name,
             authority: cert.authority,
@@ -462,12 +472,21 @@ export default function ProfilePage() {
         // Convert YYYY-MM format to YYYY-MM-DD (first day of month)
         const dateForApi = cert.date ? `${cert.date}-01` : '';
         
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        console.log('POST - Sending token:', token);
+        console.log('POST - Request headers:', headers);
+        
         const response = await fetch('/api/certificates', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token && { 'Authorization': `Bearer ${token}` }),
-          },
+          headers,
+          credentials: 'include',
           body: JSON.stringify({
             name: cert.name,
             authority: cert.authority,
