@@ -165,7 +165,7 @@ export async function registerRoutes(
     }
   });
 
-  // Certificates API proxy
+  // Certificates API proxy - Create
   app.post("/api/certificates", async (req, res) => {
     try {
       const authHeader = req.headers.authorization;
@@ -188,6 +188,32 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Add certificate proxy error:", error);
       res.status(500).json({ status: "error", message: "Failed to add certificate" });
+    }
+  });
+
+  // Certificates API proxy - Update
+  app.put("/api/certificates/:id", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/certificates/${req.params.id}`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify(req.body),
+      });
+      forwardCookies(response, res);
+      const data = await response.json();
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Update certificate proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to update certificate" });
     }
   });
 

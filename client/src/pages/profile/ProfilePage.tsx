@@ -415,13 +415,47 @@ export default function ProfilePage() {
     const token = localStorage.getItem('sinopia_token');
     
     if (cert.id) {
-      // Update existing certification (local only for now)
-      setGiverProfile(prev => ({
-        ...prev,
-        certifications: prev.certifications.map(c => c.id === cert.id ? cert : c),
-      }));
-      setCertDialog({ open: false, cert: null });
-      toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+      // Update existing certification via API
+      try {
+        const dateForApi = cert.date ? (cert.date.length === 7 ? `${cert.date}-01` : cert.date) : '';
+        
+        const response = await fetch(`/api/certificates/${cert.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` }),
+          },
+          body: JSON.stringify({
+            name: cert.name,
+            authority: cert.authority,
+            date: dateForApi,
+          }),
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          setGiverProfile(prev => ({
+            ...prev,
+            certifications: prev.certifications.map(c => c.id === cert.id ? cert : c),
+          }));
+          setCertDialog({ open: false, cert: null });
+          toast({ title: t('profile.certificationUpdated'), description: t('profile.changesSaved') });
+        } else {
+          toast({ 
+            title: t('common.error'), 
+            description: data.message || t('profile.saveFailed'),
+            variant: 'destructive',
+          });
+        }
+      } catch (error) {
+        console.error('Failed to update certificate:', error);
+        toast({ 
+          title: t('common.error'), 
+          description: t('profile.saveFailed'),
+          variant: 'destructive',
+        });
+      }
     } else {
       // Add new certification via API
       try {

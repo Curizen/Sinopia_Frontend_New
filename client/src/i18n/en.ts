@@ -460,6 +460,7 @@ export const en = {
     certificationAuthority: "Issuing Authority",
     certificationAuthorityPlaceholder: "e.g., Amazon Web Services",
     certificationDate: "Date Obtained",
+    certificationUpdated: "Certificate updated successfully",
     addProject: "Add Project",
     projectName: "Project Name",
     projectNamePlaceholder: "Name of your project",

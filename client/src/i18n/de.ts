@@ -468,6 +468,7 @@ export const de = {
     certificationAuthority: "Ausstellende Behörde",
     certificationAuthorityPlaceholder: "z.B. Amazon Web Services",
     certificationDate: "Erhaltungsdatum",
+    certificationUpdated: "Zertifikat erfolgreich aktualisiert",
     addProject: "Projekt hinzufügen",
     projectName: "Projektname",
     projectNamePlaceholder: "Name Ihres Projekts",
