@@ -549,28 +549,234 @@ export default function ProfilePage() {
     toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
   };
 
-  const handleSaveEducation = (edu: Education) => {
-    if (edu.id) {
-      setGiverProfile(prev => ({
-        ...prev,
-        education: prev.education.map(e => e.id === edu.id ? edu : e),
-      }));
-    } else {
-      setGiverProfile(prev => ({
-        ...prev,
-        education: [...prev.education, { ...edu, id: generateId() }],
-      }));
+  const updateEducationLocalStorageCache = (updatedEdu: Education, isNew: boolean = false) => {
+    try {
+      const cacheStr = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+      if (cacheStr) {
+        const cache = JSON.parse(cacheStr);
+        const apiEdu = {
+          id: parseInt(updatedEdu.id) || updatedEdu.id,
+          user_id: cache.education?.[0]?.user_id || null,
+          degree: updatedEdu.degree,
+          institution: updatedEdu.institution,
+          graduation_year: updatedEdu.graduationYear,
+          gpa: updatedEdu.gpa ? parseFloat(updatedEdu.gpa) : null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        
+        if (isNew) {
+          cache.education = [...(cache.education || []), apiEdu];
+        } else {
+          cache.education = (cache.education || []).map((e: { id: number | string }) => 
+            e.id.toString() === updatedEdu.id ? apiEdu : e
+          );
+        }
+        
+        localStorage.setItem(USER_PROFILE_CACHE_KEY, JSON.stringify(cache));
+        console.log('[DEBUG] Updated user_profile_cache with education:', apiEdu);
+      }
+    } catch (error) {
+      console.error('Failed to update education localStorage cache:', error);
     }
-    setEduDialog({ open: false, edu: null });
-    toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
   };
 
-  const handleDeleteEducation = (id: string) => {
-    setGiverProfile(prev => ({
-      ...prev,
-      education: prev.education.filter(e => e.id !== id),
-    }));
-    toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+  const removeEducationFromLocalStorageCache = (eduId: string) => {
+    try {
+      const cacheStr = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+      if (cacheStr) {
+        const cache = JSON.parse(cacheStr);
+        if (cache && cache.education) {
+          cache.education = cache.education.filter((e: { id: number | string }) => 
+            e.id.toString() !== eduId
+          );
+          localStorage.setItem(USER_PROFILE_CACHE_KEY, JSON.stringify(cache));
+          console.log('[DEBUG] Removed education from user_profile_cache, id:', eduId);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to remove education from localStorage cache:', error);
+    }
+  };
+
+  const handleSaveEducation = async (edu: Education) => {
+    const token = localStorage.getItem('sinopia_token');
+    console.log('[DEBUG] Education - Sending token:', token);
+    console.log('[DEBUG] Education ID:', edu.id);
+    
+    if (edu.id) {
+      // Update existing education via API
+      try {
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const requestBody = {
+          degree: edu.degree,
+          institution: edu.institution,
+          graduation_year: edu.graduationYear,
+          gpa: edu.gpa ? parseFloat(edu.gpa) : null,
+        };
+        
+        console.log('[DEBUG] PUT Education Request body:', requestBody);
+        
+        const response = await fetch(`/api/education/${edu.id}`, {
+          method: 'PUT',
+          headers,
+          credentials: 'include',
+          body: JSON.stringify(requestBody),
+        });
+        
+        const data = await response.json();
+        console.log('[DEBUG] PUT Education Response:', data);
+        
+        if (response.ok) {
+          // 1. Update UI state
+          setGiverProfile(prev => ({
+            ...prev,
+            education: prev.education.map(e => e.id === edu.id ? edu : e),
+          }));
+          
+          // 2. Update localStorage cache
+          updateEducationLocalStorageCache(edu, false);
+          
+          setEduDialog({ open: false, edu: null });
+          toast({ title: t('profile.educationUpdated') || t('profile.profileUpdated'), description: t('profile.changesSaved') });
+        } else {
+          toast({ 
+            title: t('common.error'), 
+            description: data.message || t('profile.saveFailed'),
+            variant: 'destructive',
+          });
+        }
+      } catch (error) {
+        console.error('[DEBUG] Failed to update education:', error);
+        toast({ 
+          title: t('common.error'), 
+          description: t('profile.saveFailed'),
+          variant: 'destructive',
+        });
+      }
+    } else {
+      // Add new education via API
+      try {
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const requestBody = {
+          degree: edu.degree,
+          institution: edu.institution,
+          graduation_year: edu.graduationYear,
+          gpa: edu.gpa ? parseFloat(edu.gpa) : null,
+        };
+        
+        console.log('[DEBUG] POST Education Request body:', requestBody);
+        
+        const response = await fetch('/api/education', {
+          method: 'POST',
+          headers,
+          credentials: 'include',
+          body: JSON.stringify(requestBody),
+        });
+        
+        const data = await response.json();
+        console.log('[DEBUG] POST Education Response:', data);
+        
+        if (response.ok) {
+          // Use the ID from the server response if available
+          const newEduId = data.data?.id?.toString() || data.id?.toString() || generateId();
+          const newEdu = { ...edu, id: newEduId };
+          
+          // 1. Update UI state
+          setGiverProfile(prev => ({
+            ...prev,
+            education: [...prev.education, newEdu],
+          }));
+          
+          // 2. Update localStorage cache
+          updateEducationLocalStorageCache(newEdu, true);
+          
+          setEduDialog({ open: false, edu: null });
+          toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+        } else {
+          toast({ 
+            title: t('common.error'), 
+            description: data.message || t('profile.saveFailed'),
+            variant: 'destructive',
+          });
+        }
+      } catch (error) {
+        console.error('[DEBUG] Failed to add education:', error);
+        toast({ 
+          title: t('common.error'), 
+          description: t('profile.saveFailed'),
+          variant: 'destructive',
+        });
+      }
+    }
+  };
+
+  const handleDeleteEducation = async (id: string) => {
+    const confirmDelete = window.confirm(t('profile.confirmDeleteEducation') || 'Are you sure you want to delete this education entry?');
+    if (!confirmDelete) return;
+
+    const token = localStorage.getItem('sinopia_token');
+    
+    try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      console.log('[DEBUG] DELETE Request for education id:', id);
+      
+      const response = await fetch(`/api/education/${id}`, {
+        method: 'DELETE',
+        headers,
+        credentials: 'include',
+      });
+      
+      console.log('[DEBUG] DELETE Education Response status:', response.status);
+      
+      if (response.ok || response.status === 204) {
+        // 1. Update UI state
+        setGiverProfile(prev => ({
+          ...prev,
+          education: prev.education.filter(e => e.id !== id),
+        }));
+        
+        // 2. Update localStorage cache
+        removeEducationFromLocalStorageCache(id);
+        
+        toast({ title: t('profile.educationDeleted') || t('profile.profileUpdated'), description: t('profile.changesSaved') });
+      } else {
+        const data = await response.json();
+        toast({ 
+          title: t('common.error'), 
+          description: data.message || t('profile.deleteFailed'),
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('[DEBUG] Failed to delete education:', error);
+      toast({ 
+        title: t('common.error'), 
+        description: t('profile.deleteFailed'),
+        variant: 'destructive',
+      });
+    }
   };
 
   const updateLocalStorageCache = (updatedCert: { id: string; name: string; authority: string; date: string }, isNew: boolean = false) => {
