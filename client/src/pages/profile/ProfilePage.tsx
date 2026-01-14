@@ -618,7 +618,7 @@ export default function ProfilePage() {
         const requestBody = {
           degree: edu.degree,
           institution: edu.institution,
-          graduation_year: edu.graduationYear,
+          graduation_year: edu.graduationYear ? parseInt(edu.graduationYear, 10) : null,
           gpa: edu.gpa ? parseFloat(edu.gpa) : null,
         };
         
@@ -675,7 +675,7 @@ export default function ProfilePage() {
         const requestBody = {
           degree: edu.degree,
           institution: edu.institution,
-          graduation_year: edu.graduationYear,
+          graduation_year: edu.graduationYear ? parseInt(edu.graduationYear, 10) : null,
           gpa: edu.gpa ? parseFloat(edu.gpa) : null,
         };
         
