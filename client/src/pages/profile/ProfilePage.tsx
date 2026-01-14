@@ -525,28 +525,237 @@ export default function ProfilePage() {
     toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
   };
 
-  const handleSaveExperience = (exp: Experience) => {
-    if (exp.id) {
-      setGiverProfile(prev => ({
-        ...prev,
-        experience: prev.experience.map(e => e.id === exp.id ? exp : e),
-      }));
-    } else {
-      setGiverProfile(prev => ({
-        ...prev,
-        experience: [...prev.experience, { ...exp, id: generateId() }],
-      }));
+  const updateExperienceLocalStorageCache = (updatedExp: Experience, isNew: boolean = false) => {
+    try {
+      const cacheStr = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+      if (cacheStr) {
+        const cache = JSON.parse(cacheStr);
+        const apiExp = {
+          id: parseInt(updatedExp.id) || updatedExp.id,
+          user_id: cache.experience?.[0]?.user_id || null,
+          title: updatedExp.title,
+          company: updatedExp.company,
+          start_date: updatedExp.startDate,
+          end_date: updatedExp.endDate || null,
+          experience_details: updatedExp.details,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        
+        if (isNew) {
+          cache.experience = [...(cache.experience || []), apiExp];
+        } else {
+          cache.experience = (cache.experience || []).map((e: { id: number | string }) => 
+            e.id.toString() === updatedExp.id ? apiExp : e
+          );
+        }
+        
+        localStorage.setItem(USER_PROFILE_CACHE_KEY, JSON.stringify(cache));
+        console.log('[DEBUG] Updated user_profile_cache with experience:', apiExp);
+      }
+    } catch (error) {
+      console.error('Failed to update experience localStorage cache:', error);
     }
-    setExpDialog({ open: false, exp: null });
-    toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
   };
 
-  const handleDeleteExperience = (id: string) => {
-    setGiverProfile(prev => ({
-      ...prev,
-      experience: prev.experience.filter(e => e.id !== id),
-    }));
-    toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+  const removeExperienceFromLocalStorageCache = (expId: string) => {
+    try {
+      const cacheStr = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+      if (cacheStr) {
+        const cache = JSON.parse(cacheStr);
+        if (cache && cache.experience) {
+          cache.experience = cache.experience.filter((e: { id: number | string }) => 
+            e.id.toString() !== expId
+          );
+          localStorage.setItem(USER_PROFILE_CACHE_KEY, JSON.stringify(cache));
+          console.log('[DEBUG] Removed experience from user_profile_cache, id:', expId);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to remove experience from localStorage cache:', error);
+    }
+  };
+
+  const handleSaveExperience = async (exp: Experience) => {
+    const token = localStorage.getItem('sinopia_token');
+    console.log('[DEBUG] Experience - Sending token:', token);
+    console.log('[DEBUG] Experience ID:', exp.id);
+    
+    if (exp.id) {
+      // Update existing experience via API
+      try {
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const requestBody = {
+          title: exp.title,
+          company: exp.company,
+          start_date: exp.startDate,
+          end_date: exp.endDate || null,
+          experience_details: exp.details,
+        };
+        
+        console.log('[DEBUG] PUT Experience Request body:', requestBody);
+        
+        const response = await fetch(`/api/experience/${exp.id}`, {
+          method: 'PUT',
+          headers,
+          credentials: 'include',
+          body: JSON.stringify(requestBody),
+        });
+        
+        const data = await response.json();
+        console.log('[DEBUG] PUT Experience Response:', data);
+        
+        if (response.ok) {
+          // 1. Update UI state
+          setGiverProfile(prev => ({
+            ...prev,
+            experience: prev.experience.map(e => e.id === exp.id ? exp : e),
+          }));
+          
+          // 2. Update localStorage cache
+          updateExperienceLocalStorageCache(exp, false);
+          
+          setExpDialog({ open: false, exp: null });
+          toast({ title: t('profile.experienceUpdated') || t('profile.profileUpdated'), description: t('profile.changesSaved') });
+        } else {
+          toast({ 
+            title: t('common.error'), 
+            description: data.message || t('profile.saveFailed'),
+            variant: 'destructive',
+          });
+        }
+      } catch (error) {
+        console.error('[DEBUG] Failed to update experience:', error);
+        toast({ 
+          title: t('common.error'), 
+          description: t('profile.saveFailed'),
+          variant: 'destructive',
+        });
+      }
+    } else {
+      // Add new experience via API
+      try {
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const requestBody = {
+          title: exp.title,
+          company: exp.company,
+          start_date: exp.startDate,
+          end_date: exp.endDate || null,
+          experience_details: exp.details,
+        };
+        
+        console.log('[DEBUG] POST Experience Request body:', requestBody);
+        
+        const response = await fetch('/api/experience', {
+          method: 'POST',
+          headers,
+          credentials: 'include',
+          body: JSON.stringify(requestBody),
+        });
+        
+        const data = await response.json();
+        console.log('[DEBUG] POST Experience Response:', data);
+        
+        if (response.ok) {
+          // Use the ID from the server response if available
+          const newExpId = data.data?.id?.toString() || data.id?.toString() || generateId();
+          const newExp = { ...exp, id: newExpId };
+          
+          // 1. Update UI state
+          setGiverProfile(prev => ({
+            ...prev,
+            experience: [...prev.experience, newExp],
+          }));
+          
+          // 2. Update localStorage cache
+          updateExperienceLocalStorageCache(newExp, true);
+          
+          setExpDialog({ open: false, exp: null });
+          toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+        } else {
+          toast({ 
+            title: t('common.error'), 
+            description: data.message || t('profile.saveFailed'),
+            variant: 'destructive',
+          });
+        }
+      } catch (error) {
+        console.error('[DEBUG] Failed to add experience:', error);
+        toast({ 
+          title: t('common.error'), 
+          description: t('profile.saveFailed'),
+          variant: 'destructive',
+        });
+      }
+    }
+  };
+
+  const handleDeleteExperience = async (id: string) => {
+    const confirmDelete = window.confirm(t('profile.confirmDeleteExperience') || 'Are you sure you want to delete this experience entry?');
+    if (!confirmDelete) return;
+
+    const token = localStorage.getItem('sinopia_token');
+    
+    try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      console.log('[DEBUG] DELETE Request for experience id:', id);
+      
+      const response = await fetch(`/api/experience/${id}`, {
+        method: 'DELETE',
+        headers,
+        credentials: 'include',
+      });
+      
+      console.log('[DEBUG] DELETE Experience Response status:', response.status);
+      
+      if (response.ok || response.status === 204) {
+        // 1. Update UI state
+        setGiverProfile(prev => ({
+          ...prev,
+          experience: prev.experience.filter(e => e.id !== id),
+        }));
+        
+        // 2. Update localStorage cache
+        removeExperienceFromLocalStorageCache(id);
+        
+        toast({ title: t('profile.experienceDeleted') || t('profile.profileUpdated'), description: t('profile.changesSaved') });
+      } else {
+        const data = await response.json();
+        toast({ 
+          title: t('common.error'), 
+          description: data.message || t('profile.deleteFailed'),
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('[DEBUG] Failed to delete experience:', error);
+      toast({ 
+        title: t('common.error'), 
+        description: t('profile.deleteFailed'),
+        variant: 'destructive',
+      });
+    }
   };
 
   const updateEducationLocalStorageCache = (updatedEdu: Education, isNew: boolean = false) => {
