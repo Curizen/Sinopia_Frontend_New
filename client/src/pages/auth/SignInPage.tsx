@@ -33,7 +33,7 @@ export default function SignInPage() {
         title: t('common.success'),
         description: t('auth.signInSuccess'),
       });
-      setLocation('/under-development');
+      setLocation('/profile');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : t('auth.signInError');
       toast({

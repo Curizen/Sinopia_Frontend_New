@@ -681,7 +681,7 @@ export const en = {
     section8Title: "8. Governing Law",
     section8Text: "These terms are governed by the laws of the Federal Republic of Germany. Any disputes shall be resolved in the courts of Stuttgart, Germany.",
     section9Title: "9. Contact",
-    section9Text: "For questions about these Terms & Conditions, please contact us at legal@sinopia.eu or via the contact information provided in our imprint.",
+    section9Text: "For questions about these Terms & Conditions, please contact us at info@sinopia.eu or via the contact information provided in our imprint.",
   },
   language: {
     en: "EN",

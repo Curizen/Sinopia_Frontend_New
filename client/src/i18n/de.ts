@@ -689,7 +689,7 @@ export const de = {
     section8Title: "8. Anwendbares Recht",
     section8Text: "Diese Bedingungen unterliegen dem Recht der Bundesrepublik Deutschland. Etwaige Streitigkeiten werden vor den Gerichten in Stuttgart, Deutschland, beigelegt.",
     section9Title: "9. Kontakt",
-    section9Text: "Bei Fragen zu diesen Nutzungsbedingungen kontaktieren Sie uns bitte unter legal@sinopia.eu oder über die Kontaktdaten in unserem Impressum.",
+    section9Text: "Bei Fragen zu diesen Nutzungsbedingungen kontaktieren Sie uns bitte unter info@sinopia.eu oder über die Kontaktdaten in unserem Impressum.",
   },
   language: {
     en: "EN",

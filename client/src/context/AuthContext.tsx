@@ -61,7 +61,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                       response.status === 'success';
     
     if (isSuccess) {
-      const userData = response.data as { id?: string; email?: string; account_type?: string; role?: string } | undefined;
+      const userData = response.data as { 
+        id?: string; 
+        email?: string; 
+        account_type?: string; 
+        role?: string;
+        certificates?: unknown[];
+        education?: unknown[];
+        experience?: unknown[];
+        projects?: unknown[];
+        skills?: unknown[];
+        summary?: string;
+        phone?: string;
+        city?: string;
+        country?: string;
+      } | undefined;
+      
       const newUser: User = {
         id: userData?.id || Date.now().toString(),
         email: userData?.email || email,
@@ -74,6 +89,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(newUser);
       localStorage.setItem('sinopia_token', sessionToken);
       localStorage.setItem('sinopia_user', JSON.stringify(newUser));
+      
+      // Save full userData to cache for profile page
+      if (userData) {
+        console.log('Saving userData to user_profile_cache:', userData);
+        localStorage.setItem('user_profile_cache', JSON.stringify(userData));
+      }
     } else {
       throw new Error(response.message || 'Login failed');
     }
@@ -135,6 +156,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       localStorage.removeItem('sinopia_token');
       localStorage.removeItem('sinopia_user');
+      localStorage.removeItem('user_profile_cache');
+      localStorage.removeItem('sinopia_skill_giver_profile');
+      localStorage.removeItem('sinopia_skill_searcher_profile');
     }
   }, []);
 
