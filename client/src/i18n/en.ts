@@ -693,12 +693,6 @@ export const en = {
     pageNotFoundDesc: "The page you're looking for doesn't exist.",
     goHome: "Go Home",
   },
-  underDevelopment: {
-    title: "The platform is still under development",
-    subtitle: "",
-    featuresNotAvailable: "Some features are not available yet.",
-    backToHome: "Back to Home",
-  },
   settings: {
     title: "Settings",
     subtitle: "Manage your account settings and preferences",

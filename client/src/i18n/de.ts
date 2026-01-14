@@ -701,12 +701,6 @@ export const de = {
     pageNotFoundDesc: "Die gesuchte Seite existiert nicht.",
     goHome: "Zur Startseite",
   },
-  underDevelopment: {
-    title: "Die Plattform befindet sich noch in der Entwicklung",
-    subtitle: "",
-    featuresNotAvailable: "Einige Funktionen sind noch nicht verfügbar.",
-    backToHome: "Zur Startseite",
-  },
   settings: {
     title: "Einstellungen",
     subtitle: "Verwalten Sie Ihre Kontoeinstellungen und Vorlieben",
