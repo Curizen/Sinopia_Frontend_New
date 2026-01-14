@@ -573,10 +573,41 @@ export default function ProfilePage() {
     toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
   };
 
+  const updateLocalStorageCache = (updatedCert: { id: string; name: string; authority: string; date: string }, isNew: boolean = false) => {
+    try {
+      const cacheStr = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+      if (cacheStr) {
+        const cache = JSON.parse(cacheStr);
+        const apiCert = {
+          id: parseInt(updatedCert.id) || updatedCert.id,
+          user_id: cache.certificates?.[0]?.user_id || null,
+          name: updatedCert.name,
+          authority: updatedCert.authority,
+          date: updatedCert.date.length === 7 ? `${updatedCert.date}-01` : updatedCert.date,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        
+        if (isNew) {
+          cache.certificates = [...(cache.certificates || []), apiCert];
+        } else {
+          cache.certificates = (cache.certificates || []).map((c: { id: number | string }) => 
+            c.id.toString() === updatedCert.id ? apiCert : c
+          );
+        }
+        
+        localStorage.setItem(USER_PROFILE_CACHE_KEY, JSON.stringify(cache));
+        console.log('[DEBUG] Updated user_profile_cache with certificate:', apiCert);
+      }
+    } catch (error) {
+      console.error('Failed to update localStorage cache:', error);
+    }
+  };
+
   const handleSaveCertification = async (cert: Certification) => {
     const token = localStorage.getItem('sinopia_token');
-    console.log('Sending token:', token);
-    console.log('Certificate ID:', cert.id);
+    console.log('[DEBUG] Sending token:', token);
+    console.log('[DEBUG] Certificate ID:', cert.id);
     
     if (cert.id) {
       // Update existing certification via API
@@ -591,7 +622,8 @@ export default function ProfilePage() {
           headers['Authorization'] = `Bearer ${token}`;
         }
         
-        console.log('Request headers:', headers);
+        console.log('[DEBUG] PUT Request headers:', headers);
+        console.log('[DEBUG] PUT Request body:', { name: cert.name, authority: cert.authority, date: dateForApi });
         
         const response = await fetch(`/api/certificates/${cert.id}`, {
           method: 'PUT',
@@ -605,12 +637,18 @@ export default function ProfilePage() {
         });
         
         const data = await response.json();
+        console.log('[DEBUG] PUT Response:', data);
         
         if (response.ok) {
+          // 1. Update UI state
           setGiverProfile(prev => ({
             ...prev,
             certifications: prev.certifications.map(c => c.id === cert.id ? cert : c),
           }));
+          
+          // 2. Update localStorage cache
+          updateLocalStorageCache(cert, false);
+          
           setCertDialog({ open: false, cert: null });
           toast({ title: t('profile.certificationUpdated'), description: t('profile.changesSaved') });
         } else {
@@ -621,7 +659,7 @@ export default function ProfilePage() {
           });
         }
       } catch (error) {
-        console.error('Failed to update certificate:', error);
+        console.error('[DEBUG] Failed to update certificate:', error);
         toast({ 
           title: t('common.error'), 
           description: t('profile.saveFailed'),
@@ -631,7 +669,6 @@ export default function ProfilePage() {
     } else {
       // Add new certification via API
       try {
-        // Convert YYYY-MM format to YYYY-MM-DD (first day of month)
         const dateForApi = cert.date ? `${cert.date}-01` : '';
         
         const headers: Record<string, string> = {
@@ -642,8 +679,9 @@ export default function ProfilePage() {
           headers['Authorization'] = `Bearer ${token}`;
         }
         
-        console.log('POST - Sending token:', token);
-        console.log('POST - Request headers:', headers);
+        console.log('[DEBUG] POST - Sending token:', token);
+        console.log('[DEBUG] POST - Request headers:', headers);
+        console.log('[DEBUG] POST - Request body:', { name: cert.name, authority: cert.authority, date: dateForApi });
         
         const response = await fetch('/api/certificates', {
           method: 'POST',
@@ -657,15 +695,22 @@ export default function ProfilePage() {
         });
         
         const data = await response.json();
+        console.log('[DEBUG] POST Response:', data);
         
         if (response.ok) {
-          // Use the ID from the server response if available, otherwise generate one
-          const newCertId = data.data?.id?.toString() || generateId();
+          // Use the ID from the server response if available
+          const newCertId = data.data?.id?.toString() || data.id?.toString() || generateId();
+          const newCert = { ...cert, id: newCertId };
           
+          // 1. Update UI state
           setGiverProfile(prev => ({
             ...prev,
-            certifications: [...prev.certifications, { ...cert, id: newCertId }],
+            certifications: [...prev.certifications, newCert],
           }));
+          
+          // 2. Update localStorage cache
+          updateLocalStorageCache(newCert, true);
+          
           setCertDialog({ open: false, cert: null });
           toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
         } else {
@@ -676,7 +721,7 @@ export default function ProfilePage() {
           });
         }
       } catch (error) {
-        console.error('Failed to add certificate:', error);
+        console.error('[DEBUG] Failed to add certificate:', error);
         toast({ 
           title: t('common.error'), 
           description: t('profile.saveFailed'),
