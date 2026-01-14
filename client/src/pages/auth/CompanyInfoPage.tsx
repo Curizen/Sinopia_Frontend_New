@@ -52,11 +52,11 @@ export default function CompanyInfoPage() {
   }
 
   if (user?.role !== 'skill_searcher') {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to="/profile" />;
   }
 
   if (user?.companyOnboardingCompleted) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to="/profile" />;
   }
 
   const isEmailValid = (email: string) => {

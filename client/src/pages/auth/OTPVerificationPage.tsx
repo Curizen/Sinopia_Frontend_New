@@ -44,7 +44,7 @@ export default function OTPVerificationPage() {
           setLocation(`/reset-password?email=${encodeURIComponent(email)}`);
           window.scrollTo(0, 0);
         } else {
-          setLocation('/dashboard');
+          setLocation('/profile');
           window.scrollTo(0, 0);
         }
       } else {

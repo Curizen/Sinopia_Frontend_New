@@ -111,8 +111,124 @@ interface SkillSearcherProfile {
 
 const STORAGE_KEY = 'sinopia_skill_giver_profile';
 const SEARCHER_STORAGE_KEY = 'sinopia_skill_searcher_profile';
+const USER_PROFILE_CACHE_KEY = 'user_profile_cache';
 
 const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
+
+// Interface for API userData response
+interface ApiUserData {
+  id?: string;
+  email?: string;
+  phone?: string;
+  city?: string;
+  country?: string;
+  summary?: string;
+  skills?: Array<{
+    id?: number;
+    skill_name?: string;
+    level?: string;
+  }>;
+  experience?: Array<{
+    id?: number;
+    title?: string;
+    company?: string;
+    start_date?: string;
+    end_date?: string;
+    description?: string;
+  }>;
+  education?: Array<{
+    id?: number;
+    degree?: string;
+    institution?: string;
+    graduation_year?: string;
+    field_of_study?: string;
+  }>;
+  certificates?: Array<{
+    id?: number;
+    name?: string;
+    authority?: string;
+    date?: string;
+  }>;
+  projects?: Array<{
+    id?: number;
+    project_name?: string;
+    technologies?: string;
+    project_url?: string;
+    description?: string;
+  }>;
+}
+
+// Transform API userData to local SkillGiverProfile format
+const transformApiDataToGiverProfile = (apiData: ApiUserData): Partial<SkillGiverProfile> => {
+  const profile: Partial<SkillGiverProfile> = {};
+  
+  if (apiData.summary) {
+    profile.bio = apiData.summary;
+  }
+  
+  if (apiData.email) {
+    profile.email = apiData.email;
+  }
+  
+  if (apiData.phone) {
+    profile.phone = apiData.phone;
+  }
+  
+  if (apiData.city || apiData.country) {
+    profile.address = [apiData.city, apiData.country].filter(Boolean).join(', ');
+  }
+  
+  if (Array.isArray(apiData.skills)) {
+    profile.skills = apiData.skills.map(s => ({
+      id: s.id?.toString() || generateId(),
+      name: s.skill_name || '',
+      level: (s.level?.toLowerCase() as SkillLevel) || 'intermediate',
+    })).filter(s => s.name);
+  }
+  
+  if (Array.isArray(apiData.experience)) {
+    profile.experience = apiData.experience.map(e => ({
+      id: e.id?.toString() || generateId(),
+      title: e.title || '',
+      company: e.company || '',
+      startDate: e.start_date ? e.start_date.substring(0, 7) : '',
+      endDate: e.end_date ? e.end_date.substring(0, 7) : '',
+      current: !e.end_date,
+      details: e.description || '',
+    }));
+  }
+  
+  if (Array.isArray(apiData.education)) {
+    profile.education = apiData.education.map(e => ({
+      id: e.id?.toString() || generateId(),
+      degree: e.degree || '',
+      institution: e.institution || '',
+      graduationYear: e.graduation_year || '',
+      gpa: '',
+    }));
+  }
+  
+  if (Array.isArray(apiData.certificates)) {
+    profile.certifications = apiData.certificates.map(c => ({
+      id: c.id?.toString() || generateId(),
+      name: c.name || '',
+      authority: c.authority || '',
+      date: c.date ? c.date.substring(0, 7) : '',
+    }));
+  }
+  
+  if (Array.isArray(apiData.projects)) {
+    profile.personalProjects = apiData.projects.map(p => ({
+      id: p.id?.toString() || generateId(),
+      name: p.project_name || '',
+      description: p.description || '',
+      technologies: p.technologies || '',
+      duration: '',
+    }));
+  }
+  
+  return profile;
+};
 
 const isValidUrl = (url: string): boolean => {
   if (!url.trim()) return true;
@@ -148,9 +264,54 @@ const createEmptySkillGiverProfile = (): SkillGiverProfile => ({
 
 const loadGiverProfileFromStorage = (): SkillGiverProfile => {
   const defaults = createEmptySkillGiverProfile();
+  
   try {
+    // First, check for API user_profile_cache (from login response)
+    const apiCache = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+    if (apiCache) {
+      console.log('Loading profile from user_profile_cache');
+      const apiData: ApiUserData = JSON.parse(apiCache);
+      const transformedData = transformApiDataToGiverProfile(apiData);
+      
+      // Also check for local profile to merge any additional data
+      const stored = localStorage.getItem(STORAGE_KEY);
+      const localData = stored ? JSON.parse(stored) : {};
+      
+      // Merge: API data takes priority, but keep local fields that API doesn't have
+      return {
+        bio: transformedData.bio ?? localData.bio ?? defaults.bio,
+        jobTitle: localData.jobTitle ?? localData.title ?? defaults.jobTitle,
+        address: transformedData.address ?? localData.address ?? localData.location ?? defaults.address,
+        email: transformedData.email ?? localData.email ?? defaults.email,
+        phone: transformedData.phone ?? localData.phone ?? defaults.phone,
+        linkedinUrl: localData.linkedinUrl ?? defaults.linkedinUrl,
+        availability: localData.availability ?? defaults.availability,
+        skills: transformedData.skills && transformedData.skills.length > 0 
+          ? transformedData.skills 
+          : (Array.isArray(localData.skills) ? localData.skills.map((s: { id?: string; name?: string; level?: SkillLevel }) => ({
+              id: s.id || generateId(),
+              name: s.name || '',
+              level: s.level || 'intermediate',
+            })).filter((s: Skill) => s.name) : defaults.skills),
+        experience: transformedData.experience && transformedData.experience.length > 0 
+          ? transformedData.experience 
+          : (Array.isArray(localData.experience) ? localData.experience : defaults.experience),
+        education: transformedData.education && transformedData.education.length > 0 
+          ? transformedData.education 
+          : (Array.isArray(localData.education) ? localData.education : defaults.education),
+        certifications: transformedData.certifications && transformedData.certifications.length > 0 
+          ? transformedData.certifications 
+          : (Array.isArray(localData.certifications) ? localData.certifications : defaults.certifications),
+        personalProjects: transformedData.personalProjects && transformedData.personalProjects.length > 0 
+          ? transformedData.personalProjects 
+          : (Array.isArray(localData.personalProjects) ? localData.personalProjects : defaults.personalProjects),
+      };
+    }
+    
+    // Fallback: load from local storage only
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
+      console.log('Loading profile from sinopia_skill_giver_profile');
       const parsed = JSON.parse(stored);
       return {
         bio: parsed.bio ?? defaults.bio,
