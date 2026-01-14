@@ -54,11 +54,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
+    console.log('[DEBUG] AuthContext login called with email:', email);
     const response = await authService.loginUser({ email, password });
+    console.log('[DEBUG] AuthContext received response:', response);
+    console.log('[DEBUG] Response.data:', response.data);
     
     const isSuccess = response.message?.toLowerCase().includes('successful') || 
                       response.message?.toLowerCase().includes('session already active') ||
                       response.status === 'success';
+    
+    console.log('[DEBUG] Login isSuccess:', isSuccess);
     
     if (isSuccess) {
       const userData = response.data as { 

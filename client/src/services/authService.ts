@@ -63,10 +63,12 @@ export const authService = {
   },
 
   async loginUser(payload: LoginPayload): Promise<ApiResponse> {
-    return apiRequest('/api/users/login', {
+    const response = await apiRequest('/api/users/login', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
+    console.log('[DEBUG] Login API raw response:', JSON.stringify(response, null, 2));
+    return response;
   },
 
   async forgotPassword(email: string): Promise<ApiResponse> {

@@ -268,9 +268,11 @@ const loadGiverProfileFromStorage = (): SkillGiverProfile => {
     // First, check for API user_profile_cache (from login response)
     const apiCache = localStorage.getItem(USER_PROFILE_CACHE_KEY);
     if (apiCache) {
-      console.log('Loading profile from user_profile_cache');
+      console.log('[DEBUG] Loading profile from user_profile_cache');
       const apiData: ApiUserData = JSON.parse(apiCache);
+      console.log('[DEBUG] Raw API cache data:', JSON.stringify(apiData, null, 2));
       const transformedData = transformApiDataToGiverProfile(apiData);
+      console.log('[DEBUG] Transformed profile data:', JSON.stringify(transformedData, null, 2));
       
       // Also check for local profile to merge any additional data
       const stored = localStorage.getItem(STORAGE_KEY);
