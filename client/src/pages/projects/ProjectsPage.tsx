@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/select';
 import { formatCurrency, formatDate } from '@/lib/utils/formatters';
 import { Search, Plus, Clock, DollarSign, FolderKanban } from 'lucide-react';
-import { UnderDevelopment } from '@/components/common/UnderDevelopment';
 
 export default function ProjectsPage() {
   const { user } = useAuth();
@@ -82,7 +81,6 @@ export default function ProjectsPage() {
           )}
         </div>
 
-        <UnderDevelopment className="mb-6" />
 
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">

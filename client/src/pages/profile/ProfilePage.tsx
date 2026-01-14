@@ -37,7 +37,6 @@ import {
   Sparkles,
   CheckCircle,
 } from 'lucide-react';
-import { UnderDevelopment } from '@/components/common/UnderDevelopment';
 
 type EditingSection = 'about' | 'skills' | 'experience' | 'education' | 'certifications' | 'company' | 'contact' | 'projects' | null;
 type SkillLevel = 'junior' | 'intermediate' | 'advance' | 'expert';
@@ -943,7 +942,6 @@ export default function ProfilePage() {
           </p>
         </div>
 
-        <UnderDevelopment className="mb-6" />
 
         <div className="grid lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-1">

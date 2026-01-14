@@ -13,7 +13,6 @@ import {
   AlertTriangle,
   XCircle,
 } from 'lucide-react';
-import { UnderDevelopment } from '@/components/common/UnderDevelopment';
 
 export default function NotificationsPage() {
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
@@ -79,7 +78,6 @@ export default function NotificationsPage() {
           )}
         </div>
 
-        <UnderDevelopment className="mb-6" />
 
         {notifications.length === 0 ? (
           <Card>

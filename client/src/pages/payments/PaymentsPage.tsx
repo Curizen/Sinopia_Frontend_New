@@ -16,7 +16,6 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatCurrency, formatDate } from '@/lib/utils/formatters';
 import { Search, CreditCard, DollarSign, TrendingUp, Clock } from 'lucide-react';
-import { UnderDevelopment } from '@/components/common/UnderDevelopment';
 
 export default function PaymentsPage() {
   const { user } = useAuth();
@@ -62,7 +61,6 @@ export default function PaymentsPage() {
           </p>
         </div>
 
-        <UnderDevelopment className="mb-6" />
 
         <div className="grid sm:grid-cols-3 gap-4">
           <Card>

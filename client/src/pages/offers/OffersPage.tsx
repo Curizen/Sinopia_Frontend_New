@@ -25,7 +25,6 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { formatCurrency, formatDate } from '@/lib/utils/formatters';
 import { Search, FileText, Check, X } from 'lucide-react';
-import { UnderDevelopment } from '@/components/common/UnderDevelopment';
 
 export default function OffersPage() {
   const { user } = useAuth();
@@ -88,7 +87,6 @@ export default function OffersPage() {
           </p>
         </div>
 
-        <UnderDevelopment className="mb-6" />
 
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">

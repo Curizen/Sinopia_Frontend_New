@@ -1,5 +1,4 @@
 import { useI18n } from '@/i18n';
-import { UnderDevelopment } from '@/components/common/UnderDevelopment';
 
 export function TestimonialsSection() {
   const { t } = useI18n();
@@ -16,7 +15,7 @@ export function TestimonialsSection() {
           </p>
         </div>
 
-        <UnderDevelopment />
+        <p className="text-center text-muted-foreground">{t('common.comingSoon')}</p>
       </div>
     </section>
   );
