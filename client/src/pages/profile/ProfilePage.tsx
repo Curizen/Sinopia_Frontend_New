@@ -78,6 +78,7 @@ interface PersonalProject {
   description: string;
   technologies: string;
   duration: string;
+  projectUrl: string;
 }
 
 interface SkillGiverProfile {
@@ -217,12 +218,13 @@ const transformApiDataToGiverProfile = (apiData: ApiUserData): Partial<SkillGive
   }
   
   if (Array.isArray(apiData.projects)) {
-    profile.personalProjects = apiData.projects.map(p => ({
+    profile.personalProjects = apiData.projects.map((p: { id?: number; project_name?: string; name?: string; technologies?: string; project_url?: string; description?: string; duration?: string }) => ({
       id: p.id?.toString() || generateId(),
-      name: p.project_name || '',
+      name: p.project_name || p.name || '',
       description: p.description || '',
       technologies: p.technologies || '',
-      duration: '',
+      duration: p.duration || '',
+      projectUrl: p.project_url || '',
     }));
   }
   
@@ -1228,28 +1230,237 @@ export default function ProfilePage() {
     }
   };
 
-  const handleSaveProject = (proj: PersonalProject) => {
-    if (proj.id) {
-      setGiverProfile(prev => ({
-        ...prev,
-        personalProjects: prev.personalProjects.map(p => p.id === proj.id ? proj : p),
-      }));
-    } else {
-      setGiverProfile(prev => ({
-        ...prev,
-        personalProjects: [...prev.personalProjects, { ...proj, id: generateId() }],
-      }));
+  const updateProjectLocalStorageCache = (updatedProj: PersonalProject, isNew: boolean = false) => {
+    try {
+      const cacheStr = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+      if (cacheStr) {
+        const cache = JSON.parse(cacheStr);
+        const apiProj = {
+          id: parseInt(updatedProj.id) || updatedProj.id,
+          user_id: cache.projects?.[0]?.user_id || null,
+          name: updatedProj.name,
+          description: updatedProj.description,
+          technologies: updatedProj.technologies,
+          duration: updatedProj.duration,
+          project_url: updatedProj.projectUrl || '',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        
+        if (isNew) {
+          cache.projects = [...(cache.projects || []), apiProj];
+        } else {
+          cache.projects = (cache.projects || []).map((p: { id: number | string }) => 
+            p.id.toString() === updatedProj.id ? apiProj : p
+          );
+        }
+        
+        localStorage.setItem(USER_PROFILE_CACHE_KEY, JSON.stringify(cache));
+        console.log('[DEBUG] Updated user_profile_cache with project:', apiProj);
+      }
+    } catch (error) {
+      console.error('Failed to update project localStorage cache:', error);
     }
-    setProjDialog({ open: false, proj: null });
-    toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
   };
 
-  const handleDeleteProject = (id: string) => {
-    setGiverProfile(prev => ({
-      ...prev,
-      personalProjects: prev.personalProjects.filter(p => p.id !== id),
-    }));
-    toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+  const removeProjectFromLocalStorageCache = (projId: string) => {
+    try {
+      const cacheStr = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+      if (cacheStr) {
+        const cache = JSON.parse(cacheStr);
+        if (cache && cache.projects) {
+          cache.projects = cache.projects.filter((p: { id: number | string }) => 
+            p.id.toString() !== projId
+          );
+          localStorage.setItem(USER_PROFILE_CACHE_KEY, JSON.stringify(cache));
+          console.log('[DEBUG] Removed project from user_profile_cache, id:', projId);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to remove project from localStorage cache:', error);
+    }
+  };
+
+  const handleSaveProject = async (proj: PersonalProject) => {
+    const token = localStorage.getItem('sinopia_token');
+    console.log('[DEBUG] Project - Sending token:', token);
+    console.log('[DEBUG] Project ID:', proj.id);
+    
+    if (proj.id) {
+      // Update existing project via API
+      try {
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const requestBody = {
+          name: proj.name,
+          description: proj.description,
+          technologies: proj.technologies,
+          duration: proj.duration,
+          project_url: proj.projectUrl || '',
+        };
+        
+        console.log('[DEBUG] PUT Project Request body:', requestBody);
+        
+        const response = await fetch(`/api/projects/${proj.id}`, {
+          method: 'PUT',
+          headers,
+          credentials: 'include',
+          body: JSON.stringify(requestBody),
+        });
+        
+        const data = await response.json();
+        console.log('[DEBUG] PUT Project Response:', data);
+        
+        if (response.ok) {
+          // 1. Update UI state
+          setGiverProfile(prev => ({
+            ...prev,
+            personalProjects: prev.personalProjects.map(p => p.id === proj.id ? proj : p),
+          }));
+          
+          // 2. Update localStorage cache
+          updateProjectLocalStorageCache(proj, false);
+          
+          setProjDialog({ open: false, proj: null });
+          toast({ title: t('profile.projectUpdated') || t('profile.profileUpdated'), description: t('profile.changesSaved') });
+        } else {
+          toast({ 
+            title: t('common.error'), 
+            description: data.message || t('profile.saveFailed'),
+            variant: 'destructive',
+          });
+        }
+      } catch (error) {
+        console.error('[DEBUG] Failed to update project:', error);
+        toast({ 
+          title: t('common.error'), 
+          description: t('profile.saveFailed'),
+          variant: 'destructive',
+        });
+      }
+    } else {
+      // Add new project via API
+      try {
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const requestBody = {
+          name: proj.name,
+          description: proj.description,
+          technologies: proj.technologies,
+          duration: proj.duration,
+          project_url: proj.projectUrl || '',
+        };
+        
+        console.log('[DEBUG] POST Project Request body:', requestBody);
+        
+        const response = await fetch('/api/projects', {
+          method: 'POST',
+          headers,
+          credentials: 'include',
+          body: JSON.stringify(requestBody),
+        });
+        
+        const data = await response.json();
+        console.log('[DEBUG] POST Project Response:', data);
+        
+        if (response.ok) {
+          // Use the ID from the server response if available
+          const newProjId = data.data?.id?.toString() || data.id?.toString() || generateId();
+          const newProj = { ...proj, id: newProjId };
+          
+          // 1. Update UI state
+          setGiverProfile(prev => ({
+            ...prev,
+            personalProjects: [...prev.personalProjects, newProj],
+          }));
+          
+          // 2. Update localStorage cache
+          updateProjectLocalStorageCache(newProj, true);
+          
+          setProjDialog({ open: false, proj: null });
+          toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+        } else {
+          toast({ 
+            title: t('common.error'), 
+            description: data.message || t('profile.saveFailed'),
+            variant: 'destructive',
+          });
+        }
+      } catch (error) {
+        console.error('[DEBUG] Failed to add project:', error);
+        toast({ 
+          title: t('common.error'), 
+          description: t('profile.saveFailed'),
+          variant: 'destructive',
+        });
+      }
+    }
+  };
+
+  const handleDeleteProject = async (id: string) => {
+    const confirmDelete = window.confirm(t('profile.confirmDeleteProject') || 'Are you sure you want to delete this project?');
+    if (!confirmDelete) return;
+
+    const token = localStorage.getItem('sinopia_token');
+    
+    try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      console.log('[DEBUG] DELETE Request for project id:', id);
+      
+      const response = await fetch(`/api/projects/${id}`, {
+        method: 'DELETE',
+        headers,
+        credentials: 'include',
+      });
+      
+      console.log('[DEBUG] DELETE Project Response status:', response.status);
+      
+      if (response.ok || response.status === 204) {
+        // 1. Update UI state
+        setGiverProfile(prev => ({
+          ...prev,
+          personalProjects: prev.personalProjects.filter(p => p.id !== id),
+        }));
+        
+        // 2. Update localStorage cache
+        removeProjectFromLocalStorageCache(id);
+        
+        toast({ title: t('profile.projectDeleted') || t('profile.profileUpdated'), description: t('profile.changesSaved') });
+      } else {
+        const data = await response.json();
+        toast({ 
+          title: t('common.error'), 
+          description: data.message || t('profile.deleteFailed'),
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('[DEBUG] Failed to delete project:', error);
+      toast({ 
+        title: t('common.error'), 
+        description: t('profile.deleteFailed'),
+        variant: 'destructive',
+      });
+    }
   };
 
   const normalizeLinkedInUrl = (url: string): string => {
@@ -2638,13 +2849,13 @@ function ProjectDialog({ open, onOpenChange, proj, onSave, t }: {
   onSave: (proj: PersonalProject) => void;
   t: (key: string) => string;
 }) {
-  const [form, setForm] = useState<PersonalProject>({ id: '', name: '', description: '', technologies: '', duration: '' });
+  const [form, setForm] = useState<PersonalProject>({ id: '', name: '', description: '', technologies: '', duration: '', projectUrl: '' });
 
   useEffect(() => {
     if (proj) {
-      setForm(proj);
+      setForm({ ...proj, projectUrl: proj.projectUrl || '' });
     } else {
-      setForm({ id: '', name: '', description: '', technologies: '', duration: '' });
+      setForm({ id: '', name: '', description: '', technologies: '', duration: '', projectUrl: '' });
     }
   }, [proj, open]);
 
@@ -2690,6 +2901,16 @@ function ProjectDialog({ open, onOpenChange, proj, onSave, t }: {
               onChange={(e) => setForm({ ...form, duration: e.target.value })}
               placeholder={t('profile.projectDurationPlaceholder')}
               data-testid="input-proj-duration"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>{t('profile.projectUrl')}</Label>
+            <Input
+              type="url"
+              value={form.projectUrl}
+              onChange={(e) => setForm({ ...form, projectUrl: e.target.value })}
+              placeholder={t('profile.projectUrlPlaceholder')}
+              data-testid="input-proj-url"
             />
           </div>
         </div>

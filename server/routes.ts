@@ -412,5 +412,87 @@ export async function registerRoutes(
     }
   });
 
+  // Projects API proxy - Create
+  app.post("/api/projects", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/projects`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(req.body),
+      });
+      forwardCookies(response, res);
+      const data = await response.json();
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Add project proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to add project" });
+    }
+  });
+
+  // Projects API proxy - Update
+  app.put("/api/projects/:id", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/projects/${req.params.id}`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify(req.body),
+      });
+      forwardCookies(response, res);
+      const data = await response.json();
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Update project proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to update project" });
+    }
+  });
+
+  // Projects API proxy - Delete
+  app.delete("/api/projects/:id", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/projects/${req.params.id}`, {
+        method: "DELETE",
+        headers,
+      });
+      forwardCookies(response, res);
+      
+      if (response.status === 204) {
+        res.status(204).send();
+      } else {
+        const data = await response.json();
+        res.status(response.status).json(data);
+      }
+    } catch (error) {
+      console.error("Delete project proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to delete project" });
+    }
+  });
+
   return httpServer;
 }
