@@ -71,6 +71,7 @@ export async function registerRoutes(
       });
       forwardCookies(response, res);
       const data = await response.json();
+      console.log("[DEBUG] Login API response from sinopia.eu:", JSON.stringify(data, null, 2));
       res.status(response.status).json(data);
     } catch (error) {
       console.error("Login proxy error:", error);

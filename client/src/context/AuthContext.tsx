@@ -66,26 +66,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     console.log('[DEBUG] Login isSuccess:', isSuccess);
     
     if (isSuccess) {
-      const userData = response.data as { 
-        id?: string; 
-        email?: string; 
-        account_type?: string; 
-        role?: string;
-        certificates?: unknown[];
-        education?: unknown[];
-        experience?: unknown[];
-        projects?: unknown[];
-        skills?: unknown[];
-        summary?: string;
-        phone?: string;
-        city?: string;
-        country?: string;
-      } | undefined;
+      // API returns userData object with user profile data
+      const apiResponse = response as { 
+        message?: string; 
+        role?: string; 
+        userData?: {
+          id?: string | null;
+          user_id?: string | null;
+          full_name?: string | null;
+          email?: string | null;
+          summary?: string | null;
+          phone?: string | null;
+          linkedin?: string | null;
+          country?: string | null;
+          city?: string | null;
+          certificates?: unknown[];
+          education?: unknown[];
+          experience?: unknown[];
+          projects?: unknown[];
+          skills?: unknown[];
+        };
+        data?: unknown;
+      };
+      
+      console.log('[DEBUG] Full API response object:', apiResponse);
+      console.log('[DEBUG] apiResponse.userData:', apiResponse.userData);
+      console.log('[DEBUG] apiResponse.role:', apiResponse.role);
+      
+      const userData = apiResponse.userData;
       
       const newUser: User = {
-        id: userData?.id || Date.now().toString(),
+        id: userData?.id || userData?.user_id || Date.now().toString(),
         email: userData?.email || email,
-        role: (userData?.account_type || userData?.role || 'skill_giver') as UserRole,
+        role: (apiResponse.role || 'skill_giver') as UserRole,
+        firstName: userData?.full_name?.split(' ')[0] || undefined,
+        lastName: userData?.full_name?.split(' ').slice(1).join(' ') || undefined,
         avatar: undefined,
       };
       
