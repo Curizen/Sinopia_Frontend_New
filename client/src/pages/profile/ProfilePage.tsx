@@ -411,20 +411,64 @@ export default function ProfilePage() {
     toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
   };
 
-  const handleSaveCertification = (cert: Certification) => {
+  const handleSaveCertification = async (cert: Certification) => {
+    const token = localStorage.getItem('sinopia_token');
+    
     if (cert.id) {
+      // Update existing certification (local only for now)
       setGiverProfile(prev => ({
         ...prev,
         certifications: prev.certifications.map(c => c.id === cert.id ? cert : c),
       }));
+      setCertDialog({ open: false, cert: null });
+      toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
     } else {
-      setGiverProfile(prev => ({
-        ...prev,
-        certifications: [...prev.certifications, { ...cert, id: generateId() }],
-      }));
+      // Add new certification via API
+      try {
+        // Convert YYYY-MM format to YYYY-MM-DD (first day of month)
+        const dateForApi = cert.date ? `${cert.date}-01` : '';
+        
+        const response = await fetch('/api/certificates', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` }),
+          },
+          body: JSON.stringify({
+            name: cert.name,
+            authority: cert.authority,
+            date: dateForApi,
+          }),
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          // Use the ID from the server response if available, otherwise generate one
+          const newCertId = data.data?.id?.toString() || generateId();
+          
+          setGiverProfile(prev => ({
+            ...prev,
+            certifications: [...prev.certifications, { ...cert, id: newCertId }],
+          }));
+          setCertDialog({ open: false, cert: null });
+          toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+        } else {
+          toast({ 
+            title: t('common.error'), 
+            description: data.message || t('profile.saveFailed'),
+            variant: 'destructive',
+          });
+        }
+      } catch (error) {
+        console.error('Failed to add certificate:', error);
+        toast({ 
+          title: t('common.error'), 
+          description: t('profile.saveFailed'),
+          variant: 'destructive',
+        });
+      }
     }
-    setCertDialog({ open: false, cert: null });
-    toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
   };
 
   const handleDeleteCertification = (id: string) => {

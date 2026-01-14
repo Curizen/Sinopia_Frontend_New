@@ -411,6 +411,7 @@ export const de = {
     location: "Standort",
     profileUpdated: "Profil aktualisiert!",
     changesSaved: "Ihre Änderungen wurden erfolgreich gespeichert.",
+    saveFailed: "Speichern fehlgeschlagen. Bitte versuchen Sie es erneut.",
     addSkill: "Fähigkeit hinzufügen",
     removeSkill: "Entfernen",
     skillName: "Fähigkeitsname",

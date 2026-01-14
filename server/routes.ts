@@ -165,5 +165,31 @@ export async function registerRoutes(
     }
   });
 
+  // Certificates API proxy
+  app.post("/api/certificates", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/certificates`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(req.body),
+      });
+      forwardCookies(response, res);
+      const data = await response.json();
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Add certificate proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to add certificate" });
+    }
+  });
+
   return httpServer;
 }

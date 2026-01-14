@@ -403,6 +403,7 @@ export const en = {
     location: "Location",
     profileUpdated: "Profile updated!",
     changesSaved: "Your changes have been saved successfully.",
+    saveFailed: "Failed to save. Please try again.",
     addSkill: "Add Skill",
     removeSkill: "Remove",
     skillName: "Skill Name",
