@@ -592,12 +592,17 @@ export default function ProfilePage() {
           headers['Authorization'] = `Bearer ${token}`;
         }
         
+        const formatDateForAPI = (date: string) => {
+          if (!date) return null;
+          return date.length === 7 ? `${date}-01` : date;
+        };
+        
         const requestBody = {
           title: exp.title,
           company: exp.company,
-          start_date: exp.startDate,
-          end_date: exp.endDate || null,
-          experience_details: exp.details,
+          start_date: formatDateForAPI(exp.startDate),
+          end_date: formatDateForAPI(exp.endDate) || formatDateForAPI(exp.startDate),
+          experience_details: exp.details || '',
         };
         
         console.log('[DEBUG] PUT Experience Request body:', requestBody);
@@ -650,12 +655,17 @@ export default function ProfilePage() {
           headers['Authorization'] = `Bearer ${token}`;
         }
         
+        const formatDateForAPI = (date: string) => {
+          if (!date) return null;
+          return date.length === 7 ? `${date}-01` : date;
+        };
+        
         const requestBody = {
           title: exp.title,
           company: exp.company,
-          start_date: exp.startDate,
-          end_date: exp.endDate || null,
-          experience_details: exp.details,
+          start_date: formatDateForAPI(exp.startDate),
+          end_date: formatDateForAPI(exp.endDate) || formatDateForAPI(exp.startDate),
+          experience_details: exp.details || '',
         };
         
         console.log('[DEBUG] POST Experience Request body:', requestBody);
