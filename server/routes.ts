@@ -218,5 +218,35 @@ export async function registerRoutes(
     }
   });
 
+  // Certificates API proxy - Delete
+  app.delete("/api/certificates/:id", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/certificates/${req.params.id}`, {
+        method: "DELETE",
+        headers,
+      });
+      forwardCookies(response, res);
+      
+      if (response.status === 204) {
+        res.status(204).send();
+      } else {
+        const data = await response.json();
+        res.status(response.status).json(data);
+      }
+    } catch (error) {
+      console.error("Delete certificate proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to delete certificate" });
+    }
+  });
+
   return httpServer;
 }

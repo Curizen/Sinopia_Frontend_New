@@ -731,12 +731,76 @@ export default function ProfilePage() {
     }
   };
 
-  const handleDeleteCertification = (id: string) => {
-    setGiverProfile(prev => ({
-      ...prev,
-      certifications: prev.certifications.filter(c => c.id !== id),
-    }));
-    toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+  const removeFromLocalStorageCache = (certId: string) => {
+    try {
+      const cacheStr = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+      if (cacheStr) {
+        const cache = JSON.parse(cacheStr);
+        if (cache && cache.certificates) {
+          cache.certificates = cache.certificates.filter((c: { id: number | string }) => 
+            c.id.toString() !== certId
+          );
+          localStorage.setItem(USER_PROFILE_CACHE_KEY, JSON.stringify(cache));
+          console.log('[DEBUG] Removed certificate from user_profile_cache, id:', certId);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to remove from localStorage cache:', error);
+    }
+  };
+
+  const handleDeleteCertification = async (id: string) => {
+    const confirmDelete = window.confirm(t('profile.confirmDeleteCertificate') || 'Are you sure you want to delete this certificate?');
+    if (!confirmDelete) return;
+
+    const token = localStorage.getItem('sinopia_token');
+    
+    try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      console.log('[DEBUG] DELETE Request for certificate id:', id);
+      
+      const response = await fetch(`/api/certificates/${id}`, {
+        method: 'DELETE',
+        headers,
+        credentials: 'include',
+      });
+      
+      console.log('[DEBUG] DELETE Response status:', response.status);
+      
+      if (response.ok || response.status === 204) {
+        // 1. Update UI state
+        setGiverProfile(prev => ({
+          ...prev,
+          certifications: prev.certifications.filter(c => c.id !== id),
+        }));
+        
+        // 2. Update localStorage cache
+        removeFromLocalStorageCache(id);
+        
+        toast({ title: t('profile.certificationDeleted') || t('profile.profileUpdated'), description: t('profile.changesSaved') });
+      } else {
+        const data = await response.json();
+        toast({ 
+          title: t('common.error'), 
+          description: data.message || t('profile.deleteFailed') || 'Failed to delete certificate',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('[DEBUG] Failed to delete certificate:', error);
+      toast({ 
+        title: t('common.error'), 
+        description: t('profile.deleteFailed') || 'Failed to delete certificate',
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleSaveProject = (proj: PersonalProject) => {
