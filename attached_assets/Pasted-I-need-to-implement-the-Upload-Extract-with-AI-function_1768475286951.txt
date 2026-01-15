@@ -1,0 +1,57 @@
+I need to implement the "Upload & Extract with AI" functionality for the CV upload section.
+
+Please implement the following logic:
+
+### 1. File Selection & API Request
+- **Trigger:** When the user selects a file or drops it into the upload area.
+- **Loading State:** Show a "Processing..." loading indicator while the AI is analyzing.
+- **API Endpoint:** `POST ${EXTERNAL_API_URL}/api/upload-cv`
+- **Headers:** `Authorization: Bearer <token>` (Do NOT set 'Content-Type' manually; let the browser handle the multipart boundary).
+- **Body:** Create a `FormData` object and append the file with the key `'cvFile'`.
+
+### 2. Response Handling (Data Mapping)
+The API returns a complex object nested in `response.data.cvData`. You need to map this extracted data to our application's `userData` structure and update the state.
+
+**Mapping Rules:**
+
+A. **Personal Info (Merge with existing):**
+   - `full_name` <= `cvData.name`
+   - `phone` <= `cvData.contact.phone`
+   - `email` <= `cvData.contact.email`
+   - `linkedin` <= `cvData.contact.linkedin`
+   - `city` <= `cvData.contact.city`
+   - `country` <= `cvData.contact.country`
+   - `summary` (Bio) <= `cvData.summary`
+
+B. **Education (Replace/Append):**
+   - Map `cvData.education` array to the state's `education` array.
+   - Fields: `degree`, `institution`, `graduation_year`, `gpa`.
+
+C. **Experience (Transformation Needed):**
+   - Map `cvData.experience` array to the state's `experience` array.
+   - **Important:** The API returns `details` as an Array of strings `["line 1", "line 2"]`. You must `.join('\n')` this array into a single string to fit our `experience_details` text field format.
+   - Map `title` (if null, use a placeholder or handle gracefully), `company`, `start_date`, `end_date`.
+
+D. **Skills:**
+   - Map `cvData.skills` to the state's `skills` array.
+   - Fields: `skill_name`, `skill_type` (e.g., 'technical'), `level`.
+
+E. **Projects:**
+   - Map `cvData.projects` to the state's `projects` array.
+   - Fields: `project_name`, `description`, `project_url`.
+   - *Note:* `cvData.projects` has a `technologies` array. Ensure it matches the format our UI expects (Array of strings).
+
+F. **Certifications:**
+   - Map `cvData.certifications` to the state's `certificates` array.
+
+### 3. Caching & State Update (CRITICAL)
+Upon successful extraction:
+1.  **Update UI State:** Update the main `user` state with all these new values simultaneously so the UI populates instantly.
+2.  **Update Local Storage:**
+    - Retrieve `'user_profile_cache'`.
+    - Update/Merge the `userData` object with the new extracted data.
+    - Save back to localStorage.
+3.  **Success Feedback:** Show a toast message: "CV uploaded and profile updated successfully!".
+4.  **Reset:** Turn off the loading indicator.
+
+Please write the complete handler function for the file upload.

@@ -116,6 +116,7 @@ const SEARCHER_STORAGE_KEY = 'sinopia_skill_searcher_profile';
 const USER_PROFILE_CACHE_KEY = 'user_profile_cache';
 
 const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
+const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
 // Interface for API userData response
 interface ApiUserData {
@@ -2007,51 +2008,147 @@ export default function ProfilePage() {
     setCvFileSize(file.size);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      const mockExtractedData = {
-        skills: [
-          { id: generateId(), name: 'JavaScript', level: 'Expert' as SkillLevel, skill_type: 'technical' as SkillType },
-          { id: generateId(), name: 'React', level: 'Advanced' as SkillLevel, skill_type: 'technical' as SkillType },
-          { id: generateId(), name: 'Node.js', level: 'Intermediate' as SkillLevel, skill_type: 'technical' as SkillType },
-        ],
-        experience: [
-          {
-            id: generateId(),
-            title: 'Senior Developer',
-            company: 'Tech Company',
-            startDate: '2020-01',
-            endDate: '',
-            current: true,
-            details: 'Full-stack development with modern technologies.',
-          },
-        ],
-        education: [
-          {
-            id: generateId(),
-            degree: 'Bachelor of Science',
-            institution: 'University',
-            graduationYear: '2018',
-            gpa: '',
-          },
-        ],
-        certifications: [] as Certification[],
+      const token = localStorage.getItem('sinopia_token');
+      const formData = new FormData();
+      formData.append('cvFile', file);
+      
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      const response = await fetch('/api/upload-cv', {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
+      
+      const data = await response.json();
+      console.log('[DEBUG] CV Upload response:', JSON.stringify(data, null, 2));
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to upload CV');
+      }
+      
+      // Extract cvData from response
+      const cvData = data.data?.cvData || data.cvData || {};
+      console.log('[DEBUG] Extracted cvData:', JSON.stringify(cvData, null, 2));
+      
+      // Map extracted data to our profile structure
+      const extractedData = {
+        // Personal Info
+        full_name: cvData.name || '',
+        phone: cvData.contact?.phone || '',
+        email: cvData.contact?.email || '',
+        linkedin: cvData.contact?.linkedin || '',
+        city: cvData.contact?.city || '',
+        country: cvData.contact?.country || '',
+        summary: cvData.summary || '',
+        
+        // Skills - map to our format
+        skills: (cvData.skills || []).map((skill: { skill_name?: string; name?: string; skill_type?: string; level?: string }) => ({
+          id: generateId(),
+          name: skill.skill_name || skill.name || '',
+          skill_type: (skill.skill_type || 'technical') as SkillType,
+          level: capitalizeFirstLetter(skill.level || 'intermediate') as SkillLevel,
+        })).filter((s: Skill) => s.name),
+        
+        // Education - map fields
+        education: (cvData.education || []).map((edu: { degree?: string; institution?: string; graduation_year?: string | number; gpa?: string | number }) => ({
+          id: generateId(),
+          degree: edu.degree || '',
+          institution: edu.institution || '',
+          graduationYear: edu.graduation_year?.toString() || '',
+          gpa: edu.gpa?.toString() || '',
+        })),
+        
+        // Experience - transform details array to string
+        experience: (cvData.experience || []).map((exp: { title?: string; company?: string; start_date?: string; end_date?: string; details?: string | string[] }) => ({
+          id: generateId(),
+          title: exp.title || 'Position',
+          company: exp.company || '',
+          startDate: exp.start_date || '',
+          endDate: exp.end_date || '',
+          current: !exp.end_date || exp.end_date.toLowerCase() === 'present',
+          details: Array.isArray(exp.details) ? exp.details.join('\n') : (exp.details || ''),
+        })),
+        
+        // Projects - map fields
+        projects: (cvData.projects || []).map((proj: { project_name?: string; name?: string; description?: string; project_url?: string; url?: string; technologies?: string[] }) => ({
+          id: generateId(),
+          name: proj.project_name || proj.name || '',
+          description: proj.description || '',
+          url: proj.project_url || proj.url || '',
+          technologies: proj.technologies || [],
+        })),
+        
+        // Certifications
+        certifications: (cvData.certifications || []).map((cert: { name?: string; issuer?: string; date?: string; expiry?: string; credential_id?: string }) => ({
+          id: generateId(),
+          name: cert.name || '',
+          issuer: cert.issuer || '',
+          date: cert.date || '',
+          expiryDate: cert.expiry || '',
+          credentialId: cert.credential_id || '',
+        })),
       };
-
+      
+      console.log('[DEBUG] Mapped extracted data:', JSON.stringify(extractedData, null, 2));
+      
+      // Update giver profile with extracted data
       setGiverProfile(prev => ({
         ...prev,
-        skills: [...prev.skills, ...mockExtractedData.skills.filter(newSkill => 
-          !prev.skills.some(existingSkill => existingSkill.name.toLowerCase() === newSkill.name.toLowerCase())
-        )],
-        experience: mockExtractedData.experience.length > 0 && prev.experience.length === 0 
-          ? mockExtractedData.experience 
+        bio: extractedData.summary || prev.bio,
+        // Add new skills, avoiding duplicates
+        skills: [
+          ...prev.skills,
+          ...extractedData.skills.filter((newSkill: Skill) => 
+            !prev.skills.some(existingSkill => 
+              existingSkill.name.toLowerCase() === newSkill.name.toLowerCase()
+            )
+          ),
+        ],
+        // Replace if empty, otherwise keep existing
+        experience: extractedData.experience.length > 0 && prev.experience.length === 0 
+          ? extractedData.experience 
           : prev.experience,
-        education: mockExtractedData.education.length > 0 && prev.education.length === 0 
-          ? mockExtractedData.education 
+        education: extractedData.education.length > 0 && prev.education.length === 0 
+          ? extractedData.education 
           : prev.education,
-        certifications: mockExtractedData.certifications.length > 0 && prev.certifications.length === 0 
-          ? mockExtractedData.certifications 
+        certifications: extractedData.certifications.length > 0 && prev.certifications.length === 0 
+          ? extractedData.certifications 
           : prev.certifications,
+        personalProjects: extractedData.projects.length > 0 && prev.personalProjects.length === 0 
+          ? extractedData.projects 
+          : prev.personalProjects,
+      }));
+      
+      // Update cached user profile
+      const cacheUpdateData: Record<string, unknown> = {};
+      if (extractedData.full_name) cacheUpdateData.full_name = extractedData.full_name;
+      if (extractedData.phone) cacheUpdateData.phone = extractedData.phone;
+      if (extractedData.email) cacheUpdateData.email = extractedData.email;
+      if (extractedData.linkedin) cacheUpdateData.linkedin = extractedData.linkedin;
+      if (extractedData.city) cacheUpdateData.city = extractedData.city;
+      if (extractedData.country) cacheUpdateData.country = extractedData.country;
+      if (extractedData.summary) cacheUpdateData.summary = extractedData.summary;
+      if (extractedData.skills.length > 0) cacheUpdateData.skills = extractedData.skills;
+      if (extractedData.education.length > 0) cacheUpdateData.education = extractedData.education;
+      if (extractedData.experience.length > 0) cacheUpdateData.experience = extractedData.experience;
+      if (extractedData.projects.length > 0) cacheUpdateData.projects = extractedData.projects;
+      if (extractedData.certifications.length > 0) cacheUpdateData.certifications = extractedData.certifications;
+      
+      updateProfileCache(cacheUpdateData);
+      
+      // Update cached profile display values
+      setCachedUserProfile(prev => ({
+        ...prev,
+        fullName: extractedData.full_name || prev.fullName,
+        email: extractedData.email || prev.email,
+        phone: extractedData.phone || prev.phone,
+        linkedin: extractedData.linkedin || prev.linkedin,
+        city: extractedData.city || prev.city,
+        country: extractedData.country || prev.country,
       }));
 
       setCvUploaded(true);
@@ -2060,7 +2157,8 @@ export default function ProfilePage() {
         title: t('profile.cvUploadSuccess'),
         description: t('profile.cvExtractionComplete'),
       });
-    } catch {
+    } catch (error) {
+      console.error('[DEBUG] CV Upload error:', error);
       setCvFileName(null);
       setCvFileSize(null);
       toast({

@@ -1,8 +1,15 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import multer from "multer";
 
 const EXTERNAL_API_BASE = process.env.EXTERNAL_API_URL || "https://sinopia.eu";
+
+// Configure multer for memory storage (we'll forward the file to external API)
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+});
 
 function forwardCookies(externalResponse: Response, res: any) {
   const setCookieHeader = externalResponse.headers.get("set-cookie");
@@ -620,6 +627,48 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Update profile proxy error:", error);
       res.status(500).json({ status: "error", message: "Failed to update profile" });
+    }
+  });
+
+  // CV Upload API proxy - Upload and extract with AI
+  app.post("/api/upload-cv", upload.single('cvFile'), async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const file = req.file;
+      
+      if (!file) {
+        res.status(400).json({ status: "error", message: "No file uploaded" });
+        return;
+      }
+      
+      console.log("[DEBUG] POST /api/upload-cv - File:", file.originalname, "Size:", file.size);
+      
+      // Create FormData to forward to external API
+      const formData = new FormData();
+      const blob = new Blob([file.buffer], { type: file.mimetype });
+      formData.append('cvFile', blob, file.originalname);
+      
+      const headers: Record<string, string> = {
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/upload-cv`, {
+        method: "POST",
+        headers,
+        body: formData,
+      });
+      
+      forwardCookies(response, res);
+      const data = await response.json();
+      console.log("[DEBUG] POST /api/upload-cv - Response status:", response.status);
+      console.log("[DEBUG] POST /api/upload-cv - Response data:", JSON.stringify(data, null, 2));
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Upload CV proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to upload CV" });
     }
   });
 
