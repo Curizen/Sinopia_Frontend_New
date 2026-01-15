@@ -1786,11 +1786,10 @@ export default function ProfilePage() {
       const bioContent = cachedUserProfile.summary || null;
       
       // Build the payload with correct field mapping for POST /api/profile/
-      // API expects: name (not full_name), bio and summary (same content), skills array
+      // API expects: name (not full_name), summary (not bio), skills array
       const payload = {
         name: contactForm.full_name.trim() || null,
         email: contactForm.email.trim() || null,
-        bio: bioContent,
         summary: bioContent,
         skills: giverProfile.skills.map(s => s.name),
       };
@@ -1884,11 +1883,10 @@ export default function ProfilePage() {
       const newSummary = (editBuffer.bio || '').trim() || null;
 
       // Build payload for POST /api/profile/ with correct field mapping
-      // API expects: name, email, bio, summary (same content), skills array
+      // API expects: name, email, summary (not bio), skills array
       const payload = {
         name: cachedUserProfile.fullName || null,
         email: cachedUserProfile.email || null,
-        bio: newSummary,
         summary: newSummary,
         skills: giverProfile.skills.map(s => s.name),
       };
