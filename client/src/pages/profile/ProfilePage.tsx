@@ -118,10 +118,13 @@ const generateId = () => Date.now().toString(36) + Math.random().toString(36).su
 // Interface for API userData response
 interface ApiUserData {
   id?: string;
+  user_id?: number;
+  full_name?: string;
   email?: string;
   phone?: string;
   city?: string;
   country?: string;
+  linkedin?: string;
   summary?: string;
   skills?: Array<{
     id?: number;
@@ -157,6 +160,38 @@ interface ApiUserData {
     description?: string;
   }>;
 }
+
+// Interface for cached user profile data used in sidebar
+interface CachedUserProfile {
+  fullName: string;
+  city: string;
+  country: string;
+  email: string;
+  phone: string;
+  linkedin: string;
+  summary: string;
+}
+
+// Helper to format LinkedIn URL
+const formatLinkedInUrl = (url: string | undefined | null): string => {
+  if (!url) return '';
+  let cleaned = url.trim();
+  if (!cleaned) return '';
+  if (!cleaned.startsWith('http://') && !cleaned.startsWith('https://')) {
+    cleaned = 'https://' + cleaned;
+  }
+  return cleaned;
+};
+
+// Helper to get initials from full name
+const getInitialsFromFullName = (fullName: string | undefined | null): string => {
+  if (!fullName || !fullName.trim()) return '?';
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length === 1) {
+    return parts[0].charAt(0).toUpperCase();
+  }
+  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+};
 
 // Transform API userData to local SkillGiverProfile format
 const transformApiDataToGiverProfile = (apiData: ApiUserData): Partial<SkillGiverProfile> => {
@@ -423,6 +458,39 @@ export default function ProfilePage() {
     contactEmail: '',
     contactPhone: '',
   });
+
+  // State for cached user profile from API (for sidebar and bio)
+  const [cachedUserProfile, setCachedUserProfile] = useState<CachedUserProfile>({
+    fullName: '',
+    city: '',
+    country: '',
+    email: '',
+    phone: '',
+    linkedin: '',
+    summary: '',
+  });
+
+  // Load cached user profile from localStorage on mount
+  useEffect(() => {
+    try {
+      const cached = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        console.log('[DEBUG] Loading user profile for sidebar from cache:', parsed);
+        setCachedUserProfile({
+          fullName: parsed.full_name || '',
+          city: parsed.city || '',
+          country: parsed.country || '',
+          email: parsed.email || '',
+          phone: parsed.phone || '',
+          linkedin: parsed.linkedin || '',
+          summary: parsed.summary || '',
+        });
+      }
+    } catch (e) {
+      console.error('Failed to load cached user profile:', e);
+    }
+  }, []);
 
   useEffect(() => {
     if (isSkillGiver) {
@@ -1695,11 +1763,11 @@ export default function ProfilePage() {
             <CardContent className="pt-6 text-center">
               <Avatar className="w-24 h-24 mx-auto mb-4">
                 <AvatarFallback className="bg-primary/10 text-primary text-2xl">
-                  {getInitials(user?.firstName, user?.lastName)}
+                  {getInitialsFromFullName(cachedUserProfile.fullName) || getInitials(user?.firstName, user?.lastName)}
                 </AvatarFallback>
               </Avatar>
-              <h2 className="font-semibold text-xl">
-                {user?.firstName} {user?.lastName}
+              <h2 className="font-semibold text-xl" data-testid="text-profile-fullname">
+                {cachedUserProfile.fullName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || t('emptyState.notSet')}
               </h2>
               {isSkillGiver && (
                 <p className="text-muted-foreground" data-testid="text-profile-job-title">{displayValue(giverProfile.jobTitle)}</p>
@@ -1713,27 +1781,35 @@ export default function ProfilePage() {
                   <>
                     <div className="flex items-center gap-3 text-sm">
                       <MapPin className="w-4 h-4 text-muted-foreground" />
-                      <span data-testid="text-profile-address">{displayValue(giverProfile.address)}</span>
+                      <span data-testid="text-profile-address">
+                        {cachedUserProfile.city || cachedUserProfile.country
+                          ? [cachedUserProfile.city, cachedUserProfile.country].filter(Boolean).join(', ')
+                          : t('emptyState.notSet')}
+                      </span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <Mail className="w-4 h-4 text-muted-foreground" />
-                      <span data-testid="text-profile-email">{displayValue(giverProfile.email) !== t('emptyState.notSet') ? giverProfile.email : (user?.email || t('emptyState.notSet'))}</span>
+                      <span data-testid="text-profile-email">
+                        {cachedUserProfile.email || user?.email || t('emptyState.notSet')}
+                      </span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <Phone className="w-4 h-4 text-muted-foreground" />
-                      <span data-testid="text-profile-phone">{displayValue(giverProfile.phone)}</span>
+                      <span data-testid="text-profile-phone">
+                        {cachedUserProfile.phone || t('emptyState.notSet')}
+                      </span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <Linkedin className="w-4 h-4 text-muted-foreground" />
-                      {giverProfile.linkedinUrl ? (
+                      {cachedUserProfile.linkedin ? (
                         <a
-                          href={giverProfile.linkedinUrl}
+                          href={formatLinkedInUrl(cachedUserProfile.linkedin)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-primary hover:underline truncate"
                           data-testid="link-profile-linkedin"
                         >
-                          {giverProfile.linkedinUrl.replace('https://', '')}
+                          {cachedUserProfile.linkedin.trim().replace('https://', '').replace('http://', '')}
                         </a>
                       ) : (
                         <span>{t('emptyState.notSet')}</span>
@@ -2096,8 +2172,8 @@ export default function ProfilePage() {
                     data-testid="input-profile-bio"
                   />
                 ) : (
-                  <p className="text-muted-foreground">
-                    {profile.bio?.trim() ? profile.bio : t('emptyState.notSet')}
+                  <p className="text-muted-foreground" data-testid="text-profile-bio">
+                    {cachedUserProfile.summary?.trim() || profile.bio?.trim() || t('emptyState.notSet')}
                   </p>
                 )}
               </CardContent>
