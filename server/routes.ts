@@ -602,7 +602,8 @@ export async function registerRoutes(
   });
 
   // Profile API proxy - Update (for Personal Info and Bio)
-  app.put("/api/profile", async (req, res) => {
+  // Uses POST method with trailing slash as required by backend
+  app.post("/api/profile", async (req, res) => {
     try {
       const authHeader = req.headers.authorization;
       const headers: Record<string, string> = { 
@@ -613,16 +614,18 @@ export async function registerRoutes(
         headers["Authorization"] = authHeader;
       }
       
-      console.log("[DEBUG] PUT /api/profile - Request body:", JSON.stringify(req.body, null, 2));
+      console.log("[DEBUG] POST /api/profile - Request body:", JSON.stringify(req.body, null, 2));
       
-      const response = await fetch(`${EXTERNAL_API_BASE}/api/profile`, {
-        method: "PUT",
+      // Note: External API requires trailing slash on /api/profile/
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/profile/`, {
+        method: "POST",
         headers,
         body: JSON.stringify(req.body),
       });
       forwardCookies(response, res);
       const data = await response.json();
-      console.log("[DEBUG] PUT /api/profile - Response:", JSON.stringify(data, null, 2));
+      console.log("[DEBUG] POST /api/profile - Response status:", response.status);
+      console.log("[DEBUG] POST /api/profile - Response:", JSON.stringify(data, null, 2));
       res.status(response.status).json(data);
     } catch (error) {
       console.error("Update profile proxy error:", error);

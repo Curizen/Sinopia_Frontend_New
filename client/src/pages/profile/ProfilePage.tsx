@@ -1783,22 +1783,22 @@ export default function ProfilePage() {
         return;
       }
 
-      // Build the complete profile payload
+      const bioContent = cachedUserProfile.summary || null;
+      
+      // Build the payload with correct field mapping for POST /api/profile/
+      // API expects: name (not full_name), bio and summary (same content), skills array
       const payload = {
-        full_name: contactForm.full_name.trim() || null,
-        phone: contactForm.phone.trim() || null,
+        name: contactForm.full_name.trim() || null,
         email: contactForm.email.trim() || null,
-        linkedin: contactForm.linkedin.trim().replace(/\r?\n/g, '') || null,
-        country: contactForm.country.trim() || null,
-        city: contactForm.city.trim() || null,
-        // Include current summary to not lose it
-        summary: cachedUserProfile.summary || null,
+        bio: bioContent,
+        summary: bioContent,
+        skills: giverProfile.skills.map(s => s.name),
       };
 
-      console.log('[DEBUG] Saving contact info:', payload);
+      console.log('[DEBUG] Saving contact info (POST):', payload);
 
       const response = await fetch('/api/profile', {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
@@ -1808,28 +1808,33 @@ export default function ProfilePage() {
       });
 
       const data = await response.json();
+      console.log('[DEBUG] Save contact response status:', response.status);
       console.log('[DEBUG] Save contact response:', data);
 
-      if (response.ok) {
+      // Handle 200 or 201 as success
+      if (response.ok || response.status === 201) {
+        // Map response.name back to full_name for UI consistency
+        const returnedName = data.name || payload.name;
+        
         // 1. Update UI state
         setCachedUserProfile(prev => ({
           ...prev,
-          fullName: payload.full_name || '',
-          phone: payload.phone || '',
+          fullName: returnedName || '',
+          phone: contactForm.phone.trim() || prev.phone,
           email: payload.email || '',
-          linkedin: payload.linkedin || '',
-          country: payload.country || '',
-          city: payload.city || '',
+          linkedin: contactForm.linkedin.trim().replace(/\r?\n/g, '') || prev.linkedin,
+          country: contactForm.country.trim() || prev.country,
+          city: contactForm.city.trim() || prev.city,
         }));
 
-        // 2. Update localStorage cache
+        // 2. Update localStorage cache - map name back to full_name
         updateProfileCache({
-          full_name: payload.full_name,
-          phone: payload.phone,
+          full_name: returnedName,
+          phone: contactForm.phone.trim(),
           email: payload.email,
-          linkedin: payload.linkedin,
-          country: payload.country,
-          city: payload.city,
+          linkedin: contactForm.linkedin.trim().replace(/\r?\n/g, ''),
+          country: contactForm.country.trim(),
+          city: contactForm.city.trim(),
         });
 
         setContactDialog(false);
@@ -1878,21 +1883,20 @@ export default function ProfilePage() {
 
       const newSummary = (editBuffer.bio || '').trim() || null;
 
-      // Build the complete profile payload - include all fields to not lose them
+      // Build payload for POST /api/profile/ with correct field mapping
+      // API expects: name, email, bio, summary (same content), skills array
       const payload = {
-        full_name: cachedUserProfile.fullName || null,
-        phone: cachedUserProfile.phone || null,
+        name: cachedUserProfile.fullName || null,
         email: cachedUserProfile.email || null,
-        linkedin: cachedUserProfile.linkedin?.trim().replace(/\r?\n/g, '') || null,
-        country: cachedUserProfile.country || null,
-        city: cachedUserProfile.city || null,
+        bio: newSummary,
         summary: newSummary,
+        skills: giverProfile.skills.map(s => s.name),
       };
 
-      console.log('[DEBUG] Saving bio:', payload);
+      console.log('[DEBUG] Saving bio (POST):', payload);
 
       const response = await fetch('/api/profile', {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
@@ -1902,9 +1906,11 @@ export default function ProfilePage() {
       });
 
       const data = await response.json();
+      console.log('[DEBUG] Save bio response status:', response.status);
       console.log('[DEBUG] Save bio response:', data);
 
-      if (response.ok) {
+      // Handle 200 or 201 as success
+      if (response.ok || response.status === 201) {
         // 1. Update UI state
         setCachedUserProfile(prev => ({
           ...prev,
@@ -2933,7 +2939,7 @@ export default function ProfilePage() {
                           <h4 className="font-semibold">{proj.name}</h4>
                           {proj.technologies && (
                             <div className="flex flex-wrap gap-1 mt-1">
-                              {proj.technologies.split(',').map((tech, i) => (
+                              {(Array.isArray(proj.technologies) ? proj.technologies : (typeof proj.technologies === 'string' ? proj.technologies.split(',') : [])).map((tech: string, i: number) => (
                                 <Badge key={i} variant="outline" className="text-xs">
                                   {tech.trim()}
                                 </Badge>
