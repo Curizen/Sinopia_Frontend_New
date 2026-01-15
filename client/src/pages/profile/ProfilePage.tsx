@@ -1786,10 +1786,11 @@ export default function ProfilePage() {
       const bioContent = cachedUserProfile.summary || null;
       
       // Build the payload with correct field mapping for POST /api/profile/
-      // API expects: name (not full_name), summary (not bio), skills array
+      // API expects: full_name, email, bio, summary, skills array
       const payload = {
-        name: contactForm.full_name.trim() || null,
+        full_name: contactForm.full_name.trim() || null,
         email: contactForm.email.trim() || null,
+        bio: bioContent,
         summary: bioContent,
         skills: giverProfile.skills.map(s => s.name),
       };
@@ -1812,8 +1813,8 @@ export default function ProfilePage() {
 
       // Handle 200 or 201 as success
       if (response.ok || response.status === 201) {
-        // Map response.name back to full_name for UI consistency
-        const returnedName = data.name || payload.name;
+        // Use full_name from response or payload
+        const returnedName = data.full_name || payload.full_name;
         
         // 1. Update UI state
         setCachedUserProfile(prev => ({
@@ -1883,10 +1884,11 @@ export default function ProfilePage() {
       const newSummary = (editBuffer.bio || '').trim() || null;
 
       // Build payload for POST /api/profile/ with correct field mapping
-      // API expects: name, email, summary (not bio), skills array
+      // API expects: full_name, email, bio, summary, skills array
       const payload = {
-        name: cachedUserProfile.fullName || null,
+        full_name: cachedUserProfile.fullName || null,
         email: cachedUserProfile.email || null,
+        bio: newSummary,
         summary: newSummary,
         skills: giverProfile.skills.map(s => s.name),
       };
