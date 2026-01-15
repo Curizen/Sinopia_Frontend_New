@@ -448,7 +448,16 @@ export default function ProfilePage() {
   const cvInputRef = useRef<HTMLInputElement>(null);
   const dropzoneRef = useRef<HTMLDivElement>(null);
 
-  const [contactForm, setContactForm] = useState({ 
+  const [contactForm, setContactForm] = useState<{
+    full_name: string;
+    phone: string;
+    email: string;
+    linkedin: string;
+    country: string;
+    city: string;
+    bio: string;
+    skills: Skill[];
+  }>({ 
     full_name: '',
     phone: '', 
     email: '', 
@@ -456,6 +465,7 @@ export default function ProfilePage() {
     country: '',
     city: '',
     bio: '',
+    skills: [],
   });
   const [contactSaving, setContactSaving] = useState(false);
 
@@ -1788,12 +1798,13 @@ export default function ProfilePage() {
       
       // Build the payload with correct field mapping for POST /api/profile/
       // API expects: full_name, email, bio, summary, skills array
+      // Use skills from contactForm (edited in dialog) instead of giverProfile
       const payload = {
         full_name: contactForm.full_name.trim() || null,
         email: contactForm.email.trim() || null,
         bio: bioContent,
         summary: bioContent,
-        skills: giverProfile.skills.map(s => s.name),
+        skills: contactForm.skills.map(s => s.name),
       };
 
       console.log('[DEBUG] Saving contact info (POST):', payload);
@@ -1829,10 +1840,11 @@ export default function ProfilePage() {
           summary: bioContent || '',
         }));
 
-        // 2. Update giverProfile bio as well
+        // 2. Update giverProfile bio and skills as well
         setGiverProfile(prev => ({
           ...prev,
           bio: bioContent || '',
+          skills: contactForm.skills, // Sync skills from dialog
         }));
 
         // 3. Update localStorage cache - include summary
@@ -1876,6 +1888,7 @@ export default function ProfilePage() {
       country: cachedUserProfile.country || '',
       city: cachedUserProfile.city || '',
       bio: cachedUserProfile.summary || giverProfile.bio || '',
+      skills: giverProfile.skills.map(s => ({ ...s })), // Deep copy skills
     });
     setContactDialog(true);
   };
@@ -3054,18 +3067,67 @@ export default function ProfilePage() {
   );
 }
 
+interface ContactFormType {
+  full_name: string;
+  phone: string;
+  email: string;
+  linkedin: string;
+  country: string;
+  city: string;
+  bio: string;
+  skills: Skill[];
+}
+
 function ContactDialog({ open, onOpenChange, form, setForm, onSave, saving, t }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  form: { full_name: string; phone: string; email: string; linkedin: string; country: string; city: string; bio: string };
-  setForm: (form: { full_name: string; phone: string; email: string; linkedin: string; country: string; city: string; bio: string }) => void;
+  form: ContactFormType;
+  setForm: React.Dispatch<React.SetStateAction<ContactFormType>>;
   onSave: () => void;
   saving?: boolean;
   t: (key: string) => string;
 }) {
+  const [newSkillName, setNewSkillName] = useState('');
+  const [newSkillLevel, setNewSkillLevel] = useState<SkillLevel>('Intermediate');
+  const [newSkillType, setNewSkillType] = useState<SkillType>('technical');
+
+  const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
+
+  const getLevelLabel = (level: SkillLevel) => {
+    switch (level) {
+      case 'Beginner': return t('profile.levelBeginner');
+      case 'Intermediate': return t('profile.levelIntermediate');
+      case 'Advanced': return t('profile.levelAdvanced');
+      case 'Expert': return t('profile.levelExpert');
+      default: return level;
+    }
+  };
+
+  const getSkillTypeLabel = (skillType: SkillType) => {
+    return skillType === 'technical' ? t('profile.skillTypeTechnical') : t('profile.skillTypeSoft');
+  };
+
+  const handleAddSkill = () => {
+    if (!newSkillName.trim()) return;
+    const newSkill: Skill = {
+      id: generateId(),
+      name: newSkillName.trim(),
+      level: newSkillLevel,
+      skill_type: newSkillType,
+    };
+    setForm(prev => ({ ...prev, skills: [...prev.skills, newSkill] }));
+    setNewSkillName('');
+    setNewSkillLevel('Intermediate');
+    setNewSkillType('technical');
+  };
+
+  const handleRemoveSkill = (skillId: string) => {
+    setForm(prev => ({ ...prev, skills: prev.skills.filter(s => s.id !== skillId) }));
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('profile.editContactInfo')}</DialogTitle>
         </DialogHeader>
@@ -3074,7 +3136,7 @@ function ContactDialog({ open, onOpenChange, form, setForm, onSave, saving, t }:
             <Label>{t('profile.fullName')}</Label>
             <Input
               value={form.full_name}
-              onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+              onChange={(e) => setForm(prev => ({ ...prev, full_name: e.target.value }))}
               placeholder={t('profile.fullNamePlaceholder')}
               data-testid="input-contact-full-name"
             />
@@ -3084,7 +3146,7 @@ function ContactDialog({ open, onOpenChange, form, setForm, onSave, saving, t }:
               <Label>{t('profile.city')}</Label>
               <Input
                 value={form.city}
-                onChange={(e) => setForm({ ...form, city: e.target.value })}
+                onChange={(e) => setForm(prev => ({ ...prev, city: e.target.value }))}
                 placeholder={t('profile.cityPlaceholder')}
                 data-testid="input-contact-city"
               />
@@ -3093,7 +3155,7 @@ function ContactDialog({ open, onOpenChange, form, setForm, onSave, saving, t }:
               <Label>{t('profile.country')}</Label>
               <Input
                 value={form.country}
-                onChange={(e) => setForm({ ...form, country: e.target.value })}
+                onChange={(e) => setForm(prev => ({ ...prev, country: e.target.value }))}
                 placeholder={t('profile.countryPlaceholder')}
                 data-testid="input-contact-country"
               />
@@ -3104,7 +3166,7 @@ function ContactDialog({ open, onOpenChange, form, setForm, onSave, saving, t }:
             <Input
               type="email"
               value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              onChange={(e) => setForm(prev => ({ ...prev, email: e.target.value }))}
               placeholder={t('profile.emailPlaceholder')}
               data-testid="input-contact-email"
             />
@@ -3113,7 +3175,7 @@ function ContactDialog({ open, onOpenChange, form, setForm, onSave, saving, t }:
             <Label>{t('profile.phone')}</Label>
             <Input
               value={form.phone}
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              onChange={(e) => setForm(prev => ({ ...prev, phone: e.target.value }))}
               placeholder={t('profile.phonePlaceholder')}
               data-testid="input-contact-phone"
             />
@@ -3122,7 +3184,7 @@ function ContactDialog({ open, onOpenChange, form, setForm, onSave, saving, t }:
             <Label>{t('profile.linkedinUrl')}</Label>
             <Input
               value={form.linkedin}
-              onChange={(e) => setForm({ ...form, linkedin: e.target.value })}
+              onChange={(e) => setForm(prev => ({ ...prev, linkedin: e.target.value }))}
               placeholder={t('profile.linkedinPlaceholder')}
               data-testid="input-contact-linkedin"
             />
@@ -3131,16 +3193,93 @@ function ContactDialog({ open, onOpenChange, form, setForm, onSave, saving, t }:
             <Label>{t('profile.bio')}</Label>
             <Textarea
               value={form.bio}
-              onChange={(e) => setForm({ ...form, bio: e.target.value })}
+              onChange={(e) => setForm(prev => ({ ...prev, bio: e.target.value }))}
               placeholder={t('profile.bioPlaceholder')}
-              rows={4}
+              rows={3}
               data-testid="input-contact-bio"
             />
+          </div>
+          
+          {/* Skills Section */}
+          <div className="space-y-3 border-t pt-4">
+            <Label className="text-base font-semibold">{t('profile.skills')}</Label>
+            
+            {/* Current Skills */}
+            {form.skills.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {form.skills.map((skill) => (
+                  <Badge key={skill.id} variant="secondary" className="flex items-center gap-1 px-2 py-1">
+                    <span>{skill.name}</span>
+                    <span className="text-xs opacity-70">({getLevelLabel(skill.level)})</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveSkill(skill.id)}
+                      className="ml-1 hover:text-destructive"
+                      data-testid={`button-remove-skill-${skill.id}`}
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            )}
+            
+            {/* Add New Skill */}
+            <div className="space-y-2 rounded-md border p-3 bg-muted/30">
+              <div className="space-y-2">
+                <Input
+                  value={newSkillName}
+                  onChange={(e) => setNewSkillName(e.target.value)}
+                  placeholder={t('profile.skillNamePlaceholder')}
+                  data-testid="input-new-skill-name"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleAddSkill();
+                    }
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Select value={newSkillType} onValueChange={(v) => setNewSkillType(v as SkillType)}>
+                  <SelectTrigger data-testid="select-new-skill-type">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="technical">{getSkillTypeLabel('technical')}</SelectItem>
+                    <SelectItem value="soft">{getSkillTypeLabel('soft')}</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={newSkillLevel} onValueChange={(v) => setNewSkillLevel(v as SkillLevel)}>
+                  <SelectTrigger data-testid="select-new-skill-level">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Beginner">{getLevelLabel('Beginner')}</SelectItem>
+                    <SelectItem value="Intermediate">{getLevelLabel('Intermediate')}</SelectItem>
+                    <SelectItem value="Advanced">{getLevelLabel('Advanced')}</SelectItem>
+                    <SelectItem value="Expert">{getLevelLabel('Expert')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="sm" 
+                onClick={handleAddSkill}
+                disabled={!newSkillName.trim()}
+                className="w-full"
+                data-testid="button-add-skill"
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                {t('profile.addSkill')}
+              </Button>
+            </div>
           </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>{t('common.cancel')}</Button>
-          <Button onClick={onSave} disabled={saving}>
+          <Button onClick={onSave} disabled={saving} data-testid="button-save-contact">
             {saving ? t('common.saving') : t('common.save')}
           </Button>
         </DialogFooter>
