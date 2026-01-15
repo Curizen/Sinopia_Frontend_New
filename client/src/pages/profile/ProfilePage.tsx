@@ -455,6 +455,7 @@ export default function ProfilePage() {
     linkedin: '',
     country: '',
     city: '',
+    bio: '',
   });
   const [contactSaving, setContactSaving] = useState(false);
 
@@ -1783,7 +1784,7 @@ export default function ProfilePage() {
         return;
       }
 
-      const bioContent = cachedUserProfile.summary || null;
+      const bioContent = contactForm.bio.trim() || null;
       
       // Build the payload with correct field mapping for POST /api/profile/
       // API expects: full_name, email, bio, summary, skills array
@@ -1816,7 +1817,7 @@ export default function ProfilePage() {
         // Use full_name from response or payload
         const returnedName = data.full_name || payload.full_name;
         
-        // 1. Update UI state
+        // 1. Update UI state (including bio/summary)
         setCachedUserProfile(prev => ({
           ...prev,
           fullName: returnedName || '',
@@ -1825,9 +1826,16 @@ export default function ProfilePage() {
           linkedin: contactForm.linkedin.trim().replace(/\r?\n/g, '') || prev.linkedin,
           country: contactForm.country.trim() || prev.country,
           city: contactForm.city.trim() || prev.city,
+          summary: bioContent || '',
         }));
 
-        // 2. Update localStorage cache - map name back to full_name
+        // 2. Update giverProfile bio as well
+        setGiverProfile(prev => ({
+          ...prev,
+          bio: bioContent || '',
+        }));
+
+        // 3. Update localStorage cache - include summary
         updateProfileCache({
           full_name: returnedName,
           phone: contactForm.phone.trim(),
@@ -1835,6 +1843,7 @@ export default function ProfilePage() {
           linkedin: contactForm.linkedin.trim().replace(/\r?\n/g, ''),
           country: contactForm.country.trim(),
           city: contactForm.city.trim(),
+          summary: bioContent,
         });
 
         setContactDialog(false);
@@ -1866,6 +1875,7 @@ export default function ProfilePage() {
       linkedin: cachedUserProfile.linkedin || '',
       country: cachedUserProfile.country || '',
       city: cachedUserProfile.city || '',
+      bio: cachedUserProfile.summary || giverProfile.bio || '',
     });
     setContactDialog(true);
   };
@@ -3047,8 +3057,8 @@ export default function ProfilePage() {
 function ContactDialog({ open, onOpenChange, form, setForm, onSave, saving, t }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  form: { full_name: string; phone: string; email: string; linkedin: string; country: string; city: string };
-  setForm: (form: { full_name: string; phone: string; email: string; linkedin: string; country: string; city: string }) => void;
+  form: { full_name: string; phone: string; email: string; linkedin: string; country: string; city: string; bio: string };
+  setForm: (form: { full_name: string; phone: string; email: string; linkedin: string; country: string; city: string; bio: string }) => void;
   onSave: () => void;
   saving?: boolean;
   t: (key: string) => string;
@@ -3115,6 +3125,16 @@ function ContactDialog({ open, onOpenChange, form, setForm, onSave, saving, t }:
               onChange={(e) => setForm({ ...form, linkedin: e.target.value })}
               placeholder={t('profile.linkedinPlaceholder')}
               data-testid="input-contact-linkedin"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>{t('profile.bio')}</Label>
+            <Textarea
+              value={form.bio}
+              onChange={(e) => setForm({ ...form, bio: e.target.value })}
+              placeholder={t('profile.bioPlaceholder')}
+              rows={4}
+              data-testid="input-contact-bio"
             />
           </div>
         </div>

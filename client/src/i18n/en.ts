@@ -399,6 +399,7 @@ export const en = {
     settings: "Settings",
     uploadPhoto: "Upload Photo",
     bio: "Bio",
+    bioPlaceholder: "Tell us about yourself and your experience...",
     hourlyRate: "Hourly Rate",
     availability: "Availability",
     location: "Location",

@@ -407,6 +407,7 @@ export const de = {
     settings: "Einstellungen",
     uploadPhoto: "Foto hochladen",
     bio: "Biografie",
+    bioPlaceholder: "Erzählen Sie uns etwas über sich und Ihre Erfahrung...",
     hourlyRate: "Stundensatz",
     availability: "Verfügbarkeit",
     location: "Standort",
