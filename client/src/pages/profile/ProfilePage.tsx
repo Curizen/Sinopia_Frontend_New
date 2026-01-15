@@ -448,12 +448,14 @@ export default function ProfilePage() {
   const dropzoneRef = useRef<HTMLDivElement>(null);
 
   const [contactForm, setContactForm] = useState({ 
-    jobTitle: '', 
-    address: '', 
-    email: '', 
+    full_name: '',
     phone: '', 
-    linkedinUrl: '' 
+    email: '', 
+    linkedin: '',
+    country: '',
+    city: '',
   });
+  const [contactSaving, setContactSaving] = useState(false);
 
   const [companySummaryForm, setCompanySummaryForm] = useState({
     companyName: '',
@@ -554,7 +556,11 @@ export default function ProfilePage() {
         <X className="w-4 h-4 mr-1" />
         {t('common.cancel')}
       </Button>
-      <Button size="sm" onClick={() => handleSave(section)} data-testid={`button-save-${section}`}>
+      <Button 
+        size="sm" 
+        onClick={() => section === 'about' ? handleSaveBio() : handleSave(section)} 
+        data-testid={`button-save-${section}`}
+      >
         <Save className="w-4 h-4 mr-1" />
         {t('common.save')}
       </Button>
@@ -1750,29 +1756,187 @@ export default function ProfilePage() {
     return 'https://linkedin.com/in/' + url;
   };
 
-  const handleSaveContact = () => {
-    const normalizedUrl = normalizeLinkedInUrl(contactForm.linkedinUrl);
-    setGiverProfile(prev => ({
-      ...prev,
-      jobTitle: contactForm.jobTitle.trim(),
-      address: contactForm.address.trim(),
-      email: contactForm.email.trim(),
-      phone: contactForm.phone.trim(),
-      linkedinUrl: normalizedUrl,
-    }));
-    setContactDialog(false);
-    toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+  // Update profile cache in localStorage
+  const updateProfileCache = (updatedData: Record<string, any>) => {
+    try {
+      const cached = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+      if (cached) {
+        const existing = JSON.parse(cached);
+        const updated = { ...existing, ...updatedData };
+        localStorage.setItem(USER_PROFILE_CACHE_KEY, JSON.stringify(updated));
+        console.log('[DEBUG] Updated user_profile_cache with:', updatedData);
+      }
+    } catch (e) {
+      console.error('Failed to update profile cache:', e);
+    }
+  };
+
+  const handleSaveContact = async () => {
+    setContactSaving(true);
+    
+    try {
+      const token = localStorage.getItem('auth_token');
+      if (!token) {
+        toast({ title: t('common.error'), description: 'Not authenticated', variant: 'destructive' });
+        setContactSaving(false);
+        return;
+      }
+
+      // Build the complete profile payload
+      const payload = {
+        full_name: contactForm.full_name.trim() || null,
+        phone: contactForm.phone.trim() || null,
+        email: contactForm.email.trim() || null,
+        linkedin: contactForm.linkedin.trim().replace(/\r?\n/g, '') || null,
+        country: contactForm.country.trim() || null,
+        city: contactForm.city.trim() || null,
+        // Include current summary to not lose it
+        summary: cachedUserProfile.summary || null,
+      };
+
+      console.log('[DEBUG] Saving contact info:', payload);
+
+      const response = await fetch('/api/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+      console.log('[DEBUG] Save contact response:', data);
+
+      if (response.ok) {
+        // 1. Update UI state
+        setCachedUserProfile(prev => ({
+          ...prev,
+          fullName: payload.full_name || '',
+          phone: payload.phone || '',
+          email: payload.email || '',
+          linkedin: payload.linkedin || '',
+          country: payload.country || '',
+          city: payload.city || '',
+        }));
+
+        // 2. Update localStorage cache
+        updateProfileCache({
+          full_name: payload.full_name,
+          phone: payload.phone,
+          email: payload.email,
+          linkedin: payload.linkedin,
+          country: payload.country,
+          city: payload.city,
+        });
+
+        setContactDialog(false);
+        toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+      } else {
+        toast({ 
+          title: t('common.error'), 
+          description: data.message || t('profile.saveFailed'),
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('[DEBUG] Failed to save contact:', error);
+      toast({ 
+        title: t('common.error'), 
+        description: t('profile.saveFailed'),
+        variant: 'destructive',
+      });
+    } finally {
+      setContactSaving(false);
+    }
   };
 
   const openContactDialog = () => {
     setContactForm({ 
-      jobTitle: giverProfile.jobTitle, 
-      address: giverProfile.address, 
-      email: giverProfile.email || user?.email || '',
-      phone: giverProfile.phone, 
-      linkedinUrl: giverProfile.linkedinUrl 
+      full_name: cachedUserProfile.fullName || '',
+      phone: cachedUserProfile.phone || '',
+      email: cachedUserProfile.email || user?.email || '',
+      linkedin: cachedUserProfile.linkedin || '',
+      country: cachedUserProfile.country || '',
+      city: cachedUserProfile.city || '',
     });
     setContactDialog(true);
+  };
+
+  // Handle Bio/Summary save via API
+  const handleSaveBio = async () => {
+    if (!editBuffer || !('bio' in editBuffer)) return;
+    
+    try {
+      const token = localStorage.getItem('auth_token');
+      if (!token) {
+        toast({ title: t('common.error'), description: 'Not authenticated', variant: 'destructive' });
+        return;
+      }
+
+      const newSummary = (editBuffer.bio || '').trim() || null;
+
+      // Build the complete profile payload - include all fields to not lose them
+      const payload = {
+        full_name: cachedUserProfile.fullName || null,
+        phone: cachedUserProfile.phone || null,
+        email: cachedUserProfile.email || null,
+        linkedin: cachedUserProfile.linkedin?.trim().replace(/\r?\n/g, '') || null,
+        country: cachedUserProfile.country || null,
+        city: cachedUserProfile.city || null,
+        summary: newSummary,
+      };
+
+      console.log('[DEBUG] Saving bio:', payload);
+
+      const response = await fetch('/api/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+      console.log('[DEBUG] Save bio response:', data);
+
+      if (response.ok) {
+        // 1. Update UI state
+        setCachedUserProfile(prev => ({
+          ...prev,
+          summary: newSummary || '',
+        }));
+
+        // 2. Update giverProfile bio as well
+        setGiverProfile(prev => ({
+          ...prev,
+          bio: newSummary || '',
+        }));
+
+        // 3. Update localStorage cache
+        updateProfileCache({ summary: newSummary });
+
+        setEditingSection(null);
+        setEditBuffer(null);
+        toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+      } else {
+        toast({ 
+          title: t('common.error'), 
+          description: data.message || t('profile.saveFailed'),
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('[DEBUG] Failed to save bio:', error);
+      toast({ 
+        title: t('common.error'), 
+        description: t('profile.saveFailed'),
+        variant: 'destructive',
+      });
+    }
   };
 
   const openCompanySummaryDialog = () => {
@@ -2718,6 +2882,7 @@ export default function ProfilePage() {
         form={contactForm}
         setForm={setContactForm}
         onSave={handleSaveContact}
+        saving={contactSaving}
         t={t}
       />
 
@@ -2775,12 +2940,13 @@ export default function ProfilePage() {
   );
 }
 
-function ContactDialog({ open, onOpenChange, form, setForm, onSave, t }: {
+function ContactDialog({ open, onOpenChange, form, setForm, onSave, saving, t }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  form: { jobTitle: string; address: string; email: string; phone: string; linkedinUrl: string };
-  setForm: (form: { jobTitle: string; address: string; email: string; phone: string; linkedinUrl: string }) => void;
+  form: { full_name: string; phone: string; email: string; linkedin: string; country: string; city: string };
+  setForm: (form: { full_name: string; phone: string; email: string; linkedin: string; country: string; city: string }) => void;
   onSave: () => void;
+  saving?: boolean;
   t: (key: string) => string;
 }) {
   return (
@@ -2791,22 +2957,33 @@ function ContactDialog({ open, onOpenChange, form, setForm, onSave, t }: {
         </DialogHeader>
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>{t('profile.jobTitle')}</Label>
+            <Label>{t('profile.fullName')}</Label>
             <Input
-              value={form.jobTitle}
-              onChange={(e) => setForm({ ...form, jobTitle: e.target.value })}
-              placeholder={t('profile.jobTitlePlaceholder')}
-              data-testid="input-contact-job-title"
+              value={form.full_name}
+              onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+              placeholder={t('profile.fullNamePlaceholder')}
+              data-testid="input-contact-full-name"
             />
           </div>
-          <div className="space-y-2">
-            <Label>{t('profile.address')}</Label>
-            <Input
-              value={form.address}
-              onChange={(e) => setForm({ ...form, address: e.target.value })}
-              placeholder={t('profile.addressPlaceholder')}
-              data-testid="input-contact-address"
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>{t('profile.city')}</Label>
+              <Input
+                value={form.city}
+                onChange={(e) => setForm({ ...form, city: e.target.value })}
+                placeholder={t('profile.cityPlaceholder')}
+                data-testid="input-contact-city"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>{t('profile.country')}</Label>
+              <Input
+                value={form.country}
+                onChange={(e) => setForm({ ...form, country: e.target.value })}
+                placeholder={t('profile.countryPlaceholder')}
+                data-testid="input-contact-country"
+              />
+            </div>
           </div>
           <div className="space-y-2">
             <Label>{t('profile.email')}</Label>
@@ -2830,16 +3007,18 @@ function ContactDialog({ open, onOpenChange, form, setForm, onSave, t }: {
           <div className="space-y-2">
             <Label>{t('profile.linkedinUrl')}</Label>
             <Input
-              value={form.linkedinUrl}
-              onChange={(e) => setForm({ ...form, linkedinUrl: e.target.value })}
+              value={form.linkedin}
+              onChange={(e) => setForm({ ...form, linkedin: e.target.value })}
               placeholder={t('profile.linkedinPlaceholder')}
               data-testid="input-contact-linkedin"
             />
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>{t('common.cancel')}</Button>
-          <Button onClick={onSave}>{t('common.save')}</Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>{t('common.cancel')}</Button>
+          <Button onClick={onSave} disabled={saving}>
+            {saving ? t('common.saving') : t('common.save')}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

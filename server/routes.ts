@@ -594,5 +594,34 @@ export async function registerRoutes(
     }
   });
 
+  // Profile API proxy - Update (for Personal Info and Bio)
+  app.put("/api/profile", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      
+      console.log("[DEBUG] PUT /api/profile - Request body:", JSON.stringify(req.body, null, 2));
+      
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/profile`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify(req.body),
+      });
+      forwardCookies(response, res);
+      const data = await response.json();
+      console.log("[DEBUG] PUT /api/profile - Response:", JSON.stringify(data, null, 2));
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Update profile proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to update profile" });
+    }
+  });
+
   return httpServer;
 }
