@@ -512,5 +512,87 @@ export async function registerRoutes(
     }
   });
 
+  // Skills API proxy - Add
+  app.post("/api/skills", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/skills`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(req.body),
+      });
+      forwardCookies(response, res);
+      const data = await response.json();
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Add skill proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to add skill" });
+    }
+  });
+
+  // Skills API proxy - Update
+  app.put("/api/skills/:id", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/skills/${req.params.id}`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify(req.body),
+      });
+      forwardCookies(response, res);
+      const data = await response.json();
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Update skill proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to update skill" });
+    }
+  });
+
+  // Skills API proxy - Delete
+  app.delete("/api/skills/:id", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/skills/${req.params.id}`, {
+        method: "DELETE",
+        headers,
+      });
+      forwardCookies(response, res);
+      
+      if (response.status === 204) {
+        res.status(204).send();
+      } else {
+        const data = await response.json();
+        res.status(response.status).json(data);
+      }
+    } catch (error) {
+      console.error("Delete skill proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to delete skill" });
+    }
+  });
+
   return httpServer;
 }

@@ -39,12 +39,14 @@ import {
 } from 'lucide-react';
 
 type EditingSection = 'about' | 'skills' | 'experience' | 'education' | 'certifications' | 'company' | 'contact' | 'projects' | null;
-type SkillLevel = 'junior' | 'intermediate' | 'advance' | 'expert';
+type SkillLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
+type SkillType = 'technical' | 'soft';
 
 interface Skill {
   id: string;
   name: string;
   level: SkillLevel;
+  skill_type: SkillType;
 }
 
 interface Experience {
@@ -130,6 +132,7 @@ interface ApiUserData {
     id?: number;
     skill_name?: string;
     level?: string;
+    skill_type?: string;
   }>;
   experience?: Array<{
     id?: number;
@@ -217,7 +220,8 @@ const transformApiDataToGiverProfile = (apiData: ApiUserData): Partial<SkillGive
     profile.skills = apiData.skills.map(s => ({
       id: s.id?.toString() || generateId(),
       name: s.skill_name || '',
-      level: (s.level?.toLowerCase() as SkillLevel) || 'intermediate',
+      level: (s.level as SkillLevel) || 'Intermediate',
+      skill_type: (s.skill_type as SkillType) || 'technical',
     })).filter(s => s.name);
   }
   
@@ -326,10 +330,11 @@ const loadGiverProfileFromStorage = (): SkillGiverProfile => {
         availability: localData.availability ?? defaults.availability,
         skills: transformedData.skills && transformedData.skills.length > 0 
           ? transformedData.skills 
-          : (Array.isArray(localData.skills) ? localData.skills.map((s: { id?: string; name?: string; level?: SkillLevel }) => ({
+          : (Array.isArray(localData.skills) ? localData.skills.map((s: { id?: string; name?: string; level?: SkillLevel; skill_type?: SkillType }) => ({
               id: s.id || generateId(),
               name: s.name || '',
-              level: s.level || 'intermediate',
+              level: s.level || 'Intermediate',
+              skill_type: s.skill_type || 'technical',
             })).filter((s: Skill) => s.name) : defaults.skills),
         experience: transformedData.experience && transformedData.experience.length > 0 
           ? transformedData.experience 
@@ -359,10 +364,11 @@ const loadGiverProfileFromStorage = (): SkillGiverProfile => {
         phone: parsed.phone ?? defaults.phone,
         linkedinUrl: parsed.linkedinUrl ?? defaults.linkedinUrl,
         availability: parsed.availability ?? defaults.availability,
-        skills: Array.isArray(parsed.skills) ? parsed.skills.map((s: { id?: string; name?: string; level?: SkillLevel; icon?: string }) => ({
+        skills: Array.isArray(parsed.skills) ? parsed.skills.map((s: { id?: string; name?: string; level?: SkillLevel; skill_type?: SkillType }) => ({
           id: s.id || generateId(),
           name: s.name || '',
-          level: s.level || 'intermediate',
+          level: s.level || 'Intermediate',
+          skill_type: s.skill_type || 'technical',
         })).filter((s: Skill) => s.name) : defaults.skills,
         experience: Array.isArray(parsed.experience) ? parsed.experience : defaults.experience,
         education: Array.isArray(parsed.education) ? parsed.education : defaults.education,
@@ -563,36 +569,234 @@ export default function ProfilePage() {
 
   const getLevelLabel = (level: SkillLevel) => {
     const labels: Record<SkillLevel, string> = {
-      junior: t('profile.levelJunior'),
-      intermediate: t('profile.levelIntermediate'),
-      advance: t('profile.levelAdvance'),
-      expert: t('profile.levelExpert'),
+      Beginner: t('profile.levelBeginner'),
+      Intermediate: t('profile.levelIntermediate'),
+      Advanced: t('profile.levelAdvanced'),
+      Expert: t('profile.levelExpert'),
     };
     return labels[level];
   };
 
-  const handleSaveSkill = (skill: Skill) => {
-    if (skill.id) {
-      setGiverProfile(prev => ({
-        ...prev,
-        skills: prev.skills.map(s => s.id === skill.id ? skill : s),
-      }));
-    } else {
-      setGiverProfile(prev => ({
-        ...prev,
-        skills: [...prev.skills, { ...skill, id: generateId() }],
-      }));
-    }
-    setSkillDialog({ open: false, skill: null });
-    toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+  const getSkillTypeLabel = (skillType: SkillType) => {
+    const labels: Record<SkillType, string> = {
+      technical: t('profile.skillTypeTechnical'),
+      soft: t('profile.skillTypeSoft'),
+    };
+    return labels[skillType];
   };
 
-  const handleDeleteSkill = (id: string) => {
-    setGiverProfile(prev => ({
-      ...prev,
-      skills: prev.skills.filter(s => s.id !== id),
-    }));
-    toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+  // Skills localStorage cache helpers
+  const updateSkillLocalStorageCache = (updatedSkill: Skill, isNew: boolean = false) => {
+    try {
+      const cacheStr = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+      if (cacheStr) {
+        const cache = JSON.parse(cacheStr);
+        const apiSkill = {
+          id: parseInt(updatedSkill.id) || updatedSkill.id,
+          user_id: cache.skills?.[0]?.user_id || null,
+          skill_name: updatedSkill.name,
+          skill_type: updatedSkill.skill_type,
+          level: updatedSkill.level,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        
+        if (isNew) {
+          cache.skills = [...(cache.skills || []), apiSkill];
+        } else {
+          cache.skills = (cache.skills || []).map((s: { id: number | string }) => 
+            s.id.toString() === updatedSkill.id ? apiSkill : s
+          );
+        }
+        
+        localStorage.setItem(USER_PROFILE_CACHE_KEY, JSON.stringify(cache));
+        console.log('[DEBUG] Updated user_profile_cache with skill:', apiSkill);
+      }
+    } catch (error) {
+      console.error('Failed to update skill localStorage cache:', error);
+    }
+  };
+
+  const removeSkillFromLocalStorageCache = (skillId: string) => {
+    try {
+      const cacheStr = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+      if (cacheStr) {
+        const cache = JSON.parse(cacheStr);
+        if (cache && cache.skills) {
+          cache.skills = cache.skills.filter((s: { id: number | string }) => 
+            s.id.toString() !== skillId
+          );
+          localStorage.setItem(USER_PROFILE_CACHE_KEY, JSON.stringify(cache));
+          console.log('[DEBUG] Removed skill from user_profile_cache, id:', skillId);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to remove skill from localStorage cache:', error);
+    }
+  };
+
+  const handleSaveSkill = async (skill: Skill) => {
+    const token = localStorage.getItem('sinopia_token');
+    console.log('[DEBUG] Skill - Sending token:', token);
+    console.log('[DEBUG] Skill ID:', skill.id);
+    
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    try {
+      if (skill.id) {
+        // UPDATE - PUT request
+        console.log('[DEBUG] PUT Skill Request body:', { 
+          skill_name: skill.name, 
+          skill_type: skill.skill_type, 
+          level: skill.level 
+        });
+        
+        const response = await fetch(`/api/skills/${skill.id}`, {
+          method: 'PUT',
+          headers,
+          credentials: 'include',
+          body: JSON.stringify({
+            skill_name: skill.name,
+            skill_type: skill.skill_type,
+            level: skill.level,
+          }),
+        });
+        
+        const data = await response.json();
+        console.log('[DEBUG] PUT Skill Response:', data);
+        
+        if (response.ok) {
+          // 1. Update UI state
+          setGiverProfile(prev => ({
+            ...prev,
+            skills: prev.skills.map(s => s.id === skill.id ? skill : s),
+          }));
+          
+          // 2. Update localStorage cache
+          updateSkillLocalStorageCache(skill, false);
+          
+          setSkillDialog({ open: false, skill: null });
+          toast({ title: t('profile.skillUpdated'), description: t('profile.changesSaved') });
+        } else {
+          toast({ 
+            title: t('common.error'), 
+            description: data.message || t('profile.saveFailed'),
+            variant: 'destructive',
+          });
+        }
+      } else {
+        // CREATE - POST request
+        console.log('[DEBUG] POST Skill - Sending token:', token);
+        console.log('[DEBUG] POST Skill - Request body:', { 
+          skill_name: skill.name, 
+          skill_type: skill.skill_type, 
+          level: skill.level 
+        });
+        
+        const response = await fetch('/api/skills', {
+          method: 'POST',
+          headers,
+          credentials: 'include',
+          body: JSON.stringify({
+            skill_name: skill.name,
+            skill_type: skill.skill_type,
+            level: skill.level,
+          }),
+        });
+        
+        const data = await response.json();
+        console.log('[DEBUG] POST Skill Response:', data);
+        
+        if (response.ok) {
+          // API returns object directly (NOT wrapped in data property)
+          const newSkillId = data.id?.toString() || generateId();
+          const newSkill = { ...skill, id: newSkillId };
+          
+          // 1. Update UI state
+          setGiverProfile(prev => ({
+            ...prev,
+            skills: [...prev.skills, newSkill],
+          }));
+          
+          // 2. Update localStorage cache
+          updateSkillLocalStorageCache(newSkill, true);
+          
+          setSkillDialog({ open: false, skill: null });
+          toast({ title: t('profile.skillAdded'), description: t('profile.changesSaved') });
+        } else {
+          toast({ 
+            title: t('common.error'), 
+            description: data.message || t('profile.saveFailed'),
+            variant: 'destructive',
+          });
+        }
+      }
+    } catch (error) {
+      console.error('[DEBUG] Failed to save skill:', error);
+      toast({ 
+        title: t('common.error'),
+        description: t('profile.saveFailed'),
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleDeleteSkill = async (id: string) => {
+    if (!window.confirm(t('profile.confirmDeleteSkill'))) {
+      return;
+    }
+    
+    const token = localStorage.getItem('sinopia_token');
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    try {
+      console.log('[DEBUG] DELETE Request for skill id:', id);
+      
+      const response = await fetch(`/api/skills/${id}`, {
+        method: 'DELETE',
+        headers,
+        credentials: 'include',
+      });
+      
+      console.log('[DEBUG] DELETE Skill Response status:', response.status);
+      
+      if (response.ok || response.status === 204) {
+        // 1. Update UI state
+        setGiverProfile(prev => ({
+          ...prev,
+          skills: prev.skills.filter(s => s.id !== id),
+        }));
+        
+        // 2. Update localStorage cache
+        removeSkillFromLocalStorageCache(id);
+        
+        toast({ title: t('profile.skillDeleted'), description: t('profile.changesSaved') });
+      } else {
+        const data = await response.json();
+        toast({ 
+          title: t('common.error'), 
+          description: data.message || t('profile.deleteFailed'),
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('[DEBUG] Failed to delete skill:', error);
+      toast({ 
+        title: t('common.error'),
+        description: t('profile.deleteFailed'),
+        variant: 'destructive',
+      });
+    }
   };
 
   const updateExperienceLocalStorageCache = (updatedExp: Experience, isNew: boolean = false) => {
@@ -1643,9 +1847,9 @@ export default function ProfilePage() {
 
       const mockExtractedData = {
         skills: [
-          { id: generateId(), name: 'JavaScript', level: 'expert' as SkillLevel },
-          { id: generateId(), name: 'React', level: 'advance' as SkillLevel },
-          { id: generateId(), name: 'Node.js', level: 'intermediate' as SkillLevel },
+          { id: generateId(), name: 'JavaScript', level: 'Expert' as SkillLevel, skill_type: 'technical' as SkillType },
+          { id: generateId(), name: 'React', level: 'Advanced' as SkillLevel, skill_type: 'technical' as SkillType },
+          { id: generateId(), name: 'Node.js', level: 'Intermediate' as SkillLevel, skill_type: 'technical' as SkillType },
         ],
         experience: [
           {
@@ -2213,9 +2417,14 @@ export default function ProfilePage() {
                           <div className="flex items-center gap-3">
                             <div>
                               <p className="font-medium">{skill.name}</p>
-                              <Badge variant="secondary" className="text-xs">
-                                {getLevelLabel(skill.level)}
-                              </Badge>
+                              <div className="flex gap-1 mt-1">
+                                <Badge variant="secondary" className="text-xs">
+                                  {getLevelLabel(skill.level)}
+                                </Badge>
+                                <Badge variant="outline" className="text-xs">
+                                  {getSkillTypeLabel(skill.skill_type)}
+                                </Badge>
+                              </div>
                             </div>
                           </div>
                           <div className="flex gap-1">
@@ -2518,6 +2727,7 @@ export default function ProfilePage() {
         onSave={handleSaveSkill}
         t={t}
         getLevelLabel={getLevelLabel}
+        getSkillTypeLabel={getSkillTypeLabel}
       />
 
       <ExperienceDialog
@@ -2635,21 +2845,22 @@ function ContactDialog({ open, onOpenChange, form, setForm, onSave, t }: {
   );
 }
 
-function SkillDialog({ open, onOpenChange, skill, onSave, t, getLevelLabel }: {
+function SkillDialog({ open, onOpenChange, skill, onSave, t, getLevelLabel, getSkillTypeLabel }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   skill: Skill | null;
   onSave: (skill: Skill) => void;
   t: (key: string) => string;
   getLevelLabel: (level: SkillLevel) => string;
+  getSkillTypeLabel: (skillType: SkillType) => string;
 }) {
-  const [form, setForm] = useState<Skill>({ id: '', name: '', level: 'intermediate' });
+  const [form, setForm] = useState<Skill>({ id: '', name: '', level: 'Intermediate', skill_type: 'technical' });
 
   useEffect(() => {
     if (skill) {
       setForm(skill);
     } else {
-      setForm({ id: '', name: '', level: 'intermediate' });
+      setForm({ id: '', name: '', level: 'Intermediate', skill_type: 'technical' });
     }
   }, [skill, open]);
 
@@ -2657,7 +2868,7 @@ function SkillDialog({ open, onOpenChange, skill, onSave, t, getLevelLabel }: {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{skill ? t('profile.skills') : t('profile.addSkill')}</DialogTitle>
+          <DialogTitle>{skill ? t('profile.editSkill') : t('profile.addSkill')}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div className="space-y-2">
@@ -2670,16 +2881,28 @@ function SkillDialog({ open, onOpenChange, skill, onSave, t, getLevelLabel }: {
             />
           </div>
           <div className="space-y-2">
+            <Label>{t('profile.skillType')}</Label>
+            <Select value={form.skill_type} onValueChange={(v) => setForm({ ...form, skill_type: v as SkillType })}>
+              <SelectTrigger data-testid="select-skill-type">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="technical">{getSkillTypeLabel('technical')}</SelectItem>
+                <SelectItem value="soft">{getSkillTypeLabel('soft')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
             <Label>{t('profile.skillLevel')}</Label>
             <Select value={form.level} onValueChange={(v) => setForm({ ...form, level: v as SkillLevel })}>
               <SelectTrigger data-testid="select-skill-level">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="junior">{getLevelLabel('junior')}</SelectItem>
-                <SelectItem value="intermediate">{getLevelLabel('intermediate')}</SelectItem>
-                <SelectItem value="advance">{getLevelLabel('advance')}</SelectItem>
-                <SelectItem value="expert">{getLevelLabel('expert')}</SelectItem>
+                <SelectItem value="Beginner">{getLevelLabel('Beginner')}</SelectItem>
+                <SelectItem value="Intermediate">{getLevelLabel('Intermediate')}</SelectItem>
+                <SelectItem value="Advanced">{getLevelLabel('Advanced')}</SelectItem>
+                <SelectItem value="Expert">{getLevelLabel('Expert')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
