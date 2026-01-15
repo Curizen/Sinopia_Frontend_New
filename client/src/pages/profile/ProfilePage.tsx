@@ -663,7 +663,7 @@ export default function ProfilePage() {
           body: JSON.stringify({
             skill_name: skill.name,
             skill_type: skill.skill_type,
-            level: skill.level,
+            level: skill.level.toLowerCase(),
           }),
         });
         
@@ -705,7 +705,7 @@ export default function ProfilePage() {
           body: JSON.stringify({
             skill_name: skill.name,
             skill_type: skill.skill_type,
-            level: skill.level,
+            level: skill.level.toLowerCase(),
           }),
         });
         
