@@ -1776,7 +1776,7 @@ export default function ProfilePage() {
     setContactSaving(true);
     
     try {
-      const token = localStorage.getItem('auth_token');
+      const token = localStorage.getItem('sinopia_token');
       if (!token) {
         toast({ title: t('common.error'), description: 'Not authenticated', variant: 'destructive' });
         setContactSaving(false);
@@ -1875,7 +1875,7 @@ export default function ProfilePage() {
     if (!editBuffer || !('bio' in editBuffer)) return;
     
     try {
-      const token = localStorage.getItem('auth_token');
+      const token = localStorage.getItem('sinopia_token');
       if (!token) {
         toast({ title: t('common.error'), description: 'Not authenticated', variant: 'destructive' });
         return;
