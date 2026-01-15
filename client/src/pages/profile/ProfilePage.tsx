@@ -2371,12 +2371,13 @@ export default function ProfilePage() {
                   <Textarea
                     value={editBuffer.bio}
                     onChange={(e) => setEditBuffer({ ...editBuffer, bio: e.target.value })}
-                    rows={4}
+                    rows={8}
+                    className="min-h-[150px] resize-y"
                     placeholder={t('profile.bio')}
                     data-testid="input-profile-bio"
                   />
                 ) : (
-                  <p className="text-muted-foreground" data-testid="text-profile-bio">
+                  <p className="text-muted-foreground whitespace-pre-wrap" data-testid="text-profile-bio">
                     {cachedUserProfile.summary?.trim() || profile.bio?.trim() || t('emptyState.notSet')}
                   </p>
                 )}
