@@ -45,6 +45,9 @@ export default function VerifyOtpPage() {
                         response.message?.toLowerCase().includes('verified');
       
       if (isSuccess) {
+        // Clear the stored signup data after successful verification
+        sessionStorage.removeItem('pending_signup');
+        
         if (role === USER_ROLES.SKILL_GIVER) {
           toast({
             title: t('auth.otp.emailVerified'),
@@ -82,12 +85,28 @@ export default function VerifyOtpPage() {
 
   const handleResend = async () => {
     try {
-      await authService.registerUser({
-        email,
-        password: '',
-        confirmPassword: '',
-        account_type: role,
-      });
+      // Retrieve stored signup data from sessionStorage
+      const pendingSignup = sessionStorage.getItem('pending_signup');
+      
+      if (pendingSignup) {
+        const signupData = JSON.parse(pendingSignup);
+        // Send full payload: { email, password, confirmPassword, account_type }
+        await authService.registerUser({
+          email: signupData.email,
+          password: signupData.password,
+          confirmPassword: signupData.confirmPassword,
+          account_type: signupData.account_type,
+        });
+      } else {
+        // Fallback: try with just email and role (may not work for all APIs)
+        await authService.registerUser({
+          email,
+          password: '',
+          confirmPassword: '',
+          account_type: role,
+        });
+      }
+      
       toast({
         title: t('auth.otp.codeResent'),
         description: t('auth.otp.codeResentDesc'),

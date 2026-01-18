@@ -90,6 +90,14 @@ export default function SignUpPage() {
                         response.status === 'success';
 
       if (isOtpSent) {
+        // Store signup data in sessionStorage for OTP resend (cleared when tab closes)
+        sessionStorage.setItem('pending_signup', JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword,
+          account_type: formData.role,
+        }));
+        
         toast({
           title: t('auth.verificationRequired'),
           description: t('auth.verificationCodeSent'),
