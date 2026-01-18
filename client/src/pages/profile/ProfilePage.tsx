@@ -218,12 +218,38 @@ const transformApiDataToGiverProfile = (apiData: ApiUserData): Partial<SkillGive
   }
   
   if (Array.isArray(apiData.skills)) {
-    profile.skills = apiData.skills.map(s => ({
-      id: s.id?.toString() || generateId(),
-      name: s.skill_name || '',
-      level: (s.level as SkillLevel) || 'Intermediate',
-      skill_type: (s.skill_type as SkillType) || 'technical',
-    })).filter(s => s.name);
+    profile.skills = apiData.skills.map(s => {
+      // Map backend skill_type to frontend format
+      // Backend sends "technical_skills" or "soft_skills", frontend expects "technical" or "soft"
+      let skillType: SkillType = 'technical';
+      if (s.skill_type) {
+        const st = s.skill_type.toLowerCase();
+        if (st.includes('soft')) {
+          skillType = 'soft';
+        } else {
+          skillType = 'technical';
+        }
+      }
+      
+      // Map backend level to frontend format (capitalize first letter)
+      // Backend sends "advanced", "intermediate", "beginner", "expert" (lowercase)
+      // Frontend expects "Advanced", "Intermediate", "Beginner", "Expert" (capitalized)
+      let level: SkillLevel = 'Intermediate';
+      if (s.level) {
+        const lvl = s.level.toLowerCase();
+        if (lvl === 'beginner') level = 'Beginner';
+        else if (lvl === 'intermediate') level = 'Intermediate';
+        else if (lvl === 'advanced') level = 'Advanced';
+        else if (lvl === 'expert') level = 'Expert';
+      }
+      
+      return {
+        id: s.id?.toString() || generateId(),
+        name: s.skill_name || '',
+        level,
+        skill_type: skillType,
+      };
+    }).filter(s => s.name);
   }
   
   if (Array.isArray(apiData.experience)) {
@@ -538,12 +564,33 @@ export default function ProfilePage() {
           const skillsArray = Array.isArray(data) ? data : (data.skills || []);
 
           if (skillsArray.length > 0) {
-            const transformedSkills: Skill[] = skillsArray.map((s: any) => ({
-              id: s.id?.toString() || generateId(),
-              name: s.skill_name || s.name || '',
-              level: (s.level as SkillLevel) || 'Intermediate',
-              skill_type: (s.skill_type as SkillType) || 'technical',
-            })).filter((s: Skill) => s.name);
+            const transformedSkills: Skill[] = skillsArray.map((s: any) => {
+              // Map backend skill_type to frontend format
+              let skillType: SkillType = 'technical';
+              if (s.skill_type) {
+                const st = s.skill_type.toLowerCase();
+                if (st.includes('soft')) {
+                  skillType = 'soft';
+                }
+              }
+              
+              // Map backend level to frontend format (capitalize first letter)
+              let level: SkillLevel = 'Intermediate';
+              if (s.level) {
+                const lvl = s.level.toLowerCase();
+                if (lvl === 'beginner') level = 'Beginner';
+                else if (lvl === 'intermediate') level = 'Intermediate';
+                else if (lvl === 'advanced') level = 'Advanced';
+                else if (lvl === 'expert') level = 'Expert';
+              }
+              
+              return {
+                id: s.id?.toString() || generateId(),
+                name: s.skill_name || s.name || '',
+                level,
+                skill_type: skillType,
+              };
+            }).filter((s: Skill) => s.name);
 
             console.log('[DEBUG] Transformed skills:', transformedSkills);
 
