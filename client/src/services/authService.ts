@@ -42,6 +42,7 @@ async function apiRequest(endpoint: string, options: RequestInit = {}): Promise<
   const response = await fetch(endpoint, {
     ...options,
     headers,
+    credentials: 'include', // Include cookies for session management
   });
 
   return response.json();
@@ -100,6 +101,7 @@ export const authService = {
         'Content-Type': 'application/json',
         ...(token && { Authorization: `Bearer ${token}` }),
       },
+      credentials: 'include', // Include cookies for session clearing
     });
     return response.json();
   },
