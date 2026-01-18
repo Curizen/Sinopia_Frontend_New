@@ -176,6 +176,14 @@ interface CachedUserProfile {
   summary: string;
 }
 
+// Helper to normalize skill_type from backend format (technical_skills/soft_skills) to frontend format (technical/soft)
+const normalizeSkillType = (skillType: string | undefined): SkillType => {
+  if (skillType === 'soft_skills' || skillType === 'soft') {
+    return 'soft';
+  }
+  return 'technical'; // Default to technical for technical_skills or any other value
+};
+
 // Helper to format LinkedIn URL
 const formatLinkedInUrl = (url: string | undefined | null): string => {
   if (!url) return '';
@@ -357,11 +365,11 @@ const loadGiverProfileFromStorage = (): SkillGiverProfile => {
         availability: localData.availability ?? defaults.availability,
         skills: transformedData.skills && transformedData.skills.length > 0 
           ? transformedData.skills 
-          : (Array.isArray(localData.skills) ? localData.skills.map((s: { id?: string; name?: string; level?: SkillLevel; skill_type?: SkillType }) => ({
+          : (Array.isArray(localData.skills) ? localData.skills.map((s: { id?: string; name?: string; level?: SkillLevel; skill_type?: string }) => ({
               id: s.id || generateId(),
               name: s.name || '',
               level: s.level || 'Intermediate',
-              skill_type: s.skill_type || 'technical',
+              skill_type: normalizeSkillType(s.skill_type),
             })).filter((s: Skill) => s.name) : defaults.skills),
         experience: transformedData.experience && transformedData.experience.length > 0 
           ? transformedData.experience 
@@ -391,11 +399,11 @@ const loadGiverProfileFromStorage = (): SkillGiverProfile => {
         phone: parsed.phone ?? defaults.phone,
         linkedinUrl: parsed.linkedinUrl ?? defaults.linkedinUrl,
         availability: parsed.availability ?? defaults.availability,
-        skills: Array.isArray(parsed.skills) ? parsed.skills.map((s: { id?: string; name?: string; level?: SkillLevel; skill_type?: SkillType }) => ({
+        skills: Array.isArray(parsed.skills) ? parsed.skills.map((s: { id?: string; name?: string; level?: SkillLevel; skill_type?: string }) => ({
           id: s.id || generateId(),
           name: s.name || '',
           level: s.level || 'Intermediate',
-          skill_type: s.skill_type || 'technical',
+          skill_type: normalizeSkillType(s.skill_type),
         })).filter((s: Skill) => s.name) : defaults.skills,
         experience: Array.isArray(parsed.experience) ? parsed.experience : defaults.experience,
         education: Array.isArray(parsed.education) ? parsed.education : defaults.education,
@@ -2182,11 +2190,11 @@ export default function ProfilePage() {
         country: cvData.contact?.country || '',
         summary: cvData.summary || '',
         
-        // Skills - map to our format
+        // Skills - map to our format (convert technical_skills→technical, soft_skills→soft)
         skills: (cvData.skills || []).map((skill: { skill_name?: string; name?: string; skill_type?: string; level?: string }) => ({
           id: generateId(),
           name: skill.skill_name || skill.name || '',
-          skill_type: (skill.skill_type || 'technical') as SkillType,
+          skill_type: normalizeSkillType(skill.skill_type),
           level: capitalizeFirstLetter(skill.level || 'intermediate') as SkillLevel,
         })).filter((s: Skill) => s.name),
         
