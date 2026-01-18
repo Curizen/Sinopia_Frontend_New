@@ -519,6 +519,34 @@ export async function registerRoutes(
     }
   });
 
+  // Skills API proxy - Get all skills for current user
+  app.get("/api/skills", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      
+      console.log("[DEBUG] GET /api/skills - Fetching skills from external API");
+      
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/skills/`, {
+        method: "GET",
+        headers,
+      });
+      forwardCookies(response, res);
+      const data = await response.json();
+      console.log("[DEBUG] GET /api/skills - Response:", JSON.stringify(data, null, 2));
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Get skills proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to get skills" });
+    }
+  });
+
   // Skills API proxy - Add
   app.post("/api/skills", async (req, res) => {
     try {
@@ -531,7 +559,7 @@ export async function registerRoutes(
         headers["Authorization"] = authHeader;
       }
       
-      const response = await fetch(`${EXTERNAL_API_BASE}/api/skills`, {
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/skills/`, {
         method: "POST",
         headers,
         body: JSON.stringify(req.body),

@@ -510,6 +510,70 @@ export default function ProfilePage() {
     }
   }, []);
 
+  // Fetch skills from backend API on mount
+  useEffect(() => {
+    const fetchSkillsFromBackend = async () => {
+      try {
+        const token = localStorage.getItem('sinopia_token');
+        if (!token) {
+          console.log('[DEBUG] No token, skipping skills fetch');
+          return;
+        }
+
+        console.log('[DEBUG] Fetching skills from backend API...');
+        const response = await fetch('/api/skills', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('[DEBUG] Skills fetched from backend:', data);
+
+          // Handle both array response and object with skills property
+          const skillsArray = Array.isArray(data) ? data : (data.skills || []);
+
+          if (skillsArray.length > 0) {
+            const transformedSkills: Skill[] = skillsArray.map((s: any) => ({
+              id: s.id?.toString() || generateId(),
+              name: s.skill_name || s.name || '',
+              level: (s.level as SkillLevel) || 'Intermediate',
+              skill_type: (s.skill_type as SkillType) || 'technical',
+            })).filter((s: Skill) => s.name);
+
+            console.log('[DEBUG] Transformed skills:', transformedSkills);
+
+            // Update giverProfile with fetched skills
+            setGiverProfile(prev => ({
+              ...prev,
+              skills: transformedSkills,
+            }));
+
+            // Also update localStorage cache
+            const cacheStr = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+            if (cacheStr) {
+              const cache = JSON.parse(cacheStr);
+              cache.skills = skillsArray;
+              localStorage.setItem(USER_PROFILE_CACHE_KEY, JSON.stringify(cache));
+            }
+          }
+        } else {
+          console.log('[DEBUG] Failed to fetch skills, status:', response.status);
+        }
+      } catch (error) {
+        console.error('[DEBUG] Error fetching skills:', error);
+      }
+    };
+
+    if (isSkillGiver) {
+      fetchSkillsFromBackend();
+    }
+  }, [isSkillGiver]);
+
   useEffect(() => {
     if (isSkillGiver) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(giverProfile));
