@@ -28,12 +28,20 @@ export default function SignInPage() {
     setIsLoading(true);
 
     try {
-      await login(formData.email, formData.password);
+      const result = await login(formData.email, formData.password);
       toast({
         title: t('common.success'),
         description: t('auth.signInSuccess'),
       });
-      setLocation('/profile');
+      
+      // Role-based routing
+      // skill_giver → profile page
+      // skill_searcher → company page
+      if (result.role === 'skill_searcher') {
+        setLocation('/onboarding/company');
+      } else {
+        setLocation('/profile');
+      }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : t('auth.signInError');
       toast({

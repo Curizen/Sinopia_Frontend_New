@@ -26,7 +26,7 @@ interface AuthContextType {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<{ role: UserRole }>;
   register: (email: string, password: string, role: UserRole, cvFile?: File | null) => Promise<void>;
   logout: () => Promise<void>;
   setUserFromToken: (token: string, user: User) => void;
@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string): Promise<{ role: UserRole }> => {
     console.log('[DEBUG] AuthContext login called with email:', email);
     const response = await authService.loginUser({ email, password });
     console.log('[DEBUG] AuthContext received response:', response);
@@ -94,11 +94,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log('[DEBUG] apiResponse.role:', apiResponse.role);
       
       const userData = apiResponse.userData;
+      const userRole = (apiResponse.role || 'skill_giver') as UserRole;
       
       const newUser: User = {
         id: userData?.id || userData?.user_id || Date.now().toString(),
         email: userData?.email || email,
-        role: (apiResponse.role || 'skill_giver') as UserRole,
+        role: userRole,
         firstName: userData?.full_name?.split(' ')[0] || undefined,
         lastName: userData?.full_name?.split(' ').slice(1).join(' ') || undefined,
         avatar: undefined,
@@ -115,6 +116,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.log('Saving userData to user_profile_cache:', userData);
         localStorage.setItem('user_profile_cache', JSON.stringify(userData));
       }
+      
+      // Return the role for routing purposes
+      return { role: userRole };
     } else {
       throw new Error(response.message || 'Login failed');
     }
