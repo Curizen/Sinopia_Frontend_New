@@ -176,13 +176,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error('Logout API error:', error);
     } finally {
+      // Clear React state
       setToken(null);
       setUser(null);
+      
+      // Clear all localStorage items
       localStorage.removeItem('sinopia_token');
       localStorage.removeItem('sinopia_user');
       localStorage.removeItem('user_profile_cache');
       localStorage.removeItem('sinopia_skill_giver_profile');
       localStorage.removeItem('sinopia_skill_searcher_profile');
+      
+      // Clear all cookies
+      document.cookie.split(";").forEach((cookie) => {
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+      });
+      
+      // Clear sessionStorage
+      sessionStorage.clear();
+      
+      console.log('[DEBUG] Logout - All storage cleared');
     }
   }, []);
 
