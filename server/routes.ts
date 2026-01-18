@@ -160,12 +160,15 @@ export async function registerRoutes(
         headers["Authorization"] = authHeader;
       }
       
-      const response = await fetch(`${EXTERNAL_API_BASE}/api/users/logout`, {
+      console.log("[DEBUG] Logout - Calling external API with cookies:", getClientCookies(req));
+      
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/users/logout/`, {
         method: "POST",
         headers,
       });
       forwardCookies(response, res);
       const data = await response.json();
+      console.log("[DEBUG] Logout - Response:", JSON.stringify(data));
       res.status(response.status).json(data);
     } catch (error) {
       console.error("Logout proxy error:", error);
