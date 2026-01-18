@@ -559,13 +559,26 @@ export async function registerRoutes(
         headers["Authorization"] = authHeader;
       }
       
+      // Transform frontend format to backend format
+      // Frontend: skill_type "technical" or "soft" → Backend: "technical_skills" or "soft_skills"
+      // Frontend: level "Advanced" → Backend: "advanced" (lowercase)
+      const transformedBody = {
+        ...req.body,
+        skill_type: req.body.skill_type === 'soft' ? 'soft_skills' : 'technical_skills',
+        level: req.body.level?.toLowerCase() || 'intermediate',
+      };
+      
+      console.log("[DEBUG] POST /api/skills - Original body:", JSON.stringify(req.body));
+      console.log("[DEBUG] POST /api/skills - Transformed body:", JSON.stringify(transformedBody));
+      
       const response = await fetch(`${EXTERNAL_API_BASE}/api/skills/`, {
         method: "POST",
         headers,
-        body: JSON.stringify(req.body),
+        body: JSON.stringify(transformedBody),
       });
       forwardCookies(response, res);
       const data = await response.json();
+      console.log("[DEBUG] POST /api/skills - Response:", JSON.stringify(data));
       res.status(response.status).json(data);
     } catch (error) {
       console.error("Add skill proxy error:", error);
@@ -585,13 +598,24 @@ export async function registerRoutes(
         headers["Authorization"] = authHeader;
       }
       
+      // Transform frontend format to backend format
+      const transformedBody = {
+        ...req.body,
+        skill_type: req.body.skill_type === 'soft' ? 'soft_skills' : 'technical_skills',
+        level: req.body.level?.toLowerCase() || 'intermediate',
+      };
+      
+      console.log("[DEBUG] PUT /api/skills - Original body:", JSON.stringify(req.body));
+      console.log("[DEBUG] PUT /api/skills - Transformed body:", JSON.stringify(transformedBody));
+      
       const response = await fetch(`${EXTERNAL_API_BASE}/api/skills/${req.params.id}`, {
         method: "PUT",
         headers,
-        body: JSON.stringify(req.body),
+        body: JSON.stringify(transformedBody),
       });
       forwardCookies(response, res);
       const data = await response.json();
+      console.log("[DEBUG] PUT /api/skills - Response:", JSON.stringify(data));
       res.status(response.status).json(data);
     } catch (error) {
       console.error("Update skill proxy error:", error);
