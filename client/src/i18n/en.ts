@@ -543,7 +543,7 @@ export const en = {
   },
   about: {
     title: "About Sinopia",
-    subtitle: "Connecting talent with opportunity since 2025",
+    subtitle: "Connecting skills and competency gaps since 2025",
     storyTitle: "Our Story",
     storyText1:
       "Sinopia is a young and innovative company with a clear vision: to rethink existing societal potential and make it accessible in new, meaningful ways.",
@@ -601,24 +601,24 @@ export const en = {
       },
     },
     skillsTitle: "Our Skills",
-    skill1Name: "Expert Matching",
+    skill1Name: "Skils Matching",
     skill1Desc:
-      "Connecting the right professionals with specific use cases based on verified expertise and experience.",
+      "Connecting the right skills with specific use cases based on verified expertise and experience.",
     skill2Name: "ESCO Skill Mapping",
     skill2Desc:
       "Utilizing the European Skills, Competences and Occupations framework for standardized skill classification.",
-    skill3Name: "Project Scoping",
+    skill3Name: "Use-Case Scoping",
     skill3Desc:
-      "Defining clear objectives, deliverables, and milestones for successful project outcomes.",
+      "Defining clear objectives, deliverables, and milestones for successful project result.",
     skill4Name: "Contract & Milestone Management",
     skill4Desc:
       "Structured agreements with transparent progress tracking and payment schedules.",
     skill5Name: "Quality Assurance",
     skill5Desc:
       "Ensuring deliverables meet standards through systematic review and verification processes.",
-    skill6Name: "Expert Onboarding",
+    skill6Name: "Skill Onboarding",
     skill6Desc:
-      "Seamless integration of professionals into projects with clear expectations and support.",
+      "Seamless integration of professionals into Processes and Use Cases with clear expectations and support.",
   },
   time: {
     justNow: "Just now",

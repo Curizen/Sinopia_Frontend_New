@@ -551,7 +551,7 @@ export const de = {
   },
   about: {
     title: "Über Sinopia",
-    subtitle: "Verbindung von Talent mit Möglichkeiten seit 2025",
+    subtitle: "Verbindung von Skills und Fähigkeitslücken seit 2025",
     storyTitle: "Unsere Geschichte",
     storyText1:
       "Sinopia ist ein junges und innovatives Unternehmen mit einer klaren Vision: bestehendes gesellschaftliches Potenzial neu zu denken und auf neue, sinnvolle Weise zugänglich zu machen.",
@@ -569,7 +569,7 @@ export const de = {
       orchestration: "Orchestrierung",
       partnership: "Partnerschaft",
       integrity: "Integrität",
-      achievement: "Leistung",
+      achievement: "Ausführung",
     },
     sinopia: {
       s: {
@@ -604,29 +604,29 @@ export const de = {
       },
       a: {
         letter: "A",
-        title: "Leistung",
-        description: "Wir denken ergebnis-orientiert. Nicht der \"Weg\" zählt, sondern das «Ziel».",
+        title: "Ausführung",
+        description: "Wir denken ergebnis-orientiert. Nicht der «Weg» zählt, sondern das «Ziel».",
       },
     },
     skillsTitle: "Unsere Stärken",
-    skill1Name: "Experten-Zuordnung",
+    skill1Name: "Skill Zuordnung",
     skill1Desc:
-      "Verbindung der richtigen Fachleute mit spezifischen Aufgaben basierend auf verifizierter Expertise.",
-    skill2Name: "ESCO Kompetenz-Zuordnung",
+      "Verbindung der richtigen skill mit spezifischen Aufgaben basierend auf verifizierter Expertise.",
+    skill2Name: "ESCO Kompetenz Zuordnung",
     skill2Desc:
       "Nutzung des europäischen Rahmens für Fähigkeiten, Kompetenzen und Berufe zur standardisierten Klassifizierung.",
-    skill3Name: "Projektumfang-Definition",
+    skill3Name: "Use-Case Definition",
     skill3Desc:
-      "Definition klarer Ziele, Liefergegenstände und Meilensteine für erfolgreiche Projektergebnisse.",
-    skill4Name: "Vertrags- & Meilenstein-Verwaltung",
+      "Definition klarer Ziele, Liefergegenstände und Meilensteine für erfolgreiche Ergebnisse.",
+    skill4Name: "Vertrags & Meilenstein-Verwaltung",
     skill4Desc:
       "Strukturierte Vereinbarungen mit transparenter Fortschrittsverfolgung und Zahlungsplänen.",
     skill5Name: "Qualitätssicherung",
     skill5Desc:
       "Sicherstellung der Standardkonformität durch systematische Überprüfungs- und Verifizierungsprozesse.",
-    skill6Name: "Experten-Einarbeitung",
+    skill6Name: "Skill Einarbeitung",
     skill6Desc:
-      "Nahtlose Integration von Fachleuten in Projekte mit klaren Erwartungen und Unterstützung.",
+      "Nahtlose Integration von Fachleuten in Prozesse und Use-Cases mit klaren Erwartungen und Unterstützung.",
   },
   time: {
     justNow: "Gerade eben",
