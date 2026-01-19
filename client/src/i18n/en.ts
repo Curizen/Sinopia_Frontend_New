@@ -567,27 +567,27 @@ export const en = {
       s: {
         letter: "S",
         title: "Service Expertise",
-        description: "We stand for high-quality skills and competencies.",
+        description: "We stand for high quality skills and competencies.",
       },
       i1: {
         letter: "I",
         title: "Innovation",
-        description: "We stand for new paths and solutions—thinking beyond the obvious for customers and society.",
+        description: "We stand for new paths and solutions thinking beyond the obvious for customers and society.",
       },
       n: {
         letter: "N",
         title: "New Thinking",
-        description: "We work with customers to rethink and live processes—skill-based, not personnel-centered.",
+        description: "We work with customers to rethink and live processes skill based, not personnel centered.",
       },
       o: {
         letter: "O",
         title: "Orchestration",
-        description: "Our approach is built on a nearly fully automated model, ensuring fast ramp-up times and targeted deployment and delivery.",
+        description: "Our approach is built on a nearly fully automated model, ensuring fast rampup times and targeted deployment and delivery.",
       },
       p: {
         letter: "P",
         title: "Partnership",
-        description: "We build partnerships at eye level—long-term, goal-oriented, and fair.",
+        description: "We build partnerships at eye level long term, goal oriented, and fair.",
       },
       i2: {
         letter: "I",
@@ -597,7 +597,7 @@ export const en = {
       a: {
         letter: "A",
         title: "Achievement",
-        description: "We think results-first—what matters is not the \"path,\" but the \"goal.\"",
+        description: "We think results first what matters is not the \"path,\" but the \"goal.\"",
       },
     },
     skillsTitle: "Our Skills",
@@ -876,7 +876,7 @@ export const en = {
     subtitle: "Information according to § 5 DDG",
     companyName: "Sinopia Deutschland GmbH",
     companyAddress:
-      "Deckerstr. 30\n70372 Stuttgart\nCommercial Register: HRA 800342\nRegistry Court: Stuttgart",
+      "Deckerstr. 39\n70372 Stuttgart\nCommercial Register: HRA 800342\nRegistry Court: Stuttgart",
     representedByTitle: "Represented by:",
     representedByNames: "Jens Uwe Jung, Tobias Bahlinger, and Eyad Dawood",
     contactTitle: "Contact:",
@@ -884,7 +884,7 @@ export const en = {
     vatIdTitle: "VAT ID:",
     vatIdNumber: "DE455888790",
     responsibleTitle: "Responsible for content according to § 18 Abs. 2 MStV:",
-    responsibleDetails: "Jens Uwe Jung\nDeckerstr. 30\n70372 Stuttgart",
+    responsibleDetails: "Jens Uwe Jung\nDeckerstr. 39\n70372 Stuttgart",
     disclaimerTitle: "Disclaimer:",
     euDisputeTitle: "EU Dispute Resolution",
     euDisputeText:

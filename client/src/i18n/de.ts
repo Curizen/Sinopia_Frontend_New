@@ -574,23 +574,23 @@ export const de = {
     sinopia: {
       s: {
         letter: "S",
-        title: "Service-Expertise",
+        title: "Service Expertise",
         description: "Wir stehen für eine hohe Qualität der eingesetzten Skills und Kompetenzen.",
       },
       i1: {
         letter: "I",
         title: "Innovation",
-        description: "Wir stehen für neue Wege und Lösungen. «Um die Ecke denken», im Sinne des Kunden und der Gesellschaft.",
+        description: "Wir stehen für neue Wege und Lösungen. \"Um die Ecke denken\", im Sinne des Kunden und der Gesellschaft.",
       },
       n: {
         letter: "N",
         title: "Neues Denken",
-        description: "Wir möchten mit dem Kunden neue Wege gehen, Prozesse zu denken und zu leben. Skill-basiert, nicht Personal-zentriert.",
+        description: "Wir möchten mit dem Kunden neue Wege gehen, Prozesse zu denken und zu leben. Skill basiert, nicht Personal zentriert.",
       },
       o: {
         letter: "O",
         title: "Orchestrierung",
-        description: "Unser Ansatz basiert auf einem nahezu vollständig automatisierten Ansatz. So garantieren wir kurze Anlaufzeiten und eine zielgerichtete Einsatz- sowie Auftragsabwicklung.",
+        description: "Unser Ansatz basiert auf einem nahezu vollständig automatisierten Ansatz. So garantieren wir kurze Anlaufzeiten und eine zielgerichtete Einsatz  sowie Auftragsabwicklung.",
       },
       p: {
         letter: "P",
@@ -605,7 +605,7 @@ export const de = {
       a: {
         letter: "A",
         title: "Leistung",
-        description: "Wir denken ergebnis-orientiert. Nicht der «Weg» zählt, sondern das «Ziel».",
+        description: "Wir denken ergebnis-orientiert. Nicht der \"Weg\" zählt, sondern das «Ziel».",
       },
     },
     skillsTitle: "Unsere Stärken",
@@ -890,7 +890,7 @@ export const de = {
     subtitle: "Angaben gemäß § 5 DDG",
     companyName: "Sinopia Deutschland GmbH",
     companyAddress:
-      "Deckerstr. 30\n70372 Stuttgart\nHandelsregister: HRA 800342\nRegistergericht: Stuttgart",
+      "Deckerstr. 39\n70372 Stuttgart\nHandelsregister: HRA 800342\nRegistergericht: Stuttgart",
     representedByTitle: "Vertreten durch:",
     representedByNames: "Jens Uwe Jung, Tobias Bahlinger und Eyad Dawood",
     contactTitle: "Kontakt:",
@@ -898,7 +898,7 @@ export const de = {
     vatIdTitle: "Umsatzsteuer-ID:",
     vatIdNumber: "DE455888790",
     responsibleTitle: "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:",
-    responsibleDetails: "Jens Uwe Jung\nDeckerstr. 30\n70372 Stuttgart",
+    responsibleDetails: "Jens Uwe Jung\nDeckerstr. 39\n70372 Stuttgart",
     disclaimerTitle: "Haftungsausschluss:",
     euDisputeTitle: "EU-Streitschlichtung",
     euDisputeText:
