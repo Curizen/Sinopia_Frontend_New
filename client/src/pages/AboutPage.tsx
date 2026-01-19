@@ -1,7 +1,7 @@
+import { useState } from 'react';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { useI18n } from '@/i18n';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { UserCheck, FileSearch, Lightbulb, ClipboardCheck, Shield, Cog } from 'lucide-react';
 import heroImage from '@assets/generated_images/team_collaboration_coworking_hero.png';
 
@@ -15,19 +15,11 @@ const skills = [
 ];
 
 const sinopiaKeys = ['s', 'i1', 'n', 'o', 'p', 'i2', 'a'] as const;
+type SinopiaKey = typeof sinopiaKeys[number];
 
 export default function AboutPage() {
   const { t } = useI18n();
-
-  const valueChips = [
-    t('about.valuesChips.service'),
-    t('about.valuesChips.innovation'),
-    t('about.valuesChips.newThinking'),
-    t('about.valuesChips.orchestration'),
-    t('about.valuesChips.partnership'),
-    t('about.valuesChips.integrity'),
-    t('about.valuesChips.achievement'),
-  ];
+  const [activeLetter, setActiveLetter] = useState<SinopiaKey>('s');
 
   return (
     <PublicLayout>
@@ -61,49 +53,51 @@ export default function AboutPage() {
       </section>
 
       <section className="py-16 bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display text-3xl font-bold text-center mb-8">{t('about.valuesTitle')}</h2>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="font-display text-3xl font-bold text-center mb-10">{t('about.valuesTitle')}</h2>
           
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {valueChips.map((chip, index) => (
-              <Badge 
-                key={index} 
-                variant="secondary" 
-                className="px-4 py-2 text-sm font-medium"
-                data-testid={`badge-value-chip-${index}`}
-              >
-                {chip}
-              </Badge>
-            ))}
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8">
+            {sinopiaKeys.map((key) => {
+              const isActive = activeLetter === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => setActiveLetter(key)}
+                  className={`
+                    w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center 
+                    text-xl sm:text-2xl font-bold transition-all duration-200
+                    focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+                    ${isActive 
+                      ? 'bg-primary text-primary-foreground scale-110 shadow-lg' 
+                      : 'bg-muted text-muted-foreground hover:bg-primary/20 hover:text-primary'
+                    }
+                  `}
+                  data-testid={`button-sinopia-${key}`}
+                  aria-pressed={isActive}
+                >
+                  {t(`about.sinopia.${key}.letter`)}
+                </button>
+              );
+            })}
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            {sinopiaKeys.map((key, index) => (
-              <Card 
-                key={key} 
-                className="hover-elevate overflow-visible"
-                data-testid={`card-sinopia-${key}`}
-              >
-                <CardContent className="pt-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-                      <span className="text-xl font-bold text-primary-foreground">
-                        {t(`about.sinopia.${key}.letter`)}
-                      </span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-lg mb-2">
-                        {t(`about.sinopia.${key}.title`)}
-                      </h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {t(`about.sinopia.${key}.description`)}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <Card className="max-w-2xl mx-auto" data-testid="card-sinopia-content">
+            <CardContent className="pt-6 pb-6">
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-primary-foreground">
+                    {t(`about.sinopia.${activeLetter}.letter`)}
+                  </span>
+                </div>
+                <h3 className="font-semibold text-xl mb-3" data-testid="text-sinopia-title">
+                  {t(`about.sinopia.${activeLetter}.title`)}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed" data-testid="text-sinopia-description">
+                  {t(`about.sinopia.${activeLetter}.description`)}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
