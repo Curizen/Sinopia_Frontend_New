@@ -561,27 +561,53 @@ export const de = {
       "Die Idee hinter Sinopia wurde von einem einfachen, aber tiefgründigen Bild inspiriert: uralte Höhlenmalereien, die menschliche Hände darstellen – ein zeitloses Symbol für Verbindung, Unterstützung und die Weitergabe von Wissen.",
     storyText4:
       "Aus dieser Symbolik entstand die Vision, die umfangreiche Erfahrung von Rentnern und erfahrenen Fachleuten der heutigen Arbeitswelt zur Verfügung zu stellen – flexibel, gezielt und wirkungsvoll. Als Gründer sind wir überzeugt, dass unser Ansatz nicht nur die Herausforderungen des demografischen Wandels adressiert, sondern auch zur sozialen Teilhabe, zum Wissenserhalt und zu einem nachhaltigeren Arbeitsmarkt beiträgt.",
-    value1Title: "Service-Expertise",
-    value1Desc:
-      "Hervorragenden Service durch tiefes Fachwissen und professionelle Exzellenz liefern.",
-    value2Title: "Innovation",
-    value2Desc:
-      "Kontinuierliche Verbesserung und Erforschung neuer Ansätze für bessere Lösungen.",
-    value3Title: "Neues Denken",
-    value3Desc:
-      "Konventionen hinterfragen und neue Perspektiven für bedeutsame Veränderungen annehmen.",
-    value4Title: "Orchestrierung",
-    value4Desc:
-      "Nahtlose Koordination von Fähigkeiten, Ressourcen und Prozessen für optimale Ergebnisse.",
-    value5Title: "Partnerschaft",
-    value5Desc:
-      "Aufbau starker, kollaborativer Beziehungen auf Basis von gegenseitigem Vertrauen.",
-    value6Title: "Integrität",
-    value6Desc:
-      "Mit Ehrlichkeit, Transparenz und ethischer Verantwortung in allem, was wir tun.",
-    value7Title: "Leistung",
-    value7Desc: "Messbare Ergebnisse liefern und gemeinsam Erfolge feiern.",
     valuesTitle: "Unsere Werte",
+    valuesChips: {
+      service: "Service-Expertise",
+      innovation: "Innovation",
+      newThinking: "Neues Denken",
+      orchestration: "Orchestrierung",
+      partnership: "Partnerschaft",
+      integrity: "Integrität",
+      achievement: "Leistung",
+    },
+    sinopia: {
+      s: {
+        letter: "S",
+        title: "Service-Expertise",
+        description: "Wir stehen für eine hohe Qualität der eingesetzten Skills und Kompetenzen.",
+      },
+      i1: {
+        letter: "I",
+        title: "Innovation",
+        description: "Wir stehen für neue Wege und Lösungen. «Um die Ecke denken», im Sinne des Kunden und der Gesellschaft.",
+      },
+      n: {
+        letter: "N",
+        title: "Neues Denken",
+        description: "Wir möchten mit dem Kunden neue Wege gehen, Prozesse zu denken und zu leben. Skill-basiert, nicht Personal-zentriert.",
+      },
+      o: {
+        letter: "O",
+        title: "Orchestrierung",
+        description: "Unser Ansatz basiert auf einem nahezu vollständig automatisierten Ansatz. So garantieren wir kurze Anlaufzeiten und eine zielgerichtete Einsatz- sowie Auftragsabwicklung.",
+      },
+      p: {
+        letter: "P",
+        title: "Partnerschaft",
+        description: "Wir führen eine Partnerschaft auf Augenhöhe. Langfristig, zielorientiert und fair.",
+      },
+      i2: {
+        letter: "I",
+        title: "Integrität",
+        description: "Wir leben unsere Werte im täglichen Handeln. Und stehen zu unseren Aussagen.",
+      },
+      a: {
+        letter: "A",
+        title: "Leistung",
+        description: "Wir denken ergebnis-orientiert. Nicht der «Weg» zählt, sondern das «Ziel».",
+      },
+    },
     skillsTitle: "Unsere Stärken",
     skill1Name: "Experten-Zuordnung",
     skill1Desc:

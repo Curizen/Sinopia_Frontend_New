@@ -553,28 +553,53 @@ export const en = {
       "The idea behind Sinopia was inspired by a simple yet profound image: ancient cave paintings depicting human hands - a timeless symbol of connection, support, and the passing on of knowledge.",
     storyText4:
       "From this symbolism, the vision emerged to make the vast experience of retirees and senior professionals available to today's working world - flexible, targeted, and impactful. As founders, we are convinced that our approach not only addresses the challenges of demographic change but also contributes to social participation, knowledge preservation, and a more sustainable labor market.",
-    value1Title: "Service Expertise",
-    value1Desc:
-      "Delivering exceptional service through deep domain knowledge and professional excellence.",
-    value2Title: "Innovation",
-    value2Desc:
-      "Continuously improving and exploring new approaches to create better solutions.",
-    value3Title: "New Thinking",
-    value3Desc:
-      "Challenging conventions and embracing fresh perspectives to drive meaningful change.",
-    value4Title: "Orchestration",
-    value4Desc:
-      "Seamlessly coordinating skills, resources, and processes for optimal outcomes.",
-    value5Title: "Partnership",
-    value5Desc:
-      "Building strong, collaborative relationships based on mutual trust and shared goals.",
-    value6Title: "Integrity",
-    value6Desc:
-      "Acting with honesty, transparency, and ethical responsibility in all we do.",
-    value7Title: "Achievement",
-    value7Desc:
-      "Delivering measurable results and celebrating success together.",
     valuesTitle: "Our Values",
+    valuesChips: {
+      service: "Service Expertise",
+      innovation: "Innovation",
+      newThinking: "New Thinking",
+      orchestration: "Orchestration",
+      partnership: "Partnership",
+      integrity: "Integrity",
+      achievement: "Achievement",
+    },
+    sinopia: {
+      s: {
+        letter: "S",
+        title: "Service Expertise",
+        description: "We stand for high-quality skills and competencies.",
+      },
+      i1: {
+        letter: "I",
+        title: "Innovation",
+        description: "We stand for new paths and solutions—thinking beyond the obvious for customers and society.",
+      },
+      n: {
+        letter: "N",
+        title: "New Thinking",
+        description: "We work with customers to rethink and live processes—skill-based, not personnel-centered.",
+      },
+      o: {
+        letter: "O",
+        title: "Orchestration",
+        description: "Our approach is built on a nearly fully automated model, ensuring fast ramp-up times and targeted deployment and delivery.",
+      },
+      p: {
+        letter: "P",
+        title: "Partnership",
+        description: "We build partnerships at eye level—long-term, goal-oriented, and fair.",
+      },
+      i2: {
+        letter: "I",
+        title: "Integrity",
+        description: "We live our values in everyday actions and stand by what we say.",
+      },
+      a: {
+        letter: "A",
+        title: "Achievement",
+        description: "We think results-first—what matters is not the \"path,\" but the \"goal.\"",
+      },
+    },
     skillsTitle: "Our Skills",
     skill1Name: "Expert Matching",
     skill1Desc:

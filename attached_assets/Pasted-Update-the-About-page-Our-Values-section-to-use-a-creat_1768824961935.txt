@@ -1,0 +1,76 @@
+Update the About page “Our Values” section to use a creative, structured “SINOPIA” values design.
+IMPORTANT: Keep FULL bilingual support (German + English). Nothing should be German-only.
+
+GOAL:
+Replace the current simple values list with a designed section that shows:
+1) The short list of values (Service Expertise, Innovation, New Thinking, Orchestration, Partnership, Integrity, Achievement)
+2) A creative “SINOPIA” acronym layout with a title + description for each letter, in BOTH languages.
+
+DESIGN REQUIREMENTS (UI)
+- Use a clean, modern, minimal Sinopia-style design (cards/accordion/timeline).
+- Create a section titled “Our Values” (EN) / “Unsere Werte” (DE).
+- Layout suggestion (choose best and implement):
+  Option A: 7 cards in a responsive grid (2 columns desktop, 1 column mobile)
+  Option B: Vertical timeline with letter badges (S I N O P I A) + card content
+  Option C: Accordion where each letter expands to show the description
+- Each item must have:
+  - Letter badge (S / I / N / O / P / I / A) in a circle
+  - Title (e.g., “Service-Expertise”)
+  - Short description text
+- Also show the “short list” of 7 values at the top as small chips/tags (no descriptions), fully translated.
+
+CONTENT (GERMAN + ENGLISH)
+A) Short list (chips)
+EN:
+- Service Expertise
+- Innovation
+- New Thinking
+- Orchestration
+- Partnership
+- Integrity
+- Achievement
+
+DE (chips):
+- Service-Expertise
+- Innovation
+- Neues Denken
+- Orchestrierung
+- Partnerschaft
+- Integrität
+- Leistung
+
+B) SINOPIA acronym details (German + English versions)
+German (use exactly this meaning, you may lightly format but do not change meaning):
+S – Service-Expertise: Wir stehen für eine hohe Qualität der eingesetzten Skills und Kompetenzen.
+I – Innovation: Wir stehen für neue Wege und Lösungen. „Um die Ecke denken“, im Sinne des Kunden und der Gesellschaft.
+N – Neues Denken: Wir möchten mit dem Kunden neue Wege gehen, Prozesse zu denken und zu leben. Skill-basiert, nicht Personal-zentriert.
+O – Orchestrierung: Unser Ansatz basiert auf einem nahezu vollständig automatisierten Ansatz. So garantieren wir kurze Anlaufzeiten und eine zielgerichtete Einsatz- sowie Auftragsabwicklung.
+P – Partnerschaft: Wir führen eine Partnerschaft auf Augenhöhe. Langfristig, zielorientiert und fair.
+I – Integrität: Wir leben unsere Werte im täglichen Handeln. Und stehen zu unseren Aussagen.
+A – Leistung: Wir denken ergebnis-orientiert. Nicht der „Weg“ zählt, sondern das „Ziel“.
+
+English (create accurate professional translations with same structure):
+S – Service Expertise: We stand for high-quality skills and competencies.
+I – Innovation: We stand for new paths and solutions—thinking beyond the obvious for customers and society.
+N – New Thinking: We work with customers to rethink and live processes—skill-based, not personnel-centered.
+O – Orchestration: Our approach is built on a nearly fully automated model, ensuring fast ramp-up times and targeted deployment and delivery.
+P – Partnership: We build partnerships at eye level—long-term, goal-oriented, and fair.
+I – Integrity: We live our values in everyday actions and stand by what we say.
+A – Achievement: We think results-first—what matters is not the “path,” but the “goal.”
+
+i18n (CRITICAL)
+- Add translation keys for:
+  - Section title “Our Values / Unsere Werte”
+  - Short list chips (EN/DE)
+  - Each acronym title and description (EN/DE)
+- Ensure language toggle switches EVERYTHING in this section.
+
+IMPLEMENTATION NOTES
+- Do not hardcode text in JSX; use i18n keys.
+- Keep typography clean: title larger, descriptions smaller.
+- Ensure mobile responsiveness (1 column, comfortable spacing).
+- Do not remove other About page content unless necessary.
+
+DELIVERABLE
+- Update the About page component(s) and translation files so the new SINOPIA values section renders correctly in EN and DE.
+- No TypeScript/build errors.
