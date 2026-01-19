@@ -605,7 +605,7 @@ export const de = {
       a: {
         letter: "A",
         title: "Ausführung",
-        description: "Wir denken ergebnis-orientiert. Nicht der «Weg» zählt, sondern das «Ziel».",
+        description: "Wir denken ergebnis-orientiert. Nicht der \"Weg\" zählt, sondern das \"Ziel\".",
       },
     },
     skillsTitle: "Unsere Stärken",
@@ -623,7 +623,7 @@ export const de = {
       "Strukturierte Vereinbarungen mit transparenter Fortschrittsverfolgung und Zahlungsplänen.",
     skill5Name: "Qualitätssicherung",
     skill5Desc:
-      "Sicherstellung der Standardkonformität durch systematische Überprüfungs- und Verifizierungsprozesse.",
+      "Sicherstellung der Standardkonformität durch systematische Überprüfungs und Verifizierungsprozesse.",
     skill6Name: "Skill Einarbeitung",
     skill6Desc:
       "Nahtlose Integration von Fachleuten in Prozesse und Use-Cases mit klaren Erwartungen und Unterstützung.",

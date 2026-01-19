@@ -601,7 +601,7 @@ export const en = {
       },
     },
     skillsTitle: "Our Skills",
-    skill1Name: "Skils Matching",
+    skill1Name: "Skill Matching",
     skill1Desc:
       "Connecting the right skills with specific use cases based on verified expertise and experience.",
     skill2Name: "ESCO Skill Mapping",
