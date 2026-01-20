@@ -952,6 +952,8 @@ export const en = {
     companySize1000plus: "1000+ employees",
     bio: "About",
     bioPlaceholder: "Tell us about your company (optional)",
+    website: "Website",
+    websitePlaceholder: "https://www.your-company.com",
     continueButton: "Continue to Dashboard",
     companyInfoSaved: "Company information saved",
     companyInfoSavedDesc: "Your company details have been saved successfully.",

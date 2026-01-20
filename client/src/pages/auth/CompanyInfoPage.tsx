@@ -43,6 +43,7 @@ export default function CompanyInfoPage() {
     city: '',
     country: '',
     bio: '',
+    website: '',
   });
 
   const populateFormFromApiData = (data: CompanyProfileData) => {
@@ -55,6 +56,7 @@ export default function CompanyInfoPage() {
       city: data.city || '',
       country: data.country || '',
       bio: data.bio || '',
+      website: data.website || '',
     });
   };
 
@@ -180,6 +182,7 @@ export default function CompanyInfoPage() {
         city: formData.city.trim(),
         country: formData.country.trim(),
         bio: formData.bio.trim() || undefined,
+        website: formData.website.trim() || undefined,
       });
 
       toast({
@@ -327,6 +330,18 @@ export default function CompanyInfoPage() {
                     data-testid="input-company-country"
                   />
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="website">{t('onboarding.website')} ({t('common.optional')})</Label>
+                <Input
+                  id="website"
+                  type="url"
+                  placeholder={t('onboarding.websitePlaceholder')}
+                  value={formData.website}
+                  onChange={(e) => setFormData(prev => ({ ...prev, website: e.target.value }))}
+                  data-testid="input-company-website"
+                />
               </div>
 
               <div className="space-y-2">

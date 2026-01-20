@@ -966,6 +966,8 @@ export const de = {
     companySize1000plus: "1000+ Mitarbeiter",
     bio: "Über uns",
     bioPlaceholder: "Erzählen Sie uns von Ihrem Unternehmen (freiwillig)",
+    website: "Webseite",
+    websitePlaceholder: "https://www.ihre-firma.de",
     continueButton: "Weiter zur Übersicht",
     companyInfoSaved: "Unternehmensinformationen gespeichert",
     companyInfoSavedDesc:

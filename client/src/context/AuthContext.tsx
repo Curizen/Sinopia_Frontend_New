@@ -19,6 +19,7 @@ interface CompanyInfoData {
   contactEmail: string;
   contactPhone: string;
   bio?: string;
+  website?: string;
 }
 
 interface AuthContextType {
@@ -223,7 +224,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       city: data.city,
       country: data.country,
       bio: data.bio || '',
-      website: '',
+      website: data.website || '',
     };
     
     console.log('[DEBUG] updateUserCompanyInfo - Sending payload:', apiPayload);
