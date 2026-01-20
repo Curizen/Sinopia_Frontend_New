@@ -30,7 +30,7 @@ interface RequiredStage {
 interface AnalysisResult {
   total_project_hours: number;
   required_job_titles: {
-    required_skills: JobTitle[];
+    job_titles: JobTitle[];
   };
   stages: {
     summary: string;
@@ -398,31 +398,32 @@ export default function AddProjectPage() {
                     </div>
 
                     {/* Section 2: Required Roles */}
-                    {analysisResult.required_job_titles?.required_skills && analysisResult.required_job_titles.required_skills.length > 0 && (
+                    {analysisResult.required_job_titles?.job_titles && analysisResult.required_job_titles.job_titles.length > 0 && (
                       <div className="space-y-3">
                         <div className="flex items-center gap-2">
                           <Users className="w-4 h-4 text-primary" />
                           <h4 className="font-semibold">{t('useCases.requiredRolesDetailed')}</h4>
                         </div>
                         <div className="space-y-3">
-                          {analysisResult.required_job_titles.required_skills.map((role, index) => (
-                            <div key={index} className="p-4 bg-background rounded-lg">
+                          {analysisResult.required_job_titles.job_titles.map((role, index) => (
+                            <div key={index} className="p-4 bg-background rounded-lg border">
                               <div className="flex items-center gap-2 mb-3">
-                                <Briefcase className="w-4 h-4 text-muted-foreground" />
-                                <span className="font-medium">
+                                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10">
+                                  <Users className="w-4 h-4 text-primary" />
+                                </div>
+                                <span className="text-lg font-semibold">
                                   {role.number_of_employees} {role.number_of_employees === 1 ? t('useCases.employee') : t('useCases.employees')}
                                 </span>
                               </div>
                               {role.required_skills && role.required_skills.length > 0 && (
                                 <div className="flex flex-wrap gap-2">
                                   {role.required_skills.map((skill, skillIndex) => (
-                                    <Badge 
+                                    <span 
                                       key={skillIndex} 
-                                      variant="secondary"
-                                      className="text-xs"
+                                      className="px-2.5 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-md"
                                     >
                                       {skill.skill} ({skill.level})
-                                    </Badge>
+                                    </span>
                                   ))}
                                 </div>
                               )}
