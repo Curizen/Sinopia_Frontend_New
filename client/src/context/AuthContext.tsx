@@ -215,7 +215,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     const storedToken = localStorage.getItem('sinopia_token');
     
-    const apiPayload = {
+    // Step A: Retrieve existing cached data to preserve fields not in form
+    const cachedDataRaw = localStorage.getItem('company_profile_cache');
+    const cachedData = cachedDataRaw ? JSON.parse(cachedDataRaw) : {};
+    
+    console.log('[DEBUG] updateUserCompanyInfo - Cached data:', cachedData);
+    
+    // Step B: Create form data payload
+    const formPayload = {
       company_name: data.companyName,
       industry: data.industry,
       phone: data.contactPhone,
@@ -227,7 +234,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       website: data.website || '',
     };
     
-    console.log('[DEBUG] updateUserCompanyInfo - Sending payload:', apiPayload);
+    // Step C: Merge cached data with form data - form data overwrites cached values
+    const apiPayload = {
+      ...cachedData,      // Keep existing fields (e.g., id, user_id, created_at, etc.)
+      ...formPayload,     // Overwrite with new form edits
+    };
+    
+    console.log('[DEBUG] updateUserCompanyInfo - Merged payload:', apiPayload);
     
     const response = await fetch('/api/profile', {
       method: 'POST',
