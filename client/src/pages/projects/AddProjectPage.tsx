@@ -9,16 +9,33 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useI18n } from '@/i18n';
-import { ArrowLeft, Plus, X, Sparkles, CheckCircle, Clock, Users, Layers } from 'lucide-react';
+import { ArrowLeft, Plus, X, Sparkles, CheckCircle, Clock, Users, Layers, Briefcase } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+
+interface RequiredSkill {
+  skill: string;
+  level: string;
+}
+
+interface JobTitle {
+  number_of_employees: number;
+  required_skills: RequiredSkill[];
+}
+
+interface RequiredStage {
+  stage_name: string;
+  total_stage_hours: number;
+}
 
 interface AnalysisResult {
   total_project_hours: number;
-  required_job_titles: string[];
-  stages: Array<{
-    name: string;
-    description?: string;
-    hours?: number;
-  }>;
+  required_job_titles: {
+    required_skills: JobTitle[];
+  };
+  stages: {
+    summary: string;
+    required_stages: RequiredStage[];
+  };
 }
 
 const ANALYSIS_CACHE_KEY = 'use_case_analysis_cache';
@@ -354,60 +371,94 @@ export default function AddProjectPage() {
                       </Button>
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="flex items-center gap-3 p-3 bg-background rounded-lg">
-                        <Clock className="w-5 h-5 text-muted-foreground" />
-                        <div>
-                          <p className="text-sm text-muted-foreground">{t('useCases.totalHours')}</p>
-                          <p className="font-semibold">{analysisResult.total_project_hours} {t('useCases.hours')}</p>
-                        </div>
+                  <CardContent className="space-y-6">
+                    {/* Section 1: Project Overview */}
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-primary" />
+                        <h4 className="font-semibold">{t('useCases.projectOverview')}</h4>
                       </div>
-                      <div className="flex items-center gap-3 p-3 bg-background rounded-lg">
-                        <Users className="w-5 h-5 text-muted-foreground" />
-                        <div>
-                          <p className="text-sm text-muted-foreground">{t('useCases.requiredRoles')}</p>
-                          <p className="font-semibold">{analysisResult.required_job_titles?.length || 0} {t('useCases.roles')}</p>
+                      <div className="p-4 bg-background rounded-lg space-y-3">
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+                            <Clock className="w-5 h-5 text-primary" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">{t('useCases.totalHours')}</p>
+                            <p className="text-xl font-bold">{analysisResult.total_project_hours} {t('useCases.hours')}</p>
+                          </div>
                         </div>
+                        {analysisResult.stages?.summary && (
+                          <div className="pt-3 border-t">
+                            <p className="text-sm text-muted-foreground mb-1">{t('useCases.projectSummary')}</p>
+                            <p className="text-sm leading-relaxed">{analysisResult.stages.summary}</p>
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {analysisResult.required_job_titles && analysisResult.required_job_titles.length > 0 && (
-                      <div>
-                        <p className="text-sm font-medium mb-2">{t('useCases.jobTitles')}</p>
-                        <div className="flex flex-wrap gap-2">
-                          {analysisResult.required_job_titles.map((jobTitle, index) => (
-                            <span
-                              key={index}
-                              className="px-2 py-1 bg-primary/10 text-primary text-sm rounded-md"
-                            >
-                              {jobTitle}
-                            </span>
+                    {/* Section 2: Required Roles */}
+                    {analysisResult.required_job_titles?.required_skills && analysisResult.required_job_titles.required_skills.length > 0 && (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <Users className="w-4 h-4 text-primary" />
+                          <h4 className="font-semibold">{t('useCases.requiredRolesDetailed')}</h4>
+                        </div>
+                        <div className="space-y-3">
+                          {analysisResult.required_job_titles.required_skills.map((role, index) => (
+                            <div key={index} className="p-4 bg-background rounded-lg">
+                              <div className="flex items-center gap-2 mb-3">
+                                <Briefcase className="w-4 h-4 text-muted-foreground" />
+                                <span className="font-medium">
+                                  {role.number_of_employees} {role.number_of_employees === 1 ? t('useCases.employee') : t('useCases.employees')}
+                                </span>
+                              </div>
+                              {role.required_skills && role.required_skills.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                  {role.required_skills.map((skill, skillIndex) => (
+                                    <Badge 
+                                      key={skillIndex} 
+                                      variant="secondary"
+                                      className="text-xs"
+                                    >
+                                      {skill.skill} ({skill.level})
+                                    </Badge>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           ))}
                         </div>
                       </div>
                     )}
 
-                    {analysisResult.stages && analysisResult.stages.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <Layers className="w-4 h-4 text-muted-foreground" />
-                          <p className="text-sm font-medium">{t('useCases.projectStages')}</p>
+                    {/* Section 3: Implementation Stages */}
+                    {analysisResult.stages?.required_stages && analysisResult.stages.required_stages.length > 0 && (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <Layers className="w-4 h-4 text-primary" />
+                          <h4 className="font-semibold">{t('useCases.implementationStages')}</h4>
                         </div>
-                        <div className="space-y-2">
-                          {analysisResult.stages.map((stage, index) => (
-                            <div key={index} className="p-3 bg-background rounded-lg">
-                              <p className="font-medium">{stage.name}</p>
-                              {stage.description && (
-                                <p className="text-sm text-muted-foreground mt-1">{stage.description}</p>
-                              )}
-                              {stage.hours && (
-                                <p className="text-xs text-muted-foreground mt-1">
-                                  {stage.hours} {t('useCases.hours')}
-                                </p>
-                              )}
-                            </div>
-                          ))}
+                        <div className="relative">
+                          {/* Timeline line */}
+                          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-border" />
+                          <div className="space-y-3">
+                            {analysisResult.stages.required_stages.map((stage, index) => (
+                              <div key={index} className="relative pl-10">
+                                {/* Timeline dot */}
+                                <div className="absolute left-2.5 top-4 w-3 h-3 rounded-full bg-primary border-2 border-background" />
+                                <div className="p-4 bg-background rounded-lg">
+                                  <div className="flex items-center justify-between flex-wrap gap-2">
+                                    <p className="font-medium">{stage.stage_name}</p>
+                                    <Badge variant="outline" className="text-xs">
+                                      <Clock className="w-3 h-3 mr-1" />
+                                      {stage.total_stage_hours} {t('useCases.hours')}
+                                    </Badge>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     )}

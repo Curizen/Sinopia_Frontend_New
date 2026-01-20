@@ -997,6 +997,12 @@ export const en = {
     jobTitles: "Required Job Titles",
     projectStages: "Project Stages",
     analyzeHint: "Click 'Analyze Use Case' to get AI-powered insights before creating.",
+    projectOverview: "Project Overview",
+    projectSummary: "Project Summary",
+    requiredRolesDetailed: "Required Roles",
+    employee: "Employee",
+    employees: "Employees",
+    implementationStages: "Implementation Stages",
   },
 };
 

@@ -1015,5 +1015,11 @@ export const de = {
     jobTitles: "Erforderliche Berufsbezeichnungen",
     projectStages: "Projektphasen",
     analyzeHint: "Klicken Sie auf «Aufgabe analysieren», um KI-gestützte Erkenntnisse zu erhalten.",
+    projectOverview: "Projektübersicht",
+    projectSummary: "Projektzusammenfassung",
+    requiredRolesDetailed: "Erforderliche Rollen",
+    employee: "Mitarbeiter",
+    employees: "Mitarbeiter",
+    implementationStages: "Umsetzungsphasen",
   },
 };
