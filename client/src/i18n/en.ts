@@ -258,6 +258,11 @@ export const en = {
     statusInProgress: "In Progress",
     statusCompleted: "Completed",
     statusCancelled: "Cancelled",
+    statusPending: "Pending",
+    statusActive: "Active",
+    totalCost: "Total Cost",
+    expertStatus: "Expert Status",
+    fetchError: "Failed to load projects. Please try again.",
   },
   projectDetail: {
     notFound: "Project not found",

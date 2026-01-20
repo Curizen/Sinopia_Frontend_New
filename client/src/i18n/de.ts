@@ -266,6 +266,11 @@ export const de = {
     statusInProgress: "In Bearbeitung",
     statusCompleted: "Abgeschlossen",
     statusCancelled: "Storniert",
+    statusPending: "Ausstehend",
+    statusActive: "Aktiv",
+    totalCost: "Gesamtkosten",
+    expertStatus: "Experten-Status",
+    fetchError: "Projekte konnten nicht geladen werden. Bitte versuchen Sie es erneut.",
   },
   projectDetail: {
     notFound: "Projekt nicht gefunden",
