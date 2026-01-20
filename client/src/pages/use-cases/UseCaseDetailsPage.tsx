@@ -19,25 +19,25 @@ import {
   CheckCircle2
 } from 'lucide-react';
 
-interface RequiredSkill {
-  skill: string;
-  level: string;
+interface Skill {
+  skill_name: string;
+  required_level: string;
 }
 
 interface JobTitle {
   job_title: string;
   level_job_title: string;
-  total_hours_role: number;
-  number_of_employees: number;
+  total_hours: number;
+  required_employees: number;
   description: string;
   hourly_rate: number;
-  required_skills: RequiredSkill[];
+  skills: Skill[];
 }
 
 interface Stage {
   stage_name: string;
   description: string;
-  total_stage_hours: number;
+  total_hours: number;
 }
 
 interface UseCaseDetails {
@@ -300,35 +300,37 @@ export default function UseCaseDetailsPage() {
                         </div>
                         <div className="flex items-center gap-1.5 bg-primary/10 text-primary px-2.5 py-1 rounded-full">
                           <Users className="w-4 h-4" />
-                          <span className="font-semibold">{job.number_of_employees}</span>
+                          <span className="font-semibold">{job.required_employees}</span>
                         </div>
                       </div>
                       <p className="text-sm text-muted-foreground">{job.description}</p>
                       <div className="flex items-center gap-4 text-sm">
                         <span className="flex items-center gap-1">
                           <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-                          {formatHours(job.total_hours_role)} {t('useCases.hours')}
+                          {formatHours(job.total_hours)} {t('useCases.hours')}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <DollarSign className="w-3.5 h-3.5 text-muted-foreground" />
-                          {formatCurrency(job.hourly_rate)}/{t('useCaseDetails.perHour')}
-                        </span>
+                        {job.hourly_rate > 0 && (
+                          <span className="flex items-center gap-1">
+                            <DollarSign className="w-3.5 h-3.5 text-muted-foreground" />
+                            {formatCurrency(job.hourly_rate)}/{t('useCaseDetails.perHour')}
+                          </span>
+                        )}
                       </div>
-                      {job.required_skills && job.required_skills.length > 0 && (
+                      {job.skills && job.skills.length > 0 && (
                         <div className="pt-2 border-t">
                           <h5 className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1">
                             <GraduationCap className="w-3.5 h-3.5" />
                             {t('useCaseDetails.requiredSkills')}
                           </h5>
                           <div className="flex flex-wrap gap-1.5">
-                            {job.required_skills.map((skill, skillIndex) => (
+                            {job.skills.map((skill, skillIndex) => (
                               <Badge 
                                 key={skillIndex} 
                                 variant="outline" 
                                 className="text-xs font-normal"
                               >
-                                {skill.skill}
-                                <span className="ml-1 text-muted-foreground">({skill.level})</span>
+                                {skill.skill_name}
+                                <span className="ml-1 text-muted-foreground">({skill.required_level})</span>
                               </Badge>
                             ))}
                           </div>
@@ -363,7 +365,7 @@ export default function UseCaseDetailsPage() {
                             <h4 className="font-semibold">{stage.stage_name}</h4>
                             <Badge variant="secondary" className="font-normal">
                               <Clock className="w-3 h-3 mr-1" />
-                              {formatHours(stage.total_stage_hours)} {t('useCases.hours')}
+                              {formatHours(stage.total_hours)} {t('useCases.hours')}
                             </Badge>
                           </div>
                           <p className="text-sm text-muted-foreground">{stage.description}</p>
