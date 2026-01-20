@@ -611,7 +611,7 @@ export const de = {
     skillsTitle: "Unsere Stärken",
     skill1Name: "Skill Zuordnung",
     skill1Desc:
-      "Verbindung der richtigen skill mit spezifischen Aufgaben basierend auf verifizierter Expertise.",
+      "Verbindung der richtigen Skills mit spezifischen Aufgaben basierend auf verifizierter Expertise.",
     skill2Name: "ESCO Kompetenz Zuordnung",
     skill2Desc:
       "Nutzung des europäischen Rahmens für Fähigkeiten, Kompetenzen und Berufe zur standardisierten Klassifizierung.",
@@ -626,7 +626,7 @@ export const de = {
       "Sicherstellung der Standardkonformität durch systematische Überprüfungs und Verifizierungsprozesse.",
     skill6Name: "Skill Einarbeitung",
     skill6Desc:
-      "Nahtlose Integration von Fachleuten in Prozesse und Use-Cases mit klaren Erwartungen und Unterstützung.",
+      "Nahtlose Integration von benötiger Skills in Prozesse und Use-Cases mit klaren Erwartungen und Unterstützung.",
   },
   time: {
     justNow: "Gerade eben",

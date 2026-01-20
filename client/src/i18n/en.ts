@@ -673,7 +673,7 @@ export const en = {
     sg1Title: "Share Your Expertise",
     sg1Desc:
       "Bring your lifelong knowledge into meaningful, flexible projects.",
-    sg2Title: "UseCase Based Work",
+    sg2Title: "Use-Case Based Work",
     sg2Desc:
       "Get matched to targeted, modular Use Cases tailored to your skills not generic jobs.",
     sg3Title: "Fair & Secure Compensation",
@@ -693,7 +693,7 @@ export const en = {
       "Create your profile and outline your skills or submit your project as a clear Use Case.",
     step2Title: "Get Smart Matched",
     step2Desc:
-      "AI analyzes requirements and recommends the right experts or Use Cases based on skills and experience.",
+      "AI analyzes requirements and recommends the right expertise or Use Cases based on skills and experience.",
     step3Title: "Collaborate with Clarity",
     step3Desc:
       "Work through structured tasks and milestones, with transparent pricing and secure payment upon delivery.",
