@@ -1008,6 +1008,7 @@ export const en = {
     analysisDataInvalid: "Analysis data is invalid. Please analyze again.",
     createError: "Failed to create use case. Please try again.",
     totalHours: "Total Hours",
+    totalCost: "Total Cost",
     hours: "hours",
     requiredRoles: "Required Roles",
     roles: "roles",

@@ -1026,6 +1026,7 @@ export const de = {
     analysisDataInvalid: "Analysedaten sind ungültig. Bitte analysieren Sie erneut.",
     createError: "Aufgabe konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
     totalHours: "Gesamtstunden",
+    totalCost: "Gesamtkosten",
     hours: "Stunden",
     requiredRoles: "Erforderliche Rollen",
     roles: "Rollen",

@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useI18n } from '@/i18n';
-import { ArrowLeft, Plus, X, Sparkles, CheckCircle, Clock, Users, Layers, Briefcase } from 'lucide-react';
+import { ArrowLeft, Plus, X, Sparkles, CheckCircle, Clock, Users, Layers, Euro } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface RequiredSkill {
@@ -29,6 +29,7 @@ interface RequiredStage {
 
 interface AnalysisResult {
   total_project_hours: number;
+  total_project_cost: number;
   required_job_titles: {
     job_titles: JobTitle[];
   };
@@ -379,13 +380,26 @@ export default function AddProjectPage() {
                         <h4 className="font-semibold">{t('useCases.projectOverview')}</h4>
                       </div>
                       <div className="p-4 bg-background rounded-lg space-y-3">
-                        <div className="flex items-center gap-3">
-                          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
-                            <Clock className="w-5 h-5 text-primary" />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="flex items-center gap-3">
+                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+                              <Clock className="w-5 h-5 text-primary" />
+                            </div>
+                            <div>
+                              <p className="text-sm text-muted-foreground">{t('useCases.totalHours')}</p>
+                              <p className="text-xl font-bold" data-testid="text-total-hours">{analysisResult.total_project_hours} {t('useCases.hours')}</p>
+                            </div>
                           </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">{t('useCases.totalHours')}</p>
-                            <p className="text-xl font-bold">{analysisResult.total_project_hours} {t('useCases.hours')}</p>
+                          <div className="flex items-center gap-3">
+                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-500/10">
+                              <Euro className="w-5 h-5 text-green-600" />
+                            </div>
+                            <div>
+                              <p className="text-sm text-muted-foreground">{t('useCases.totalCost')}</p>
+                              <p className="text-xl font-bold text-green-600" data-testid="text-total-cost">
+                                {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(analysisResult.total_project_cost || 0)}
+                              </p>
+                            </div>
                           </div>
                         </div>
                         {analysisResult.stages?.summary && (
