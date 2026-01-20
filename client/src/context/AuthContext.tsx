@@ -184,6 +184,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.removeItem('sinopia_token');
       localStorage.removeItem('sinopia_user');
       localStorage.removeItem('user_profile_cache');
+      localStorage.removeItem('company_profile_cache');
       localStorage.removeItem('sinopia_skill_giver_profile');
       localStorage.removeItem('sinopia_skill_searcher_profile');
       
@@ -210,6 +211,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const updateUserCompanyInfo = useCallback(async (data: CompanyInfoData) => {
     if (!user) throw new Error('No user logged in');
+    
+    const storedToken = localStorage.getItem('sinopia_token');
+    
+    const apiPayload = {
+      company_name: data.companyName,
+      industry: data.industry,
+      phone: data.contactPhone,
+      email: data.contactEmail,
+      company_size: data.companySize,
+      city: data.city,
+      country: data.country,
+      bio: data.bio || '',
+      website: '',
+    };
+    
+    console.log('[DEBUG] updateUserCompanyInfo - Sending payload:', apiPayload);
+    
+    const response = await fetch('/api/profile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(storedToken && { 'Authorization': `Bearer ${storedToken}` }),
+      },
+      credentials: 'include',
+      body: JSON.stringify(apiPayload),
+    });
+    
+    const responseData = await response.json();
+    console.log('[DEBUG] updateUserCompanyInfo - Response:', responseData);
+    
+    if (!response.ok) {
+      throw new Error(responseData.message || 'Failed to update company info');
+    }
+    
+    localStorage.setItem('company_profile_cache', JSON.stringify(responseData));
     
     const updatedUser: User = {
       ...user,

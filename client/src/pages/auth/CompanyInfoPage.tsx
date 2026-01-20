@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, Redirect } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
 import { useI18n } from '@/i18n';
@@ -12,12 +12,27 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { Building2, CheckCircle2 } from 'lucide-react';
 
+interface CompanyProfileData {
+  id?: number | null;
+  user_id?: number | null;
+  company_name?: string | null;
+  company_size?: string | null;
+  industry?: string | null;
+  website?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  country?: string | null;
+  city?: string | null;
+  bio?: string | null;
+}
+
 export default function CompanyInfoPage() {
   const { user, updateUserCompanyInfo, isAuthenticated, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
   const { t } = useI18n();
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
   const [formData, setFormData] = useState({
     companyName: '',
@@ -30,6 +45,65 @@ export default function CompanyInfoPage() {
     bio: '',
   });
 
+  const populateFormFromApiData = (data: CompanyProfileData) => {
+    setFormData({
+      companyName: data.company_name || '',
+      industry: data.industry || '',
+      contactEmail: data.email || user?.email || '',
+      contactPhone: data.phone || '',
+      companySize: data.company_size || '',
+      city: data.city || '',
+      country: data.country || '',
+      bio: data.bio || '',
+    });
+  };
+
+  useEffect(() => {
+    const loadProfileData = async () => {
+      const cachedData = localStorage.getItem('company_profile_cache');
+      if (cachedData) {
+        try {
+          const parsed = JSON.parse(cachedData) as CompanyProfileData;
+          console.log('[DEBUG] Loading company profile from cache:', parsed);
+          populateFormFromApiData(parsed);
+        } catch (e) {
+          console.error('Error parsing cached company profile:', e);
+        }
+      }
+
+      try {
+        const token = localStorage.getItem('sinopia_token');
+        const response = await fetch('/api/profile/me', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` }),
+          },
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('[DEBUG] Fetched company profile from API:', data);
+          if (data && (data.company_name || data.email || data.industry)) {
+            localStorage.setItem('company_profile_cache', JSON.stringify(data));
+            populateFormFromApiData(data);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching company profile:', error);
+      } finally {
+        setIsLoadingProfile(false);
+      }
+    };
+
+    if (isAuthenticated) {
+      loadProfileData();
+    } else {
+      setIsLoadingProfile(false);
+    }
+  }, [isAuthenticated, user?.email]);
+
   const companySizeOptions = [
     { value: '1-10', labelKey: 'onboarding.companySize1to10' },
     { value: '11-50', labelKey: 'onboarding.companySize11to50' },
@@ -39,7 +113,7 @@ export default function CompanyInfoPage() {
     { value: '1000+', labelKey: 'onboarding.companySize1000plus' },
   ];
 
-  if (authLoading) {
+  if (authLoading || isLoadingProfile) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -113,7 +187,7 @@ export default function CompanyInfoPage() {
         description: t('onboarding.companyInfoSavedDesc'),
       });
 
-      setLocation('/profile');
+      setLocation('/dashboard');
       window.scrollTo(0, 0);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : t('common.error');

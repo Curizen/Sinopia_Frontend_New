@@ -1,0 +1,40 @@
+I need to implement the "Company Information" form submission (Onboarding & Update) and the Profile Data fetching logic for the Skill Searcher role.
+
+Please implement the following:
+
+### 1. Form Submission (Create/Update)
+- **Component:** The Company Information form shown in the onboarding flow (and profile settings).
+- **Trigger:** When the "Continue to Dashboard" (or "Save") button is clicked.
+- **API Endpoint:** `POST https://sinopia.eu/api/profile`
+- **Headers:** `Content-Type: application/json`, `Authorization: Bearer <token>`
+- **Request Body Mapping:**
+  Map the form input state to the backend JSON keys:
+  - `company_name` (from Company Name input)
+  - `industry` (from Industry input)
+  - `phone` (from Contact Phone input)
+  - `email` (from Contact Email input)
+  - `company_size` (from Company Size dropdown)
+  - `city` (from City input)
+  - `country` (from Country input)
+  - `bio` (from the "About" textarea)
+  - `website` (Add this field to the payload, if the UI has an input for it, otherwise send null or empty string).
+
+- **On Success:**
+  1.  **Cache Data:** Save the response `data` object to `localStorage` with key `'company_profile_cache'`.
+  2.  **Redirect:** If in onboarding mode, redirect to `/dashboard`. If in edit mode, show a "Saved successfully" toast.
+
+### 2. Profile Fetching (GET)
+- **Component:** The User Profile page.
+- **API Endpoint:** `GET https://sinopia.eu/api/profile/me`
+- **Headers:** `Authorization: Bearer <token>`
+- **Logic (Cache-First Strategy):**
+  1.  **On Mount:** Check `localStorage` for `'company_profile_cache'`.
+      - If found, immediately populate the form state with this data (so the user sees it instantly).
+  2.  **Background Fetch:** Call the GET API.
+      - On response, update the state (to ensure data is fresh) and overwrite the `'company_profile_cache'` in `localStorage` with the new data.
+
+### 3. Field Specifics
+- Ensure the `company_size` dropdown maps correctly to the value expected by the API (e.g., "50-100").
+- Handle `null` values gracefully when populating the form.
+
+Please write the complete logic for this form handling and data synchronization.

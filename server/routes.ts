@@ -656,6 +656,36 @@ export async function registerRoutes(
     }
   });
 
+  // Profile API proxy - Get current user profile
+  app.get("/api/profile/me", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+
+      console.log("[DEBUG] GET /api/profile/me");
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/profile/me`, {
+        method: "GET",
+        headers,
+      });
+
+      forwardCookies(response, res);
+      const data = await response.json();
+      console.log("[DEBUG] GET /api/profile/me - Response status:", response.status);
+      console.log("[DEBUG] GET /api/profile/me - Response:", JSON.stringify(data, null, 2));
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Get profile proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to fetch profile" });
+    }
+  });
+
   // Profile API proxy - Update (for Personal Info and Bio)
   // Uses POST method with trailing slash as required by backend
   app.post("/api/profile", async (req, res) => {
