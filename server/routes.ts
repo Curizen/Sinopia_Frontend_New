@@ -730,5 +730,67 @@ export async function registerRoutes(
     }
   });
 
+  // Use Case Analysis endpoint
+  app.post("/api/use-case/analysis", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+
+      console.log("[DEBUG] POST /api/use-case/analysis - Body:", JSON.stringify(req.body, null, 2));
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/use-case/analysis`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(req.body),
+      });
+
+      forwardCookies(response, res);
+      const data = await response.json();
+      console.log("[DEBUG] POST /api/use-case/analysis - Response status:", response.status);
+      console.log("[DEBUG] POST /api/use-case/analysis - Response data:", JSON.stringify(data, null, 2));
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Use case analysis proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to analyze use case" });
+    }
+  });
+
+  // Use Case Creation endpoint
+  app.post("/api/use-case", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+
+      console.log("[DEBUG] POST /api/use-case - Body:", JSON.stringify(req.body, null, 2));
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/use-case`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(req.body),
+      });
+
+      forwardCookies(response, res);
+      const data = await response.json();
+      console.log("[DEBUG] POST /api/use-case - Response status:", response.status);
+      console.log("[DEBUG] POST /api/use-case - Response data:", JSON.stringify(data, null, 2));
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Use case creation proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to create use case" });
+    }
+  });
+
   return httpServer;
 }

@@ -1,0 +1,43 @@
+I need to implement a "Two-Step Use Case Creation" workflow involving an AI Analysis step followed by the final Creation step.
+
+Please implement the following logic in the `CreateUseCase` component:
+
+### 1. Step 1: Analyze & Cache (The "Analyze Use Case" Button)
+- **Action:** When the user clicks "Analyze Use Case", send the form data (`title`, `description`, `objectives`) to:
+  - `POST ${EXTERNAL_API_URL}/api/use-case/analysis`
+- **On Success:**
+  1.  Store the **entire response object** (containing `total_project_hours`, `required_job_titles`, `stages`) into `localStorage`.
+      - **Key:** `'use_case_analysis_cache'`
+      - **Value:** `JSON.stringify(response)`
+  2.  Update a local state variable (e.g., `analysisResult`) with this data to display the "AI Analysis Results" preview section below the form.
+  3.  Show a success message: "Analysis complete. You can now create the use case."
+
+### 2. Step 2: Create Full Use Case (The "Create Use Case" Button)
+- **Action:** When the user clicks "Create Use Case", construct the final payload by merging the **Form Inputs** with the **Cached Analysis Data**.
+- **Endpoint:** `POST ${EXTERNAL_API_URL}/api/use-case`
+- **Headers:** `Authorization: Bearer <token>`
+- **Request Body Construction:**
+  Retrieve the cache: `const cachedAnalysis = JSON.parse(localStorage.getItem('use_case_analysis_cache'));`
+
+  The body must look like this:
+  ```json
+  {
+    "title": "value from form input",
+    "description": "value from form input",
+    "objectives": ["value from form input"],
+    "total_project_hours": cachedAnalysis.total_project_hours,
+    "required_job_titles": cachedAnalysis.required_job_titles,
+    "stages": cachedAnalysis.stages
+  }
+3. Validation & Cleanup
+Validation: Disable the "Create Use Case" button if the analysis hasn't been performed yet (i.e., if use_case_analysis_cache is null).
+
+On Create Success:
+
+Clear the cache: localStorage.removeItem('use_case_analysis_cache').
+
+Show a success message.
+
+Redirect the user to the projects list or dashboard.
+
+Please implement this logic, ensuring that the "Create" request fails gracefully if the analysis data is missing.

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useProjects } from '@/context/ProjectContext';
@@ -9,7 +9,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useI18n } from '@/i18n';
-import { ArrowLeft, Plus, X } from 'lucide-react';
+import { ArrowLeft, Plus, X, Sparkles, CheckCircle, Clock, Users, Layers } from 'lucide-react';
+
+interface AnalysisResult {
+  total_project_hours: number;
+  required_job_titles: string[];
+  stages: Array<{
+    name: string;
+    description?: string;
+    hours?: number;
+  }>;
+}
+
+const ANALYSIS_CACHE_KEY = 'use_case_analysis_cache';
 
 export default function AddProjectPage() {
   const { t } = useI18n();
@@ -17,9 +29,23 @@ export default function AddProjectPage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [objectives, setObjectives] = useState<string[]>(['']);
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+
+  // Load cached analysis on mount
+  useEffect(() => {
+    const cached = localStorage.getItem(ANALYSIS_CACHE_KEY);
+    if (cached) {
+      try {
+        setAnalysisResult(JSON.parse(cached));
+      } catch (e) {
+        localStorage.removeItem(ANALYSIS_CACHE_KEY);
+      }
+    }
+  }, []);
 
   const addObjective = () => {
     setObjectives([...objectives, '']);
@@ -37,9 +63,7 @@ export default function AddProjectPage() {
     setObjectives(newObjectives);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const validateForm = () => {
     const trimmedTitle = title.trim();
     const trimmedDescription = description.trim();
     const filteredObjectives = objectives
@@ -52,7 +76,7 @@ export default function AddProjectPage() {
         description: t('useCases.allFieldsRequired'),
         variant: 'destructive',
       });
-      return;
+      return null;
     }
 
     if (filteredObjectives.length === 0) {
@@ -61,42 +85,165 @@ export default function AddProjectPage() {
         description: t('useCases.atLeastOneObjective'),
         variant: 'destructive',
       });
+      return null;
+    }
+
+    return {
+      title: trimmedTitle,
+      description: trimmedDescription,
+      objectives: filteredObjectives,
+    };
+  };
+
+  // Step 1: Analyze Use Case
+  const handleAnalyze = async () => {
+    const formData = validateForm();
+    if (!formData) return;
+
+    setIsAnalyzing(true);
+
+    try {
+      const token = localStorage.getItem('sinopia_token');
+      const response = await fetch('/api/use-case/analysis', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          title: formData.title,
+          description: formData.description,
+          objectives: formData.objectives,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || t('useCases.analysisError'));
+      }
+
+      const analysisData = await response.json();
+      
+      // Cache the analysis result
+      localStorage.setItem(ANALYSIS_CACHE_KEY, JSON.stringify(analysisData));
+      setAnalysisResult(analysisData);
+
+      toast({
+        title: t('useCases.analysisComplete'),
+        description: t('useCases.analysisCompleteDesc'),
+      });
+    } catch (error) {
+      console.error('Analysis error:', error);
+      toast({
+        title: t('common.error'),
+        description: error instanceof Error ? error.message : t('useCases.analysisError'),
+        variant: 'destructive',
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  // Step 2: Create Full Use Case
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const formData = validateForm();
+    if (!formData) return;
+
+    // Check if analysis was performed
+    const cachedAnalysis = localStorage.getItem(ANALYSIS_CACHE_KEY);
+    if (!cachedAnalysis) {
+      toast({
+        title: t('common.error'),
+        description: t('useCases.analyzeFirst'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    let parsedAnalysis: AnalysisResult;
+    try {
+      parsedAnalysis = JSON.parse(cachedAnalysis);
+    } catch (e) {
+      toast({
+        title: t('common.error'),
+        description: t('useCases.analysisDataInvalid'),
+        variant: 'destructive',
+      });
       return;
     }
     
     setIsLoading(true);
 
-    const payload = {
-      use_case: {
-        title: trimmedTitle,
-        description: trimmedDescription,
-        objectives: filteredObjectives,
+    try {
+      const token = localStorage.getItem('sinopia_token');
+      
+      // Merge form data with cached analysis data
+      const payload = {
+        title: formData.title,
+        description: formData.description,
+        objectives: formData.objectives,
+        total_project_hours: parsedAnalysis.total_project_hours,
+        required_job_titles: parsedAnalysis.required_job_titles,
+        stages: parsedAnalysis.stages,
+      };
+
+      console.log('Creating use case with payload:', JSON.stringify(payload, null, 2));
+
+      const response = await fetch('/api/use-case', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || t('useCases.createError'));
       }
-    };
 
-    console.log('Submitting payload:', JSON.stringify(payload, null, 2));
+      // Clear the cache on success
+      localStorage.removeItem(ANALYSIS_CACHE_KEY);
+      setAnalysisResult(null);
 
-    // todo: remove mock functionality
-    await new Promise(resolve => setTimeout(resolve, 500));
+      // Also update local project context
+      addProject({
+        title: formData.title,
+        description: `${formData.description}\n\n${t('useCases.objective')}: ${formData.objectives.join(', ')}`,
+        status: 'open',
+        budget: 0,
+        deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        skills: [],
+        stages: [],
+        ownerId: '2',
+      });
 
-    addProject({
-      title: trimmedTitle,
-      description: `${trimmedDescription}\n\n${t('useCases.objective')}: ${filteredObjectives.join(', ')}`,
-      status: 'open',
-      budget: 0,
-      deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      skills: [],
-      stages: [],
-      ownerId: '2',
-    });
+      toast({
+        title: t('useCases.created'),
+        description: t('useCases.createdDesc'),
+      });
 
-    toast({
-      title: t('useCases.created'),
-      description: t('useCases.createdDesc'),
-    });
+      setLocation('/dashboard');
+    } catch (error) {
+      console.error('Create use case error:', error);
+      toast({
+        title: t('common.error'),
+        description: error instanceof Error ? error.message : t('useCases.createError'),
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    setLocation('/dashboard');
-    setIsLoading(false);
+  const clearAnalysis = () => {
+    localStorage.removeItem(ANALYSIS_CACHE_KEY);
+    setAnalysisResult(null);
   };
 
   return (
@@ -186,16 +333,131 @@ export default function AddProjectPage() {
                 </Button>
               </div>
 
-              <div className="flex gap-4 pt-4">
+              {/* AI Analysis Results Preview */}
+              {analysisResult && (
+                <Card className="bg-muted/50 border-primary/20">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-primary" />
+                        <CardTitle className="text-lg">{t('useCases.analysisResults')}</CardTitle>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={clearAnalysis}
+                        className="text-muted-foreground hover:text-destructive"
+                        data-testid="button-clear-analysis"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="flex items-center gap-3 p-3 bg-background rounded-lg">
+                        <Clock className="w-5 h-5 text-muted-foreground" />
+                        <div>
+                          <p className="text-sm text-muted-foreground">{t('useCases.totalHours')}</p>
+                          <p className="font-semibold">{analysisResult.total_project_hours} {t('useCases.hours')}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-background rounded-lg">
+                        <Users className="w-5 h-5 text-muted-foreground" />
+                        <div>
+                          <p className="text-sm text-muted-foreground">{t('useCases.requiredRoles')}</p>
+                          <p className="font-semibold">{analysisResult.required_job_titles?.length || 0} {t('useCases.roles')}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {analysisResult.required_job_titles && analysisResult.required_job_titles.length > 0 && (
+                      <div>
+                        <p className="text-sm font-medium mb-2">{t('useCases.jobTitles')}</p>
+                        <div className="flex flex-wrap gap-2">
+                          {analysisResult.required_job_titles.map((jobTitle, index) => (
+                            <span
+                              key={index}
+                              className="px-2 py-1 bg-primary/10 text-primary text-sm rounded-md"
+                            >
+                              {jobTitle}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {analysisResult.stages && analysisResult.stages.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Layers className="w-4 h-4 text-muted-foreground" />
+                          <p className="text-sm font-medium">{t('useCases.projectStages')}</p>
+                        </div>
+                        <div className="space-y-2">
+                          {analysisResult.stages.map((stage, index) => (
+                            <div key={index} className="p-3 bg-background rounded-lg">
+                              <p className="font-medium">{stage.name}</p>
+                              {stage.description && (
+                                <p className="text-sm text-muted-foreground mt-1">{stage.description}</p>
+                              )}
+                              {stage.hours && (
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {stage.hours} {t('useCases.hours')}
+                                </p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
+              <div className="flex flex-wrap gap-4 pt-4">
                 <Link href="/dashboard">
                   <Button type="button" variant="outline" data-testid="button-cancel">
                     {t('common.cancel')}
                   </Button>
                 </Link>
-                <Button type="submit" disabled={isLoading} data-testid="button-create-usecase">
+                
+                {/* Step 1: Analyze Button */}
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleAnalyze}
+                  disabled={isAnalyzing || isLoading}
+                  data-testid="button-analyze-usecase"
+                >
+                  {isAnalyzing ? (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2 animate-pulse" />
+                      {t('useCases.analyzing')}
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      {t('useCases.analyzeButton')}
+                    </>
+                  )}
+                </Button>
+
+                {/* Step 2: Create Button */}
+                <Button
+                  type="submit"
+                  disabled={isLoading || isAnalyzing || !analysisResult}
+                  data-testid="button-create-usecase"
+                >
                   {isLoading ? t('common.loading') : t('useCases.createButton')}
                 </Button>
               </div>
+
+              {!analysisResult && (
+                <p className="text-sm text-muted-foreground">
+                  {t('useCases.analyzeHint')}
+                </p>
+              )}
             </form>
           </CardContent>
         </Card>
