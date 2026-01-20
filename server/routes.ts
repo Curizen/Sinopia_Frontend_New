@@ -730,6 +730,36 @@ export async function registerRoutes(
     }
   });
 
+  // Get single use case by ID
+  app.get("/api/use-case/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+
+      console.log("[DEBUG] GET /api/use-case/" + id);
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/use-case/${id}`, {
+        method: "GET",
+        headers,
+      });
+
+      forwardCookies(response, res);
+      const data = await response.json();
+      console.log("[DEBUG] GET /api/use-case/" + id + " - Response status:", response.status);
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Get use case by ID proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to fetch use case" });
+    }
+  });
+
   // Get user's use cases
   app.get("/api/use-case/my-usecases", async (req, res) => {
     try {

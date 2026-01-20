@@ -207,7 +207,8 @@ export default function ProjectsPage() {
         ) : (
           <div className="grid gap-4">
             {filteredProjects.map((project) => (
-              <Card key={project.id} className="hover-elevate cursor-pointer" data-testid={`card-project-${project.id}`}>
+              <Link key={project.id} href={`/use-case/${project.id}`}>
+              <Card className="hover-elevate cursor-pointer" data-testid={`card-project-${project.id}`}>
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <CardTitle className="text-lg">{project.title}</CardTitle>
@@ -267,6 +268,7 @@ export default function ProjectsPage() {
                   </div>
                 </CardFooter>
               </Card>
+              </Link>
             ))}
           </div>
         )}

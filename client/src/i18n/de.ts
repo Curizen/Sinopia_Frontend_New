@@ -272,6 +272,18 @@ export const de = {
     expertStatus: "Experten-Status",
     fetchError: "Projekte konnten nicht geladen werden. Bitte versuchen Sie es erneut.",
   },
+  useCaseDetails: {
+    backToProjects: "Zurück zu Projekten",
+    notFound: "Anwendungsfall nicht gefunden",
+    notFoundDescription: "Der gesuchte Anwendungsfall existiert nicht oder wurde entfernt.",
+    fetchError: "Laden fehlgeschlagen",
+    fetchErrorDescription: "Beim Laden der Anwendungsfalldetails ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    overview: "Übersicht",
+    requiredExperts: "Benötigte Experten",
+    implementationStages: "Implementierungsphasen",
+    requiredSkills: "Erforderliche Fähigkeiten",
+    perHour: "Std.",
+  },
   projectDetail: {
     notFound: "Projekt nicht gefunden",
     backToProjects: "Zurück zu Projekten",

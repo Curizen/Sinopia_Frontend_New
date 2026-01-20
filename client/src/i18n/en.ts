@@ -264,6 +264,18 @@ export const en = {
     expertStatus: "Expert Status",
     fetchError: "Failed to load projects. Please try again.",
   },
+  useCaseDetails: {
+    backToProjects: "Back to Projects",
+    notFound: "Use Case Not Found",
+    notFoundDescription: "The use case you are looking for does not exist or has been removed.",
+    fetchError: "Failed to Load",
+    fetchErrorDescription: "There was an error loading the use case details. Please try again.",
+    overview: "Overview",
+    requiredExperts: "Required Experts",
+    implementationStages: "Implementation Stages",
+    requiredSkills: "Required Skills",
+    perHour: "hr",
+  },
   projectDetail: {
     notFound: "Project not found",
     backToProjects: "Back to Projects",
