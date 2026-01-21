@@ -447,6 +447,27 @@ export default function ProfilePage() {
   const loadSearcherProfileFromStorage = (): SkillSearcherProfile => {
     const defaults = createEmptySearcherProfile();
     try {
+      // First check API cache (user_profile_cache) which has data from login
+      const apiCache = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+      if (apiCache) {
+        const apiData = JSON.parse(apiCache);
+        console.log('[DEBUG] Loading searcher profile from API cache:', apiData);
+        // Map API field names to local profile fields
+        return {
+          companyName: apiData.company_name ?? defaults.companyName,
+          industry: apiData.industry ?? defaults.industry,
+          website: apiData.website ?? defaults.website,
+          bio: apiData.bio ?? defaults.bio,
+          contactEmail: apiData.email ?? defaults.contactEmail,
+          contactPhone: apiData.phone ?? defaults.contactPhone,
+          location: apiData.city && apiData.country ? `${apiData.city}, ${apiData.country}` : defaults.location,
+          city: apiData.city ?? defaults.city,
+          country: apiData.country ?? defaults.country,
+          companySize: apiData.company_size ?? defaults.companySize,
+        };
+      }
+      
+      // Fallback to local storage
       const stored = localStorage.getItem(SEARCHER_STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
