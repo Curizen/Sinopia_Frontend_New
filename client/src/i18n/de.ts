@@ -40,7 +40,7 @@ export const de = {
     signUp: "Registrieren",
     getStarted: "Jetzt starten",
     dashboard: "Übersicht",
-    projects: "Projekte",
+    projects: "Use Cases",
     offers: "Angebote",
     contracts: "Verträge",
     payments: "Zahlungen",
@@ -550,7 +550,7 @@ export const de = {
   },
   footer: {
     skillGiver: "Fähigkeitengeber",
-    findProjects: "Projekte finden",
+    findProjects: "Use Cases finden",
     buildPortfolio: "Arbeitsmappe aufbauen",
     getPaid: "Bezahlt werden",
     skillSearcher: "Fähigkeitensucher",
