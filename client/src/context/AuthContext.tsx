@@ -233,8 +233,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     
     // Step C: Merge cached data with form data - form data overwrites cached values
+    // IMPORTANT: Do NOT include id or user_id from stale cache - backend derives these from session
+    // This prevents foreign key constraint errors when a new user has stale cache from previous user
+    const { id: _id, user_id: _userId, ...safeCachedData } = cachedData;
     const apiPayload = {
-      ...cachedData,      // Keep existing fields (e.g., id, user_id, created_at, etc.)
+      ...safeCachedData,  // Keep non-ID fields (e.g., created_at, etc.)
       ...formPayload,     // Overwrite with new form edits
     };
     

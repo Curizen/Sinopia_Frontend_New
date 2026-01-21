@@ -48,6 +48,10 @@ export default function VerifyOtpPage() {
         // Clear the stored signup data after successful verification
         sessionStorage.removeItem('pending_signup');
         
+        // Clear any stale profile caches from previous users to prevent data conflicts
+        localStorage.removeItem('company_profile_cache');
+        localStorage.removeItem('user_profile_cache');
+        
         // Role Extraction (Normalization): Check both possible locations for the role
         const extractedRole = response.role || response.userData?.account_type || role;
         const normalizedRole = extractedRole as UserRole;
