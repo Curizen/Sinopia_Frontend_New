@@ -48,23 +48,47 @@ export default function VerifyOtpPage() {
         // Clear the stored signup data after successful verification
         sessionStorage.removeItem('pending_signup');
         
-        if (role === USER_ROLES.SKILL_GIVER) {
-          completeRegistration(email, role, false, response.token);
-          toast({
-            title: t('auth.otp.accountCreated'),
-            description: t('auth.otp.accountCreatedDesc'),
-          });
-          setLocation('/profile');
-          window.scrollTo(0, 0);
-        } else {
-          completeRegistration(email, role, false, response.token);
-          toast({
-            title: t('auth.otp.accountCreated'),
-            description: t('auth.otp.accountCreatedDesc'),
-          });
+        // ROLE EXTRACTION (Normalization): Check both possible locations for the role
+        // Login returns response.data.role, Signup/OTP returns response.userData?.account_type
+        // Type assertion to handle different API response structures
+        const apiResponse = response as {
+          role?: string;
+          data?: { role?: string; userData?: { account_type?: string } };
+          userData?: { account_type?: string };
+        };
+        
+        const extractedRole = (
+          apiResponse.role || 
+          apiResponse.data?.role || 
+          apiResponse.userData?.account_type || 
+          apiResponse.data?.userData?.account_type ||
+          role // Fallback to URL param role
+        ) as UserRole;
+        
+        console.log('[DEBUG] OTP Verification - Extracted role:', extractedRole);
+        console.log('[DEBUG] OTP Verification - Full response:', response);
+        
+        // STORAGE (Normalization): Always save role to localStorage with standardized key
+        localStorage.setItem('role', extractedRole);
+        
+        // Complete registration with extracted role
+        completeRegistration(email, extractedRole, false, response.token);
+        
+        toast({
+          title: t('auth.otp.accountCreated'),
+          description: t('auth.otp.accountCreatedDesc'),
+        });
+        
+        // REDIRECTION: Use extracted role to decide destination
+        if (extractedRole === USER_ROLES.SKILL_GIVER) {
+          setLocation('/dashboard');
+        } else if (extractedRole === USER_ROLES.SKILL_SEARCHER) {
           setLocation('/onboarding/company');
-          window.scrollTo(0, 0);
+        } else {
+          // Default fallback
+          setLocation('/dashboard');
         }
+        window.scrollTo(0, 0);
       } else {
         toast({
           title: t('auth.otp.invalidCode'),

@@ -112,6 +112,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('sinopia_token', sessionToken);
       localStorage.setItem('sinopia_user', JSON.stringify(newUser));
       
+      // STORAGE (Normalization): Always save role to localStorage with standardized key
+      localStorage.setItem('role', userRole);
+      
       // Save full userData to cache for profile page
       if (userData) {
         console.log('Saving userData to user_profile_cache:', userData);
@@ -157,6 +160,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(newUser);
     localStorage.setItem('sinopia_token', tokenToUse);
     localStorage.setItem('sinopia_user', JSON.stringify(newUser));
+    
+    // STORAGE (Normalization): Always save role to localStorage with standardized key
+    localStorage.setItem('role', role);
   }, []);
 
   const updateCvStatus = useCallback((uploaded: boolean, fileName?: string, fileSize?: number) => {
@@ -184,6 +190,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Clear all localStorage items
       localStorage.removeItem('sinopia_token');
       localStorage.removeItem('sinopia_user');
+      localStorage.removeItem('role');
       localStorage.removeItem('user_profile_cache');
       localStorage.removeItem('company_profile_cache');
       localStorage.removeItem('sinopia_skill_giver_profile');
