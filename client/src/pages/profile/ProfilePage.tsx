@@ -3659,11 +3659,11 @@ function CompanySummaryDialog({ open, onOpenChange, form, setForm, onSave, t }: 
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg max-h-[85vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>{t('profile.editCompanyInfo')}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="space-y-4 overflow-y-auto flex-1 pr-2">
           <div className="space-y-2">
             <Label>{t('profile.companyName')}</Label>
             <Input
