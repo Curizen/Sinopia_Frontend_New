@@ -196,8 +196,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       console.log('[DEBUG] Logout - All storage cleared');
       
-      // Redirect to login page
-      window.location.href = '/login';
+      // Hard redirect to sign-in page (forces full browser reload to wipe React state)
+      window.location.href = '/sign-in';
     }
   }, []);
 
