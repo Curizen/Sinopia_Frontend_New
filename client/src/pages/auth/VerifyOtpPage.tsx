@@ -13,7 +13,7 @@ import { USER_ROLES } from '@/lib/utils/constants';
 import type { UserRole } from '@/lib/utils/constants';
 
 export default function VerifyOtpPage() {
-  const { completeRegistration } = useAuth();
+  const { completeRegistration, login } = useAuth();
   const { toast } = useToast();
   const { t } = useI18n();
   const [, setLocation] = useLocation();
@@ -45,24 +45,64 @@ export default function VerifyOtpPage() {
                         response.message?.toLowerCase().includes('verified');
       
       if (isSuccess) {
-        // Clear the stored signup data after successful verification
-        sessionStorage.removeItem('pending_signup');
+        // Retrieve stored signup data for auto-login
+        const pendingSignup = sessionStorage.getItem('pending_signup');
         
-        if (role === USER_ROLES.SKILL_GIVER) {
-          completeRegistration(email, role, false, response.token);
-          toast({
-            title: t('auth.otp.accountCreated'),
-            description: t('auth.otp.accountCreatedDesc'),
-          });
-          setLocation('/profile');
-          window.scrollTo(0, 0);
+        if (pendingSignup) {
+          const signupData = JSON.parse(pendingSignup);
+          
+          // Auto-login to properly establish session cookie
+          try {
+            console.log('[DEBUG] OTP verified, attempting auto-login...');
+            await login(email, signupData.password);
+            console.log('[DEBUG] Auto-login successful');
+            
+            // Clear the stored signup data after successful login
+            sessionStorage.removeItem('pending_signup');
+            
+            toast({
+              title: t('auth.otp.accountCreated'),
+              description: t('auth.otp.accountCreatedDesc'),
+            });
+            
+            if (role === USER_ROLES.SKILL_GIVER) {
+              setLocation('/profile');
+            } else {
+              setLocation('/onboarding/company');
+            }
+            window.scrollTo(0, 0);
+          } catch (loginError) {
+            console.error('[DEBUG] Auto-login failed:', loginError);
+            // Fall back to completeRegistration if auto-login fails
+            completeRegistration(email, role, false, response.token);
+            sessionStorage.removeItem('pending_signup');
+            
+            toast({
+              title: t('auth.otp.accountCreated'),
+              description: t('auth.otp.accountCreatedDesc'),
+            });
+            
+            if (role === USER_ROLES.SKILL_GIVER) {
+              setLocation('/profile');
+            } else {
+              setLocation('/onboarding/company');
+            }
+            window.scrollTo(0, 0);
+          }
         } else {
+          // No stored password, use completeRegistration as fallback
           completeRegistration(email, role, false, response.token);
+          
           toast({
             title: t('auth.otp.accountCreated'),
             description: t('auth.otp.accountCreatedDesc'),
           });
-          setLocation('/onboarding/company');
+          
+          if (role === USER_ROLES.SKILL_GIVER) {
+            setLocation('/profile');
+          } else {
+            setLocation('/onboarding/company');
+          }
           window.scrollTo(0, 0);
         }
       } else {
