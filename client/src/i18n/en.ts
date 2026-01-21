@@ -42,7 +42,7 @@ export const en = {
     signUp: "Sign Up",
     getStarted: "Get Started",
     dashboard: "Dashboard",
-    useCases: "Use Cases",
+    projects: "Projects",
     offers: "Offers",
     contracts: "Contracts",
     payments: "Payments",
@@ -227,7 +227,7 @@ export const en = {
   dashboard: {
     welcome: "Welcome back",
     overview: "Overview",
-    recentProjects: "Recent Use Cases",
+    recentProjects: "Recent Projects",
     pendingOffers: "Pending Offers",
     activeContracts: "Active Contracts",
     totalEarnings: "Total Earnings",
@@ -542,7 +542,7 @@ export const en = {
   },
   footer: {
     skillGiver: "Skill Giver",
-    findProjects: "Find Use Cases",
+    findProjects: "Find Projects",
     buildPortfolio: "Build Portfolio",
     getPaid: "Get Paid",
     skillSearcher: "Skill Searcher",
