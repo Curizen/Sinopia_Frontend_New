@@ -13,7 +13,7 @@ import { USER_ROLES } from '@/lib/utils/constants';
 import type { UserRole } from '@/lib/utils/constants';
 
 export default function VerifyOtpPage() {
-  const { completeRegistration } = useAuth();
+  const { completeRegistration, login } = useAuth();
   const { toast } = useToast();
   const { t } = useI18n();
   const [, setLocation] = useLocation();
@@ -45,6 +45,9 @@ export default function VerifyOtpPage() {
                         response.message?.toLowerCase().includes('verified');
       
       if (isSuccess) {
+        // Get pending signup data BEFORE clearing it - needed for login after OTP
+        const pendingSignupData = sessionStorage.getItem('pending_signup');
+        
         // Clear the stored signup data after successful verification
         sessionStorage.removeItem('pending_signup');
         
@@ -86,8 +89,26 @@ export default function VerifyOtpPage() {
           setLocation('/sign-up/cv?email=' + encodeURIComponent(email));
           window.scrollTo(0, 0);
         } else {
-          // skill_searcher: complete registration and go to company onboarding
+          // skill_searcher: complete registration and login to establish session
+          // Then redirect to company onboarding
           completeRegistration(email, normalizedRole, false, response.token);
+          
+          // Use password from pending signup data (saved earlier) to perform login
+          if (pendingSignupData) {
+            try {
+              const signupData = JSON.parse(pendingSignupData);
+              if (signupData.password) {
+                // Perform login to establish session cookies
+                console.log('[DEBUG] skill_searcher OTP verified - performing login to establish session');
+                await login(email, signupData.password);
+                console.log('[DEBUG] skill_searcher login successful after OTP');
+              }
+            } catch (loginError) {
+              console.error('[DEBUG] Login after OTP failed:', loginError);
+              // Continue anyway - session might still work via cookies
+            }
+          }
+          
           toast({
             title: t('auth.otp.accountCreated'),
             description: t('auth.otp.accountCreatedDesc'),
