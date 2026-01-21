@@ -34,14 +34,9 @@ export default function SignInPage() {
         description: t('auth.signInSuccess'),
       });
       
-      // Role-based routing
-      // skill_giver → profile page
-      // skill_searcher → company page
-      if (result.role === 'skill_searcher') {
-        setLocation('/onboarding/company');
-      } else {
-        setLocation('/profile');
-      }
+      // All users go to profile after sign in
+      // (onboarding/company is only shown during sign UP, not sign IN)
+      setLocation('/profile');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : t('auth.signInError');
       toast({
