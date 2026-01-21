@@ -187,14 +187,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken(null);
       setUser(null);
       
-      // Clear all localStorage items
-      localStorage.removeItem('sinopia_token');
-      localStorage.removeItem('sinopia_user');
-      localStorage.removeItem('role');
-      localStorage.removeItem('user_profile_cache');
-      localStorage.removeItem('company_profile_cache');
-      localStorage.removeItem('sinopia_skill_giver_profile');
-      localStorage.removeItem('sinopia_skill_searcher_profile');
+      // 1. CLEAR STORAGE: Remove ALL localStorage data (tokens, profile cache, roles, session info)
+      localStorage.clear();
       
       // Clear all cookies
       document.cookie.split(";").forEach((cookie) => {
@@ -207,6 +201,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       sessionStorage.clear();
       
       console.log('[DEBUG] Logout - All storage cleared');
+      
+      // 2. REDIRECT: Navigate user to /login page
+      window.location.href = '/login';
     }
   }, []);
 
