@@ -129,6 +129,11 @@ interface ApiUserData {
   country?: string;
   linkedin?: string;
   summary?: string;
+  bio?: string; // skill_searcher uses 'bio' instead of 'summary'
+  company_name?: string;
+  industry?: string;
+  website?: string;
+  company_size?: string;
   skills?: Array<{
     id?: number;
     skill_name?: string;
@@ -209,8 +214,9 @@ const getInitialsFromFullName = (fullName: string | undefined | null): string =>
 const transformApiDataToGiverProfile = (apiData: ApiUserData): Partial<SkillGiverProfile> => {
   const profile: Partial<SkillGiverProfile> = {};
   
-  if (apiData.summary) {
-    profile.bio = apiData.summary;
+  // skill_giver uses 'summary', skill_searcher uses 'bio'
+  if (apiData.summary || apiData.bio) {
+    profile.bio = apiData.summary || apiData.bio;
   }
   
   if (apiData.email) {
