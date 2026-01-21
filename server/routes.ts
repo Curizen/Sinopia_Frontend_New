@@ -12,9 +12,25 @@ const upload = multer({
 });
 
 function forwardCookies(externalResponse: Response, res: any) {
-  const setCookieHeader = externalResponse.headers.get("set-cookie");
-  if (setCookieHeader) {
-    res.setHeader("Set-Cookie", setCookieHeader);
+  // Use getSetCookie() to properly get all Set-Cookie headers as an array
+  // This is the correct way to handle multiple cookies from the external API
+  const setCookieHeaders = externalResponse.headers.getSetCookie?.();
+  
+  if (setCookieHeaders && setCookieHeaders.length > 0) {
+    // Set each cookie individually to preserve all cookies
+    res.setHeader("Set-Cookie", setCookieHeaders);
+    console.log("[DEBUG] Forwarding cookies:", setCookieHeaders.length, "cookies");
+  } else {
+    // Fallback for older Node.js versions - try raw header
+    const rawHeader = externalResponse.headers.get("set-cookie");
+    if (rawHeader) {
+      // Split by comma but be careful with expires dates that contain commas
+      const cookies = rawHeader.split(/,(?=\s*[^;=]+=[^;]*(?:;|$))/);
+      if (cookies.length > 0) {
+        res.setHeader("Set-Cookie", cookies);
+        console.log("[DEBUG] Forwarding cookies (fallback):", cookies.length, "cookies");
+      }
+    }
   }
 }
 
