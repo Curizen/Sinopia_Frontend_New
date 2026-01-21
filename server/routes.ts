@@ -150,6 +150,38 @@ export async function registerRoutes(
   });
 
   app.post("/api/users/logout", async (req, res) => {
+    // Helper to clear ALL cookies from the request - parse cookie header and expire each one
+    const clearAllCookiesFromRequest = () => {
+      const cookieHeader = req.headers.cookie || '';
+      const cookieNames = cookieHeader.split(';')
+        .map(cookie => cookie.trim().split('=')[0])
+        .filter(name => name.length > 0);
+      
+      // Clear each cookie found in the request with multiple path combinations
+      const paths = ['/', '/api', ''];
+      cookieNames.forEach(cookieName => {
+        paths.forEach(path => {
+          res.clearCookie(cookieName, { path: path || '/' });
+        });
+      });
+      
+      // Also explicitly clear known session cookies with various options
+      const knownCookies = ['accessToken', 'refreshToken', 'ip_address', 'session', 'sessionId', 'connect.sid'];
+      knownCookies.forEach(cookieName => {
+        res.clearCookie(cookieName, { path: '/' });
+        res.clearCookie(cookieName, { path: '/api' });
+        // Set expired cookie as backup
+        res.cookie(cookieName, '', { 
+          expires: new Date(0), 
+          path: '/',
+          httpOnly: true,
+        });
+      });
+      
+      console.log("[DEBUG] Logout - Cleared cookies from request:", cookieNames.join(', '));
+      console.log("[DEBUG] Logout - Also cleared known cookies:", knownCookies.join(', '));
+    };
+
     try {
       const authHeader = req.headers.authorization;
       const headers: Record<string, string> = { 
@@ -166,13 +198,28 @@ export async function registerRoutes(
         method: "POST",
         headers,
       });
+      
+      // Forward any Set-Cookie headers from external API (which should clear their cookies)
       forwardCookies(response, res);
-      const data = await response.json();
-      console.log("[DEBUG] Logout - Response:", JSON.stringify(data));
-      res.status(response.status).json(data);
+      
+      // ALWAYS clear all cookies from request regardless of external API result
+      clearAllCookiesFromRequest();
+      
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        data = { message: "Logged out" };
+      }
+      console.log("[DEBUG] Logout - External API Response:", JSON.stringify(data));
+      
+      // Return success - user is logged out on our side regardless of external API
+      res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
       console.error("Logout proxy error:", error);
-      res.status(500).json({ status: "error", message: "Failed to connect to authentication server" });
+      // Still clear cookies even on error
+      clearAllCookiesFromRequest();
+      res.status(200).json({ message: "Logged out successfully" });
     }
   });
 
