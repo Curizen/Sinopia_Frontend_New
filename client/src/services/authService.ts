@@ -25,6 +25,14 @@ interface ApiResponse {
   message?: string;
   token?: string;
   data?: unknown;
+  role?: string;
+  userData?: {
+    id?: number;
+    email?: string;
+    account_type?: string;
+    created_at?: string;
+    [key: string]: unknown;
+  };
 }
 
 async function apiRequest(endpoint: string, options: RequestInit = {}): Promise<ApiResponse> {

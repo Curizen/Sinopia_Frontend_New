@@ -48,7 +48,33 @@ export default function VerifyOtpPage() {
         // Clear the stored signup data after successful verification
         sessionStorage.removeItem('pending_signup');
         
-        if (role === USER_ROLES.SKILL_GIVER) {
+        // Role Extraction (Normalization): Check both possible locations for the role
+        const extractedRole = response.role || response.userData?.account_type || role;
+        const normalizedRole = extractedRole as UserRole;
+        
+        // Storage (Normalization): Always save role to localStorage with standardized key
+        localStorage.setItem('role', normalizedRole);
+        
+        // Save token if available
+        if (response.token) {
+          localStorage.setItem('sinopia_token', response.token);
+        }
+        
+        // Save user data if available
+        if (response.userData) {
+          localStorage.setItem('user_profile_cache', JSON.stringify(response.userData));
+          localStorage.setItem('sinopia_user', JSON.stringify({
+            id: response.userData.id?.toString() || '',
+            email: response.userData.email || email,
+            role: normalizedRole,
+          }));
+        }
+        
+        console.log('[DEBUG] OTP Verification - Extracted role:', normalizedRole);
+        console.log('[DEBUG] OTP Verification - Response:', response);
+        
+        // Role-based redirection
+        if (normalizedRole === USER_ROLES.SKILL_GIVER) {
           toast({
             title: t('auth.otp.emailVerified'),
             description: t('auth.otp.nowUploadCv'),
@@ -56,7 +82,8 @@ export default function VerifyOtpPage() {
           setLocation('/sign-up/cv?email=' + encodeURIComponent(email));
           window.scrollTo(0, 0);
         } else {
-          completeRegistration(email, role, false, response.token);
+          // skill_searcher: complete registration and go to company onboarding
+          completeRegistration(email, normalizedRole, false, response.token);
           toast({
             title: t('auth.otp.accountCreated'),
             description: t('auth.otp.accountCreatedDesc'),
