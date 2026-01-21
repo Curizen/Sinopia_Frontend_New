@@ -509,6 +509,8 @@ export default function ProfilePage() {
     companySize: '',
     contactEmail: '',
     contactPhone: '',
+    industry: '',
+    bio: '',
   });
 
   // State for cached user profile from API (for sidebar and bio)
@@ -2094,17 +2096,19 @@ export default function ProfilePage() {
       companySize: searcherProfile.companySize,
       contactEmail: searcherProfile.contactEmail || user?.email || '',
       contactPhone: searcherProfile.contactPhone,
+      industry: searcherProfile.industry,
+      bio: searcherProfile.bio,
     });
     setCompanySummaryDialog(true);
   };
 
-  const handleSaveCompanySummary = () => {
+  const handleSaveCompanySummary = async () => {
     if (companySummaryForm.website && !isValidUrl(companySummaryForm.website)) {
       toast({ title: t('common.error'), description: t('profile.invalidWebsiteUrl'), variant: 'destructive' });
       return;
     }
-    setSearcherProfile(prev => ({
-      ...prev,
+    
+    const updatedProfile = {
       companyName: companySummaryForm.companyName.trim(),
       website: normalizeUrl(companySummaryForm.website),
       city: companySummaryForm.city.trim(),
@@ -2112,9 +2116,56 @@ export default function ProfilePage() {
       companySize: companySummaryForm.companySize.trim(),
       contactEmail: companySummaryForm.contactEmail.trim(),
       contactPhone: companySummaryForm.contactPhone.trim(),
-    }));
-    setCompanySummaryDialog(false);
-    toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+      industry: companySummaryForm.industry.trim(),
+      bio: companySummaryForm.bio.trim(),
+    };
+    
+    setSearcherProfile(prev => ({ ...prev, ...updatedProfile }));
+    
+    try {
+      const storedToken = localStorage.getItem('sinopia_token');
+      const apiPayload = {
+        company_name: updatedProfile.companyName,
+        industry: updatedProfile.industry,
+        website: updatedProfile.website,
+        phone: updatedProfile.contactPhone,
+        email: updatedProfile.contactEmail,
+        country: updatedProfile.country,
+        city: updatedProfile.city,
+        bio: updatedProfile.bio,
+        company_size: updatedProfile.companySize,
+      };
+      
+      console.log('[DEBUG] Saving company profile to API:', apiPayload);
+      
+      const response = await fetch('/api/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(storedToken && { 'Authorization': `Bearer ${storedToken}` }),
+        },
+        credentials: 'include',
+        body: JSON.stringify(apiPayload),
+      });
+      
+      const responseData = await response.json();
+      console.log('[DEBUG] Company profile save response:', responseData);
+      
+      if (!response.ok) {
+        throw new Error(responseData.message || 'Failed to save company profile');
+      }
+      
+      localStorage.setItem('company_profile_cache', JSON.stringify(responseData));
+      setCompanySummaryDialog(false);
+      toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
+    } catch (error) {
+      console.error('Error saving company profile:', error);
+      toast({ 
+        title: t('common.error'), 
+        description: error instanceof Error ? error.message : t('profile.saveFailed'),
+        variant: 'destructive',
+      });
+    }
   };
 
   const allowedTypes = [
@@ -2497,137 +2548,58 @@ export default function ProfilePage() {
                     <Building2 className="w-5 h-5" />
                     {t('profile.companyInfo')}
                   </CardTitle>
-                  {editingSection === 'company' ? (
-                    <SectionActions section="company" />
-                  ) : (
-                    <SectionEditButton section="company" />
-                  )}
                 </CardHeader>
                 <CardContent>
-                  {editingSection === 'company' && editBuffer && 'companyName' in editBuffer ? (
-                    <div className="space-y-4">
-                      <div className="grid sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">{t('profile.companyName')}</label>
-                          <Input
-                            value={editBuffer.companyName}
-                            onChange={(e) => setEditBuffer({ ...editBuffer, companyName: e.target.value })}
-                            data-testid="input-company-name"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">{t('profile.industry')}</label>
-                          <Input
-                            value={editBuffer.industry}
-                            onChange={(e) => setEditBuffer({ ...editBuffer, industry: e.target.value })}
-                            data-testid="input-industry"
-                          />
-                        </div>
-                      </div>
-                      <div className="grid sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">{t('profile.city')}</label>
-                          <Input
-                            value={editBuffer.city}
-                            onChange={(e) => setEditBuffer({ ...editBuffer, city: e.target.value })}
-                            data-testid="input-profile-city"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">{t('profile.country')}</label>
-                          <Input
-                            value={editBuffer.country}
-                            onChange={(e) => setEditBuffer({ ...editBuffer, country: e.target.value })}
-                            data-testid="input-profile-country"
-                          />
-                        </div>
-                      </div>
-                      <div className="grid sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">{t('profile.companySize')}</label>
-                          <Input
-                            value={editBuffer.companySize}
-                            onChange={(e) => setEditBuffer({ ...editBuffer, companySize: e.target.value })}
-                            data-testid="input-profile-company-size"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">{t('profile.website')}</label>
-                          <Input
-                            value={editBuffer.website}
-                            onChange={(e) => setEditBuffer({ ...editBuffer, website: e.target.value })}
-                            data-testid="input-website"
-                          />
-                        </div>
-                      </div>
-                      <div className="grid sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">{t('profile.contactEmail')}</label>
-                          <Input
-                            type="email"
-                            value={editBuffer.contactEmail}
-                            onChange={(e) => setEditBuffer({ ...editBuffer, contactEmail: e.target.value })}
-                            data-testid="input-contact-email"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">{t('profile.contactPhone')}</label>
-                          <Input
-                            value={editBuffer.contactPhone}
-                            onChange={(e) => setEditBuffer({ ...editBuffer, contactPhone: e.target.value })}
-                            data-testid="input-contact-phone"
-                          />
-                        </div>
-                      </div>
+                  <div className="grid sm:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-muted-foreground">{t('profile.companySize')}: </span>
+                      <span className="font-medium">{displayValue(searcherProfile.companySize)}</span>
                     </div>
-                  ) : (
-                    <div className="grid sm:grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-muted-foreground">{t('profile.companySize')}: </span>
-                        <span className="font-medium">{displayValue(searcherProfile.companySize)}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">{t('profile.industry')}: </span>
-                        <span className="font-medium">{displayValue(searcherProfile.industry)}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">{t('profile.city')}: </span>
-                        <span className="font-medium">{displayValue(searcherProfile.city)}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">{t('profile.country')}: </span>
-                        <span className="font-medium">{displayValue(searcherProfile.country)}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">{t('profile.companyName')}: </span>
-                        <span className="font-medium">{displayValue(searcherProfile.companyName)}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">{t('profile.website')}: </span>
-                        {searcherProfile.website ? (
-                          <a 
-                            href={searcherProfile.website} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="font-medium text-primary hover:underline"
-                            data-testid="link-company-website"
-                          >
-                            {searcherProfile.website.replace('https://', '').replace('http://', '')}
-                          </a>
-                        ) : (
-                          <span className="font-medium">{t('emptyState.notSet')}</span>
-                        )}
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">{t('profile.contactEmail')}: </span>
-                        <span className="font-medium">{displayValue(searcherProfile.contactEmail)}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">{t('profile.contactPhone')}: </span>
-                        <span className="font-medium">{displayValue(searcherProfile.contactPhone)}</span>
-                      </div>
+                    <div>
+                      <span className="text-muted-foreground">{t('profile.industry')}: </span>
+                      <span className="font-medium">{displayValue(searcherProfile.industry)}</span>
                     </div>
-                  )}
+                    <div>
+                      <span className="text-muted-foreground">{t('profile.city')}: </span>
+                      <span className="font-medium">{displayValue(searcherProfile.city)}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">{t('profile.country')}: </span>
+                      <span className="font-medium">{displayValue(searcherProfile.country)}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">{t('profile.companyName')}: </span>
+                      <span className="font-medium">{displayValue(searcherProfile.companyName)}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">{t('profile.website')}: </span>
+                      {searcherProfile.website ? (
+                        <a 
+                          href={searcherProfile.website} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="font-medium text-primary hover:underline"
+                          data-testid="link-company-website"
+                        >
+                          {searcherProfile.website.replace('https://', '').replace('http://', '')}
+                        </a>
+                      ) : (
+                        <span className="font-medium">{t('emptyState.notSet')}</span>
+                      )}
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">{t('profile.contactEmail')}: </span>
+                      <span className="font-medium">{displayValue(searcherProfile.contactEmail)}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">{t('profile.contactPhone')}: </span>
+                      <span className="font-medium">{displayValue(searcherProfile.contactPhone)}</span>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <span className="text-muted-foreground">{t('profile.bio')}: </span>
+                      <span className="font-medium">{displayValue(searcherProfile.bio)}</span>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -2761,26 +2733,27 @@ export default function ProfilePage() {
               </Card>
             )}
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
-                <CardTitle className="flex items-center gap-2">
-                  <User className="w-5 h-5" />
-                  {t('profile.about')}
-                </CardTitle>
-                {editingSection === 'about' ? (
-                  <SectionActions section="about" />
-                ) : (
-                  <SectionEditButton section="about" />
-                )}
-              </CardHeader>
-              <CardContent>
-                {editingSection === 'about' && editBuffer ? (
-                  <Textarea
-                    value={editBuffer.bio}
-                    onChange={(e) => setEditBuffer({ ...editBuffer, bio: e.target.value })}
-                    rows={8}
-                    className="min-h-[150px] resize-y"
-                    placeholder={t('profile.bio')}
+            {isSkillGiver && (
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
+                  <CardTitle className="flex items-center gap-2">
+                    <User className="w-5 h-5" />
+                    {t('profile.about')}
+                  </CardTitle>
+                  {editingSection === 'about' ? (
+                    <SectionActions section="about" />
+                  ) : (
+                    <SectionEditButton section="about" />
+                  )}
+                </CardHeader>
+                <CardContent>
+                  {editingSection === 'about' && editBuffer ? (
+                    <Textarea
+                      value={editBuffer.bio}
+                      onChange={(e) => setEditBuffer({ ...editBuffer, bio: e.target.value })}
+                      rows={8}
+                      className="min-h-[150px] resize-y"
+                      placeholder={t('profile.bio')}
                     data-testid="input-profile-bio"
                   />
                 ) : (
@@ -2790,7 +2763,7 @@ export default function ProfilePage() {
                 )}
               </CardContent>
             </Card>
-
+            )}
 
             {isSkillGiver && (
               <Card>
@@ -3679,8 +3652,8 @@ function ProjectDialog({ open, onOpenChange, proj, onSave, t }: {
 function CompanySummaryDialog({ open, onOpenChange, form, setForm, onSave, t }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  form: { companyName: string; website: string; city: string; country: string; companySize: string; contactEmail: string; contactPhone: string };
-  setForm: (form: { companyName: string; website: string; city: string; country: string; companySize: string; contactEmail: string; contactPhone: string }) => void;
+  form: { companyName: string; website: string; city: string; country: string; companySize: string; contactEmail: string; contactPhone: string; industry: string; bio: string };
+  setForm: (form: { companyName: string; website: string; city: string; country: string; companySize: string; contactEmail: string; contactPhone: string; industry: string; bio: string }) => void;
   onSave: () => void;
   t: (key: string) => string;
 }) {
@@ -3756,6 +3729,25 @@ function CompanySummaryDialog({ open, onOpenChange, form, setForm, onSave, t }: 
               onChange={(e) => setForm({ ...form, contactPhone: e.target.value })}
               placeholder={t('profile.phonePlaceholder')}
               data-testid="input-summary-contact-phone"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>{t('profile.industry')}</Label>
+            <Input
+              value={form.industry}
+              onChange={(e) => setForm({ ...form, industry: e.target.value })}
+              placeholder={t('profile.industryPlaceholder')}
+              data-testid="input-summary-industry"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>{t('profile.bio')}</Label>
+            <Textarea
+              value={form.bio}
+              onChange={(e) => setForm({ ...form, bio: e.target.value })}
+              placeholder={t('profile.bioPlaceholder')}
+              rows={4}
+              data-testid="input-summary-bio"
             />
           </div>
         </div>
