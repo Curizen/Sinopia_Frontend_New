@@ -82,11 +82,28 @@ export default function VerifyOtpPage() {
         
         // Role-based redirection
         if (normalizedRole === USER_ROLES.SKILL_GIVER) {
+          // skill_giver: complete registration and login, then go to profile
+          completeRegistration(email, normalizedRole, false, response.token);
+          
+          // Use password from pending signup data to perform login
+          if (pendingSignupData) {
+            try {
+              const signupData = JSON.parse(pendingSignupData);
+              if (signupData.password) {
+                console.log('[DEBUG] skill_giver OTP verified - performing login to establish session');
+                await login(email, signupData.password);
+                console.log('[DEBUG] skill_giver login successful after OTP');
+              }
+            } catch (loginError) {
+              console.error('[DEBUG] Login after OTP failed:', loginError);
+            }
+          }
+          
           toast({
-            title: t('auth.otp.emailVerified'),
-            description: t('auth.otp.nowUploadCv'),
+            title: t('auth.otp.accountCreated'),
+            description: t('auth.otp.accountCreatedDesc'),
           });
-          setLocation('/sign-up/cv?email=' + encodeURIComponent(email));
+          setLocation('/profile');
           window.scrollTo(0, 0);
         } else {
           // skill_searcher: complete registration and login to establish session
