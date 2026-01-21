@@ -97,6 +97,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const userData = apiResponse.userData;
       const userRole = (apiResponse.role || 'skill_giver') as UserRole;
       
+      // Check if skill_searcher has already completed company onboarding
+      // by checking if company_name exists in userData
+      const hasCompanyData = !!(userData as { company_name?: string })?.company_name;
+      const companyOnboardingCompleted = userRole === 'skill_searcher' ? hasCompanyData : undefined;
+      
       const newUser: User = {
         id: userData?.id || userData?.user_id || Date.now().toString(),
         email: userData?.email || email,
@@ -104,6 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         firstName: userData?.full_name?.split(' ')[0] || undefined,
         lastName: userData?.full_name?.split(' ').slice(1).join(' ') || undefined,
         avatar: undefined,
+        companyOnboardingCompleted,
       };
       
       const sessionToken = response.token || 'session_' + Date.now();
