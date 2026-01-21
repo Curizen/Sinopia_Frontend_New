@@ -49,11 +49,12 @@ export default function VerifyOtpPage() {
         sessionStorage.removeItem('pending_signup');
         
         if (role === USER_ROLES.SKILL_GIVER) {
+          completeRegistration(email, role, false, response.token);
           toast({
-            title: t('auth.otp.emailVerified'),
-            description: t('auth.otp.nowUploadCv'),
+            title: t('auth.otp.accountCreated'),
+            description: t('auth.otp.accountCreatedDesc'),
           });
-          setLocation('/sign-up/cv?email=' + encodeURIComponent(email));
+          setLocation('/profile');
           window.scrollTo(0, 0);
         } else {
           completeRegistration(email, role, false, response.token);
