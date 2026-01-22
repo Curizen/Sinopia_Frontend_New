@@ -2657,7 +2657,32 @@ export default function ProfilePage() {
                     data-testid="input-profile-cv"
                   />
                   
-                  {!cvUploaded && !cvFileName ? (
+                  {/* Show AI Animation when uploading - always visible during upload */}
+                  {cvUploading ? (
+                    <div className="flex flex-col items-center justify-center py-8">
+                      {/* Glow effect container with explicit dimensions */}
+                      <div className="relative w-16 h-16 flex items-center justify-center">
+                        {/* Outer glow rings */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-16 h-16 rounded-full bg-orange-200/40 dark:bg-orange-500/20 animate-ping" style={{ animationDuration: '2s' }} />
+                        </div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-14 h-14 rounded-full bg-orange-300/30 dark:bg-orange-400/20 animate-pulse" />
+                        </div>
+                        {/* Icon container with glow background */}
+                        <div className="relative z-10 flex items-center justify-center w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/40">
+                          <Brain className="w-6 h-6 text-orange-600 dark:text-orange-400 animate-pulse" />
+                        </div>
+                      </div>
+                      {/* Text */}
+                      <p className="mt-4 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {t('profile.cvExtracting')}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground text-center max-w-xs">
+                        {t('profile.cvExtractingDescription')}
+                      </p>
+                    </div>
+                  ) : !cvUploaded && !cvFileName ? (
                     <div
                       ref={dropzoneRef}
                       role="button"
@@ -2683,48 +2708,17 @@ export default function ProfilePage() {
                       data-testid="dropzone-cv"
                     >
                       <div className="flex flex-col items-center justify-center gap-4 text-center">
-                        {cvUploading ? (
-                          <div className="py-6">
-                            {/* AI Analyzing Animation */}
-                            <div className="flex flex-col items-center justify-center">
-                              {/* Glow effect container with explicit dimensions */}
-                              <div className="relative w-24 h-24 flex items-center justify-center">
-                                {/* Outer glow rings */}
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <div className="w-24 h-24 rounded-full bg-orange-200/40 dark:bg-orange-500/20 animate-ping" style={{ animationDuration: '2s' }} />
-                                </div>
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <div className="w-20 h-20 rounded-full bg-orange-300/30 dark:bg-orange-400/20 animate-pulse" />
-                                </div>
-                                {/* Icon container with glow background */}
-                                <div className="relative z-10 flex items-center justify-center w-20 h-20 rounded-full bg-orange-100 dark:bg-orange-900/40">
-                                  <Brain className="w-10 h-10 text-orange-600 dark:text-orange-400 animate-pulse" />
-                                </div>
-                              </div>
-                              {/* Text */}
-                              <p className="mt-6 text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {t('profile.cvExtracting')}
-                              </p>
-                              <p className="mt-1 text-xs text-muted-foreground max-w-xs">
-                                {t('profile.cvExtractingDescription')}
-                              </p>
-                            </div>
-                          </div>
-                        ) : (
-                          <>
-                            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                              <Upload className="w-8 h-8 text-primary" />
-                            </div>
-                            <div className="space-y-1">
-                              <p className="text-sm font-medium">
-                                {isDragOver ? t('profile.cvDropHere') : t('profile.cvUploadDescription')}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {t('profile.cvUploadSupported')}
-                              </p>
-                            </div>
-                          </>
-                        )}
+                        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Upload className="w-8 h-8 text-primary" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium">
+                            {isDragOver ? t('profile.cvDropHere') : t('profile.cvUploadDescription')}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {t('profile.cvUploadSupported')}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   ) : (
