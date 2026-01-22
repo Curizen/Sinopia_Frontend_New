@@ -3746,12 +3746,22 @@ function CompanySummaryDialog({ open, onOpenChange, form, setForm, onSave, t }: 
           </div>
           <div className="space-y-2">
             <Label>{t('profile.companySize')}</Label>
-            <Input
+            <Select
               value={form.companySize}
-              onChange={(e) => setForm({ ...form, companySize: e.target.value })}
-              placeholder={t('profile.companySizePlaceholder')}
-              data-testid="input-summary-company-size"
-            />
+              onValueChange={(value) => setForm({ ...form, companySize: value })}
+            >
+              <SelectTrigger data-testid="select-summary-company-size">
+                <SelectValue placeholder={t('profile.companySizePlaceholder')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1-10">1-10</SelectItem>
+                <SelectItem value="11-50">11-50</SelectItem>
+                <SelectItem value="51-200">51-200</SelectItem>
+                <SelectItem value="201-500">201-500</SelectItem>
+                <SelectItem value="501-1000">501-1000</SelectItem>
+                <SelectItem value="1000+">1000+</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label>{t('profile.contactEmail')}</Label>

@@ -531,7 +531,7 @@ export const de = {
     invalidWebsiteUrl: "Bitte geben Sie eine gültige Webseiten-URL ein",
     cvUploadTitle: "Lebenslauf hochladen (KI-gestützt)",
     cvUploadDescription: "Ziehe deinen Lebenslauf hierher oder klicke zum Auswählen",
-    cvUploadSupported: "Unterstützt: PDF, DOC, DOCX (max. 5MB)",
+    cvUploadSupported: "Unterstützt: Nur PDF (max. 5MB)",
     cvUploadButton: "Hochladen & mit KI auslesen",
     cvSkipButton: "Überspringen",
     cvUploaded: "Lebenslauf hochgeladen",
