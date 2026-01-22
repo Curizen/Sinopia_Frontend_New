@@ -2684,28 +2684,28 @@ export default function ProfilePage() {
                     >
                       <div className="flex flex-col items-center justify-center gap-4 text-center">
                         {cvUploading ? (
-                          <div className="py-4">
+                          <div className="py-6">
                             {/* AI Analyzing Animation */}
                             <div className="flex flex-col items-center justify-center">
-                              {/* Glow effect container */}
-                              <div className="relative">
+                              {/* Glow effect container with explicit dimensions */}
+                              <div className="relative w-24 h-24 flex items-center justify-center">
                                 {/* Outer glow rings */}
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                  <div className="w-20 h-20 rounded-full bg-orange-200/40 dark:bg-orange-500/20 animate-ping" style={{ animationDuration: '2s' }} />
+                                  <div className="w-24 h-24 rounded-full bg-orange-200/40 dark:bg-orange-500/20 animate-ping" style={{ animationDuration: '2s' }} />
                                 </div>
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                  <div className="w-16 h-16 rounded-full bg-orange-300/30 dark:bg-orange-400/20 animate-pulse" />
+                                  <div className="w-20 h-20 rounded-full bg-orange-300/30 dark:bg-orange-400/20 animate-pulse" />
                                 </div>
                                 {/* Icon container with glow background */}
-                                <div className="relative flex items-center justify-center w-20 h-20 rounded-full bg-orange-100 dark:bg-orange-900/40">
+                                <div className="relative z-10 flex items-center justify-center w-20 h-20 rounded-full bg-orange-100 dark:bg-orange-900/40">
                                   <Brain className="w-10 h-10 text-orange-600 dark:text-orange-400 animate-pulse" />
                                 </div>
                               </div>
                               {/* Text */}
-                              <p className="mt-5 text-sm font-medium text-gray-700 dark:text-gray-300">
+                              <p className="mt-6 text-sm font-medium text-gray-700 dark:text-gray-300">
                                 {t('profile.cvExtracting')}
                               </p>
-                              <p className="mt-1 text-xs text-muted-foreground">
+                              <p className="mt-1 text-xs text-muted-foreground max-w-xs">
                                 {t('profile.cvExtractingDescription')}
                               </p>
                             </div>
