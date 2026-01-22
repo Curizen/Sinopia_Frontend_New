@@ -36,6 +36,7 @@ import {
   FileText,
   Sparkles,
   CheckCircle,
+  Brain,
 } from 'lucide-react';
 
 type EditingSection = 'about' | 'skills' | 'experience' | 'education' | 'certifications' | 'company' | 'contact' | 'projects' | null;
@@ -2683,13 +2684,32 @@ export default function ProfilePage() {
                     >
                       <div className="flex flex-col items-center justify-center gap-4 text-center">
                         {cvUploading ? (
-                          <>
-                            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                            <div className="space-y-1">
-                              <p className="text-sm font-medium">{t('profile.cvUploading')}</p>
-                              <p className="text-xs text-muted-foreground">{t('profile.cvExtracting')}</p>
+                          <div className="py-4">
+                            {/* AI Analyzing Animation */}
+                            <div className="flex flex-col items-center justify-center">
+                              {/* Glow effect container */}
+                              <div className="relative">
+                                {/* Outer glow rings */}
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <div className="w-20 h-20 rounded-full bg-orange-200/40 dark:bg-orange-500/20 animate-ping" style={{ animationDuration: '2s' }} />
+                                </div>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <div className="w-16 h-16 rounded-full bg-orange-300/30 dark:bg-orange-400/20 animate-pulse" />
+                                </div>
+                                {/* Icon container with glow background */}
+                                <div className="relative flex items-center justify-center w-20 h-20 rounded-full bg-orange-100 dark:bg-orange-900/40">
+                                  <Brain className="w-10 h-10 text-orange-600 dark:text-orange-400 animate-pulse" />
+                                </div>
+                              </div>
+                              {/* Text */}
+                              <p className="mt-5 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {t('profile.cvExtracting')}
+                              </p>
+                              <p className="mt-1 text-xs text-muted-foreground">
+                                {t('profile.cvExtractingDescription')}
+                              </p>
                             </div>
-                          </>
+                          </div>
                         ) : (
                           <>
                             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">

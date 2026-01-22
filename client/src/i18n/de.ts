@@ -538,6 +538,7 @@ export const de = {
     cvNotUploaded: "Nicht hochgeladen",
     cvUploading: "Wird hochgeladen...",
     cvExtracting: "Mit KI extrahieren...",
+    cvExtractingDescription: "Unsere KI analysiert Ihren Lebenslauf, um Fähigkeiten, Erfahrung und Qualifikationen zu extrahieren.",
     cvUploadSuccess: "Lebenslauf erfolgreich hochgeladen",
     cvExtractionComplete: "Dein Profil wurde mit den extrahierten Informationen aktualisiert.",
     cvExtractionPartial: "Nicht alles konnte extrahiert werden. Du kannst es manuell bearbeiten.",

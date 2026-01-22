@@ -530,6 +530,7 @@ export const en = {
     cvNotUploaded: "Not uploaded",
     cvUploading: "Uploading...",
     cvExtracting: "Extracting with AI...",
+    cvExtractingDescription: "Our AI is analyzing your CV to extract skills, experience, and qualifications.",
     cvUploadSuccess: "CV uploaded successfully",
     cvExtractionComplete: "Your profile has been updated with the extracted information.",
     cvExtractionPartial: "We couldn't extract everything. You can edit manually.",
