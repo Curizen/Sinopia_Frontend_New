@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useI18n } from '@/i18n';
-import { ArrowLeft, Plus, X, Sparkles, CheckCircle, Clock, Users, Layers, Euro } from 'lucide-react';
+import { ArrowLeft, Plus, X, Sparkles, CheckCircle, Clock, Users, Layers, Euro, Brain } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface RequiredSkill {
@@ -351,8 +351,39 @@ export default function AddProjectPage() {
                 </Button>
               </div>
 
+              {/* AI Analyzing Animation */}
+              {isAnalyzing && (
+                <Card className="border-primary/30 bg-gradient-to-br from-orange-50/50 to-amber-50/50 dark:from-orange-950/20 dark:to-amber-950/20">
+                  <CardContent className="py-12">
+                    <div className="flex flex-col items-center justify-center text-center">
+                      {/* Glow effect container */}
+                      <div className="relative">
+                        {/* Outer glow rings */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-24 h-24 rounded-full bg-orange-200/40 dark:bg-orange-500/20 animate-ping" style={{ animationDuration: '2s' }} />
+                        </div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-20 h-20 rounded-full bg-orange-300/30 dark:bg-orange-400/20 animate-pulse" />
+                        </div>
+                        {/* Icon container with glow background */}
+                        <div className="relative flex items-center justify-center w-24 h-24 rounded-full bg-orange-100 dark:bg-orange-900/40">
+                          <Brain className="w-12 h-12 text-orange-600 dark:text-orange-400 animate-pulse" />
+                        </div>
+                      </div>
+                      {/* Text */}
+                      <p className="mt-6 text-lg font-medium text-gray-700 dark:text-gray-300">
+                        {t('useCases.analyzing')}
+                      </p>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        {t('useCases.analyzingDescription')}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
               {/* AI Analysis Results Preview */}
-              {analysisResult && (
+              {analysisResult && !isAnalyzing && (
                 <Card className="bg-muted/50 border-primary/20">
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
