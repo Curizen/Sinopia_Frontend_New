@@ -33,7 +33,8 @@ import ProjectDetailPage from "@/pages/projects/ProjectDetailPage";
 import AddProjectPage from "@/pages/projects/AddProjectPage";
 import UseCaseUploadPage from "@/pages/use-cases/UseCaseUploadPage";
 import UseCaseDetailsPage from "@/pages/use-cases/UseCaseDetailsPage";
-import OffersPage from "@/pages/offers/OffersPage";
+import OffersListPage from "@/pages/offers/OffersListPage";
+import OfferDetailsPage from "@/pages/offers/OfferDetailsPage";
 import ContractsPage from "@/pages/contracts/ContractsPage";
 import PaymentsPage from "@/pages/payments/PaymentsPage";
 import NotificationsPage from "@/pages/notifications/NotificationsPage";
@@ -131,7 +132,10 @@ function Router() {
         <PrivateRoute component={UseCaseDetailsPage} />
       </Route>
       <Route path="/offers">
-        <PrivateRoute component={OffersPage} />
+        <PrivateRoute component={OffersListPage} />
+      </Route>
+      <Route path="/offers/:id">
+        <PrivateRoute component={OfferDetailsPage} />
       </Route>
       <Route path="/contracts">
         <PrivateRoute component={ContractsPage} />

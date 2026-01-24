@@ -914,6 +914,66 @@ export async function registerRoutes(
     }
   });
 
+  // Get user's offers
+  app.get("/api/offers/my-offers", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+
+      console.log("[DEBUG] GET /api/offers/my-offers");
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/offers/my-offers`, {
+        method: "GET",
+        headers,
+      });
+
+      forwardCookies(response, res);
+      const data = await response.json();
+      console.log("[DEBUG] GET /api/offers/my-offers - Response status:", response.status);
+      console.log("[DEBUG] GET /api/offers/my-offers - Response data:", JSON.stringify(data, null, 2));
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Get offers proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to fetch offers" });
+    }
+  });
+
+  // Get offer by ID
+  app.get("/api/offers/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+
+      console.log("[DEBUG] GET /api/offers/" + id);
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/offers/${id}`, {
+        method: "GET",
+        headers,
+      });
+
+      forwardCookies(response, res);
+      const data = await response.json();
+      console.log("[DEBUG] GET /api/offers/" + id + " - Response status:", response.status);
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Get offer by ID proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to fetch offer" });
+    }
+  });
+
   // Use Case Creation endpoint
   app.post("/api/use-case", async (req, res) => {
     try {
