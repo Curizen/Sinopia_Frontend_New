@@ -190,7 +190,14 @@ export default function CompanyInfoPage() {
         description: t('onboarding.companyInfoSavedDesc'),
       });
 
-      setLocation('/dashboard');
+      // Check for saved returnUrl from signup flow (validate it starts with '/')
+      const savedReturnUrl = sessionStorage.getItem('post_onboarding_return_url');
+      sessionStorage.removeItem('post_onboarding_return_url');
+      if (savedReturnUrl && savedReturnUrl.startsWith('/')) {
+        setLocation(savedReturnUrl);
+      } else {
+        setLocation('/dashboard');
+      }
       window.scrollTo(0, 0);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : t('common.error');

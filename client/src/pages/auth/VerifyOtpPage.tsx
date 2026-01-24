@@ -22,6 +22,20 @@ export default function VerifyOtpPage() {
   const email = params.get('email') || '';
   const role = (params.get('role') || 'skill_giver') as UserRole;
   
+  // Get returnUrl from query params for redirect after verification
+  const returnUrl = (() => {
+    const url = params.get('returnUrl');
+    if (url) {
+      try {
+        const decoded = decodeURIComponent(url);
+        return decoded.startsWith('/') ? decoded : null;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  })();
+  
   const [isLoading, setIsLoading] = useState(false);
   const [otp, setOtp] = useState('');
 
@@ -103,7 +117,8 @@ export default function VerifyOtpPage() {
             title: t('auth.otp.accountCreated'),
             description: t('auth.otp.accountCreatedDesc'),
           });
-          setLocation('/profile');
+          // Redirect to returnUrl if provided, otherwise go to profile
+          setLocation(returnUrl || '/profile');
           window.scrollTo(0, 0);
         } else {
           // skill_searcher: complete registration and login to establish session
@@ -130,6 +145,10 @@ export default function VerifyOtpPage() {
             title: t('auth.otp.accountCreated'),
             description: t('auth.otp.accountCreatedDesc'),
           });
+          // Store returnUrl for redirect after company onboarding
+          if (returnUrl) {
+            sessionStorage.setItem('post_onboarding_return_url', returnUrl);
+          }
           setLocation('/onboarding/company');
           window.scrollTo(0, 0);
         }

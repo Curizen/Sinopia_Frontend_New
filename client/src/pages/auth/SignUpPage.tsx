@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'wouter';
+import { useState, useEffect, useMemo } from 'react';
+import { Link, useLocation, useSearch } from 'wouter';
 import { useI18n } from '@/i18n';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import sinopiaLogo from '@assets/sinopia_logo.png';
@@ -20,6 +20,21 @@ export default function SignUpPage() {
   const { toast } = useToast();
   const { t } = useI18n();
   const [, setLocation] = useLocation();
+  const searchString = useSearch();
+
+  // Parse returnUrl from query params for redirect after signup
+  const returnUrl = useMemo(() => {
+    const params = new URLSearchParams(searchString);
+    const url = params.get('returnUrl');
+    if (url) {
+      try {
+        return decodeURIComponent(url);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }, [searchString]);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -102,7 +117,9 @@ export default function SignUpPage() {
           title: t('auth.verificationRequired'),
           description: t('auth.verificationCodeSent'),
         });
-        setLocation('/verify-otp?email=' + encodeURIComponent(formData.email) + '&role=' + formData.role);
+        // Propagate returnUrl to OTP verification page
+        const returnParam = returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}` : '';
+        setLocation('/verify-otp?email=' + encodeURIComponent(formData.email) + '&role=' + formData.role + returnParam);
       } else {
         toast({
           title: t('common.error'),

@@ -1,4 +1,4 @@
-import { Switch, Route, Redirect } from "wouter";
+import { Switch, Route, Redirect, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -44,6 +44,7 @@ import NotFound from "@/pages/not-found";
 
 function PrivateRoute({ component: Component }: { component: React.ComponentType }) {
   const { isAuthenticated, isLoading, user } = useAuth();
+  const [location] = useLocation();
 
   if (isLoading) {
     return (
@@ -54,7 +55,9 @@ function PrivateRoute({ component: Component }: { component: React.ComponentType
   }
 
   if (!isAuthenticated) {
-    return <Redirect to="/sign-in" />;
+    // Store current path as return URL for redirect after login
+    const returnUrl = encodeURIComponent(location);
+    return <Redirect to={`/sign-in?returnUrl=${returnUrl}`} />;
   }
 
   if (user?.role === 'skill_searcher' && !user?.companyOnboardingCompleted) {
@@ -76,6 +79,19 @@ function PublicOnlyRoute({ component: Component }: { component: React.ComponentT
   }
 
   if (isAuthenticated) {
+    // Check if there's a returnUrl in query params to preserve it
+    const searchParams = new URLSearchParams(window.location.search);
+    const returnUrl = searchParams.get('returnUrl');
+    if (returnUrl) {
+      try {
+        const decodedUrl = decodeURIComponent(returnUrl);
+        if (decodedUrl.startsWith('/')) {
+          return <Redirect to={decodedUrl} />;
+        }
+      } catch {
+        // Invalid URL, fall through to default
+      }
+    }
     return <Redirect to="/profile" />;
   }
 
