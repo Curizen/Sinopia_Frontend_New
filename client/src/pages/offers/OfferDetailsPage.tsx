@@ -4,7 +4,8 @@ import { useI18n } from '@/i18n';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { queryClient, apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { 
   ArrowLeft, 
@@ -64,9 +65,69 @@ export default function OfferDetailsPage() {
 
   const offer = offerData?.success ? offerData.data : null;
 
+  const updateOfferStatus = (newStatus: string) => {
+    queryClient.setQueryData<OfferResponse>(['/api/offers', id], (oldData) => {
+      if (!oldData?.data) return oldData;
+      return {
+        ...oldData,
+        data: {
+          ...oldData.data,
+          offer_status: newStatus,
+        },
+      };
+    });
+  };
+
+  const acceptMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest('POST', `/api/offers/${id}/accept`);
+    },
+    onSuccess: () => {
+      updateOfferStatus('accepted');
+      toast({
+        title: t('offers.offerAccepted'),
+        description: t('offers.offerAcceptedDesc'),
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/offers/my-offers'] });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: t('common.error'),
+        description: error.message || t('offers.fetchError'),
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest('POST', `/api/offers/${id}/reject`);
+    },
+    onSuccess: () => {
+      updateOfferStatus('rejected');
+      toast({
+        title: t('offers.offerRejected'),
+        description: t('offers.offerRejectedDesc'),
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/offers/my-offers'] });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: t('common.error'),
+        description: error.message || t('offers.fetchError'),
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const isProcessing = acceptMutation.isPending || rejectMutation.isPending;
+  const currentStatus = offer?.offer_status || '';
+  const canTakeAction = ['sent', 'pending'].includes(currentStatus.toLowerCase());
+
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'pending':
+      case 'sent':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
       case 'accepted':
         return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
@@ -107,18 +168,27 @@ export default function OfferDetailsPage() {
     }
   };
 
+  const getStatusLabel = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'accepted':
+        return t('offers.accepted');
+      case 'rejected':
+      case 'declined':
+        return t('offers.rejected');
+      case 'pending':
+      case 'sent':
+        return t('offers.pending');
+      default:
+        return status;
+    }
+  };
+
   const handleAcceptOffer = () => {
-    toast({
-      title: t('offers.acceptOffer'),
-      description: t('offers.acceptOfferPlaceholder'),
-    });
+    acceptMutation.mutate();
   };
 
   const handleRejectOffer = () => {
-    toast({
-      title: t('offers.rejectOffer'),
-      description: t('offers.rejectOfferPlaceholder'),
-    });
+    rejectMutation.mutate();
   };
 
   if (isLoading) {
@@ -174,8 +244,8 @@ export default function OfferDetailsPage() {
               {offer.project?.title || t('offers.untitledProject')}
             </h1>
             <div className="flex items-center gap-3 mt-1 flex-wrap">
-              <Badge className={getStatusColor(offer.offer_status)} data-testid="badge-offer-status">
-                {offer.offer_status}
+              <Badge className={getStatusColor(currentStatus)} data-testid="badge-offer-status">
+                {getStatusLabel(currentStatus)}
               </Badge>
               <span className="text-sm text-muted-foreground flex items-center gap-1" data-testid="text-date-sent">
                 <Calendar className="w-4 h-4" />
@@ -263,25 +333,57 @@ export default function OfferDetailsPage() {
 
         <Card data-testid="card-actions">
           <CardContent className="py-6">
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                onClick={handleAcceptOffer}
-                data-testid="button-accept-offer"
-              >
-                <CheckCircle className="w-5 h-5 mr-2" />
-                {t('offers.acceptOffer')}
-              </Button>
-              <Button 
-                size="lg" 
-                variant="destructive"
-                onClick={handleRejectOffer}
-                data-testid="button-reject-offer"
-              >
-                <XCircle className="w-5 h-5 mr-2" />
-                {t('offers.rejectOffer')}
-              </Button>
-            </div>
+            {canTakeAction ? (
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  onClick={handleAcceptOffer}
+                  disabled={isProcessing}
+                  data-testid="button-accept-offer"
+                >
+                  {acceptMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                  )}
+                  {t('offers.acceptOffer')}
+                </Button>
+                <Button 
+                  variant="destructive"
+                  onClick={handleRejectOffer}
+                  disabled={isProcessing}
+                  data-testid="button-reject-offer"
+                >
+                  {rejectMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <XCircle className="w-4 h-4 mr-2" />
+                  )}
+                  {t('offers.rejectOffer')}
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-3">
+                <div className="flex items-center gap-2">
+                  {currentStatus.toLowerCase() === 'accepted' ? (
+                    <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
+                  ) : (
+                    <XCircle className="w-6 h-6 text-red-600 dark:text-red-400" />
+                  )}
+                  <Badge 
+                    className={`text-base px-4 py-1 ${getStatusColor(currentStatus)}`}
+                    data-testid="badge-final-status"
+                  >
+                    {getStatusLabel(currentStatus)}
+                  </Badge>
+                </div>
+                <p className="text-sm text-muted-foreground" data-testid="text-decision-made">
+                  {currentStatus.toLowerCase() === 'accepted' 
+                    ? t('offers.offerAcceptedDesc')
+                    : t('offers.offerRejectedDesc')
+                  }
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
