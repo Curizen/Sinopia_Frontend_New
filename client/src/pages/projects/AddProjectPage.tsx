@@ -122,6 +122,13 @@ export default function AddProjectPage() {
 
     try {
       const token = localStorage.getItem('sinopia_token');
+      
+      // Construct formatted string for use_case_file
+      const formattedString = `title: ${formData.title}
+Description: ${formData.description}
+Objectives:
+${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
+
       const response = await fetch('/api/use-case/analysis', {
         method: 'POST',
         headers: {
@@ -130,9 +137,7 @@ export default function AddProjectPage() {
         },
         credentials: 'include',
         body: JSON.stringify({
-          title: formData.title,
-          description: formData.description,
-          objectives: formData.objectives,
+          use_case_file: formattedString,
         }),
       });
 
