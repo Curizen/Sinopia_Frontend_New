@@ -914,6 +914,59 @@ export async function registerRoutes(
     }
   });
 
+  // Use Case File Analysis endpoint (for PDF/DOC uploads)
+  app.post("/api/use-case/analysis-file", upload.single('file'), async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      
+      if (!authHeader) {
+        return res.status(401).json({ status: "error", message: "Authorization required" });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({ status: "error", message: "No file uploaded" });
+      }
+
+      console.log("[DEBUG] POST /api/use-case/analysis-file - File:", req.file.originalname, req.file.mimetype, req.file.size);
+
+      // Create FormData for forwarding to external API
+      const formData = new FormData();
+      const blob = new Blob([req.file.buffer], { type: req.file.mimetype });
+      formData.append('file', blob, req.file.originalname);
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/use-case/analysis-file`, {
+        method: "POST",
+        headers: {
+          "Authorization": authHeader,
+          "Cookie": getClientCookies(req),
+        },
+        body: formData,
+      });
+
+      console.log("[DEBUG] POST /api/use-case/analysis-file - Response status:", response.status);
+      
+      forwardCookies(response, res);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("[DEBUG] POST /api/use-case/analysis-file - Error:", errorText);
+        try {
+          const errorJson = JSON.parse(errorText);
+          return res.status(response.status).json(errorJson);
+        } catch {
+          return res.status(response.status).json({ status: "error", message: errorText || "File analysis failed" });
+        }
+      }
+
+      const data = await response.json();
+      console.log("[DEBUG] POST /api/use-case/analysis-file - Response data:", JSON.stringify(data, null, 2));
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Use case file analysis proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to analyze file" });
+    }
+  });
+
   // Get user's offers
   app.get("/api/offers/my-offers", async (req, res) => {
     try {

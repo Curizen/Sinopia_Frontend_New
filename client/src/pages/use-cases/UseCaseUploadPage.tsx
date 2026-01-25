@@ -130,12 +130,13 @@ export default function UseCaseUploadPage() {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      // Step 4: Make request with explicit Authorization header
-      const response = await fetch('https://sinopia.eu/api/use-case/analysis-file', {
+      // Step 4: Make request through backend proxy with explicit Authorization header
+      const response = await fetch('/api/use-case/analysis-file', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
         },
+        credentials: 'include',
         body: formData,
       });
 
