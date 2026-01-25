@@ -114,7 +114,7 @@ export default function UseCaseUploadPage() {
     if (!token) {
       toast({
         title: t('common.error'),
-        description: t('auth.pleaseLoginAgain'),
+        description: t('auth.otp.pleaseLoginAgain'),
         variant: 'destructive',
       });
       setLocation('/login');
@@ -143,7 +143,7 @@ export default function UseCaseUploadPage() {
         if (response.status === 401) {
           toast({
             title: t('common.error'),
-            description: t('auth.pleaseLoginAgain'),
+            description: t('auth.otp.pleaseLoginAgain'),
             variant: 'destructive',
           });
           setLocation('/login');
