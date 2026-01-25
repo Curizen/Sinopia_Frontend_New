@@ -1017,7 +1017,7 @@ export const en = {
     atLeastOneObjective: "Please add at least one objective.",
     uploadCta: {
       headline: "Have a requirement document?",
-      subtext: "Skip the manual entry! Upload your PDF or DOCX file and let our AI extract the details for you.",
+      subtext: "Skip the manual entry! Upload your PDF file and let our AI extract the details for you.",
       button: "Upload Use Case File",
     },
     createButton: "Create Use Case",
