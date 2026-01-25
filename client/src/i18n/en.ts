@@ -1015,6 +1015,11 @@ export const en = {
     addObjective: "Add objective",
     removeObjective: "Remove",
     atLeastOneObjective: "Please add at least one objective.",
+    uploadCta: {
+      headline: "Have a requirement document?",
+      subtext: "Skip the manual entry! Upload your PDF or DOCX file and let our AI extract the details for you.",
+      button: "Upload Use Case File",
+    },
     createButton: "Create Use Case",
     created: "Use Case created!",
     createdDesc: "Your use case has been posted successfully.",

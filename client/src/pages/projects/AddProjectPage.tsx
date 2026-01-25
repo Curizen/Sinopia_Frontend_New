@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useI18n } from '@/i18n';
-import { ArrowLeft, Plus, X, Sparkles, CheckCircle, Clock, Users, Layers, Euro, Brain } from 'lucide-react';
+import { ArrowLeft, Plus, X, Sparkles, CheckCircle, Clock, Users, Layers, Euro, Brain, Upload } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface RequiredSkill {
@@ -281,6 +281,27 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
           <div>
             <h1 className="text-2xl font-display font-bold">{t('useCases.postTitle')}</h1>
             <p className="text-muted-foreground">{t('useCases.postSubtitle')}</p>
+          </div>
+        </div>
+
+        {/* File Upload CTA */}
+        <div className="mb-6 p-6 bg-primary/5 border-2 border-dashed border-primary/20 rounded-lg">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex-1">
+              <h3 className="font-medium text-foreground">{t('useCases.uploadCta.headline')}</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                {t('useCases.uploadCta.subtext')}
+              </p>
+            </div>
+            <Button
+              type="button"
+              onClick={() => setLocation('/use-cases/upload')}
+              className="shrink-0"
+              data-testid="button-upload-usecase-file"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              {t('useCases.uploadCta.button')}
+            </Button>
           </div>
         </div>
 

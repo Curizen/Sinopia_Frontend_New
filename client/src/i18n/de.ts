@@ -1033,6 +1033,11 @@ export const de = {
     addObjective: "Ziel hinzufügen",
     removeObjective: "Entfernen",
     atLeastOneObjective: "Bitte fügen Sie mindestens ein Ziel hinzu.",
+    uploadCta: {
+      headline: "Haben Sie ein Anforderungsdokument?",
+      subtext: "Überspringen Sie die manuelle Eingabe! Laden Sie Ihre PDF- oder DOCX-Datei hoch und lassen Sie unsere KI die Details für Sie extrahieren.",
+      button: "Aufgabe-Datei hochladen",
+    },
     createButton: "Aufgabe erstellen",
     created: "Aufgabe erstellt!",
     createdDesc: "Ihre Aufgabe wurde erfolgreich veröffentlicht.",
