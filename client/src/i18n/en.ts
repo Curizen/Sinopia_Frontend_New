@@ -1032,6 +1032,7 @@ export const en = {
     analysisComplete: "Analysis Complete",
     analysisCompleteDesc: "Analysis complete. You can now create the use case.",
     analysisError: "Failed to analyze use case. Please try again.",
+    endpointNotFound: "API endpoint not found (404). Please contact support.",
     analysisResults: "AI Analysis Results",
     analyzeFirst: "Please analyze the use case first before creating.",
     analysisDataInvalid: "Analysis data is invalid. Please analyze again.",

@@ -1050,6 +1050,7 @@ export const de = {
     analysisComplete: "Analyse abgeschlossen",
     analysisCompleteDesc: "Analyse abgeschlossen. Sie können nun die Aufgabe erstellen.",
     analysisError: "Analyse fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    endpointNotFound: "API-Endpunkt nicht gefunden (404). Bitte kontaktieren Sie den Support.",
     analysisResults: "KI-Analyseergebnisse",
     analyzeFirst: "Bitte analysieren Sie die Aufgabe zuerst, bevor Sie sie erstellen.",
     analysisDataInvalid: "Analysedaten sind ungültig. Bitte analysieren Sie erneut.",

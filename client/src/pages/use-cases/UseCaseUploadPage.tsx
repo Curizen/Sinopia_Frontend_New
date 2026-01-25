@@ -149,8 +149,12 @@ export default function UseCaseUploadPage() {
           setLocation('/login');
           return;
         }
+        if (response.status === 404) {
+          throw new Error(t('useCases.endpointNotFound'));
+        }
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || t('useCases.analysisError'));
+        console.error('API Error Response:', response.status, errorData);
+        throw new Error(errorData.message || errorData.detail || `${t('useCases.analysisError')} (${response.status})`);
       }
 
       const analysisData = await response.json();
