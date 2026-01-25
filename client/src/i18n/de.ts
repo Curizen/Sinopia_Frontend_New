@@ -146,6 +146,7 @@ export const de = {
       resend: "Erneut senden",
       backToSignUp: "Zurück zur Registrierung",
       sessionExpired: "Sitzung abgelaufen",
+      pleaseLoginAgain: "Bitte melden Sie sich erneut an",
       pleaseSignUpAgain: "Bitte registrieren Sie sich erneut.",
       invalidCode: "Ungültiger Code",
       invalidCodeDesc: "Ungültiger Verifizierungscode",

@@ -107,25 +107,48 @@ export default function UseCaseUploadPage() {
   const handleUpload = async () => {
     if (uploadedFiles.length === 0) return;
 
+    // Step 1: Retrieve token explicitly
+    const token = localStorage.getItem('sinopia_token');
+    
+    // Step 2: Validate token - redirect to login if missing
+    if (!token) {
+      toast({
+        title: t('common.error'),
+        description: t('auth.pleaseLoginAgain'),
+        variant: 'destructive',
+      });
+      setLocation('/login');
+      return;
+    }
+
     const selectedFile = uploadedFiles[0].file;
     setIsAnalyzing(true);
     setError(null);
 
     try {
-      const token = localStorage.getItem('sinopia_token');
-      
+      // Step 3: Construct FormData - DO NOT set Content-Type manually
       const formData = new FormData();
       formData.append('file', selectedFile);
 
+      // Step 4: Make request with explicit Authorization header
       const response = await fetch('https://sinopia.eu/api/use-case/analysis-file', {
         method: 'POST',
         headers: {
-          ...(token && { 'Authorization': `Bearer ${token}` }),
+          'Authorization': `Bearer ${token}`,
         },
         body: formData,
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          toast({
+            title: t('common.error'),
+            description: t('auth.pleaseLoginAgain'),
+            variant: 'destructive',
+          });
+          setLocation('/login');
+          return;
+        }
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || t('useCases.analysisError'));
       }

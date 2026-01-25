@@ -143,6 +143,7 @@ export const en = {
       resend: "Resend",
       backToSignUp: "Back to Sign Up",
       sessionExpired: "Session Expired",
+      pleaseLoginAgain: "Please log in again",
       pleaseSignUpAgain: "Please sign up again.",
       invalidCode: "Invalid Code",
       invalidCodeDesc: "Invalid verification code",
