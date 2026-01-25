@@ -1057,9 +1057,9 @@ export const de = {
     analyzeHint: "Klicken Sie auf «Aufgabe analysieren», um KI-gestützte Erkenntnisse zu erhalten.",
     projectOverview: "Anwendungsfall Übersicht",
     projectSummary: "Zusammenfassung des Anwendungsfalls",
-    requiredRolesDetailed: "Erforderliche Rollen",
-    employee: "Mitarbeiter",
-    employees: "Mitarbeiter",
+    requiredRolesDetailed: "Erforderliche Ressourcen",
+    employee: "Ressource",
+    employees: "Ressourcen",
     implementationStages: "Umsetzungsphasen",
   },
 };
