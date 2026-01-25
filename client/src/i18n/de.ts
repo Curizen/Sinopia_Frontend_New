@@ -1017,6 +1017,7 @@ export const de = {
     filesProcessed: "Dateien erfolgreich verarbeitet",
     filesProcessedDesc: "Ihre Aufgabe wurde zur Überprüfung eingereicht.",
     submitUpload: "Aufgabe einreichen",
+    analyzingFile: "Datei wird analysiert...",
     postTitle: "Aufgabe erstellen",
     postSubtitle:
       "Erstellen Sie eine neue Aufgabe, um den richtigen Experten zu finden",

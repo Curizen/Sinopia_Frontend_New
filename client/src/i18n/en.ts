@@ -1000,6 +1000,7 @@ export const en = {
     filesProcessed: "Files processed successfully",
     filesProcessedDesc: "Your use case has been submitted for review.",
     submitUpload: "Submit Use Case",
+    analyzingFile: "Analyzing File...",
     postTitle: "Post Use Case",
     postSubtitle: "Create a new use case to find the right expert",
     details: "Use Case Details",

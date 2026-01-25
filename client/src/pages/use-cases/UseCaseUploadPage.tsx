@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useI18n } from '@/i18n';
-import { ArrowLeft, Upload, FileText, X, Check, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Upload, FileText, X, Check, AlertCircle, Loader2 } from 'lucide-react';
 
 const ALLOWED_TYPES = [
   'application/pdf',
@@ -21,6 +21,8 @@ interface UploadedFile {
   id: string;
 }
 
+const ANALYSIS_CACHE_KEY = 'use_case_analysis_cache';
+
 export default function UseCaseUploadPage() {
   const { t } = useI18n();
   const { toast } = useToast();
@@ -28,6 +30,7 @@ export default function UseCaseUploadPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const validateFile = (file: File): string | null => {
     const extension = '.' + file.name.split('.').pop()?.toLowerCase();
@@ -99,6 +102,58 @@ export default function UseCaseUploadPage() {
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  };
+
+  const handleUpload = async () => {
+    if (uploadedFiles.length === 0) return;
+
+    const selectedFile = uploadedFiles[0].file;
+    setIsAnalyzing(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem('sinopia_token');
+      
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      const response = await fetch('https://sinopia.eu/api/use-case/analysis-file', {
+        method: 'POST',
+        headers: {
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || t('useCases.analysisError'));
+      }
+
+      const analysisData = await response.json();
+      
+      // Cache the analysis result for the create page
+      localStorage.setItem(ANALYSIS_CACHE_KEY, JSON.stringify(analysisData));
+
+      toast({
+        title: t('useCases.analysisComplete'),
+        description: t('useCases.analysisCompleteDesc'),
+      });
+
+      // Navigate to the create page
+      setLocation('/projects/new');
+    } catch (err) {
+      console.error('File analysis error:', err);
+      const errorMessage = err instanceof Error ? err.message : t('useCases.analysisError');
+      setError(errorMessage);
+      toast({
+        title: t('common.error'),
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   return (
@@ -197,17 +252,18 @@ export default function UseCaseUploadPage() {
                 </Button>
               </Link>
               <Button
-                disabled={uploadedFiles.length === 0}
-                onClick={() => {
-                  toast({
-                    title: t('useCases.filesProcessed'),
-                    description: t('useCases.filesProcessedDesc'),
-                  });
-                  setLocation('/dashboard');
-                }}
+                disabled={uploadedFiles.length === 0 || isAnalyzing}
+                onClick={handleUpload}
                 data-testid="button-submit-upload"
               >
-                {t('useCases.submitUpload')}
+                {isAnalyzing ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {t('useCases.analyzingFile')}
+                  </>
+                ) : (
+                  t('useCases.submitUpload')
+                )}
               </Button>
             </div>
           </CardContent>
