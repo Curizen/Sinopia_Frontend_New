@@ -259,7 +259,7 @@ export default function UseCaseDetailsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <h4 className="text-sm font-medium text-muted-foreground mb-2">{t('useCases.description')}</h4>
+              <h4 className="text-sm font-medium text-muted-foreground mb-2">{t('useCases.descriptionLabel')}</h4>
               <p className="text-foreground">{useCase.description}</p>
             </div>
             {useCase.objectives && useCase.objectives.length > 0 && (
