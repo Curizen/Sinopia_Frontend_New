@@ -1007,9 +1007,11 @@ export const en = {
     details: "Use Case Details",
     titleLabel: "Title",
     titlePlaceholder: "e.g., Process Optimization in Manufacturing",
+    titlePlaceholderOptional: "Optional - Leave empty to use uploaded file data",
     descriptionLabel: "Description",
     descriptionPlaceholder:
       "Describe your use case in detail. What is the current situation? What challenges are you facing?",
+    descriptionPlaceholderOptional: "Optional - Leave empty to use uploaded file data",
     objectiveLabel: "Objectives",
     objectivePlaceholder:
       "What do you want to achieve? What is the desired outcome?",
@@ -1051,6 +1053,9 @@ export const en = {
     employee: "Resource",
     employees: "Resources",
     implementationStages: "Implementation Stages",
+    uploadedUseCase: "Uploaded Use Case",
+    uploadedUseCaseDesc: "Use case details extracted from uploaded file",
+    uploadedUseCaseObjective: "Objectives from uploaded file",
   },
   chatWidget: {
     title: "AI Assistant",

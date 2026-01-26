@@ -1025,9 +1025,11 @@ export const de = {
     details: "Aufgabendetails",
     titleLabel: "Titel",
     titlePlaceholder: "z.B. Prozessoptimierung in der Fertigung",
+    titlePlaceholderOptional: "Optional - Leer lassen, um hochgeladene Dateidaten zu verwenden",
     descriptionLabel: "Beschreibung",
     descriptionPlaceholder:
       "Beschreiben Sie Ihre Aufgabe im Detail. Wie ist die aktuelle Situation? Welche Herausforderungen gibt es?",
+    descriptionPlaceholderOptional: "Optional - Leer lassen, um hochgeladene Dateidaten zu verwenden",
     objectiveLabel: "Ziele",
     objectivePlaceholder:
       "Was möchten Sie erreichen? Was ist das gewünschte Ergebnis?",
@@ -1069,6 +1071,9 @@ export const de = {
     employee: "Ressource",
     employees: "Ressourcen",
     implementationStages: "Umsetzungsphasen",
+    uploadedUseCase: "Hochgeladener Anwendungsfall",
+    uploadedUseCaseDesc: "Anwendungsfalldetails aus hochgeladener Datei extrahiert",
+    uploadedUseCaseObjective: "Ziele aus hochgeladener Datei",
   },
   chatWidget: {
     title: "KI-Assistent",

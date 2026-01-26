@@ -81,13 +81,26 @@ export default function AddProjectPage() {
     setObjectives(newObjectives);
   };
 
-  const validateForm = () => {
+  // Check if we have a file-based analysis (uploaded file)
+  const hasFileAnalysis = analysisResult !== null;
+
+  const validateForm = (requireFields: boolean = true) => {
     const trimmedTitle = title.trim();
     const trimmedDescription = description.trim();
     const filteredObjectives = objectives
       .map(obj => obj.trim())
       .filter(obj => obj.length > 0);
 
+    // If file was uploaded (analysis exists), fields are optional
+    if (!requireFields || hasFileAnalysis) {
+      return {
+        title: trimmedTitle || t('useCases.uploadedUseCase'),
+        description: trimmedDescription || t('useCases.uploadedUseCaseDesc'),
+        objectives: filteredObjectives.length > 0 ? filteredObjectives : [t('useCases.uploadedUseCaseObjective')],
+      };
+    }
+
+    // Manual entry path: all fields required
     if (!trimmedTitle || !trimmedDescription) {
       toast({
         title: t('common.error'),
@@ -113,9 +126,9 @@ export default function AddProjectPage() {
     };
   };
 
-  // Step 1: Analyze Use Case
+  // Step 1: Analyze Use Case (manual entry - requires fields)
   const handleAnalyze = async () => {
-    const formData = validateForm();
+    const formData = validateForm(true);
     if (!formData) return;
 
     setIsAnalyzing(true);
@@ -172,9 +185,6 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const formData = validateForm();
-    if (!formData) return;
-
     // Check if analysis was performed
     const cachedAnalysis = localStorage.getItem(ANALYSIS_CACHE_KEY);
     if (!cachedAnalysis) {
@@ -185,6 +195,10 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
       });
       return;
     }
+    
+    // File upload path: fields are optional; Manual path: fields required
+    const formData = validateForm(!hasFileAnalysis);
+    if (!formData) return;
 
     let parsedAnalysis: AnalysisResult;
     try {
@@ -312,32 +326,41 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="title">{t('useCases.titleLabel')}</Label>
+                <Label htmlFor="title">
+                  {t('useCases.titleLabel')}
+                  {hasFileAnalysis && <span className="text-muted-foreground text-xs ml-2">({t('common.optional')})</span>}
+                </Label>
                 <Input
                   id="title"
-                  placeholder={t('useCases.titlePlaceholder')}
+                  placeholder={hasFileAnalysis ? t('useCases.titlePlaceholderOptional') : t('useCases.titlePlaceholder')}
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  required
+                  required={!hasFileAnalysis}
                   data-testid="input-usecase-title"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">{t('useCases.descriptionLabel')}</Label>
+                <Label htmlFor="description">
+                  {t('useCases.descriptionLabel')}
+                  {hasFileAnalysis && <span className="text-muted-foreground text-xs ml-2">({t('common.optional')})</span>}
+                </Label>
                 <Textarea
                   id="description"
-                  placeholder={t('useCases.descriptionPlaceholder')}
+                  placeholder={hasFileAnalysis ? t('useCases.descriptionPlaceholderOptional') : t('useCases.descriptionPlaceholder')}
                   rows={5}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  required
+                  required={!hasFileAnalysis}
                   data-testid="input-usecase-description"
                 />
               </div>
 
               <div className="space-y-3">
-                <Label>{t('useCases.objectiveLabel')}</Label>
+                <Label>
+                  {t('useCases.objectiveLabel')}
+                  {hasFileAnalysis && <span className="text-muted-foreground text-xs ml-2">({t('common.optional')})</span>}
+                </Label>
                 <div className="space-y-3">
                   {objectives.map((objective, index) => (
                     <div key={index} className="flex gap-2">
