@@ -47,15 +47,17 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     setMobileMenuOpen(false);
   }, [location]);
 
-  const navItems = [
+  const allNavItems = [
     { href: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard },
     { href: '/projects', labelKey: 'nav.projects', icon: FolderKanban },
-    { href: '/offers', labelKey: 'nav.offers', icon: FileText },
+    { href: '/offers', labelKey: 'nav.offers', icon: FileText, skillGiverOnly: true },
     { href: '/contracts', labelKey: 'nav.contracts', icon: Handshake },
     { href: '/payments', labelKey: 'nav.payments', icon: CreditCard },
     { href: '/notifications', labelKey: 'nav.notifications', icon: Bell, badge: unreadCount },
     { href: '/profile', labelKey: 'nav.profile', icon: User },
   ];
+
+  const navItems = allNavItems.filter(item => !item.skillGiverOnly || isSkillGiver);
 
   const handleLogout = async () => {
     await logout();

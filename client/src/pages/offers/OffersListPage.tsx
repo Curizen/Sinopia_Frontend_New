@@ -1,6 +1,8 @@
-import { Link } from 'wouter';
+import { useEffect } from 'react';
+import { Link, useLocation } from 'wouter';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useI18n } from '@/i18n';
+import { useAuth } from '@/context/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -48,10 +50,25 @@ interface OffersResponse {
 
 export default function OffersListPage() {
   const { t } = useI18n();
+  const { user } = useAuth();
+  const [, setLocation] = useLocation();
+
+  const isSkillSearcher = user?.role === 'skill_searcher';
+
+  useEffect(() => {
+    if (isSkillSearcher) {
+      setLocation('/dashboard');
+    }
+  }, [isSkillSearcher, setLocation]);
 
   const { data: offersData, isLoading, error, refetch } = useQuery<OffersResponse>({
     queryKey: ['/api/offers/my-offers'],
+    enabled: !isSkillSearcher,
   });
+
+  if (isSkillSearcher) {
+    return null;
+  }
 
   const offers = offersData?.success && Array.isArray(offersData.data) ? offersData.data : [];
 

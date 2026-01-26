@@ -47,7 +47,7 @@ export default function DashboardPage() {
   const signedContracts = contracts.filter(c => c.status === 'signed');
   const totalEarnings = signedContracts.reduce((sum, c) => sum + c.amount, 0);
 
-  const stats = [
+  const allStats = [
     {
       titleKey: 'dashboard.recentProjects',
       value: activeProjects.length,
@@ -61,6 +61,7 @@ export default function DashboardPage() {
       icon: FileText,
       color: 'text-yellow-600',
       bg: 'bg-yellow-100 dark:bg-yellow-900/30',
+      skillGiverOnly: true,
     },
     {
       titleKey: 'dashboard.activeContracts',
@@ -77,6 +78,8 @@ export default function DashboardPage() {
       bg: 'bg-primary/10',
     },
   ];
+
+  const stats = allStats.filter(stat => !stat.skillGiverOnly || isSkillGiver);
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
@@ -200,47 +203,49 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between gap-4">
-              <CardTitle className="text-lg">{t('dashboard.pendingOffers')}</CardTitle>
-              <Link href="/offers">
-                <Button variant="ghost" size="sm">
-                  {t('dashboard.viewAll')}
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </Link>
-            </CardHeader>
-            <CardContent>
-              {pendingOffers.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">{t('dashboard.noOffers')}</p>
-              ) : (
-                <div className="space-y-4">
-                  {pendingOffers.slice(0, 3).map((offer) => (
-                    <Link key={offer.id} href={`/offers/${offer.id}`}>
-                      <div className="p-4 rounded-lg border border-border hover-elevate cursor-pointer">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-medium truncate">{offer.projectTitle}</h4>
-                            <p className="text-sm text-muted-foreground mt-1">
-                              {offer.fromUserName}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-bold text-primary">
-                              {formatCurrency(offer.amount)}
-                            </p>
-                            <p className="text-xs text-muted-foreground mt-1">
-                              {formatDate(offer.createdAt)}
-                            </p>
+          {isSkillGiver && (
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between gap-4">
+                <CardTitle className="text-lg">{t('dashboard.pendingOffers')}</CardTitle>
+                <Link href="/offers">
+                  <Button variant="ghost" size="sm">
+                    {t('dashboard.viewAll')}
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </Link>
+              </CardHeader>
+              <CardContent>
+                {pendingOffers.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-8">{t('dashboard.noOffers')}</p>
+                ) : (
+                  <div className="space-y-4">
+                    {pendingOffers.slice(0, 3).map((offer) => (
+                      <Link key={offer.id} href={`/offers/${offer.id}`}>
+                        <div className="p-4 rounded-lg border border-border hover-elevate cursor-pointer">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium truncate">{offer.projectTitle}</h4>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {offer.fromUserName}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-bold text-primary">
+                                {formatCurrency(offer.amount)}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {formatDate(offer.createdAt)}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </DashboardLayout>

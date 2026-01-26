@@ -1,6 +1,8 @@
-import { useRoute, Link } from 'wouter';
+import { useEffect } from 'react';
+import { useRoute, Link, useLocation } from 'wouter';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useI18n } from '@/i18n';
+import { useAuth } from '@/context/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -56,11 +58,25 @@ export default function OfferDetailsPage() {
   const [, params] = useRoute('/offers/:id');
   const { t } = useI18n();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const [, setLocation] = useLocation();
   const id = params?.id;
+
+  const isSkillSearcher = user?.role === 'skill_searcher';
+
+  useEffect(() => {
+    if (isSkillSearcher) {
+      setLocation('/dashboard');
+    }
+  }, [isSkillSearcher, setLocation]);
+
+  if (isSkillSearcher) {
+    return null;
+  }
 
   const { data: offerData, isLoading, error, refetch } = useQuery<OfferResponse>({
     queryKey: ['/api/offers', id],
-    enabled: !!id,
+    enabled: !!id && !isSkillSearcher,
   });
 
   const offer = offerData?.success ? offerData.data : null;
