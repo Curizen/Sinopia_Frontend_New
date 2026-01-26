@@ -135,8 +135,8 @@ export function ChatWidget() {
             </div>
             <Button
               variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-white hover:bg-orange-600"
+              size="sm"
+              className="text-white hover-elevate"
               onClick={() => setIsOpen(false)}
               data-testid="button-close-chat"
             >
@@ -199,7 +199,7 @@ export function ChatWidget() {
                 size="icon"
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim() || isTyping}
-                className="bg-orange-500 hover:bg-orange-600 text-white"
+                className="bg-orange-500 text-white"
                 data-testid="button-send-message"
               >
                 <Send className="h-4 w-4" />
@@ -209,15 +209,15 @@ export function ChatWidget() {
         </div>
       )}
 
-      {/* Floating Button */}
-      <Button
-        size="icon"
-        className="h-14 w-14 rounded-full bg-orange-500 hover:bg-orange-600 text-white shadow-lg"
+      {/* Floating Button - Custom FAB requires explicit sizing */}
+      <button
+        type="button"
+        className="h-14 w-14 rounded-full bg-orange-500 text-white shadow-lg flex items-center justify-center hover-elevate active-elevate-2"
         onClick={() => setIsOpen(!isOpen)}
         data-testid="button-toggle-chat"
       >
         {isOpen ? <X className="h-6 w-6" /> : <Bot className="h-6 w-6" />}
-      </Button>
+      </button>
     </div>
   );
 }
