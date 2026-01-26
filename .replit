@@ -44,3 +44,5 @@ waitForPort = 5000
 [userenv.shared]
 VITE_API_BASE_URL = "http://sinopi.eu"
 EXTERNAL_API_URL = "https://sinopia.eu"
+N8N_GIVER_WEBHOOK = "https://sinopia.app.n8n.cloud/webhook/Chatbot_SkillGiver"
+N8N_SEARCHER_WEBHOOK = "https://sinopia.app.n8n.cloud/webhook/Skill_Searcher_chatbot"

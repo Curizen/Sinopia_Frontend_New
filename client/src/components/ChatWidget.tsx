@@ -11,24 +11,47 @@ interface Message {
   timestamp: Date;
 }
 
-const N8N_WEBHOOK_URL = '/api/chat/webhook';
+const CHAT_API_URL = '/api/chat/webhook';
 
-function getUserIdFromStorage(): number | null {
+type UserRole = 'skill_giver' | 'skill_searcher' | null;
+
+interface UserInfo {
+  userId: number | null;
+  role: UserRole;
+}
+
+function getUserInfoFromStorage(): UserInfo {
   try {
+    // Get role from sinopia_user
+    const sinopiaUser = localStorage.getItem('sinopia_user');
+    let role: UserRole = null;
+    if (sinopiaUser) {
+      const parsed = JSON.parse(sinopiaUser);
+      role = parsed.role || null;
+    }
+    
+    // Get user_id from cache
     const userCache = localStorage.getItem('user_profile_cache');
     if (userCache) {
       const parsed = JSON.parse(userCache);
-      return parsed.user_id || parsed.id || null;
+      return { 
+        userId: parsed.user_id || parsed.id || null,
+        role 
+      };
     }
-    const sinopiaUser = localStorage.getItem('sinopia_user');
+    
+    // Fallback to sinopia_user for user_id
     if (sinopiaUser) {
       const parsed = JSON.parse(sinopiaUser);
-      return parsed.user_id || parsed.id || null;
+      return { 
+        userId: parsed.user_id || parsed.id || null,
+        role 
+      };
     }
   } catch (e) {
-    console.error('Failed to get user_id from storage:', e);
+    console.error('Failed to get user info from storage:', e);
   }
-  return null;
+  return { userId: null, role: null };
 }
 
 export function ChatWidget() {
@@ -70,18 +93,32 @@ export function ChatWidget() {
     setIsTyping(true);
 
     try {
-      const userId = getUserIdFromStorage();
+      const { userId, role } = getUserInfoFromStorage();
       
-      const response = await fetch(N8N_WEBHOOK_URL, {
+      // Build payload based on role
+      let payload: Record<string, unknown>;
+      if (role === 'skill_searcher') {
+        payload = {
+          role: 'skill_searcher',
+          skill_searcher_id: userId,
+          message: trimmedMessage,
+        };
+      } else {
+        // Default to skill_giver format
+        payload = {
+          role: role || 'skill_giver',
+          user_id: userId,
+          message: trimmedMessage,
+        };
+      }
+      
+      const response = await fetch(CHAT_API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({
-          message: trimmedMessage,
-          user_id: userId,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {

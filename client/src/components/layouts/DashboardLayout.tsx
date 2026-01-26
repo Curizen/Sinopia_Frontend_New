@@ -256,8 +256,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         {children}
       </main>
 
-      {/* AI Chat Widget - Only for Skill Givers */}
-      {isSkillGiver && <ChatWidget />}
+      {/* AI Chat Widget - Available for all authenticated users */}
+      <ChatWidget />
     </div>
   );
 }

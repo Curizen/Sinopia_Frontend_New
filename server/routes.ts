@@ -1121,22 +1121,38 @@ export async function registerRoutes(
   // Chat webhook proxy for AI assistant
   app.post("/api/chat/webhook", async (req, res) => {
     try {
-      const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL || '';
       const N8N_API_KEY = process.env.N8N_API_KEY || '';
-
-      if (!N8N_WEBHOOK_URL) {
-        return res.status(500).json({ status: "error", message: "Chat service not configured" });
+      const N8N_GIVER_WEBHOOK = process.env.N8N_GIVER_WEBHOOK || '';
+      const N8N_SEARCHER_WEBHOOK = process.env.N8N_SEARCHER_WEBHOOK || '';
+      
+      const { role, ...payload } = req.body;
+      
+      // Select webhook URL based on role
+      let webhookUrl: string;
+      if (role === 'skill_giver') {
+        webhookUrl = N8N_GIVER_WEBHOOK;
+      } else if (role === 'skill_searcher') {
+        webhookUrl = N8N_SEARCHER_WEBHOOK;
+      } else {
+        // Default to giver webhook if role is unknown
+        webhookUrl = N8N_GIVER_WEBHOOK;
+        console.warn("[DEBUG] Unknown role, defaulting to skill_giver webhook:", role);
       }
 
-      console.log("[DEBUG] POST /api/chat/webhook - Body:", JSON.stringify(req.body, null, 2));
+      if (!webhookUrl) {
+        return res.status(500).json({ status: "error", message: "Chat service not configured for this role" });
+      }
 
-      const response = await fetch(N8N_WEBHOOK_URL, {
+      console.log("[DEBUG] POST /api/chat/webhook - Role:", role, "URL:", webhookUrl);
+      console.log("[DEBUG] POST /api/chat/webhook - Payload:", JSON.stringify(payload, null, 2));
+
+      const response = await fetch(webhookUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "x-api-key": N8N_API_KEY,
         },
-        body: JSON.stringify(req.body),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
