@@ -1052,6 +1052,13 @@ export const en = {
     employees: "Resources",
     implementationStages: "Implementation Stages",
   },
+  chatWidget: {
+    title: "AI Assistant",
+    welcomeMessage: "Hello! How can I help you today?",
+    inputPlaceholder: "Type your message...",
+    errorResponse: "Sorry, I couldn't process your request. Please try again.",
+    typing: "Typing...",
+  },
 };
 
 export type TranslationKeys = typeof en;

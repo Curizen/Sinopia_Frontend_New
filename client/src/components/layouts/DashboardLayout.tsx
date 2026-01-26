@@ -30,6 +30,7 @@ import {
   Settings,
   Home,
 } from 'lucide-react';
+import { ChatWidget } from '@/components/ChatWidget';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -254,6 +255,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <main className="flex-1 overflow-auto p-4 md:p-6">
         {children}
       </main>
+
+      {/* AI Chat Widget - Only for Skill Givers */}
+      {isSkillGiver && <ChatWidget />}
     </div>
   );
 }

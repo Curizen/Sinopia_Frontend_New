@@ -1118,5 +1118,41 @@ export async function registerRoutes(
     }
   });
 
+  // Chat webhook proxy for AI assistant
+  app.post("/api/chat/webhook", async (req, res) => {
+    try {
+      const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL || '';
+      const N8N_API_KEY = process.env.N8N_API_KEY || '';
+
+      if (!N8N_WEBHOOK_URL) {
+        return res.status(500).json({ status: "error", message: "Chat service not configured" });
+      }
+
+      console.log("[DEBUG] POST /api/chat/webhook - Body:", JSON.stringify(req.body, null, 2));
+
+      const response = await fetch(N8N_WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": N8N_API_KEY,
+        },
+        body: JSON.stringify(req.body),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("[DEBUG] Chat webhook error:", errorText);
+        return res.status(response.status).json({ status: "error", message: "Chat service error" });
+      }
+
+      const data = await response.json();
+      console.log("[DEBUG] Chat webhook response:", JSON.stringify(data, null, 2));
+      res.status(200).json(data);
+    } catch (error) {
+      console.error("Chat webhook proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to process chat message" });
+    }
+  });
+
   return httpServer;
 }

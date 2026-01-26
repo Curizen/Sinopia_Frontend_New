@@ -1070,4 +1070,11 @@ export const de = {
     employees: "Ressourcen",
     implementationStages: "Umsetzungsphasen",
   },
+  chatWidget: {
+    title: "KI-Assistent",
+    welcomeMessage: "Hallo! Wie kann ich Ihnen heute helfen?",
+    inputPlaceholder: "Ihre Nachricht eingeben...",
+    errorResponse: "Entschuldigung, ich konnte Ihre Anfrage nicht verarbeiten. Bitte versuchen Sie es erneut.",
+    typing: "Schreibt...",
+  },
 };
