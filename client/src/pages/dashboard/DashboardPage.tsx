@@ -105,19 +105,21 @@ export default function DashboardPage() {
           </div>
           <div className="flex gap-2 flex-wrap">
             {!isSkillGiver && (
-              <Link href="/use-cases/upload">
-                <Button variant="outline" data-testid="button-upload-usecase">
-                  <Upload className="w-4 h-4 mr-2" />
-                  {t('useCases.uploadUseCase')}
-                </Button>
-              </Link>
+              <>
+                <Link href="/use-cases/upload">
+                  <Button variant="outline" data-testid="button-upload-usecase">
+                    <Upload className="w-4 h-4 mr-2" />
+                    {t('useCases.uploadUseCase')}
+                  </Button>
+                </Link>
+                <Link href="/projects/new">
+                  <Button data-testid="button-dashboard-action">
+                    <Plus className="w-4 h-4 mr-2" />
+                    {t('useCases.postUseCase')}
+                  </Button>
+                </Link>
+              </>
             )}
-            <Link href={isSkillGiver ? '/projects' : '/projects/new'}>
-              <Button data-testid="button-dashboard-action">
-                <Plus className="w-4 h-4 mr-2" />
-                {isSkillGiver ? t('footer.findProjects') : t('useCases.postUseCase')}
-              </Button>
-            </Link>
           </div>
         </div>
 

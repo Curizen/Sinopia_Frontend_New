@@ -145,9 +145,11 @@ export default function ProjectsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-display font-bold">{t('projects.title')}</h1>
-            <p className="text-muted-foreground">
-              {isSkillGiver ? t('footer.findProjects') : t('footer.postProjects')}
-            </p>
+            {!isSkillGiver && (
+              <p className="text-muted-foreground">
+                {t('footer.postProjects')}
+              </p>
+            )}
           </div>
           {!isSkillGiver && (
             <Link href="/projects/new">
@@ -159,31 +161,33 @@ export default function ProjectsPage() {
           )}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder={t('projects.search')}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-              data-testid="input-search-projects"
-            />
+        {!isSkillGiver && (
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder={t('projects.search')}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+                data-testid="input-search-projects"
+              />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full sm:w-[180px]" data-testid="select-status-filter">
+                <SelectValue placeholder={t('projects.status')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('common.filter')}</SelectItem>
+                <SelectItem value="pending">{t('projects.statusPending')}</SelectItem>
+                <SelectItem value="active">{t('projects.statusActive')}</SelectItem>
+                <SelectItem value="in_progress">{t('projects.statusInProgress')}</SelectItem>
+                <SelectItem value="completed">{t('projects.statusCompleted')}</SelectItem>
+                <SelectItem value="cancelled">{t('projects.statusCancelled')}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-full sm:w-[180px]" data-testid="select-status-filter">
-              <SelectValue placeholder={t('projects.status')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{t('common.filter')}</SelectItem>
-              <SelectItem value="pending">{t('projects.statusPending')}</SelectItem>
-              <SelectItem value="active">{t('projects.statusActive')}</SelectItem>
-              <SelectItem value="in_progress">{t('projects.statusInProgress')}</SelectItem>
-              <SelectItem value="completed">{t('projects.statusCompleted')}</SelectItem>
-              <SelectItem value="cancelled">{t('projects.statusCancelled')}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        )}
 
         {isLoading ? (
           <div className="flex items-center justify-center py-12">

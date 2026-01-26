@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -729,7 +728,7 @@ export default function ProfilePage() {
   const currentData = editBuffer || profile;
 
   const displayValue = (value: string | undefined) => {
-    return value?.trim() ? value : t('emptyState.notSet');
+    return value?.trim() ? value : '';
   };
 
   const getLevelLabel = (level: SkillLevel) => {
@@ -2451,13 +2450,8 @@ export default function ProfilePage() {
         <div className="grid lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-1">
             <CardContent className="pt-6 text-center">
-              <Avatar className="w-24 h-24 mx-auto mb-4">
-                <AvatarFallback className="bg-primary/10 text-primary text-2xl">
-                  {getInitialsFromFullName(cachedUserProfile.fullName) || getInitials(user?.firstName, user?.lastName)}
-                </AvatarFallback>
-              </Avatar>
               <h2 className="font-semibold text-xl" data-testid="text-profile-fullname">
-                {cachedUserProfile.fullName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || t('emptyState.notSet')}
+                {cachedUserProfile.fullName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || ''}
               </h2>
               {isSkillGiver && (
                 <p className="text-muted-foreground" data-testid="text-profile-job-title">{displayValue(giverProfile.jobTitle)}</p>
@@ -2469,29 +2463,33 @@ export default function ProfilePage() {
               <div className="mt-6 space-y-3 text-left">
                 {isSkillGiver && (
                   <>
-                    <div className="flex items-center gap-3 text-sm">
-                      <MapPin className="w-4 h-4 text-muted-foreground" />
-                      <span data-testid="text-profile-address">
-                        {cachedUserProfile.city || cachedUserProfile.country
-                          ? [cachedUserProfile.city, cachedUserProfile.country].filter(Boolean).join(', ')
-                          : t('emptyState.notSet')}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm">
-                      <Mail className="w-4 h-4 text-muted-foreground" />
-                      <span data-testid="text-profile-email">
-                        {cachedUserProfile.email || user?.email || t('emptyState.notSet')}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm">
-                      <Phone className="w-4 h-4 text-muted-foreground" />
-                      <span data-testid="text-profile-phone">
-                        {cachedUserProfile.phone || t('emptyState.notSet')}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm">
-                      <Linkedin className="w-4 h-4 text-muted-foreground" />
-                      {cachedUserProfile.linkedin ? (
+                    {(cachedUserProfile.city || cachedUserProfile.country) && (
+                      <div className="flex items-center gap-3 text-sm">
+                        <MapPin className="w-4 h-4 text-muted-foreground" />
+                        <span data-testid="text-profile-address">
+                          {[cachedUserProfile.city, cachedUserProfile.country].filter(Boolean).join(', ')}
+                        </span>
+                      </div>
+                    )}
+                    {(cachedUserProfile.email || user?.email) && (
+                      <div className="flex items-center gap-3 text-sm">
+                        <Mail className="w-4 h-4 text-muted-foreground" />
+                        <span data-testid="text-profile-email">
+                          {cachedUserProfile.email || user?.email}
+                        </span>
+                      </div>
+                    )}
+                    {cachedUserProfile.phone && (
+                      <div className="flex items-center gap-3 text-sm">
+                        <Phone className="w-4 h-4 text-muted-foreground" />
+                        <span data-testid="text-profile-phone">
+                          {cachedUserProfile.phone}
+                        </span>
+                      </div>
+                    )}
+                    {cachedUserProfile.linkedin && (
+                      <div className="flex items-center gap-3 text-sm">
+                        <Linkedin className="w-4 h-4 text-muted-foreground" />
                         <a
                           href={formatLinkedInUrl(cachedUserProfile.linkedin)}
                           target="_blank"
@@ -2501,10 +2499,8 @@ export default function ProfilePage() {
                         >
                           {cachedUserProfile.linkedin.trim().replace('https://', '').replace('http://', '')}
                         </a>
-                      ) : (
-                        <span>{t('emptyState.notSet')}</span>
-                      )}
-                    </div>
+                      </div>
+                    )}
                     <Button
                       variant="outline"
                       size="sm"
@@ -2520,25 +2516,29 @@ export default function ProfilePage() {
 
                 {!isSkillGiver && (
                   <>
-                    <div className="flex items-center gap-3 text-sm">
-                      <MapPin className="w-4 h-4 text-muted-foreground" />
-                      <span data-testid="text-profile-location">
-                        {searcherProfile.city && searcherProfile.country
-                          ? `${searcherProfile.city}, ${searcherProfile.country}`
-                          : t('profile.locationNotSet')}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm">
-                      <Mail className="w-4 h-4 text-muted-foreground" />
-                      <span data-testid="text-searcher-email">{displayValue(searcherProfile.contactEmail) !== t('emptyState.notSet') ? searcherProfile.contactEmail : (user?.email || t('emptyState.notSet'))}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm">
-                      <Phone className="w-4 h-4 text-muted-foreground" />
-                      <span data-testid="text-searcher-phone">{displayValue(searcherProfile.contactPhone)}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm">
-                      <Globe className="w-4 h-4 text-muted-foreground" />
-                      {searcherProfile.website ? (
+                    {(searcherProfile.city || searcherProfile.country) && (
+                      <div className="flex items-center gap-3 text-sm">
+                        <MapPin className="w-4 h-4 text-muted-foreground" />
+                        <span data-testid="text-profile-location">
+                          {[searcherProfile.city, searcherProfile.country].filter(Boolean).join(', ')}
+                        </span>
+                      </div>
+                    )}
+                    {(searcherProfile.contactEmail || user?.email) && (
+                      <div className="flex items-center gap-3 text-sm">
+                        <Mail className="w-4 h-4 text-muted-foreground" />
+                        <span data-testid="text-searcher-email">{searcherProfile.contactEmail || user?.email}</span>
+                      </div>
+                    )}
+                    {searcherProfile.contactPhone && (
+                      <div className="flex items-center gap-3 text-sm">
+                        <Phone className="w-4 h-4 text-muted-foreground" />
+                        <span data-testid="text-searcher-phone">{searcherProfile.contactPhone}</span>
+                      </div>
+                    )}
+                    {searcherProfile.website && (
+                      <div className="flex items-center gap-3 text-sm">
+                        <Globe className="w-4 h-4 text-muted-foreground" />
                         <a 
                           href={searcherProfile.website} 
                           target="_blank"
@@ -2548,10 +2548,8 @@ export default function ProfilePage() {
                         >
                           {searcherProfile.website.replace('https://', '').replace('http://', '')}
                         </a>
-                      ) : (
-                        <span>{t('emptyState.notSet')}</span>
-                      )}
-                    </div>
+                      </div>
+                    )}
                     <Button
                       variant="outline"
                       size="sm"
@@ -2612,7 +2610,7 @@ export default function ProfilePage() {
                           {searcherProfile.website.replace('https://', '').replace('http://', '')}
                         </a>
                       ) : (
-                        <span className="font-medium">{t('emptyState.notSet')}</span>
+                        <span className="font-medium"></span>
                       )}
                     </div>
                     <div>
