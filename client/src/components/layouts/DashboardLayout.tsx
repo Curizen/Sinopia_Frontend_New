@@ -3,11 +3,9 @@ import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
 import { useNotifications } from '@/context/NotificationContext';
 import { useI18n } from '@/i18n';
-import { getInitials } from '@/lib/utils';
 import sinopiaLogo from '@assets/sinopia_logo.png';
 
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -131,14 +129,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex items-center gap-2"
+                  size="icon"
                   data-testid="button-user-menu"
                 >
-                  <Avatar className="w-8 h-8">
-                    <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                      {getInitials(user?.firstName, user?.lastName)}
-                    </AvatarFallback>
-                  </Avatar>
+                  <User className="w-5 h-5 text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
 

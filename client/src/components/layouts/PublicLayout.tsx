@@ -1,8 +1,6 @@
 import { type ReactNode, useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { getInitials } from '@/lib/utils';
 import sinopiaLogo from '@assets/sinopia_logo.png';
 import {
   DropdownMenu,
@@ -92,14 +90,10 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="flex items-center gap-2"
+                      size="icon"
                       data-testid="button-user-avatar"
                     >
-                      <Avatar className="w-8 h-8">
-                        <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                          {getInitials(user?.firstName, user?.lastName)}
-                        </AvatarFallback>
-                      </Avatar>
+                      <User className="w-5 h-5 text-muted-foreground" />
                     </Button>
                   </DropdownMenuTrigger>
 
