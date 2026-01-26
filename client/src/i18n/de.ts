@@ -989,7 +989,9 @@ export const de = {
     bio: "Über uns",
     bioPlaceholder: "Erzählen Sie uns von Ihrem Unternehmen (freiwillig)",
     website: "Webseite",
-    websitePlaceholder: "https://www.ihre-firma.de",
+    websitePlaceholder: "https://example.com",
+    websiteHelperText: "Bitte beginnen Sie Ihre Website mit https://",
+    websiteMustStartWithHttps: "Website muss mit https:// beginnen",
     continueButton: "Weiter zur Übersicht",
     companyInfoSaved: "Unternehmensinformationen gespeichert",
     companyInfoSavedDesc:
