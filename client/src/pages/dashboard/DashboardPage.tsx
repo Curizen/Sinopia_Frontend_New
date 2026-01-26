@@ -127,17 +127,17 @@ export default function DashboardPage() {
         </div>
 
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {stats.map((stat) => (
-            <Card key={stat.titleKey}>
-              <CardContent className="pt-6">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground">{t(stat.titleKey)}</p>
-                    <p className="text-2xl font-bold mt-1">{stat.value}</p>
+            <Card key={stat.titleKey} className="min-w-0">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm text-muted-foreground truncate">{t(stat.titleKey)}</p>
+                    <p className="text-xl font-bold mt-1 truncate">{stat.value}</p>
                   </div>
-                  <div className={`w-10 h-10 rounded-lg ${stat.bg} flex items-center justify-center`}>
-                    <stat.icon className={`w-5 h-5 ${stat.color}`} />
+                  <div className={`w-9 h-9 rounded-lg ${stat.bg} flex items-center justify-center shrink-0`}>
+                    <stat.icon className={`w-4 h-4 ${stat.color}`} />
                   </div>
                 </div>
               </CardContent>
