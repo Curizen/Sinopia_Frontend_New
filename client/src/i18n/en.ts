@@ -540,6 +540,8 @@ export const en = {
     countryPlaceholder: "Country",
     companySizePlaceholder: "e.g., 10-50 employees",
     invalidWebsiteUrl: "Please enter a valid website URL",
+    websiteHelperText: "Please start your website with https://",
+    websiteMustStartWithHttps: "Website must start with https://",
     cvUploadTitle: "Upload your CV (AI-powered)",
     cvUploadDescription: "Drag & drop your CV here, or click to browse",
     cvUploadSupported: "Supported: PDF, DOC, DOCX (max 5MB)",

@@ -762,13 +762,27 @@ export async function registerRoutes(
         headers["Authorization"] = authHeader;
       }
       
-      console.log("[DEBUG] POST /api/profile - Request body:", JSON.stringify(req.body, null, 2));
+      // Validate and trim website URL if provided
+      const body = { ...req.body };
+      if (body.website) {
+        body.website = body.website.trim();
+        // Validate website starts with https://
+        if (body.website && !body.website.startsWith('https://')) {
+          res.status(400).json({ 
+            status: "error", 
+            message: "Website must start with https://" 
+          });
+          return;
+        }
+      }
+      
+      console.log("[DEBUG] POST /api/profile - Request body:", JSON.stringify(body, null, 2));
       
       // Note: External API requires trailing slash on /api/profile/
       const response = await fetch(`${EXTERNAL_API_BASE}/api/profile/`, {
         method: "POST",
         headers,
-        body: JSON.stringify(req.body),
+        body: JSON.stringify(body),
       });
       forwardCookies(response, res);
       const data = await response.json();

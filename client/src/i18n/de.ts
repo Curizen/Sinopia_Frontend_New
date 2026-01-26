@@ -548,6 +548,8 @@ export const de = {
     countryPlaceholder: "Land",
     companySizePlaceholder: "z.B. 10-50 Mitarbeiter",
     invalidWebsiteUrl: "Bitte geben Sie eine gültige Webseiten-URL ein",
+    websiteHelperText: "Bitte beginnen Sie Ihre Website mit https://",
+    websiteMustStartWithHttps: "Website muss mit https:// beginnen",
     cvUploadTitle: "Lebenslauf hochladen (KI-gestützt)",
     cvUploadDescription: "Ziehe deinen Lebenslauf hierher oder klicke zum Auswählen",
     cvUploadSupported: "Unterstützt: Nur PDF (max. 5MB)",

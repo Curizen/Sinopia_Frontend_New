@@ -46,6 +46,8 @@ export default function CompanyInfoPage() {
     website: '',
   });
 
+  const [websiteError, setWebsiteError] = useState<string | null>(null);
+
   const populateFormFromApiData = (data: CompanyProfileData) => {
     setFormData({
       companyName: data.company_name || '',
@@ -139,6 +141,24 @@ export default function CompanyInfoPage() {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
+  const isWebsiteValid = (website: string) => {
+    if (!website.trim()) return true; // Optional field
+    return website.trim().startsWith('https://');
+  };
+
+  const validateWebsite = (value: string) => {
+    if (value.trim() && !value.trim().startsWith('https://')) {
+      setWebsiteError(t('onboarding.websiteMustStartWithHttps'));
+      return false;
+    }
+    setWebsiteError(null);
+    return true;
+  };
+
+  const handleWebsiteBlur = () => {
+    validateWebsite(formData.website);
+  };
+
   const isFormValid = 
     formData.companyName.trim() && 
     formData.industry.trim() && 
@@ -147,7 +167,8 @@ export default function CompanyInfoPage() {
     formData.contactPhone.trim() && 
     formData.companySize && 
     formData.city.trim() && 
-    formData.country.trim();
+    formData.country.trim() &&
+    isWebsiteValid(formData.website);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,6 +188,11 @@ export default function CompanyInfoPage() {
         description: t('onboarding.invalidEmail'),
         variant: 'destructive',
       });
+      return;
+    }
+
+    // Validate website on submit
+    if (!validateWebsite(formData.website)) {
       return;
     }
 
@@ -343,12 +369,24 @@ export default function CompanyInfoPage() {
                 <Label htmlFor="website">{t('onboarding.website')} ({t('common.optional')})</Label>
                 <Input
                   id="website"
-                  type="url"
-                  placeholder={t('onboarding.websitePlaceholder')}
+                  type="text"
+                  placeholder="https://example.com"
                   value={formData.website}
-                  onChange={(e) => setFormData(prev => ({ ...prev, website: e.target.value }))}
+                  onChange={(e) => {
+                    setFormData(prev => ({ ...prev, website: e.target.value }));
+                    // Clear error when user starts typing correctly
+                    if (e.target.value.trim().startsWith('https://') || !e.target.value.trim()) {
+                      setWebsiteError(null);
+                    }
+                  }}
+                  onBlur={handleWebsiteBlur}
+                  className={websiteError ? 'border-destructive' : ''}
                   data-testid="input-company-website"
                 />
+                <p className="text-xs text-muted-foreground">{t('onboarding.websiteHelperText')}</p>
+                {websiteError && (
+                  <p className="text-xs text-destructive">{websiteError}</p>
+                )}
               </div>
 
               <div className="space-y-2">
