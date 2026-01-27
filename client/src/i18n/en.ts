@@ -51,8 +51,8 @@ export const en = {
     signOut: "Sign Out",
   },
   home: {
-    heroTitle: "Connect Your Skills with",
-    heroTitleHighlight: "Opportunities",
+    heroTitle: "SIA connects - expertise on demand From personal to personal to",
+    heroTitleHighlight: "businesses",
     heroSubtitle:
       "Sinopia enables companies to turn a business use case into an outcome, by breaking the request down into the required skills, making those skills instantly available through the Agentic AI platform, and orchestrating the right skill set to solve the use case.",
     learnMore: "Learn More",

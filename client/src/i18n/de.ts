@@ -49,8 +49,8 @@ export const de = {
     signOut: "Abmelden",
   },
   home: {
-    heroTitle: "Verbinde deine Fähigkeiten mit",
-    heroTitleHighlight: "Möglichkeiten",
+    heroTitle: "SIA verbindet - Fachwissen on demand Von Mensch zu Mensch zu",
+    heroTitleHighlight: "Unternehmen",
     heroSubtitle:
       "Sinopia ermöglicht es Unternehmen, einen geschäftlichen Anwendungsfall in ein konkretes Ergebnis zu verwandeln, indem Anforderungen in die benötigten Fähigkeiten aufgeteilt werden, diese Fähigkeiten über die Agentic-KI-Plattform sofort verfügbar gemacht werden und die passenden Kompetenzen gezielt zur Lösung der Aufgabe orchestriert wird.",
     learnMore: "Mehr erfahren",
