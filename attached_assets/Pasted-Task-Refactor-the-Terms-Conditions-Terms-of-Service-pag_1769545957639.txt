@@ -1,0 +1,79 @@
+Task:
+Refactor the Terms & Conditions / Terms of Service page
+to fully support the existing language switch (DE / EN),
+instead of showing German and English on the same page.
+
+REQUIREMENTS (CRITICAL):
+- Use the SAME i18n / localization system already used in the project
+- German shown when language = DE
+- English shown when language = EN
+- Do NOT render both languages at the same time
+- No UI duplication
+- No routing changes
+- No console or runtime errors
+
+====================================
+CONTENT STRUCTURE
+====================================
+
+1) Create two translation entries:
+   - terms.de
+   - terms.en
+
+2) Each language must contain:
+   - Title
+   - Sections
+   - Paragraphs
+   - Last updated date
+
+====================================
+GERMAN (DEFAULT LANGUAGE)
+====================================
+
+Language key: de
+
+Title:
+Allgemeine Geschäftsbedingungen (AGB) – Sinopia Deutschland GmbH  
+Stand: 27.01.2026
+
+Content:
+[Insert the FULL German AGB text exactly as provided]
+
+====================================
+ENGLISH VERSION
+====================================
+
+Language key: en
+
+Title:
+Terms and Conditions – Sinopia Deutschland GmbH  
+Last updated: January 27, 2026
+
+Content:
+Professional legal English translation suitable for
+Sinopia's digital platform and services,
+mirroring the German structure and meaning.
+
+====================================
+IMPLEMENTATION RULES
+====================================
+
+- Replace hardcoded text with translation keys
+- Example:
+  t("terms.title")
+  t("terms.section1.title")
+  t("terms.section1.content")
+
+- Use the same layout component for both languages
+- Do NOT duplicate JSX / HTML
+- Follow existing typography and spacing styles
+
+====================================
+EXPECTED RESULT
+====================================
+
+- Website opens in German by default
+- Switching language to English shows ONLY English terms
+- No mixed-language content
+- No crashes, no hydration issues
+- Behavior matches all other localized pages
