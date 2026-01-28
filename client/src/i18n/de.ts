@@ -755,8 +755,6 @@ export const de = {
   },
   terms: {
     title: "Allgemeine Geschäftsbedingungen (AGB)",
-    companyName: "Sinopia Deutschland GmbH",
-    lastUpdated: "Stand: 27.01.2026",
     viewTerms: "Bedingungen ansehen",
     openFullTerms: "Vollständige Nutzungsbedingungen öffnen",
     agreeLabel: "Ich habe die Allgemeinen Geschäftsbedingungen gelesen und akzeptiere sie",
@@ -764,72 +762,141 @@ export const de = {
     acceptError: "Bitte lesen und akzeptieren Sie die Nutzungsbedingungen, um fortzufahren.",
     acceptButton: "Ich stimme zu",
     closeButton: "Schließen",
-    section1Title: "§ 1 Geltungsbereich und Begriffsbestimmungen",
-    section1Text1: "(1) Diese Allgemeinen Geschäftsbedingungen (nachfolgend 'AGB') gelten für alle Verträge zwischen der Sinopia Deutschland GmbH (nachfolgend 'Anbieter') und dem Kunden (nachfolgend 'Kunde') über die Nutzung der vom Anbieter bereitgestellten digitalen Plattform und Dienstleistungen.",
-    section1Text2: "(2) Abweichende, entgegenstehende oder ergänzende Allgemeine Geschäftsbedingungen des Kunden werden nur dann Vertragsbestandteil, wenn und soweit der Anbieter ihrer Geltung ausdrücklich schriftlich zugestimmt hat.",
-    section1Text3: "(3) Der Begriff 'Kunde' umfasst sowohl Verbraucher als auch Unternehmer im Sinne der §§ 13, 14 BGB.",
-    section2Title: "§ 2 Vertragsgegenstand",
-    section2Text1: "(1) Der Anbieter betreibt eine digitale Plattform, die Unternehmen und Fachkräfte (Skill Giver und Skill Searcher) zusammenführt, um geschäftliche Anwendungsfälle in konkrete Ergebnisse zu verwandeln.",
-    section2Text2: "(2) Die Plattform ermöglicht die Vermittlung von Fähigkeiten, das Matching von Anforderungen und Kompetenzen sowie die Nutzung von KI-gestützten Funktionen zur Optimierung der Zusammenarbeit.",
-    section2Text3: "(3) Der genaue Leistungsumfang ergibt sich aus der jeweiligen Leistungsbeschreibung auf der Plattform sowie etwaigen individuellen Vereinbarungen.",
-    section3Title: "§ 3 Vertragsschluss",
-    section3Text1: "(1) Die Darstellung der Dienstleistungen auf der Plattform stellt kein rechtlich bindendes Angebot, sondern eine Aufforderung zur Abgabe eines Angebots dar.",
-    section3Text2: "(2) Der Vertrag kommt durch die Registrierung des Kunden auf der Plattform und die Bestätigung durch den Anbieter zustande.",
-    section3Text3: "(3) Der Anbieter behält sich das Recht vor, Registrierungen ohne Angabe von Gründen abzulehnen.",
-    section4Title: "§ 4 Leistungserbringung",
-    section4Text1: "(1) Der Anbieter erbringt seine Leistungen nach bestem Wissen und Gewissen und unter Einsatz der vereinbarten technischen Mittel.",
-    section4Text2: "(2) Eine Garantie für die ununterbrochene Verfügbarkeit der Plattform wird nicht übernommen. Wartungsarbeiten werden nach Möglichkeit angekündigt.",
-    section4Text3: "(3) Der Anbieter ist berechtigt, die Plattform weiterzuentwickeln und anzupassen, sofern dies den Vertragszweck nicht wesentlich beeinträchtigt.",
-    section5Title: "§ 5 Pflichten des Kunden",
-    section5Text1: "(1) Der Kunde verpflichtet sich, bei der Registrierung wahrheitsgemäße Angaben zu machen und diese aktuell zu halten.",
-    section5Text2: "(2) Der Kunde ist für die Geheimhaltung seiner Zugangsdaten selbst verantwortlich und haftet für alle Aktivitäten, die unter seinem Konto stattfinden.",
-    section5Text3: "(3) Der Kunde verpflichtet sich, die Plattform nicht missbräuchlich zu nutzen, insbesondere keine rechtswidrigen Inhalte hochzuladen oder zu verbreiten.",
-    section5Text4: "(4) Der Kunde stellt den Anbieter von allen Ansprüchen Dritter frei, die aufgrund einer schuldhaften Verletzung dieser Pflichten entstehen.",
-    section6Title: "§ 6 Vergütung und Preise",
-    section6Text1: "(1) Die Nutzung der Plattform kann kostenpflichtig sein. Die aktuellen Preise sind auf der Plattform einsehbar.",
-    section6Text2: "(2) Alle Preise verstehen sich zuzüglich der gesetzlichen Mehrwertsteuer, sofern nicht anders angegeben.",
-    section6Text3: "(3) Preisänderungen werden dem Kunden rechtzeitig mitgeteilt und gelten ab dem nächsten Abrechnungszeitraum.",
-    section7Title: "§ 7 Zahlungsbedingungen",
-    section7Text1: "(1) Die Zahlung erfolgt nach Rechnungsstellung durch den Anbieter. Rechnungen sind innerhalb von 14 Tagen nach Erhalt ohne Abzug zu begleichen.",
-    section7Text2: "(2) Bei Zahlungsverzug ist der Anbieter berechtigt, Verzugszinsen in gesetzlicher Höhe zu erheben.",
-    section7Text3: "(3) Der Kunde kann nur mit unbestrittenen oder rechtskräftig festgestellten Forderungen aufrechnen.",
-    section8Title: "§ 8 Verzug, Leistungsstörungen, Höhere Gewalt",
-    section8Text1: "(1) Der Anbieter haftet nicht für Verzögerungen oder Ausfälle, die auf Umstände zurückzuführen sind, die außerhalb seines Einflussbereichs liegen (höhere Gewalt).",
-    section8Text2: "(2) Zu höherer Gewalt zählen insbesondere Naturkatastrophen, Pandemien, behördliche Maßnahmen, Streiks und technische Störungen bei Drittanbietern.",
-    section8Text3: "(3) Im Falle höherer Gewalt werden die vertraglichen Pflichten für die Dauer der Beeinträchtigung ausgesetzt.",
-    section9Title: "§ 9 Haftung",
-    section9Text1: "(1) Der Anbieter haftet unbeschränkt für Schäden aus der Verletzung des Lebens, des Körpers oder der Gesundheit sowie bei Vorsatz und grober Fahrlässigkeit.",
-    section9Text2: "(2) Bei leichter Fahrlässigkeit haftet der Anbieter nur bei Verletzung wesentlicher Vertragspflichten (Kardinalpflichten), begrenzt auf den vorhersehbaren, vertragstypischen Schaden.",
-    section9Text3: "(3) Eine weitergehende Haftung ist ausgeschlossen, soweit gesetzlich zulässig.",
-    section10Title: "§ 10 Mängel und Gewährleistung",
-    section10Text1: "(1) Der Kunde ist verpflichtet, Mängel unverzüglich nach deren Entdeckung schriftlich anzuzeigen.",
-    section10Text2: "(2) Der Anbieter wird Mängel im Rahmen seiner technischen und wirtschaftlichen Möglichkeiten beheben.",
-    section10Text3: "(3) Die Gewährleistungsfrist für Mängel beträgt 12 Monate ab Leistungserbringung, sofern nicht gesetzlich eine längere Frist vorgeschrieben ist.",
-    section11Title: "§ 11 Vertragsbeendigung",
-    section11Text1: "(1) Der Vertrag kann von beiden Parteien unter Einhaltung einer Kündigungsfrist von 30 Tagen zum Monatsende ordentlich gekündigt werden.",
-    section11Text2: "(2) Das Recht zur außerordentlichen Kündigung aus wichtigem Grund bleibt unberührt.",
-    section11Text3: "(3) Die Kündigung bedarf der Textform (z. B. E-Mail).",
-    section12Title: "§ 12 Widerruf durch den Kunden",
-    section12Text1: "(1) Verbrauchern steht ein gesetzliches Widerrufsrecht gemäß §§ 312g, 355 BGB zu.",
-    section12Text2: "(2) Der Widerruf ist innerhalb von 14 Tagen nach Vertragsschluss ohne Angabe von Gründen möglich.",
-    section12Text3: "(3) Zur Ausübung des Widerrufsrechts genügt eine eindeutige Erklärung gegenüber dem Anbieter.",
-    section13Title: "§ 13 Urheberrechte und Nutzungsrechte",
-    section13Text1: "(1) Alle Inhalte der Plattform (Texte, Grafiken, Software, etc.) sind urheberrechtlich geschützt und Eigentum des Anbieters oder lizenzierter Dritter.",
-    section13Text2: "(2) Der Kunde erhält ein einfaches, nicht übertragbares Nutzungsrecht an den Inhalten für die Dauer des Vertrages.",
-    section13Text3: "(3) Eine Vervielfältigung, Verbreitung oder öffentliche Zugänglichmachung ohne Zustimmung ist untersagt.",
-    section14Title: "§ 14 Vertraulichkeit",
-    section14Text1: "(1) Beide Parteien verpflichten sich, alle im Rahmen der Zusammenarbeit erhaltenen vertraulichen Informationen geheim zu halten.",
-    section14Text2: "(2) Diese Verpflichtung gilt auch nach Beendigung des Vertragsverhältnisses fort.",
-    section14Text3: "(3) Ausgenommen sind Informationen, die öffentlich bekannt sind oder ohne Verschulden bekannt werden.",
-    section15Title: "§ 15 Datenschutz",
-    section15Text1: "(1) Der Anbieter verarbeitet personenbezogene Daten gemäß den geltenden datenschutzrechtlichen Bestimmungen, insbesondere der DSGVO.",
-    section15Text2: "(2) Einzelheiten zur Datenverarbeitung sind in der Datenschutzerklärung auf der Plattform einsehbar.",
-    section15Text3: "(3) Der Kunde willigt in die Verarbeitung seiner Daten zum Zweck der Vertragserfüllung ein.",
-    section16Title: "§ 16 Schlussbestimmungen",
-    section16Text1: "(1) Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts.",
-    section16Text2: "(2) Gerichtsstand ist, soweit gesetzlich zulässig, der Sitz des Anbieters.",
-    section16Text3: "(3) Sollten einzelne Bestimmungen unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.",
-    section16Text4: "(4) Änderungen und Ergänzungen dieser AGB bedürfen der Textform.",
+    content: `Allgemeine Geschäftsbedingungen (AGB)
+Sinopia Deutschland GmbH
+(Stand: 27.01.2026)
+
+§ 1 Geltungsbereich und Begriffsbestimmungen
+
+(1) Diese Allgemeinen Geschäftsbedingungen gelten für sämtliche Nutzungs- und Vertragsverhältnisse zwischen der Sinopia Deutschland GmbH (nachfolgend „Sinopia") und den Nutzern der Sinopia-Plattform.
+
+(2) Nutzer der Plattform sind:
+
+Skill-Searcher: Unternehmen oder Organisationen, die über die Plattform konkrete Use Cases einstellen und Leistungen nachfragen.
+
+Skill-Giver: Selbstständige, Freiberufler oder Unternehmen, die ihre Fähigkeiten und Kompetenzen über die Plattform anbieten.
+
+(3) Sinopia betreibt eine digitale Plattform zur Vermittlung von Leistungen, ist jedoch nicht selbst Leistungserbringer der durch Skill-Giver erbrachten Leistungen.
+
+(4) Abweichende Geschäftsbedingungen von Skill-Searchern oder Skill-Givern finden keine Anwendung, es sei denn, Sinopia stimmt ihrer Geltung ausdrücklich schriftlich zu.
+
+(5) Individuelle Vereinbarungen zwischen Sinopia und den Nutzern haben Vorrang vor diesen AGB.
+
+§ 2 Gegenstand der Plattform und Leistungen von Sinopia
+
+(1) Sinopia stellt eine digitale Plattform bereit, über die:
+
+Skill-Searcher konkrete Use Cases beschreiben und anfragen können,
+
+Skill-Giver passende Angebote zur Umsetzung dieser Use Cases erhalten.
+
+(2) Sinopia übernimmt insbesondere:
+
+Analyse und Strukturierung der Anfrage des Skill-Searchers,
+
+Erstellung eines Angebots inkl. Preis für den Skill-Searcher,
+
+Auswahl und Beauftragung eines geeigneten Skill-Givers,
+
+Koordination der Beauftragung und Abwicklung über die Plattform.
+
+(3) Sinopia schuldet keinen bestimmten wirtschaftlichen oder technischen Erfolg der vermittelten Leistung, sondern ausschließlich die ordnungsgemäße Vermittlung und Plattformbereitstellung.
+
+§ 3 Vertragsschluss und Vertragsverhältnisse
+
+(1) Zwischen Sinopia und dem Skill-Searcher kommt ein Vertrag zustande, sobald der Skill-Searcher ein von Sinopia unterbreitetes Angebot annimmt.
+
+(2) Zwischen Sinopia und dem Skill-Giver kommt ein separater Vertrag zustande, sobald der Skill-Giver ein von Sinopia unterbreitetes Leistungsangebot annimmt.
+
+(3) Ein unmittelbarer Vertrag zwischen Skill-Searcher und Skill-Giver kommt nicht zustande, sofern nicht ausdrücklich schriftlich etwas anderes vereinbart wird.
+
+(4) Sinopia ist berechtigt, Anfragen oder Angebote ohne Angabe von Gründen abzulehnen.
+
+§ 4 Angebots- und Leistungsprozess
+
+(1) Der Skill-Searcher erhält von Sinopia ein verbindliches Angebot mit Leistungsbeschreibung, Preis und Laufzeit.
+
+(2) Der Skill-Giver erhält von Sinopia ein separates Angebot zur Durchführung der angefragten Leistung.
+
+(3) Angebote gelten nur für den jeweils angegebenen Zeitraum.
+
+(4) Die Leistungserbringung erfolgt ausschließlich durch den Skill-Giver in eigener Verantwortung.
+
+§ 5 Rolle und Pflichten der Skill-Giver
+
+(1) Skill-Giver handeln selbstständig und auf eigene Rechnung.
+
+(2) Es besteht kein Arbeits-, Dienst- oder Gesellschaftsverhältnis zwischen Sinopia und dem Skill-Giver.
+
+(3) Skill-Giver sind für die ordnungsgemäße, fachgerechte und fristgerechte Erbringung der Leistung verantwortlich.
+
+(4) Skill-Giver gewährleisten, dass sie über die erforderlichen Qualifikationen und Rechte zur Leistungserbringung verfügen.
+
+§ 6 Rolle und Pflichten der Skill-Searcher
+
+(1) Skill-Searcher sind verpflichtet, ihre Use Cases vollständig, korrekt und wahrheitsgemäß zu beschreiben.
+
+(2) Änderungen des Leistungsumfangs bedürfen der schriftlichen Zustimmung von Sinopia.
+
+(3) Verzögerungen oder Mehrkosten aufgrund unvollständiger oder fehlerhafter Angaben gehen zu Lasten des Skill-Searchers.
+
+§ 7 Vergütung und Zahlungsabwicklung
+
+(1) Die Vergütung des Skill-Searchers richtet sich nach dem von Sinopia unterbreiteten Angebot.
+
+(2) Sinopia ist berechtigt, Zahlungen treuhänderisch entgegenzunehmen und nach Leistungserbringung an den Skill-Giver weiterzuleiten.
+
+(3) Sinopia behält sich eine Plattform- bzw. Vermittlungsgebühr vor.
+
+(4) Alle Preise verstehen sich zzgl. der gesetzlichen Umsatzsteuer, sofern anwendbar.
+
+§ 8 Haftung
+
+(1) Sinopia haftet unbeschränkt für Schäden aus der Verletzung von Leben, Körper oder Gesundheit.
+
+(2) Für sonstige Schäden haftet Sinopia nur bei Vorsatz oder grober Fahrlässigkeit.
+
+(3) Sinopia haftet nicht für die tatsächliche Leistungserbringung durch Skill-Giver, deren Qualität oder Ergebnisse.
+
+§ 9 Mängel und Reklamationen
+
+(1) Beanstandungen sind unverzüglich an Sinopia zu richten.
+
+(2) Sinopia ist berechtigt, den Sachverhalt mit dem Skill-Giver zu klären und eine Nachbesserung zu vermitteln.
+
+(3) Weitergehende Ansprüche bestehen nur im Rahmen der gesetzlichen Vorschriften.
+
+§ 10 Kündigung und Stornierung
+
+(1) Verträge können gemäß den im Angebot vereinbarten Bedingungen gekündigt werden.
+
+(2) Bereits erbrachte Leistungen sind anteilig zu vergüten.
+
+(3) Sinopia ist berechtigt, Nutzer bei Verstößen gegen diese AGB von der Plattform auszuschließen.
+
+§ 11 Urheber- und Nutzungsrechte
+
+(1) Rechte an Arbeitsergebnissen verbleiben beim Skill-Giver, sofern nicht ausdrücklich anders vereinbart.
+
+(2) Der Skill-Searcher erhält ein einfaches Nutzungsrecht im vereinbarten Umfang.
+
+§ 12 Vertraulichkeit
+
+(1) Alle Parteien verpflichten sich zur Vertraulichkeit über nicht öffentliche Informationen.
+
+(2) Diese Verpflichtung gilt auch nach Vertragsende fort.
+
+§ 13 Datenschutz
+
+Die Verarbeitung personenbezogener Daten erfolgt gemäß DSGVO und der Datenschutzerklärung von Sinopia.
+
+§ 14 Schlussbestimmungen
+
+(1) Es gilt deutsches Recht.
+
+(2) Gerichtsstand ist Stuttgart, sofern gesetzlich zulässig.
+
+(3) Sollte eine Bestimmung unwirksam sein, bleibt die Wirksamkeit der übrigen Regelungen unberührt.`,
   },
   language: {
     en: "EN",

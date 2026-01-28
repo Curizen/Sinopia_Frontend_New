@@ -746,8 +746,6 @@ export const en = {
   },
   terms: {
     title: "General Terms and Conditions (GTC)",
-    companyName: "Sinopia Deutschland GmbH",
-    lastUpdated: "Version: 27 January 2026",
     viewTerms: "View Terms",
     openFullTerms: "Open full Terms page",
     agreeLabel: "I have read and accept the General Terms and Conditions",
@@ -755,72 +753,142 @@ export const en = {
     acceptError: "Please read and accept the Terms & Conditions to continue.",
     acceptButton: "I Accept",
     closeButton: "Close",
-    section1Title: "§ 1 Scope of Application and Definitions",
-    section1Text1: "(1) These General Terms and Conditions (hereinafter \"GTC\") apply to all contracts between Sinopia Deutschland GmbH (hereinafter \"Service Provider\") and the customer (hereinafter \"Customer\") regarding the use of the digital platform and services provided by the Service Provider.",
-    section1Text2: "(2) Deviating, conflicting, or supplementary terms and conditions of the Customer shall only become part of the contract if and to the extent that the Service Provider has expressly agreed to their validity in writing.",
-    section1Text3: "(3) The term \"Customer\" includes both consumers and entrepreneurs within the meaning of Sections 13 and 14 of the German Civil Code (BGB).",
-    section2Title: "§ 2 Subject Matter of the Contract",
-    section2Text1: "(1) The Service Provider operates a digital platform that connects businesses and professionals (Skill Givers and Skill Searchers) to transform business use cases into concrete results.",
-    section2Text2: "(2) The platform enables the matching of skills, the alignment of requirements and competencies, and the use of AI-powered features to optimize collaboration.",
-    section2Text3: "(3) The exact scope of services is determined by the respective service description on the platform and any individual agreements.",
-    section3Title: "§ 3 Conclusion of Contract",
-    section3Text1: "(1) The presentation of services on the platform does not constitute a legally binding offer, but rather an invitation to submit an offer.",
-    section3Text2: "(2) The contract is concluded upon the Customer's registration on the platform and confirmation by the Service Provider.",
-    section3Text3: "(3) The Service Provider reserves the right to reject registrations without stating reasons.",
-    section4Title: "§ 4 Service Delivery",
-    section4Text1: "(1) The Service Provider shall perform its services to the best of its knowledge and ability, using the agreed technical resources.",
-    section4Text2: "(2) No guarantee is provided for the uninterrupted availability of the platform. Maintenance work will be announced in advance whenever possible.",
-    section4Text3: "(3) The Service Provider is entitled to further develop and adapt the platform, provided this does not significantly impair the purpose of the contract.",
-    section5Title: "§ 5 Customer Obligations",
-    section5Text1: "(1) The Customer undertakes to provide truthful information during registration and to keep this information up to date.",
-    section5Text2: "(2) The Customer is responsible for keeping their access credentials confidential and is liable for all activities that take place under their account.",
-    section5Text3: "(3) The Customer undertakes not to misuse the platform, in particular not to upload or distribute unlawful content.",
-    section5Text4: "(4) The Customer shall indemnify the Service Provider against all claims by third parties arising from a culpable breach of these obligations.",
-    section6Title: "§ 6 Fees and Pricing",
-    section6Text1: "(1) The use of the platform may be subject to fees. Current prices are available on the platform.",
-    section6Text2: "(2) All prices are exclusive of statutory VAT, unless otherwise stated.",
-    section6Text3: "(3) Price changes will be communicated to the Customer in good time and shall apply from the next billing period.",
-    section7Title: "§ 7 Payment Terms",
-    section7Text1: "(1) Payment is due upon invoicing by the Service Provider. Invoices are to be paid in full within 14 days of receipt.",
-    section7Text2: "(2) In the event of late payment, the Service Provider is entitled to charge default interest at the statutory rate.",
-    section7Text3: "(3) The Customer may only offset claims that are undisputed or have been established by final court judgment.",
-    section8Title: "§ 8 Delay, Service Disruptions, Force Majeure",
-    section8Text1: "(1) The Service Provider shall not be liable for delays or outages caused by circumstances beyond its control (force majeure).",
-    section8Text2: "(2) Force majeure includes, in particular, natural disasters, pandemics, government actions, strikes, and technical failures of third-party providers.",
-    section8Text3: "(3) In the event of force majeure, contractual obligations shall be suspended for the duration of the disruption.",
-    section9Title: "§ 9 Liability",
-    section9Text1: "(1) The Service Provider is fully liable for damages resulting from injury to life, body, or health, as well as for intentional misconduct and gross negligence.",
-    section9Text2: "(2) In the case of slight negligence, the Service Provider is only liable for breach of material contractual obligations (cardinal obligations), limited to the foreseeable, contract-typical damage.",
-    section9Text3: "(3) Any further liability is excluded to the extent permitted by law.",
-    section10Title: "§ 10 Defects and Warranty",
-    section10Text1: "(1) The Customer is obliged to report defects in writing immediately upon discovery.",
-    section10Text2: "(2) The Service Provider shall remedy defects within its technical and economic capabilities.",
-    section10Text3: "(3) The warranty period for defects is 12 months from the provision of services, unless a longer period is required by law.",
-    section11Title: "§ 11 Termination of Contract",
-    section11Text1: "(1) The contract may be terminated by either party with 30 days' notice to the end of the month.",
-    section11Text2: "(2) The right to extraordinary termination for good cause remains unaffected.",
-    section11Text3: "(3) Termination must be in text form (e.g., email).",
-    section12Title: "§ 12 Right of Withdrawal",
-    section12Text1: "(1) Consumers have a statutory right of withdrawal pursuant to Sections 312g and 355 of the German Civil Code (BGB).",
-    section12Text2: "(2) Withdrawal is possible within 14 days of conclusion of the contract without giving reasons.",
-    section12Text3: "(3) To exercise the right of withdrawal, a clear declaration to the Service Provider is sufficient.",
-    section13Title: "§ 13 Copyright and Usage Rights",
-    section13Text1: "(1) All content on the platform (texts, graphics, software, etc.) is protected by copyright and is the property of the Service Provider or licensed third parties.",
-    section13Text2: "(2) The Customer receives a simple, non-transferable right to use the content for the duration of the contract.",
-    section13Text3: "(3) Reproduction, distribution, or public display without consent is prohibited.",
-    section14Title: "§ 14 Confidentiality",
-    section14Text1: "(1) Both parties undertake to keep confidential all confidential information received in the course of the collaboration.",
-    section14Text2: "(2) This obligation shall continue to apply after termination of the contractual relationship.",
-    section14Text3: "(3) Excluded is information that is publicly known or becomes known without fault.",
-    section15Title: "§ 15 Data Protection",
-    section15Text1: "(1) The Service Provider processes personal data in accordance with applicable data protection regulations, in particular the GDPR.",
-    section15Text2: "(2) Details on data processing can be found in the Privacy Policy on the platform.",
-    section15Text3: "(3) The Customer consents to the processing of their data for the purpose of contract fulfillment.",
-    section16Title: "§ 16 Final Provisions",
-    section16Text1: "(1) German law shall apply, excluding the UN Convention on Contracts for the International Sale of Goods.",
-    section16Text2: "(2) The place of jurisdiction, to the extent permitted by law, is the registered office of the Service Provider.",
-    section16Text3: "(3) If individual provisions are or become invalid, the validity of the remaining provisions shall remain unaffected.",
-    section16Text4: "(4) Amendments and additions to these GTC require text form.",
+    content: `General Terms and Conditions (GTC)
+
+Sinopia Deutschland GmbH
+(Version: 27 January 2026)
+
+§ 1 Scope of Application and Definitions
+
+(1) These General Terms and Conditions apply to all usage and contractual relationships between Sinopia Deutschland GmbH (hereinafter referred to as "Sinopia") and the users of the Sinopia platform.
+
+(2) Users of the platform are:
+
+Skill Searchers: Companies or organizations that publish specific use cases on the platform and request services.
+
+Skill Givers: Self-employed individuals, freelancers, or companies that offer their skills and competencies via the platform.
+
+(3) Sinopia operates a digital platform for the mediation of services but is not itself the provider of the services performed by Skill Givers.
+
+(4) Deviating terms and conditions of Skill Searchers or Skill Givers shall not apply unless Sinopia expressly agrees to their validity in writing.
+
+(5) Individual agreements between Sinopia and users shall take precedence over these GTC.
+
+§ 2 Subject Matter of the Platform and Services of Sinopia
+
+(1) Sinopia provides a digital platform through which:
+
+Skill Searchers can describe and submit specific use cases, and
+
+Skill Givers receive suitable offers to implement these use cases.
+
+(2) In particular, Sinopia provides the following services:
+
+Analysis and structuring of the Skill Searcher's request,
+
+Preparation of an offer including pricing for the Skill Searcher,
+
+Selection and engagement of a suitable Skill Giver,
+
+Coordination of the assignment and processing via the platform.
+
+(3) Sinopia does not owe a specific economic or technical success of the mediated service, but solely the proper mediation and provision of the platform.
+
+§ 3 Conclusion of Contract and Contractual Relationships
+
+(1) A contract between Sinopia and the Skill Searcher is concluded once the Skill Searcher accepts an offer submitted by Sinopia.
+
+(2) A separate contract between Sinopia and the Skill Giver is concluded once the Skill Giver accepts a service offer submitted by Sinopia.
+
+(3) No direct contractual relationship is established between the Skill Searcher and the Skill Giver unless expressly agreed otherwise in writing.
+
+(4) Sinopia is entitled to reject requests or offers without stating reasons.
+
+§ 4 Offer and Service Process
+
+(1) The Skill Searcher receives a binding offer from Sinopia including a description of services, price, and term.
+
+(2) The Skill Giver receives a separate offer from Sinopia for the performance of the requested service.
+
+(3) Offers are valid only for the period specified in each case.
+
+(4) The provision of services is carried out exclusively by the Skill Giver under their own responsibility.
+
+§ 5 Role and Obligations of Skill Givers
+
+(1) Skill Givers act independently and on their own account.
+
+(2) No employment, service, or partnership relationship exists between Sinopia and the Skill Giver.
+
+(3) Skill Givers are responsible for the proper, professional, and timely performance of the services.
+
+(4) Skill Givers warrant that they possess the required qualifications and rights to perform the services.
+
+§ 6 Role and Obligations of Skill Searchers
+
+(1) Skill Searchers are obliged to describe their use cases completely, accurately, and truthfully.
+
+(2) Changes to the scope of services require the prior written consent of Sinopia.
+
+(3) Delays or additional costs resulting from incomplete or incorrect information shall be borne by the Skill Searcher.
+
+§ 7 Remuneration and Payment Processing
+
+(1) The remuneration payable by the Skill Searcher is determined by the offer submitted by Sinopia.
+
+(2) Sinopia is entitled to receive payments in trust and to forward them to the Skill Giver after the service has been rendered.
+
+(3) Sinopia reserves the right to charge a platform and/or mediation fee.
+
+(4) All prices are exclusive of statutory value-added tax (VAT), where applicable.
+
+§ 8 Liability
+
+(1) Sinopia shall be liable without limitation for damages resulting from injury to life, body, or health.
+
+(2) For other damages, Sinopia shall be liable only in cases of intent or gross negligence.
+
+(3) Sinopia shall not be liable for the actual performance of services by Skill Givers, nor for their quality or results.
+
+§ 9 Defects and Complaints
+
+(1) Complaints must be submitted to Sinopia without undue delay.
+
+(2) Sinopia is entitled to clarify the matter with the Skill Giver and to mediate a remedy or correction.
+
+(3) Any further claims shall exist only within the scope of the statutory provisions.
+
+§ 10 Termination and Cancellation
+
+(1) Contracts may be terminated in accordance with the conditions specified in the respective offer.
+
+(2) Services already rendered shall be remunerated on a pro-rata basis.
+
+(3) Sinopia is entitled to exclude users from the platform in the event of violations of these GTC.
+
+§ 11 Copyright and Usage Rights
+
+(1) Rights to work results remain with the Skill Giver unless expressly agreed otherwise.
+
+(2) The Skill Searcher receives a non-exclusive right of use within the agreed scope.
+
+§ 12 Confidentiality
+
+(1) All parties undertake to maintain confidentiality regarding non-public information.
+
+(2) This obligation shall continue to apply after termination of the contractual relationship.
+
+§ 13 Data Protection
+
+The processing of personal data is carried out in accordance with the GDPR and Sinopia's Privacy Policy.
+
+§ 14 Final Provisions
+
+(1) German law shall apply.
+
+(2) The place of jurisdiction shall be Stuttgart, insofar as legally permissible.
+
+(3) Should any provision of these GTC be or become invalid, the validity of the remaining provisions shall remain unaffected.`,
   },
   language: {
     en: "EN",
