@@ -1,0 +1,91 @@
+TASK:
+Format the existing German and English Terms & Conditions text for better readability
+WITHOUT changing any legal meaning or wording.
+
+This task is FORMATTING ONLY.
+
+DO NOT:
+- Translate
+- Rewrite
+- Summarize
+- Remove or add legal content
+- Change meaning
+- Introduce new text
+
+================================================
+FORMATTING RULES (APPLY TO BOTH LANGUAGES)
+================================================
+
+1. MAIN TITLE
+- Render the main title as:
+  <strong> / bold
+- Keep original wording
+
+2. SECTION HEADINGS (§)
+- Each section title (e.g. § 1, § 2, § 3…) must be:
+  - Bold
+  - On its own line
+- Remove parentheses around section numbers
+  Example:
+  ❌ (§ 1)
+  ✅ § 1
+
+3. PARAGRAPH NUMBERS
+- Keep numbering: 1., 2., 3.
+- Remove parentheses
+  Example:
+  ❌ (1)
+  ✅ 1.
+
+4. LISTS
+- Convert inline lists into clean bullet points:
+  - Use line breaks
+  - One item per line
+- Do NOT reword list items
+
+5. SPACING
+- Add spacing between:
+  - Sections
+  - Paragraph blocks
+- Keep legal structure intact
+
+6. SPECIAL CHARACTERS
+- Preserve:
+  - § symbol
+  - Legal terms
+  - Capitalization
+  - Line breaks
+
+================================================
+TECHNICAL REQUIREMENTS
+================================================
+
+- Keep content stored in:
+  terms.content
+- Rendering must support:
+  white-space: pre-line OR equivalent
+- No HTML injection unless already supported
+- Prefer Markdown-safe formatting (**bold**, line breaks)
+
+================================================
+LANGUAGE HANDLING
+================================================
+
+- Apply the SAME formatting rules to:
+  German version (DE)
+  English version (EN)
+
+- Language switching must remain automatic
+- Do NOT duplicate pages
+- Do NOT break i18n
+
+================================================
+FINAL VALIDATION
+================================================
+
+✔ German formatted when language = DE
+✔ English formatted when language = EN
+✔ No missing translation keys
+✔ No runtime or console errors
+✔ Text is clearly readable and professional
+✔ Legal meaning unchanged

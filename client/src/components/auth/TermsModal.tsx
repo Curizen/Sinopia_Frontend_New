@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/i18n';
 import { ExternalLink } from 'lucide-react';
+import { TermsContent } from '@/components/TermsContent';
 
 interface TermsModalProps {
   open: boolean;
@@ -78,12 +79,10 @@ export function TermsModal({
             className="h-[55vh] overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent"
             data-testid="terms-scroll-container"
           >
-            <div 
-              className="text-muted-foreground whitespace-pre-line text-sm leading-relaxed"
-              data-testid="terms-content"
-            >
-              {t('terms.content')}
-            </div>
+            <TermsContent 
+              content={t('terms.content')} 
+              className="text-muted-foreground text-sm leading-relaxed"
+            />
 
             <div className="pt-4 pb-2">
               <Link

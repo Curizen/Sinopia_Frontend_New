@@ -762,141 +762,147 @@ export const de = {
     acceptError: "Bitte lesen und akzeptieren Sie die Nutzungsbedingungen, um fortzufahren.",
     acceptButton: "Ich stimme zu",
     closeButton: "Schließen",
-    content: `Allgemeine Geschäftsbedingungen (AGB)
-Sinopia Deutschland GmbH
-(Stand: 27.01.2026)
+    content: `**Allgemeine Geschäftsbedingungen (AGB)**
+**Sinopia Deutschland GmbH**
+Stand: 27.01.2026
 
-§ 1 Geltungsbereich und Begriffsbestimmungen
 
-(1) Diese Allgemeinen Geschäftsbedingungen gelten für sämtliche Nutzungs- und Vertragsverhältnisse zwischen der Sinopia Deutschland GmbH (nachfolgend „Sinopia") und den Nutzern der Sinopia-Plattform.
+**§ 1 Geltungsbereich und Begriffsbestimmungen**
 
-(2) Nutzer der Plattform sind:
+1. Diese Allgemeinen Geschäftsbedingungen gelten für sämtliche Nutzungs- und Vertragsverhältnisse zwischen der Sinopia Deutschland GmbH (nachfolgend „Sinopia") und den Nutzern der Sinopia-Plattform.
 
-Skill-Searcher: Unternehmen oder Organisationen, die über die Plattform konkrete Use Cases einstellen und Leistungen nachfragen.
+2. Nutzer der Plattform sind:
+• Skill-Searcher: Unternehmen oder Organisationen, die über die Plattform konkrete Use Cases einstellen und Leistungen nachfragen.
+• Skill-Giver: Selbstständige, Freiberufler oder Unternehmen, die ihre Fähigkeiten und Kompetenzen über die Plattform anbieten.
 
-Skill-Giver: Selbstständige, Freiberufler oder Unternehmen, die ihre Fähigkeiten und Kompetenzen über die Plattform anbieten.
+3. Sinopia betreibt eine digitale Plattform zur Vermittlung von Leistungen, ist jedoch nicht selbst Leistungserbringer der durch Skill-Giver erbrachten Leistungen.
 
-(3) Sinopia betreibt eine digitale Plattform zur Vermittlung von Leistungen, ist jedoch nicht selbst Leistungserbringer der durch Skill-Giver erbrachten Leistungen.
+4. Abweichende Geschäftsbedingungen von Skill-Searchern oder Skill-Givern finden keine Anwendung, es sei denn, Sinopia stimmt ihrer Geltung ausdrücklich schriftlich zu.
 
-(4) Abweichende Geschäftsbedingungen von Skill-Searchern oder Skill-Givern finden keine Anwendung, es sei denn, Sinopia stimmt ihrer Geltung ausdrücklich schriftlich zu.
+5. Individuelle Vereinbarungen zwischen Sinopia und den Nutzern haben Vorrang vor diesen AGB.
 
-(5) Individuelle Vereinbarungen zwischen Sinopia und den Nutzern haben Vorrang vor diesen AGB.
 
-§ 2 Gegenstand der Plattform und Leistungen von Sinopia
+**§ 2 Gegenstand der Plattform und Leistungen von Sinopia**
 
-(1) Sinopia stellt eine digitale Plattform bereit, über die:
+1. Sinopia stellt eine digitale Plattform bereit, über die:
+• Skill-Searcher konkrete Use Cases beschreiben und anfragen können,
+• Skill-Giver passende Angebote zur Umsetzung dieser Use Cases erhalten.
 
-Skill-Searcher konkrete Use Cases beschreiben und anfragen können,
+2. Sinopia übernimmt insbesondere:
+• Analyse und Strukturierung der Anfrage des Skill-Searchers,
+• Erstellung eines Angebots inkl. Preis für den Skill-Searcher,
+• Auswahl und Beauftragung eines geeigneten Skill-Givers,
+• Koordination der Beauftragung und Abwicklung über die Plattform.
 
-Skill-Giver passende Angebote zur Umsetzung dieser Use Cases erhalten.
+3. Sinopia schuldet keinen bestimmten wirtschaftlichen oder technischen Erfolg der vermittelten Leistung, sondern ausschließlich die ordnungsgemäße Vermittlung und Plattformbereitstellung.
 
-(2) Sinopia übernimmt insbesondere:
 
-Analyse und Strukturierung der Anfrage des Skill-Searchers,
+**§ 3 Vertragsschluss und Vertragsverhältnisse**
 
-Erstellung eines Angebots inkl. Preis für den Skill-Searcher,
+1. Zwischen Sinopia und dem Skill-Searcher kommt ein Vertrag zustande, sobald der Skill-Searcher ein von Sinopia unterbreitetes Angebot annimmt.
 
-Auswahl und Beauftragung eines geeigneten Skill-Givers,
+2. Zwischen Sinopia und dem Skill-Giver kommt ein separater Vertrag zustande, sobald der Skill-Giver ein von Sinopia unterbreitetes Leistungsangebot annimmt.
 
-Koordination der Beauftragung und Abwicklung über die Plattform.
+3. Ein unmittelbarer Vertrag zwischen Skill-Searcher und Skill-Giver kommt nicht zustande, sofern nicht ausdrücklich schriftlich etwas anderes vereinbart wird.
 
-(3) Sinopia schuldet keinen bestimmten wirtschaftlichen oder technischen Erfolg der vermittelten Leistung, sondern ausschließlich die ordnungsgemäße Vermittlung und Plattformbereitstellung.
+4. Sinopia ist berechtigt, Anfragen oder Angebote ohne Angabe von Gründen abzulehnen.
 
-§ 3 Vertragsschluss und Vertragsverhältnisse
 
-(1) Zwischen Sinopia und dem Skill-Searcher kommt ein Vertrag zustande, sobald der Skill-Searcher ein von Sinopia unterbreitetes Angebot annimmt.
+**§ 4 Angebots- und Leistungsprozess**
 
-(2) Zwischen Sinopia und dem Skill-Giver kommt ein separater Vertrag zustande, sobald der Skill-Giver ein von Sinopia unterbreitetes Leistungsangebot annimmt.
+1. Der Skill-Searcher erhält von Sinopia ein verbindliches Angebot mit Leistungsbeschreibung, Preis und Laufzeit.
 
-(3) Ein unmittelbarer Vertrag zwischen Skill-Searcher und Skill-Giver kommt nicht zustande, sofern nicht ausdrücklich schriftlich etwas anderes vereinbart wird.
+2. Der Skill-Giver erhält von Sinopia ein separates Angebot zur Durchführung der angefragten Leistung.
 
-(4) Sinopia ist berechtigt, Anfragen oder Angebote ohne Angabe von Gründen abzulehnen.
+3. Angebote gelten nur für den jeweils angegebenen Zeitraum.
 
-§ 4 Angebots- und Leistungsprozess
+4. Die Leistungserbringung erfolgt ausschließlich durch den Skill-Giver in eigener Verantwortung.
 
-(1) Der Skill-Searcher erhält von Sinopia ein verbindliches Angebot mit Leistungsbeschreibung, Preis und Laufzeit.
 
-(2) Der Skill-Giver erhält von Sinopia ein separates Angebot zur Durchführung der angefragten Leistung.
+**§ 5 Rolle und Pflichten der Skill-Giver**
 
-(3) Angebote gelten nur für den jeweils angegebenen Zeitraum.
+1. Skill-Giver handeln selbstständig und auf eigene Rechnung.
 
-(4) Die Leistungserbringung erfolgt ausschließlich durch den Skill-Giver in eigener Verantwortung.
+2. Es besteht kein Arbeits-, Dienst- oder Gesellschaftsverhältnis zwischen Sinopia und dem Skill-Giver.
 
-§ 5 Rolle und Pflichten der Skill-Giver
+3. Skill-Giver sind für die ordnungsgemäße, fachgerechte und fristgerechte Erbringung der Leistung verantwortlich.
 
-(1) Skill-Giver handeln selbstständig und auf eigene Rechnung.
+4. Skill-Giver gewährleisten, dass sie über die erforderlichen Qualifikationen und Rechte zur Leistungserbringung verfügen.
 
-(2) Es besteht kein Arbeits-, Dienst- oder Gesellschaftsverhältnis zwischen Sinopia und dem Skill-Giver.
 
-(3) Skill-Giver sind für die ordnungsgemäße, fachgerechte und fristgerechte Erbringung der Leistung verantwortlich.
+**§ 6 Rolle und Pflichten der Skill-Searcher**
 
-(4) Skill-Giver gewährleisten, dass sie über die erforderlichen Qualifikationen und Rechte zur Leistungserbringung verfügen.
+1. Skill-Searcher sind verpflichtet, ihre Use Cases vollständig, korrekt und wahrheitsgemäß zu beschreiben.
 
-§ 6 Rolle und Pflichten der Skill-Searcher
+2. Änderungen des Leistungsumfangs bedürfen der schriftlichen Zustimmung von Sinopia.
 
-(1) Skill-Searcher sind verpflichtet, ihre Use Cases vollständig, korrekt und wahrheitsgemäß zu beschreiben.
+3. Verzögerungen oder Mehrkosten aufgrund unvollständiger oder fehlerhafter Angaben gehen zu Lasten des Skill-Searchers.
 
-(2) Änderungen des Leistungsumfangs bedürfen der schriftlichen Zustimmung von Sinopia.
 
-(3) Verzögerungen oder Mehrkosten aufgrund unvollständiger oder fehlerhafter Angaben gehen zu Lasten des Skill-Searchers.
+**§ 7 Vergütung und Zahlungsabwicklung**
 
-§ 7 Vergütung und Zahlungsabwicklung
+1. Die Vergütung des Skill-Searchers richtet sich nach dem von Sinopia unterbreiteten Angebot.
 
-(1) Die Vergütung des Skill-Searchers richtet sich nach dem von Sinopia unterbreiteten Angebot.
+2. Sinopia ist berechtigt, Zahlungen treuhänderisch entgegenzunehmen und nach Leistungserbringung an den Skill-Giver weiterzuleiten.
 
-(2) Sinopia ist berechtigt, Zahlungen treuhänderisch entgegenzunehmen und nach Leistungserbringung an den Skill-Giver weiterzuleiten.
+3. Sinopia behält sich eine Plattform- bzw. Vermittlungsgebühr vor.
 
-(3) Sinopia behält sich eine Plattform- bzw. Vermittlungsgebühr vor.
+4. Alle Preise verstehen sich zzgl. der gesetzlichen Umsatzsteuer, sofern anwendbar.
 
-(4) Alle Preise verstehen sich zzgl. der gesetzlichen Umsatzsteuer, sofern anwendbar.
 
-§ 8 Haftung
+**§ 8 Haftung**
 
-(1) Sinopia haftet unbeschränkt für Schäden aus der Verletzung von Leben, Körper oder Gesundheit.
+1. Sinopia haftet unbeschränkt für Schäden aus der Verletzung von Leben, Körper oder Gesundheit.
 
-(2) Für sonstige Schäden haftet Sinopia nur bei Vorsatz oder grober Fahrlässigkeit.
+2. Für sonstige Schäden haftet Sinopia nur bei Vorsatz oder grober Fahrlässigkeit.
 
-(3) Sinopia haftet nicht für die tatsächliche Leistungserbringung durch Skill-Giver, deren Qualität oder Ergebnisse.
+3. Sinopia haftet nicht für die tatsächliche Leistungserbringung durch Skill-Giver, deren Qualität oder Ergebnisse.
 
-§ 9 Mängel und Reklamationen
 
-(1) Beanstandungen sind unverzüglich an Sinopia zu richten.
+**§ 9 Mängel und Reklamationen**
 
-(2) Sinopia ist berechtigt, den Sachverhalt mit dem Skill-Giver zu klären und eine Nachbesserung zu vermitteln.
+1. Beanstandungen sind unverzüglich an Sinopia zu richten.
 
-(3) Weitergehende Ansprüche bestehen nur im Rahmen der gesetzlichen Vorschriften.
+2. Sinopia ist berechtigt, den Sachverhalt mit dem Skill-Giver zu klären und eine Nachbesserung zu vermitteln.
 
-§ 10 Kündigung und Stornierung
+3. Weitergehende Ansprüche bestehen nur im Rahmen der gesetzlichen Vorschriften.
 
-(1) Verträge können gemäß den im Angebot vereinbarten Bedingungen gekündigt werden.
 
-(2) Bereits erbrachte Leistungen sind anteilig zu vergüten.
+**§ 10 Kündigung und Stornierung**
 
-(3) Sinopia ist berechtigt, Nutzer bei Verstößen gegen diese AGB von der Plattform auszuschließen.
+1. Verträge können gemäß den im Angebot vereinbarten Bedingungen gekündigt werden.
 
-§ 11 Urheber- und Nutzungsrechte
+2. Bereits erbrachte Leistungen sind anteilig zu vergüten.
 
-(1) Rechte an Arbeitsergebnissen verbleiben beim Skill-Giver, sofern nicht ausdrücklich anders vereinbart.
+3. Sinopia ist berechtigt, Nutzer bei Verstößen gegen diese AGB von der Plattform auszuschließen.
 
-(2) Der Skill-Searcher erhält ein einfaches Nutzungsrecht im vereinbarten Umfang.
 
-§ 12 Vertraulichkeit
+**§ 11 Urheber- und Nutzungsrechte**
 
-(1) Alle Parteien verpflichten sich zur Vertraulichkeit über nicht öffentliche Informationen.
+1. Rechte an Arbeitsergebnissen verbleiben beim Skill-Giver, sofern nicht ausdrücklich anders vereinbart.
 
-(2) Diese Verpflichtung gilt auch nach Vertragsende fort.
+2. Der Skill-Searcher erhält ein einfaches Nutzungsrecht im vereinbarten Umfang.
 
-§ 13 Datenschutz
+
+**§ 12 Vertraulichkeit**
+
+1. Alle Parteien verpflichten sich zur Vertraulichkeit über nicht öffentliche Informationen.
+
+2. Diese Verpflichtung gilt auch nach Vertragsende fort.
+
+
+**§ 13 Datenschutz**
 
 Die Verarbeitung personenbezogener Daten erfolgt gemäß DSGVO und der Datenschutzerklärung von Sinopia.
 
-§ 14 Schlussbestimmungen
 
-(1) Es gilt deutsches Recht.
+**§ 14 Schlussbestimmungen**
 
-(2) Gerichtsstand ist Stuttgart, sofern gesetzlich zulässig.
+1. Es gilt deutsches Recht.
 
-(3) Sollte eine Bestimmung unwirksam sein, bleibt die Wirksamkeit der übrigen Regelungen unberührt.`,
+2. Gerichtsstand ist Stuttgart, sofern gesetzlich zulässig.
+
+3. Sollte eine Bestimmung unwirksam sein, bleibt die Wirksamkeit der übrigen Regelungen unberührt.`,
   },
   language: {
     en: "EN",

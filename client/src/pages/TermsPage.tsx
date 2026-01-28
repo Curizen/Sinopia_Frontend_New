@@ -1,5 +1,6 @@
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { useI18n } from '@/i18n';
+import { TermsContent } from '@/components/TermsContent';
 
 export default function TermsPage() {
   const { t } = useI18n();
@@ -13,12 +14,10 @@ export default function TermsPage() {
             {t('terms.title')}
           </h1>
           
-          <div 
-            className="prose prose-lg max-w-none text-muted-foreground whitespace-pre-line leading-relaxed"
-            data-testid="terms-content"
-          >
-            {t('terms.content')}
-          </div>
+          <TermsContent 
+            content={t('terms.content')} 
+            className="prose prose-lg max-w-none text-muted-foreground leading-relaxed"
+          />
           
         </div>
       </div>
