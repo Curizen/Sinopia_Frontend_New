@@ -759,7 +759,7 @@ export const de = {
     lastUpdated: "Stand: 27.01.2026",
     viewTerms: "Bedingungen ansehen",
     openFullTerms: "Vollständige Nutzungsbedingungen öffnen",
-    agreeLabel: "Ich habe die Nutzungsbedingungen gelesen und stimme ihnen zu",
+    agreeLabel: "Ich habe die Allgemeinen Geschäftsbedingungen gelesen und akzeptiere sie",
     scrollToAccept: "Bitte scrollen Sie nach unten, um die Zustimmung zu aktivieren",
     acceptError: "Bitte lesen und akzeptieren Sie die Nutzungsbedingungen, um fortzufahren.",
     acceptButton: "Ich stimme zu",
