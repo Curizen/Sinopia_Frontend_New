@@ -1,0 +1,100 @@
+TASK:
+Completely replace the existing Terms & Conditions content
+with the provided German and English legal texts and ensure
+they are displayed correctly across the website.
+
+IMPORTANT REQUIREMENTS:
+- NO runtime, build, or console errors
+- Fully compatible with existing i18n system
+- Language switches automatically (DE / EN)
+- Works in:
+  • Sign-Up Terms modal
+  • Dedicated Terms & Conditions page
+- Remove ALL old terms content
+
+========================================
+STEP 1: REMOVE OLD TERMS CONTENT
+========================================
+
+- Delete or overwrite all existing Terms & Conditions text
+- Remove any legacy placeholders, mock data, or dummy sections
+- Ensure no old translation keys remain in use
+
+========================================
+STEP 2: ADD NEW TRANSLATION FILES
+========================================
+
+Create or update the following files:
+
+/locales/de/terms.json
+/locales/en/terms.json
+
+----------------------------------------
+GERMAN VERSION (de/terms.json)
+----------------------------------------
+
+Structure example (content must be EXACTLY the provided German text):
+
+{
+  "title": "Allgemeine Geschäftsbedingungen (AGB)",
+  "company": "Sinopia Deutschland GmbH",
+  "version": "Stand: 27.01.2026",
+  "content": "§ 1 Geltungsbereich und Begriffsbestimmungen\n(1) Diese Allgemeinen Geschäftsbedingungen gelten für sämtliche Nutzungs- und Vertragsverhältnisse ... [FULL GERMAN TEXT CONTINUES]"
+}
+
+----------------------------------------
+ENGLISH VERSION (en/terms.json)
+----------------------------------------
+
+{
+  "title": "General Terms and Conditions (GTC)",
+  "company": "Sinopia Deutschland GmbH",
+  "version": "Version: 27 January 2026",
+  "content": "§ 1 Scope of Application and Definitions\n(1) These General Terms and Conditions apply to all usage and contractual relationships ... [FULL ENGLISH TEXT CONTINUES]"
+}
+
+✔ Keep the SAME key structure in both languages
+✔ Preserve paragraphs, numbering, and legal formatting
+✔ Use newline characters \\n where needed
+
+========================================
+STEP 3: FIX TERMS RENDERING
+========================================
+
+In all components that display Terms & Conditions:
+
+- Render text using:
+  t("terms.content")
+- Render title, company, version separately
+- NEVER hardcode text in components
+- NEVER show translation keys in UI
+
+========================================
+STEP 4: SIGN-UP MODAL INTEGRATION
+========================================
+
+- The Sign-Up Terms modal must:
+  • Load content from i18n
+  • Match the site language automatically
+  • Keep scroll-to-bottom acceptance logic
+  • Keep existing UI & buttons
+- Acceptance checkbox logic must remain unchanged
+
+========================================
+STEP 5: FAIL-SAFE & VALIDATION
+========================================
+
+- Ensure terms namespace is registered in i18n init
+- Ensure no fallback-to-key behavior
+- Add safe rendering to prevent empty content crashes
+
+========================================
+EXPECTED RESULT
+========================================
+
+✔ Old Terms fully removed
+✔ New German & English legal texts displayed correctly
+✔ Language switch works instantly
+✔ Terms appear correctly in Sign-Up & Terms page
+✔ No console warnings or errors
+✔ Production-ready legal content

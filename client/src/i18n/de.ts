@@ -239,7 +239,7 @@ export const de = {
     recentProjects: "Aktuelle Anwendungsfälle",
     pendingOffers: "Ausstehende Angebote",
     activeContracts: "Aktive Verträge",
-    totalEarnings: "Gesamteinnahmen",
+    totalEarnings: "Gesamtkosten",
     completedProjects: "Abgeschlossene Anwendungsfälle",
     pendingPayments: "Ausstehende Zahlungen",
     quickActions: "Schnellaktionen",
