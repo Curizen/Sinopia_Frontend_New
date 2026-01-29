@@ -336,8 +336,6 @@ export const de = {
     digitallySignedBy: "Digital unterzeichnet von:",
     signatureDate: "Datum:",
     downloadPdf: "PDF herunterladen",
-    generatingPdf: "PDF wird erstellt...",
-    pdfGenerationError: "PDF konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
     agreeAndAccept: "Ich stimme zu & akzeptiere",
     untitledProject: "Unbenanntes Projekt",
     noJobTitle: "Keine Stellenbezeichnung angegeben",
