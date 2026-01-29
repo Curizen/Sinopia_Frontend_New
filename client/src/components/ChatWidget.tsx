@@ -11,10 +11,7 @@ interface Message {
   timestamp: Date;
 }
 
-// Direct N8N Webhook URLs (no backend proxy)
-const GIVER_URL = "https://sinopia.app.n8n.cloud/webhook/Chatbot_SkillGiver";
-const SEARCHER_URL = "https://sinopia.app.n8n.cloud/webhook/Skill_Searcher_chatbot";
-const GUEST_URL = "https://sinopia.app.n8n.cloud/webhook/Guest_Chatbot";
+const CHAT_API_URL = '/api/chat/webhook';
 
 type UserRole = 'skill_giver' | 'skill_searcher' | 'guest';
 
@@ -117,53 +114,44 @@ export function ChatWidget() {
     try {
       const { userId, role, sessionId } = getUserInfoFromStorage();
       
-      // Determine target URL and payload based on role
-      let targetUrl: string;
+      // Build payload based on role
       let payload: Record<string, unknown>;
-      
       if (role === 'guest') {
-        // Guest: Direct to Guest webhook with User_query and session_id
-        targetUrl = GUEST_URL;
+        // Guest payload with session_id
         payload = {
-          User_query: trimmedMessage,
-          session_id: sessionId || getOrCreateGuestSessionId(),
+          role: 'guest',
+          session_id: sessionId,
+          message: trimmedMessage,
         };
       } else if (role === 'skill_searcher') {
-        // Skill Searcher: Direct to Searcher webhook
-        targetUrl = SEARCHER_URL;
         payload = {
+          role: 'skill_searcher',
           skill_searcher_id: userId,
           message: trimmedMessage,
         };
       } else {
-        // Skill Giver (default): Direct to Giver webhook
-        targetUrl = GIVER_URL;
+        // Default to skill_giver format
         payload = {
+          role: role,
           user_id: userId,
           message: trimmedMessage,
         };
       }
       
-      console.log('[ChatWidget] Sending to:', targetUrl);
-      console.log('[ChatWidget] Payload:', JSON.stringify(payload, null, 2));
-      
-      const response = await fetch(targetUrl, {
+      const response = await fetch(CHAT_API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('[ChatWidget] Response error:', response.status, errorText);
         throw new Error(`API error: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('[ChatWidget] Response data:', data);
-      
       const botResponse = data.output || data.message || t('chatWidget.errorResponse');
 
       const botMessage: Message = {
@@ -175,7 +163,7 @@ export function ChatWidget() {
 
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
-      console.error('[ChatWidget] Chat error:', error);
+      console.error('Chat API error:', error);
       const errorMessage: Message = {
         id: `bot-error-${Date.now()}`,
         content: t('chatWidget.errorResponse'),
