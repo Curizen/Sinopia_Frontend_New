@@ -1135,38 +1135,48 @@ export async function registerRoutes(
   // Chat webhook proxy for AI assistant
   app.post("/api/chat/webhook", async (req, res) => {
     try {
-      const N8N_API_KEY = process.env.N8N_API_KEY || '';
-      const N8N_GIVER_WEBHOOK = process.env.N8N_GIVER_WEBHOOK || '';
-      const N8N_SEARCHER_WEBHOOK = process.env.N8N_SEARCHER_WEBHOOK || '';
+      // Hardcoded webhook URLs (no environment variables needed)
+      const GIVER_WEBHOOK_URL = "https://sinopia.app.n8n.cloud/webhook/Chatbot_SkillGiver";
+      const SEARCHER_WEBHOOK_URL = "https://sinopia.app.n8n.cloud/webhook/Skill_Searcher_chatbot";
       
-      const { role, ...payload } = req.body;
+      const { role, user_id, skill_searcher_id, message } = req.body;
       
-      // Select webhook URL based on role
-      let webhookUrl: string;
-      if (role === 'skill_giver') {
-        webhookUrl = N8N_GIVER_WEBHOOK;
-      } else if (role === 'skill_searcher') {
-        webhookUrl = N8N_SEARCHER_WEBHOOK;
-      } else {
-        // Default to giver webhook if role is unknown
-        webhookUrl = N8N_GIVER_WEBHOOK;
-        console.warn("[DEBUG] Unknown role, defaulting to skill_giver webhook:", role);
+      // Validate required message field
+      if (!message || typeof message !== 'string' || !message.trim()) {
+        return res.status(400).json({ status: "error", message: "Message is required" });
       }
 
-      if (!webhookUrl) {
-        return res.status(500).json({ status: "error", message: "Chat service not configured for this role" });
+      // Select webhook URL and construct payload based on role
+      let webhookUrl: string;
+      let webhookPayload: Record<string, unknown>;
+      
+      if (role === 'skill_searcher') {
+        webhookUrl = SEARCHER_WEBHOOK_URL;
+        webhookPayload = {
+          skill_searcher_id: skill_searcher_id || null,
+          message: message.trim(),
+        };
+      } else {
+        // Default to skill_giver format for skill_giver, guest, or unknown roles
+        webhookUrl = GIVER_WEBHOOK_URL;
+        webhookPayload = {
+          user_id: user_id || null,
+          message: message.trim(),
+        };
+        if (role !== 'skill_giver') {
+          console.warn("[DEBUG] Unknown role, defaulting to skill_giver webhook:", role);
+        }
       }
 
       console.log("[DEBUG] POST /api/chat/webhook - Role:", role, "URL:", webhookUrl);
-      console.log("[DEBUG] POST /api/chat/webhook - Payload:", JSON.stringify(payload, null, 2));
+      console.log("[DEBUG] POST /api/chat/webhook - Payload:", JSON.stringify(webhookPayload, null, 2));
 
       const response = await fetch(webhookUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": N8N_API_KEY,
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(webhookPayload),
       });
 
       if (!response.ok) {
