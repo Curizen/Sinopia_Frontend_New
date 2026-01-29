@@ -322,6 +322,13 @@ export const en = {
     rejectConfirmDesc:
       "Are you sure you want to reject this offer? This action cannot be undone.",
     viewDetails: "View Details",
+    termsAgreementTitle: "Terms & Conditions Agreement",
+    termsAgreementSubtitle: "Please read and accept the terms to proceed",
+    digitalSignature: "Digital Signature",
+    digitallySignedBy: "Digitally Signed by:",
+    signatureDate: "Date:",
+    downloadPdf: "Download PDF",
+    agreeAndAccept: "I Agree & Accept",
     untitledProject: "Untitled Project",
     noJobTitle: "No job title specified",
     errorTitle: "Error Loading Offers",

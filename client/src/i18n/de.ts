@@ -330,6 +330,13 @@ export const de = {
     rejectConfirmDesc:
       "Sind Sie sicher, dass Sie dieses Angebot ablehnen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
     viewDetails: "Details anzeigen",
+    termsAgreementTitle: "Allgemeine Geschäftsbedingungen",
+    termsAgreementSubtitle: "Bitte lesen und akzeptieren Sie die Bedingungen, um fortzufahren",
+    digitalSignature: "Digitale Unterschrift",
+    digitallySignedBy: "Digital unterzeichnet von:",
+    signatureDate: "Datum:",
+    downloadPdf: "PDF herunterladen",
+    agreeAndAccept: "Ich stimme zu & akzeptiere",
     untitledProject: "Unbenanntes Projekt",
     noJobTitle: "Keine Stellenbezeichnung angegeben",
     errorTitle: "Fehler beim Laden der Angebote",

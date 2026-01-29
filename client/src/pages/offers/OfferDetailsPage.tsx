@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useRoute, Link, useLocation } from 'wouter';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useI18n } from '@/i18n';
@@ -6,9 +6,18 @@ import { useAuth } from '@/context/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient, apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import { TermsContent } from '@/components/TermsContent';
 import { 
   ArrowLeft, 
   Clock, 
@@ -19,7 +28,9 @@ import {
   AlertCircle,
   CheckCircle,
   XCircle,
-  Calendar
+  Calendar,
+  Download,
+  FileText
 } from 'lucide-react';
 
 interface SkillRequired {
@@ -54,6 +65,37 @@ interface OfferResponse {
   data: OfferDetails;
 }
 
+function getUserNameFromStorage(): string {
+  try {
+    const userCache = localStorage.getItem('user_profile_cache');
+    if (userCache) {
+      const parsed = JSON.parse(userCache);
+      if (parsed.first_name && parsed.last_name) {
+        return `${parsed.first_name} ${parsed.last_name}`;
+      }
+      if (parsed.name) {
+        return parsed.name;
+      }
+    }
+    const sinopiaUser = localStorage.getItem('sinopia_user');
+    if (sinopiaUser) {
+      const parsed = JSON.parse(sinopiaUser);
+      if (parsed.first_name && parsed.last_name) {
+        return `${parsed.first_name} ${parsed.last_name}`;
+      }
+      if (parsed.name) {
+        return parsed.name;
+      }
+      if (parsed.email) {
+        return parsed.email;
+      }
+    }
+  } catch (e) {
+    console.error('Failed to get user name from storage:', e);
+  }
+  return 'User';
+}
+
 export default function OfferDetailsPage() {
   const [, params] = useRoute('/offers/:id');
   const { t } = useI18n();
@@ -61,6 +103,17 @@ export default function OfferDetailsPage() {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
   const id = params?.id;
+
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  
+  const userName = useMemo(() => getUserNameFromStorage(), []);
+  const currentDate = useMemo(() => {
+    return new Date().toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  }, []);
 
   const isSkillSearcher = user?.role === 'skill_searcher';
 
@@ -99,6 +152,7 @@ export default function OfferDetailsPage() {
       return apiRequest('POST', `/api/offers/${id}/accept`);
     },
     onSuccess: () => {
+      setShowTermsModal(false);
       updateOfferStatus('accepted');
       toast({
         title: t('offers.offerAccepted'),
@@ -199,8 +253,16 @@ export default function OfferDetailsPage() {
     }
   };
 
-  const handleAcceptOffer = () => {
+  const handleAcceptClick = () => {
+    setShowTermsModal(true);
+  };
+
+  const handleConfirmAccept = () => {
     acceptMutation.mutate();
+  };
+
+  const handleDownloadPdf = () => {
+    console.log('Download PDF clicked - Terms & Conditions');
   };
 
   const handleRejectOffer = () => {
@@ -352,7 +414,7 @@ export default function OfferDetailsPage() {
             {canTakeAction ? (
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
-                  onClick={handleAcceptOffer}
+                  onClick={handleAcceptClick}
                   disabled={isProcessing}
                   data-testid="button-accept-offer"
                 >
@@ -403,6 +465,89 @@ export default function OfferDetailsPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={showTermsModal} onOpenChange={setShowTermsModal}>
+        <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="w-5 h-5" />
+              {t('offers.termsAgreementTitle')}
+            </DialogTitle>
+            <DialogDescription>
+              {t('offers.termsAgreementSubtitle')}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex-1 min-h-0 overflow-y-auto max-h-96 bg-muted/30 rounded-md p-4" data-testid="terms-modal-content">
+            <TermsContent 
+              content={t('terms.content')} 
+              className="text-sm leading-relaxed text-muted-foreground"
+            />
+          </div>
+
+          <div className="border-t pt-4 mt-4">
+            <div className="bg-muted/50 rounded-md p-4" data-testid="signature-section">
+              <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <FileText className="w-4 h-4" />
+                {t('offers.digitalSignature')}
+              </h4>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">{t('offers.digitallySignedBy')}</span>
+                  <span 
+                    className="text-lg font-semibold italic" 
+                    style={{ fontFamily: 'Georgia, serif' }}
+                    data-testid="text-signature-name"
+                  >
+                    {userName}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">{t('offers.signatureDate')}</span>
+                  <span className="text-sm font-medium" data-testid="text-signature-date">
+                    {currentDate}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="flex-col sm:flex-row gap-2 pt-4">
+            <Button
+              variant="outline"
+              onClick={handleDownloadPdf}
+              className="w-full sm:w-auto"
+              data-testid="button-download-pdf"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              {t('offers.downloadPdf')}
+            </Button>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button
+                variant="ghost"
+                onClick={() => setShowTermsModal(false)}
+                className="flex-1 sm:flex-none"
+                data-testid="button-cancel-terms"
+              >
+                {t('common.cancel')}
+              </Button>
+              <Button
+                onClick={handleConfirmAccept}
+                disabled={acceptMutation.isPending}
+                className="flex-1 sm:flex-none"
+                data-testid="button-confirm-accept"
+              >
+                {acceptMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                )}
+                {t('offers.agreeAndAccept')}
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }
