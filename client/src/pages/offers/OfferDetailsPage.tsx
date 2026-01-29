@@ -277,13 +277,132 @@ export default function OfferDetailsPage() {
       }
     };
 
-    doc.setFontSize(18);
+    doc.setFontSize(20);
     doc.setFont('helvetica', 'bold');
     doc.text(t('offers.termsAgreementTitle'), pageWidth / 2, yPosition, { align: 'center' });
-    yPosition += 15;
+    yPosition += 10;
 
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 100);
+    doc.text(currentDate, pageWidth / 2, yPosition, { align: 'center' });
+    doc.setTextColor(0, 0, 0);
+    yPosition += 15;
+
+    addNewPageIfNeeded(80);
+    doc.setDrawColor(200, 200, 200);
+    doc.setFillColor(250, 250, 250);
+    
+    const jobBoxHeight = 70;
+    doc.roundedRect(margin, yPosition, maxWidth, jobBoxHeight, 3, 3, 'FD');
+    
+    yPosition += 10;
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(t('offers.jobDetails'), margin + 10, yPosition);
+    yPosition += 10;
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    
+    const projectTitle = offer?.project?.title || t('offers.untitledProject');
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${t('projects.title')}:`, margin + 10, yPosition);
+    doc.setFont('helvetica', 'normal');
+    doc.text(projectTitle, margin + 50, yPosition);
+    yPosition += 8;
+
+    const jobTitle = offer?.job_title?.job_title || '-';
+    const jobLevel = offer?.job_title?.level_job_title || '';
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${t('offers.role')}:`, margin + 10, yPosition);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${jobTitle}${jobLevel ? ` (${jobLevel})` : ''}`, margin + 50, yPosition);
+    yPosition += 8;
+
+    const totalHours = offer?.job_title?.total_hours || 0;
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${t('offers.workload')}:`, margin + 10, yPosition);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${totalHours} ${t('offers.hours')}`, margin + 50, yPosition);
+    yPosition += 8;
+
+    const requiredEmployees = offer?.job_title?.required_employees || 1;
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${t('offers.employeesRequired')}:`, margin + 10, yPosition);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${requiredEmployees}`, margin + 50, yPosition);
+    yPosition += 8;
+
+    if (offer?.job_title?.description) {
+      const descLines = doc.splitTextToSize(offer.job_title.description, maxWidth - 60);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${t('offers.description')}:`, margin + 10, yPosition);
+      doc.setFont('helvetica', 'normal');
+      doc.text(descLines[0] || '', margin + 50, yPosition);
+      if (descLines.length > 1) {
+        yPosition += 6;
+        for (let i = 1; i < Math.min(descLines.length, 3); i++) {
+          doc.text(descLines[i], margin + 50, yPosition);
+          yPosition += 5;
+        }
+      }
+    }
+
+    yPosition += 15;
+
+    const skills = offer?.job_title?.skills_required || [];
+    if (skills.length > 0) {
+      const skillsBoxHeight = 15 + Math.ceil(skills.length / 2) * 8;
+      addNewPageIfNeeded(skillsBoxHeight + 10);
+      
+      doc.setDrawColor(200, 200, 200);
+      doc.setFillColor(250, 250, 250);
+      doc.roundedRect(margin, yPosition, maxWidth, skillsBoxHeight, 3, 3, 'FD');
+      
+      yPosition += 10;
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text(t('offers.requiredSkills'), margin + 10, yPosition);
+      yPosition += 10;
+
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      
+      const colWidth = (maxWidth - 20) / 2;
+      let col = 0;
+      let startY = yPosition;
+      
+      for (let i = 0; i < skills.length; i++) {
+        const skill = skills[i];
+        const xPos = margin + 10 + (col * colWidth);
+        doc.text(`• ${skill.skill_name} (${skill.required_level})`, xPos, yPosition);
+        
+        col++;
+        if (col >= 2) {
+          col = 0;
+          yPosition += 7;
+        }
+      }
+      
+      if (col !== 0) {
+        yPosition += 7;
+      }
+      yPosition += 10;
+    } else {
+      yPosition += 5;
+    }
+
+    addNewPageIfNeeded(20);
+    yPosition += 5;
+    doc.setDrawColor(180, 180, 180);
+    doc.line(margin, yPosition, pageWidth - margin, yPosition);
+    yPosition += 10;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text(t('terms.title'), margin, yPosition);
+    yPosition += 8;
     
     const termsText = t('terms.content');
     const cleanText = termsText
@@ -307,10 +426,10 @@ export default function OfferDetailsPage() {
 
       if (isBoldLine) {
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(11);
+        doc.setFontSize(10);
       } else {
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
+        doc.setFontSize(9);
       }
 
       const splitLines = doc.splitTextToSize(trimmedLine, maxWidth);
@@ -325,19 +444,19 @@ export default function OfferDetailsPage() {
       yPosition += 2;
     }
 
-    addNewPageIfNeeded(60);
+    addNewPageIfNeeded(70);
     yPosition += 10;
 
-    doc.setDrawColor(200, 200, 200);
+    doc.setDrawColor(100, 100, 100);
     doc.setFillColor(248, 248, 248);
-    doc.roundedRect(margin, yPosition, maxWidth, 50, 3, 3, 'FD');
+    doc.roundedRect(margin, yPosition, maxWidth, 55, 3, 3, 'FD');
 
-    yPosition += 10;
+    yPosition += 12;
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text(t('offers.digitalSignature'), margin + 10, yPosition);
     
-    yPosition += 12;
+    yPosition += 14;
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.text(t('offers.digitallySignedBy'), margin + 10, yPosition);
@@ -346,12 +465,13 @@ export default function OfferDetailsPage() {
     doc.setFontSize(14);
     doc.text(userName, margin + 10 + doc.getTextWidth(t('offers.digitallySignedBy')) + 5, yPosition);
 
-    yPosition += 10;
+    yPosition += 12;
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.text(`${t('offers.signatureDate')} ${currentDate}`, margin + 10, yPosition);
 
-    const fileName = `Terms_and_Conditions_${userName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+    const projectName = (offer?.project?.title || 'Contract').replace(/[^a-zA-Z0-9]/g, '_');
+    const fileName = `Contract_${projectName}_${userName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
     doc.save(fileName);
   };
 
