@@ -12,7 +12,6 @@ import { useI18n } from '@/i18n';
 import { ArrowLeft, Plus, X, Sparkles, CheckCircle, Clock, Users, Layers, Euro, Brain, Upload, Download, FileText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { TermsContent } from '@/components/TermsContent';
 import jsPDF from 'jspdf';
 
@@ -844,76 +843,49 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
 
       {/* Terms & Conditions Modal */}
       <Dialog open={showTermsModal} onOpenChange={setShowTermsModal}>
-        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
+        <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5" />
               {t('useCases.termsTitle')}
             </DialogTitle>
           </DialogHeader>
-          
-          <ScrollArea className="flex-1 pr-4" style={{ maxHeight: '60vh' }}>
-            <div className="space-y-6">
-              {/* Use Case Summary */}
-              {pendingFormData && (
-                <div className="p-4 bg-muted/50 rounded-lg border">
-                  <h3 className="font-semibold mb-3">{t('useCases.useCaseDetails')}</h3>
-                  <div className="space-y-2 text-sm">
-                    <div>
-                      <span className="font-medium">{t('useCases.titleLabel')}:</span>{' '}
-                      <span className="text-muted-foreground">{pendingFormData.title}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium">{t('useCases.descriptionLabel')}:</span>{' '}
-                      <span className="text-muted-foreground line-clamp-2">{pendingFormData.description}</span>
-                    </div>
-                  </div>
+
+          <div className="flex-1 min-h-0 overflow-y-auto max-h-96 bg-muted/30 rounded-md p-4" data-testid="terms-modal-content">
+            <TermsContent 
+              content={t('terms.content')} 
+              className="text-sm leading-relaxed text-muted-foreground"
+            />
+          </div>
+
+          <div className="border-t pt-4 mt-4">
+            <div className="bg-muted/50 rounded-md p-4" data-testid="signature-section">
+              <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <FileText className="w-4 h-4" />
+                {t('offers.digitalSignature')}
+              </h4>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">{t('offers.digitallySignedBy')}</span>
+                  <span 
+                    className="text-lg font-semibold italic" 
+                    style={{ fontFamily: 'Georgia, serif' }}
+                    data-testid="text-signature-name"
+                  >
+                    {userName}
+                  </span>
                 </div>
-              )}
-
-              {/* Analysis Summary */}
-              {analysisResult && (
-                <div className="p-4 bg-muted/50 rounded-lg border">
-                  <h3 className="font-semibold mb-3">{t('useCases.projectOverview')}</h3>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="font-medium">{t('useCases.totalHours')}:</span>{' '}
-                      <span className="text-muted-foreground">{analysisResult.total_project_hours} {t('useCases.hours')}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium">{t('useCases.totalCost')}:</span>{' '}
-                      <span className="text-green-600 font-semibold">
-                        {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(analysisResult.total_project_cost || 0)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Terms Content */}
-              <div className="prose prose-sm dark:prose-invert max-w-none">
-                <TermsContent content={t('terms.content')} />
-              </div>
-
-              {/* Digital Signature Section */}
-              <div className="p-4 bg-muted/30 rounded-lg border-2 border-dashed">
-                <h3 className="font-semibold mb-3">{t('offers.digitalSignature')}</h3>
-                <div className="space-y-2">
-                  <p className="text-sm">
-                    {t('offers.digitallySignedBy')}{' '}
-                    <span className="font-semibold italic" style={{ fontFamily: 'Georgia, serif' }}>
-                      {userName}
-                    </span>
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {t('offers.signatureDate')} {currentDate}
-                  </p>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">{t('offers.signatureDate')}</span>
+                  <span className="text-sm font-medium" data-testid="text-signature-date">
+                    {currentDate}
+                  </span>
                 </div>
               </div>
             </div>
-          </ScrollArea>
+          </div>
 
-          <DialogFooter className="flex-col sm:flex-row gap-2 pt-4 border-t">
+          <DialogFooter className="flex-col sm:flex-row gap-2 pt-4">
             <Button
               variant="outline"
               onClick={handleDownloadPdf}
@@ -927,7 +899,7 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
               <Button
                 variant="ghost"
                 onClick={() => setShowTermsModal(false)}
-                className="flex-1 sm:flex-initial"
+                className="flex-1 sm:flex-none"
                 data-testid="button-cancel-terms"
               >
                 {t('common.cancel')}
@@ -935,7 +907,7 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
               <Button
                 onClick={handleConfirmCreate}
                 disabled={isLoading}
-                className="flex-1 sm:flex-initial"
+                className="flex-1 sm:flex-none"
                 data-testid="button-agree-create"
               >
                 {isLoading ? t('common.loading') : t('useCases.agreeAndCreate')}
