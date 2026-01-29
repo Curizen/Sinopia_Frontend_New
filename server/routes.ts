@@ -1138,8 +1138,9 @@ export async function registerRoutes(
       // Hardcoded webhook URLs (no environment variables needed)
       const GIVER_WEBHOOK_URL = "https://sinopia.app.n8n.cloud/webhook/Chatbot_SkillGiver";
       const SEARCHER_WEBHOOK_URL = "https://sinopia.app.n8n.cloud/webhook/Skill_Searcher_chatbot";
+      const GUEST_WEBHOOK_URL = "https://sinopia.app.n8n.cloud/webhook/Guest_Chatbot";
       
-      const { role, user_id, skill_searcher_id, message } = req.body;
+      const { role, user_id, skill_searcher_id, session_id, message } = req.body;
       
       // Validate required message field
       if (!message || typeof message !== 'string' || !message.trim()) {
@@ -1150,14 +1151,21 @@ export async function registerRoutes(
       let webhookUrl: string;
       let webhookPayload: Record<string, unknown>;
       
-      if (role === 'skill_searcher') {
+      if (role === 'guest') {
+        // Guest webhook requires User_query and session_id keys
+        webhookUrl = GUEST_WEBHOOK_URL;
+        webhookPayload = {
+          User_query: message.trim(),
+          session_id: session_id || null,
+        };
+      } else if (role === 'skill_searcher') {
         webhookUrl = SEARCHER_WEBHOOK_URL;
         webhookPayload = {
           skill_searcher_id: skill_searcher_id || null,
           message: message.trim(),
         };
       } else {
-        // Default to skill_giver format for skill_giver, guest, or unknown roles
+        // Default to skill_giver format for skill_giver or unknown roles
         webhookUrl = GIVER_WEBHOOK_URL;
         webhookPayload = {
           user_id: user_id || null,

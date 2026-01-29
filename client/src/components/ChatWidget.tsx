@@ -13,18 +13,31 @@ interface Message {
 
 const CHAT_API_URL = '/api/chat/webhook';
 
-type UserRole = 'skill_giver' | 'skill_searcher' | null;
+type UserRole = 'skill_giver' | 'skill_searcher' | 'guest';
 
 interface UserInfo {
   userId: number | null;
   role: UserRole;
+  sessionId?: string;
+}
+
+function getOrCreateGuestSessionId(): string {
+  const SESSION_KEY = 'guest_session_id';
+  let sessionId = sessionStorage.getItem(SESSION_KEY);
+  
+  if (!sessionId) {
+    sessionId = `guest_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    sessionStorage.setItem(SESSION_KEY, sessionId);
+  }
+  
+  return sessionId;
 }
 
 function getUserInfoFromStorage(): UserInfo {
   try {
     // Get role from sinopia_user
     const sinopiaUser = localStorage.getItem('sinopia_user');
-    let role: UserRole = null;
+    let role: UserRole | null = null;
     if (sinopiaUser) {
       const parsed = JSON.parse(sinopiaUser);
       role = parsed.role || null;
@@ -36,7 +49,7 @@ function getUserInfoFromStorage(): UserInfo {
       const parsed = JSON.parse(userCache);
       return { 
         userId: parsed.user_id || parsed.id || null,
-        role 
+        role: role || 'guest'
       };
     }
     
@@ -45,13 +58,19 @@ function getUserInfoFromStorage(): UserInfo {
       const parsed = JSON.parse(sinopiaUser);
       return { 
         userId: parsed.user_id || parsed.id || null,
-        role 
+        role: role || 'guest'
       };
     }
   } catch (e) {
     console.error('Failed to get user info from storage:', e);
   }
-  return { userId: null, role: null };
+  
+  // Not logged in - return guest with session ID
+  return { 
+    userId: null, 
+    role: 'guest',
+    sessionId: getOrCreateGuestSessionId()
+  };
 }
 
 export function ChatWidget() {
@@ -93,11 +112,18 @@ export function ChatWidget() {
     setIsTyping(true);
 
     try {
-      const { userId, role } = getUserInfoFromStorage();
+      const { userId, role, sessionId } = getUserInfoFromStorage();
       
       // Build payload based on role
       let payload: Record<string, unknown>;
-      if (role === 'skill_searcher') {
+      if (role === 'guest') {
+        // Guest payload with session_id
+        payload = {
+          role: 'guest',
+          session_id: sessionId,
+          message: trimmedMessage,
+        };
+      } else if (role === 'skill_searcher') {
         payload = {
           role: 'skill_searcher',
           skill_searcher_id: userId,
@@ -106,7 +132,7 @@ export function ChatWidget() {
       } else {
         // Default to skill_giver format
         payload = {
-          role: role || 'skill_giver',
+          role: role,
           user_id: userId,
           message: trimmedMessage,
         };
