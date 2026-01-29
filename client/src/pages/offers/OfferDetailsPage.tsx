@@ -3,6 +3,7 @@ import { useRoute, Link, useLocation } from 'wouter';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { useI18n } from '@/i18n';
 import { useAuth } from '@/context/AuthContext';
+import { jsPDF } from 'jspdf';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -262,7 +263,96 @@ export default function OfferDetailsPage() {
   };
 
   const handleDownloadPdf = () => {
-    console.log('Download PDF clicked - Terms & Conditions');
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    const maxWidth = pageWidth - margin * 2;
+    let yPosition = margin;
+
+    const addNewPageIfNeeded = (requiredSpace: number) => {
+      if (yPosition + requiredSpace > pageHeight - margin) {
+        doc.addPage();
+        yPosition = margin;
+      }
+    };
+
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(t('offers.termsAgreementTitle'), pageWidth / 2, yPosition, { align: 'center' });
+    yPosition += 15;
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    
+    const termsText = t('terms.content');
+    const cleanText = termsText
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/\n\n/g, '\n');
+    
+    const lines = cleanText.split('\n');
+    
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+      if (!trimmedLine) {
+        yPosition += 4;
+        continue;
+      }
+
+      const isBoldLine = /^\d+\./.test(trimmedLine) || 
+                         trimmedLine.startsWith('Allgemeine') ||
+                         trimmedLine.startsWith('General') ||
+                         trimmedLine.includes('AGB') ||
+                         trimmedLine.includes('Terms');
+
+      if (isBoldLine) {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+      } else {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+      }
+
+      const splitLines = doc.splitTextToSize(trimmedLine, maxWidth);
+      const lineHeight = isBoldLine ? 6 : 5;
+      
+      for (const splitLine of splitLines) {
+        addNewPageIfNeeded(lineHeight);
+        doc.text(splitLine, margin, yPosition);
+        yPosition += lineHeight;
+      }
+      
+      yPosition += 2;
+    }
+
+    addNewPageIfNeeded(60);
+    yPosition += 10;
+
+    doc.setDrawColor(200, 200, 200);
+    doc.setFillColor(248, 248, 248);
+    doc.roundedRect(margin, yPosition, maxWidth, 50, 3, 3, 'FD');
+
+    yPosition += 10;
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text(t('offers.digitalSignature'), margin + 10, yPosition);
+    
+    yPosition += 12;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(t('offers.digitallySignedBy'), margin + 10, yPosition);
+    
+    doc.setFont('helvetica', 'bolditalic');
+    doc.setFontSize(14);
+    doc.text(userName, margin + 10 + doc.getTextWidth(t('offers.digitallySignedBy')) + 5, yPosition);
+
+    yPosition += 10;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${t('offers.signatureDate')} ${currentDate}`, margin + 10, yPosition);
+
+    const fileName = `Terms_and_Conditions_${userName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(fileName);
   };
 
   const handleRejectOffer = () => {
