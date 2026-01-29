@@ -9,8 +9,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useI18n } from '@/i18n';
-import { ArrowLeft, Plus, X, Sparkles, CheckCircle, Clock, Users, Layers, Euro, Brain, Upload } from 'lucide-react';
+import { ArrowLeft, Plus, X, Sparkles, CheckCircle, Clock, Users, Layers, Euro, Brain, Upload, Download, FileText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { TermsContent } from '@/components/TermsContent';
+import jsPDF from 'jspdf';
 
 interface RequiredSkill {
   skill: string;
@@ -52,6 +56,36 @@ export default function AddProjectPage() {
   const [description, setDescription] = useState('');
   const [objectives, setObjectives] = useState<string[]>(['']);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [pendingFormData, setPendingFormData] = useState<{ title: string; description: string; objectives: string[] } | null>(null);
+
+  const getUserName = () => {
+    try {
+      const profileCache = localStorage.getItem('user_profile_cache');
+      if (profileCache) {
+        const profile = JSON.parse(profileCache);
+        if (profile.full_name) return profile.full_name;
+        if (profile.first_name || profile.last_name) {
+          return `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
+        }
+      }
+      const sinopiaUser = localStorage.getItem('sinopia_user');
+      if (sinopiaUser) {
+        const user = JSON.parse(sinopiaUser);
+        return user.name || user.email || t('offers.user');
+      }
+    } catch (e) {
+      console.error('Error getting user name:', e);
+    }
+    return t('offers.user');
+  };
+
+  const userName = getUserName();
+  const currentDate = new Date().toLocaleDateString('de-DE', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
 
   // Load cached analysis on mount
   useEffect(() => {
@@ -181,7 +215,7 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
     }
   };
 
-  // Step 2: Create Full Use Case
+  // Step 2: Open Terms Modal (intercept submission)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -200,6 +234,25 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
     const formData = validateForm(!hasFileAnalysis);
     if (!formData) return;
 
+    // Store form data and open terms modal
+    setPendingFormData(formData);
+    setShowTermsModal(true);
+  };
+
+  // Step 3: Create Use Case after Terms acceptance
+  const handleConfirmCreate = async () => {
+    if (!pendingFormData) return;
+
+    const cachedAnalysis = localStorage.getItem(ANALYSIS_CACHE_KEY);
+    if (!cachedAnalysis) {
+      toast({
+        title: t('common.error'),
+        description: t('useCases.analysisDataInvalid'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
     let parsedAnalysis: AnalysisResult;
     try {
       parsedAnalysis = JSON.parse(cachedAnalysis);
@@ -213,15 +266,16 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
     }
     
     setIsLoading(true);
+    setShowTermsModal(false);
 
     try {
       const token = localStorage.getItem('sinopia_token');
       
       // Merge form data with cached analysis data
       const payload = {
-        title: formData.title,
-        description: formData.description,
-        objectives: formData.objectives,
+        title: pendingFormData.title,
+        description: pendingFormData.description,
+        objectives: pendingFormData.objectives,
         total_project_hours: parsedAnalysis.total_project_hours,
         required_job_titles: parsedAnalysis.required_job_titles,
         stages: parsedAnalysis.stages,
@@ -247,11 +301,12 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
       // Clear the cache on success
       localStorage.removeItem(ANALYSIS_CACHE_KEY);
       setAnalysisResult(null);
+      setPendingFormData(null);
 
       // Also update local project context
       addProject({
-        title: formData.title,
-        description: `${formData.description}\n\n${t('useCases.objective')}: ${formData.objectives.join(', ')}`,
+        title: pendingFormData.title,
+        description: `${pendingFormData.description}\n\n${t('useCases.objective')}: ${pendingFormData.objectives.join(', ')}`,
         status: 'open',
         budget: 0,
         deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -276,6 +331,184 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // PDF Download for Use Case Contract
+  const handleDownloadPdf = () => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    const maxWidth = pageWidth - margin * 2;
+    let yPosition = margin;
+
+    const addNewPageIfNeeded = (requiredSpace: number) => {
+      if (yPosition + requiredSpace > pageHeight - margin) {
+        doc.addPage();
+        yPosition = margin;
+      }
+    };
+
+    // Title
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text(t('useCases.contractTitle'), pageWidth / 2, yPosition, { align: 'center' });
+    yPosition += 10;
+
+    // Date
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 100);
+    doc.text(currentDate, pageWidth / 2, yPosition, { align: 'center' });
+    doc.setTextColor(0, 0, 0);
+    yPosition += 15;
+
+    // Use Case Details Box
+    if (pendingFormData) {
+      addNewPageIfNeeded(60);
+      doc.setDrawColor(200, 200, 200);
+      doc.setFillColor(250, 250, 250);
+      
+      const detailsBoxHeight = 50;
+      doc.roundedRect(margin, yPosition, maxWidth, detailsBoxHeight, 3, 3, 'FD');
+      
+      yPosition += 10;
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text(t('useCases.useCaseDetails'), margin + 10, yPosition);
+      yPosition += 10;
+
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${t('useCases.titleLabel')}:`, margin + 10, yPosition);
+      doc.setFont('helvetica', 'normal');
+      const titleLines = doc.splitTextToSize(pendingFormData.title, maxWidth - 60);
+      doc.text(titleLines[0] || '', margin + 50, yPosition);
+      yPosition += 8;
+
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${t('useCases.descriptionLabel')}:`, margin + 10, yPosition);
+      doc.setFont('helvetica', 'normal');
+      const descLines = doc.splitTextToSize(pendingFormData.description, maxWidth - 60);
+      doc.text(descLines[0] || '', margin + 50, yPosition);
+      if (descLines.length > 1) {
+        yPosition += 6;
+        doc.text(descLines[1] || '', margin + 50, yPosition);
+      }
+      yPosition += 15;
+    }
+
+    // Analysis Results Box
+    if (analysisResult) {
+      const analysisBoxHeight = 40;
+      addNewPageIfNeeded(analysisBoxHeight + 10);
+      
+      doc.setDrawColor(200, 200, 200);
+      doc.setFillColor(250, 250, 250);
+      doc.roundedRect(margin, yPosition, maxWidth, analysisBoxHeight, 3, 3, 'FD');
+      
+      yPosition += 10;
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text(t('useCases.projectOverview'), margin + 10, yPosition);
+      yPosition += 10;
+
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${t('useCases.totalHours')}:`, margin + 10, yPosition);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${analysisResult.total_project_hours} ${t('useCases.hours')}`, margin + 60, yPosition);
+
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${t('useCases.totalCost')}:`, margin + 100, yPosition);
+      doc.setFont('helvetica', 'normal');
+      const costFormatted = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(analysisResult.total_project_cost || 0);
+      doc.text(costFormatted, margin + 130, yPosition);
+      yPosition += 15;
+    }
+
+    // Separator
+    addNewPageIfNeeded(20);
+    yPosition += 5;
+    doc.setDrawColor(180, 180, 180);
+    doc.line(margin, yPosition, pageWidth - margin, yPosition);
+    yPosition += 10;
+
+    // Terms & Conditions
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text(t('terms.title'), margin, yPosition);
+    yPosition += 8;
+    
+    const termsText = t('terms.content');
+    const cleanText = termsText
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/\n\n/g, '\n');
+    
+    const lines = cleanText.split('\n');
+    
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+      if (!trimmedLine) {
+        yPosition += 4;
+        continue;
+      }
+
+      const isBoldLine = /^\d+\./.test(trimmedLine) || 
+                         trimmedLine.startsWith('Allgemeine') ||
+                         trimmedLine.startsWith('General') ||
+                         trimmedLine.includes('AGB') ||
+                         trimmedLine.includes('Terms');
+
+      if (isBoldLine) {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+      } else {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+      }
+
+      const splitLines = doc.splitTextToSize(trimmedLine, maxWidth);
+      const lineHeight = isBoldLine ? 6 : 5;
+      
+      for (const splitLine of splitLines) {
+        addNewPageIfNeeded(lineHeight);
+        doc.text(splitLine, margin, yPosition);
+        yPosition += lineHeight;
+      }
+      
+      yPosition += 2;
+    }
+
+    // Digital Signature Box
+    addNewPageIfNeeded(70);
+    yPosition += 10;
+
+    doc.setDrawColor(100, 100, 100);
+    doc.setFillColor(248, 248, 248);
+    doc.roundedRect(margin, yPosition, maxWidth, 55, 3, 3, 'FD');
+
+    yPosition += 12;
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text(t('offers.digitalSignature'), margin + 10, yPosition);
+    
+    yPosition += 14;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(t('offers.digitallySignedBy'), margin + 10, yPosition);
+    
+    doc.setFont('helvetica', 'bolditalic');
+    doc.setFontSize(14);
+    doc.text(userName, margin + 10 + doc.getTextWidth(t('offers.digitallySignedBy')) + 5, yPosition);
+
+    yPosition += 12;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${t('offers.signatureDate')} ${currentDate}`, margin + 10, yPosition);
+
+    // Save PDF
+    doc.save('Sinopia_UseCase_Contract.pdf');
   };
 
   const clearAnalysis = () => {
@@ -608,6 +841,109 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
           </CardContent>
         </Card>
       </div>
+
+      {/* Terms & Conditions Modal */}
+      <Dialog open={showTermsModal} onOpenChange={setShowTermsModal}>
+        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="w-5 h-5" />
+              {t('useCases.termsTitle')}
+            </DialogTitle>
+          </DialogHeader>
+          
+          <ScrollArea className="flex-1 pr-4" style={{ maxHeight: '60vh' }}>
+            <div className="space-y-6">
+              {/* Use Case Summary */}
+              {pendingFormData && (
+                <div className="p-4 bg-muted/50 rounded-lg border">
+                  <h3 className="font-semibold mb-3">{t('useCases.useCaseDetails')}</h3>
+                  <div className="space-y-2 text-sm">
+                    <div>
+                      <span className="font-medium">{t('useCases.titleLabel')}:</span>{' '}
+                      <span className="text-muted-foreground">{pendingFormData.title}</span>
+                    </div>
+                    <div>
+                      <span className="font-medium">{t('useCases.descriptionLabel')}:</span>{' '}
+                      <span className="text-muted-foreground line-clamp-2">{pendingFormData.description}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Analysis Summary */}
+              {analysisResult && (
+                <div className="p-4 bg-muted/50 rounded-lg border">
+                  <h3 className="font-semibold mb-3">{t('useCases.projectOverview')}</h3>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="font-medium">{t('useCases.totalHours')}:</span>{' '}
+                      <span className="text-muted-foreground">{analysisResult.total_project_hours} {t('useCases.hours')}</span>
+                    </div>
+                    <div>
+                      <span className="font-medium">{t('useCases.totalCost')}:</span>{' '}
+                      <span className="text-green-600 font-semibold">
+                        {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(analysisResult.total_project_cost || 0)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Terms Content */}
+              <div className="prose prose-sm dark:prose-invert max-w-none">
+                <TermsContent content={t('terms.content')} />
+              </div>
+
+              {/* Digital Signature Section */}
+              <div className="p-4 bg-muted/30 rounded-lg border-2 border-dashed">
+                <h3 className="font-semibold mb-3">{t('offers.digitalSignature')}</h3>
+                <div className="space-y-2">
+                  <p className="text-sm">
+                    {t('offers.digitallySignedBy')}{' '}
+                    <span className="font-semibold italic" style={{ fontFamily: 'Georgia, serif' }}>
+                      {userName}
+                    </span>
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {t('offers.signatureDate')} {currentDate}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </ScrollArea>
+
+          <DialogFooter className="flex-col sm:flex-row gap-2 pt-4 border-t">
+            <Button
+              variant="outline"
+              onClick={handleDownloadPdf}
+              className="w-full sm:w-auto"
+              data-testid="button-download-contract-pdf"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              {t('offers.downloadPdf')}
+            </Button>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button
+                variant="ghost"
+                onClick={() => setShowTermsModal(false)}
+                className="flex-1 sm:flex-initial"
+                data-testid="button-cancel-terms"
+              >
+                {t('common.cancel')}
+              </Button>
+              <Button
+                onClick={handleConfirmCreate}
+                disabled={isLoading}
+                className="flex-1 sm:flex-initial"
+                data-testid="button-agree-create"
+              >
+                {isLoading ? t('common.loading') : t('useCases.agreeAndCreate')}
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }
