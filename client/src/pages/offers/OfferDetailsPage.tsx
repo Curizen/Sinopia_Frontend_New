@@ -18,6 +18,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient, apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { TermsContent } from '@/components/TermsContent';
+import { jsPDF } from 'jspdf';
 import { 
   ArrowLeft, 
   Clock, 
@@ -105,6 +106,7 @@ export default function OfferDetailsPage() {
   const id = params?.id;
 
   const [showTermsModal, setShowTermsModal] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   
   const userName = useMemo(() => getUserNameFromStorage(), []);
   const currentDate = useMemo(() => {
@@ -261,8 +263,41 @@ export default function OfferDetailsPage() {
     acceptMutation.mutate();
   };
 
-  const handleDownloadPdf = () => {
-    console.log('Download PDF clicked - Terms & Conditions');
+  const handleDownloadPdf = async () => {
+    setIsDownloading(true);
+
+    try {
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'pt',
+        format: 'a4'
+      });
+
+      const element = document.getElementById('contract-content');
+      if (!element) {
+        throw new Error('Contract content not found');
+      }
+
+      await doc.html(element, {
+        callback: function (pdf) {
+          pdf.save(`Sinopia_Contract_${new Date().toISOString().split('T')[0]}.pdf`);
+          setIsDownloading(false);
+        },
+        x: 20,
+        y: 20,
+        width: 555,
+        windowWidth: 800,
+        autoPaging: 'text'
+      });
+    } catch (error) {
+      console.error('PDF generation failed:', error);
+      setIsDownloading(false);
+      toast({
+        title: t('common.error'),
+        description: t('offers.pdfGenerationError'),
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleRejectOffer = () => {
@@ -478,35 +513,37 @@ export default function OfferDetailsPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex-1 min-h-0 overflow-y-auto max-h-96 bg-muted/30 rounded-md p-4" data-testid="terms-modal-content">
-            <TermsContent 
-              content={t('terms.content')} 
-              className="text-sm leading-relaxed text-muted-foreground"
-            />
-          </div>
+          <div id="contract-content" className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+            <div className="flex-1 min-h-0 overflow-y-auto max-h-96 bg-muted/30 rounded-md p-4" data-testid="terms-modal-content">
+              <TermsContent 
+                content={t('terms.content')} 
+                className="text-sm leading-relaxed text-muted-foreground"
+              />
+            </div>
 
-          <div className="border-t pt-4 mt-4">
-            <div className="bg-muted/50 rounded-md p-4" data-testid="signature-section">
-              <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <FileText className="w-4 h-4" />
-                {t('offers.digitalSignature')}
-              </h4>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">{t('offers.digitallySignedBy')}</span>
-                  <span 
-                    className="text-lg font-semibold italic" 
-                    style={{ fontFamily: 'Georgia, serif' }}
-                    data-testid="text-signature-name"
-                  >
-                    {userName}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">{t('offers.signatureDate')}</span>
-                  <span className="text-sm font-medium" data-testid="text-signature-date">
-                    {currentDate}
-                  </span>
+            <div className="border-t pt-4 mt-4">
+              <div className="bg-muted/50 rounded-md p-4" data-testid="signature-section">
+                <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                  <FileText className="w-4 h-4" />
+                  {t('offers.digitalSignature')}
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">{t('offers.digitallySignedBy')}</span>
+                    <span 
+                      className="text-lg font-semibold italic" 
+                      style={{ fontFamily: 'Georgia, serif' }}
+                      data-testid="text-signature-name"
+                    >
+                      {userName}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">{t('offers.signatureDate')}</span>
+                    <span className="text-sm font-medium" data-testid="text-signature-date">
+                      {currentDate}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -516,11 +553,16 @@ export default function OfferDetailsPage() {
             <Button
               variant="outline"
               onClick={handleDownloadPdf}
+              disabled={isDownloading}
               className="w-full sm:w-auto"
               data-testid="button-download-pdf"
             >
-              <Download className="w-4 h-4 mr-2" />
-              {t('offers.downloadPdf')}
+              {isDownloading ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Download className="w-4 h-4 mr-2" />
+              )}
+              {isDownloading ? t('offers.generatingPdf') : t('offers.downloadPdf')}
             </Button>
             <div className="flex gap-2 w-full sm:w-auto">
               <Button

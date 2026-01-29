@@ -328,6 +328,8 @@ export const en = {
     digitallySignedBy: "Digitally Signed by:",
     signatureDate: "Date:",
     downloadPdf: "Download PDF",
+    generatingPdf: "Generating PDF...",
+    pdfGenerationError: "Failed to generate PDF. Please try again.",
     agreeAndAccept: "I Agree & Accept",
     untitledProject: "Untitled Project",
     noJobTitle: "No job title specified",
