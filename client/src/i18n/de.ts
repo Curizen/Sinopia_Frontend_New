@@ -1175,7 +1175,7 @@ Die Verarbeitung personenbezogener Daten erfolgt gemäß DSGVO und der Datenschu
       subtext: "Überspringen Sie die manuelle Eingabe! Laden Sie Ihre PDF-Datei hoch und lassen Sie unsere KI die Details für Sie extrahieren.",
       button: "Aufgabe-Datei hochladen",
     },
-    createButton: "Aufgabe erstellen",
+    createButton: "Aufgabe akzeptieren",
     termsTitle: "Allgemeine Geschäftsbedingungen",
     useCaseDetails: "Aufgabendetails",
     contractTitle: "Sinopia Aufgabenvertrag",

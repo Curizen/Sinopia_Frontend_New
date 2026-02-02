@@ -132,7 +132,7 @@ export function ChatWidget() {
       } else {
         // Default to skill_giver format
         payload = {
-          role: role,
+          role: 'skill_giver',
           user_id: userId,
           message: trimmedMessage,
         };

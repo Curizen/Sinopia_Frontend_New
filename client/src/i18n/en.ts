@@ -1157,7 +1157,7 @@ The processing of personal data is carried out in accordance with the GDPR and S
       subtext: "Skip the manual entry! Upload your PDF file and let our AI extract the details for you.",
       button: "Upload Use Case File",
     },
-    createButton: "Create Use Case",
+    createButton: "Accept Use Case",
     termsTitle: "Terms & Conditions",
     useCaseDetails: "Use Case Details",
     contractTitle: "Sinopia Use Case Contract",
