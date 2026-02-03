@@ -31,6 +31,9 @@ interface RequiredStage {
 }
 
 interface AnalysisResult {
+  title?: string;
+  description?: string;
+  objectives?: string[];
   total_project_hours: number;
   total_project_cost: number;
   required_job_titles: {
@@ -86,12 +89,24 @@ export default function AddProjectPage() {
     day: 'numeric'
   });
 
-  // Load cached analysis on mount
+  // Load cached analysis on mount and pre-populate form fields
   useEffect(() => {
     const cached = localStorage.getItem(ANALYSIS_CACHE_KEY);
     if (cached) {
       try {
-        setAnalysisResult(JSON.parse(cached));
+        const parsedAnalysis = JSON.parse(cached);
+        setAnalysisResult(parsedAnalysis);
+        
+        // Pre-populate form fields from cached analysis
+        if (parsedAnalysis.title) {
+          setTitle(parsedAnalysis.title);
+        }
+        if (parsedAnalysis.description) {
+          setDescription(parsedAnalysis.description);
+        }
+        if (parsedAnalysis.objectives && Array.isArray(parsedAnalysis.objectives) && parsedAnalysis.objectives.length > 0) {
+          setObjectives(parsedAnalysis.objectives);
+        }
       } catch (e) {
         localStorage.removeItem(ANALYSIS_CACHE_KEY);
       }
