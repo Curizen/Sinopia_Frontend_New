@@ -31,6 +31,8 @@ export const en = {
     error: "An error occurred",
     success: "Success",
     optional: "optional",
+    untitled: "Untitled",
+    unknown: "Unknown",
   },
   nav: {
     home: "Home",
@@ -254,6 +256,7 @@ export const en = {
     description: "Description",
     viewDetails: "View Details",
     applyNow: "Apply Now",
+    jobRole: "Job Role",
     statusDraft: "Draft",
     statusOpen: "Open",
     statusInProgress: "In Progress",

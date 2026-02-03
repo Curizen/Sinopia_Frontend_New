@@ -28,6 +28,22 @@ interface UseCase {
   total_project_hours: number;
 }
 
+interface ProjectJobTitle {
+  id: number;
+  job_title: string;
+  projects: {
+    id: number;
+    title: string;
+    status: string;
+    total_project_hours: number;
+  };
+}
+
+interface SkillGiverProject {
+  id: number;
+  project_job_titles: ProjectJobTitle | ProjectJobTitle[];
+}
+
 export default function ProjectsPage() {
   const { user } = useAuth();
   const { t } = useI18n();
@@ -43,22 +59,72 @@ export default function ProjectsPage() {
     const fetchProjects = async () => {
       try {
         const token = localStorage.getItem('sinopia_token');
-        const response = await fetch('/api/use-case/my-usecases', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token && { 'Authorization': `Bearer ${token}` }),
-          },
-          credentials: 'include',
-        });
+        const headers = {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        };
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch projects');
+        if (isSkillGiver) {
+          // Fetch skill giver's assigned projects
+          const response = await fetch('/api/use-case/skill-giver', {
+            method: 'GET',
+            headers,
+            credentials: 'include',
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to fetch projects');
+          }
+
+          const data = await response.json();
+          console.log('[DEBUG] Fetched skill giver projects:', data);
+          
+          // Map the nested structure to our UseCase interface with defensive checks
+          // Handles both object and array shapes for project_job_titles
+          const rawProjects = data.data || [];
+          const mappedProjects: UseCase[] = [];
+          
+          for (const item of rawProjects) {
+            if (!item?.project_job_titles) continue;
+            
+            // Normalize to array if it's an object
+            const jobTitles = Array.isArray(item.project_job_titles) 
+              ? item.project_job_titles 
+              : [item.project_job_titles];
+            
+            for (const jobTitle of jobTitles) {
+              if (!jobTitle?.projects?.id) continue;
+              
+              mappedProjects.push({
+                id: jobTitle.projects.id,
+                title: jobTitle.projects.title || t('common.untitled'),
+                description: `${t('projects.jobRole')}: ${jobTitle.job_title || t('common.unknown')}`,
+                total_cost: 0,
+                objectives: [],
+                status: jobTitle.projects.status || 'pending',
+                skill_giver_status: jobTitle.projects.status || 'pending',
+                total_project_hours: jobTitle.projects.total_project_hours || 0,
+              });
+            }
+          }
+          
+          setProjects(mappedProjects);
+        } else {
+          // Fetch skill searcher's use cases
+          const response = await fetch('/api/use-case/my-usecases', {
+            method: 'GET',
+            headers,
+            credentials: 'include',
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to fetch projects');
+          }
+
+          const data = await response.json();
+          console.log('[DEBUG] Fetched use cases:', data);
+          setProjects(data.use_cases || []);
         }
-
-        const data = await response.json();
-        console.log('[DEBUG] Fetched use cases:', data);
-        setProjects(data.use_cases || []);
       } catch (error) {
         console.error('Error fetching projects:', error);
         toast({
@@ -72,7 +138,7 @@ export default function ProjectsPage() {
     };
 
     fetchProjects();
-  }, [toast, t]);
+  }, [toast, t, isSkillGiver]);
 
   const filteredProjects = projects.filter(project => {
     const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -211,7 +277,7 @@ export default function ProjectsPage() {
         ) : (
           <div className="grid gap-4">
             {filteredProjects.map((project) => (
-              <Link key={project.id} href={`/use-case/${project.id}`}>
+              <Link key={project.id} href={isSkillGiver ? `/projects/${project.id}` : `/use-case/${project.id}`}>
               <Card className="hover-elevate cursor-pointer" data-testid={`card-project-${project.id}`}>
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-4 flex-wrap">

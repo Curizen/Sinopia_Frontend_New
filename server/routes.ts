@@ -897,6 +897,67 @@ export async function registerRoutes(
     }
   });
 
+  // Get Skill Giver's assigned projects (list)
+  app.get("/api/use-case/skill-giver", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+
+      console.log("[DEBUG] GET /api/use-case/skill-giver");
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/use-case/skill-giver`, {
+        method: "GET",
+        headers,
+      });
+
+      forwardCookies(response, res);
+      const data = await response.json();
+      console.log("[DEBUG] GET /api/use-case/skill-giver - Response status:", response.status);
+      console.log("[DEBUG] GET /api/use-case/skill-giver - Response data:", JSON.stringify(data, null, 2));
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Get skill giver projects proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to fetch skill giver projects" });
+    }
+  });
+
+  // Get Skill Giver's project details
+  app.get("/api/use-case/skill-giver/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+
+      console.log(`[DEBUG] GET /api/use-case/skill-giver/${id}`);
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/use-case/skill-giver/${id}`, {
+        method: "GET",
+        headers,
+      });
+
+      forwardCookies(response, res);
+      const data = await response.json();
+      console.log(`[DEBUG] GET /api/use-case/skill-giver/${id} - Response status:`, response.status);
+      console.log(`[DEBUG] GET /api/use-case/skill-giver/${id} - Response data:`, JSON.stringify(data, null, 2));
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Get skill giver project details proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to fetch project details" });
+    }
+  });
+
   // Use Case Analysis endpoint
   app.post("/api/use-case/analysis", async (req, res) => {
     try {

@@ -29,6 +29,8 @@ export const de = {
     error: "Ein Fehler ist aufgetreten",
     success: "Erfolgreich",
     optional: "freiwillig",
+    untitled: "Ohne Titel",
+    unknown: "Unbekannt",
   },
   nav: {
     home: "Startseite",
@@ -262,6 +264,7 @@ export const de = {
     description: "Beschreibung",
     viewDetails: "Details anzeigen",
     applyNow: "Jetzt bewerben",
+    jobRole: "Berufsbezeichnung",
     statusDraft: "Entwurf",
     statusOpen: "Offen",
     statusInProgress: "In Bearbeitung",
