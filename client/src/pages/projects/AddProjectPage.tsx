@@ -945,27 +945,6 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
                   </div>
                 )}
 
-                {/* Project Stages */}
-                {analysisResult.stages?.required_stages && analysisResult.stages.required_stages.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-semibold mb-2">
-                      {t('useCases.projectStages')}
-                    </h4>
-                    <div className="space-y-1">
-                      {analysisResult.stages.required_stages.map((stage: RequiredStage, idx: number) => (
-                        <div key={idx} className="flex items-center justify-between text-sm bg-muted/30 rounded px-3 py-2">
-                          <span className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-semibold">
-                              {stage.stage_order || idx + 1}
-                            </span>
-                            <span>{stage.stage_name}</span>
-                          </span>
-                          <span className="text-muted-foreground text-xs">{stage.total_stage_hours?.toLocaleString()} {t('useCases.hours')}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             )}
 
