@@ -1193,6 +1193,122 @@ export async function registerRoutes(
     }
   });
 
+  // ===============================
+  // Notifications API Routes
+  // ===============================
+
+  // Get user notifications
+  app.get("/api/notifications/user/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const authHeader = req.headers.authorization;
+      
+      if (!authHeader) {
+        return res.status(401).json({ status: "error", message: "Authorization required" });
+      }
+
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "Authorization": authHeader,
+        "Cookie": getClientCookies(req),
+      };
+
+      console.log(`[DEBUG] GET /api/notifications/user/${userId}`);
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/notifications/user/${userId}`, {
+        method: "GET",
+        headers,
+      });
+
+      forwardCookies(response, res);
+      const data = await response.json();
+      console.log(`[DEBUG] GET /api/notifications/user/${userId} - Response status:`, response.status);
+      console.log(`[DEBUG] GET /api/notifications/user/${userId} - Response data:`, JSON.stringify(data, null, 2));
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Get notifications proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to fetch notifications" });
+    }
+  });
+
+  // Mark notification as read
+  app.patch("/api/notifications/:id/read", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const authHeader = req.headers.authorization;
+      
+      if (!authHeader) {
+        return res.status(401).json({ status: "error", message: "Authorization required" });
+      }
+
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "Authorization": authHeader,
+        "Cookie": getClientCookies(req),
+      };
+
+      console.log(`[DEBUG] PATCH /api/notifications/${id}/read`);
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/notifications/${id}/read`, {
+        method: "PATCH",
+        headers,
+      });
+
+      forwardCookies(response, res);
+      console.log(`[DEBUG] PATCH /api/notifications/${id}/read - Response status:`, response.status);
+      
+      // Handle empty response for PATCH (common for mark as read)
+      if (response.status === 204 || response.headers.get('content-length') === '0') {
+        return res.status(200).json({ success: true, message: "Notification marked as read" });
+      }
+      
+      const data = await response.json();
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Mark notification as read proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to mark notification as read" });
+    }
+  });
+
+  // Delete notification
+  app.delete("/api/notifications/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const authHeader = req.headers.authorization;
+      
+      if (!authHeader) {
+        return res.status(401).json({ status: "error", message: "Authorization required" });
+      }
+
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "Authorization": authHeader,
+        "Cookie": getClientCookies(req),
+      };
+
+      console.log(`[DEBUG] DELETE /api/notifications/${id}`);
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/notifications/${id}`, {
+        method: "DELETE",
+        headers,
+      });
+
+      forwardCookies(response, res);
+      
+      // Handle empty response for DELETE
+      if (response.status === 204 || response.headers.get('content-length') === '0') {
+        return res.status(200).json({ success: true, message: "Notification deleted" });
+      }
+      
+      const data = await response.json();
+      console.log(`[DEBUG] DELETE /api/notifications/${id} - Response status:`, response.status);
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Delete notification proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to delete notification" });
+    }
+  });
+
   // Chat webhook proxy for AI assistant
   app.post("/api/chat/webhook", async (req, res) => {
     try {

@@ -4,6 +4,7 @@ import { useI18n } from '@/i18n';
 import { formatDate } from '@/lib/utils/formatters';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'wouter';
 import {
   Bell,
@@ -12,10 +13,12 @@ import {
   CheckCircle2,
   AlertTriangle,
   XCircle,
+  Trash2,
+  Eye,
 } from 'lucide-react';
 
 export default function NotificationsPage() {
-  const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+  const { notifications, unreadCount, isLoading, markAsRead, markAllAsRead, deleteNotification } = useNotifications();
   const { t } = useI18n();
 
   const formatRelativeTime = (date: Date | string) => {
@@ -60,6 +63,14 @@ export default function NotificationsPage() {
     }
   };
 
+  const handleMarkAsRead = async (id: string) => {
+    await markAsRead(id);
+  };
+
+  const handleDelete = async (id: string) => {
+    await deleteNotification(id);
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -78,8 +89,26 @@ export default function NotificationsPage() {
           )}
         </div>
 
-
-        {notifications.length === 0 ? (
+        {isLoading ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('notifications.recentActivity')}</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="divide-y divide-border">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="p-4 flex items-start gap-4">
+                    <Skeleton className="w-10 h-10 rounded-lg shrink-0" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-3 w-1/2" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        ) : notifications.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
               <Bell className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
@@ -100,19 +129,20 @@ export default function NotificationsPage() {
                   <div
                     key={notification.id}
                     className={`p-4 flex items-start gap-4 transition-colors ${
-                      !notification.read ? 'bg-muted/50' : ''
+                      !notification.read ? 'bg-primary/5 border-l-4 border-l-primary' : ''
                     }`}
+                    data-testid={`notification-card-${notification.id}`}
                   >
                     <div className={`w-10 h-10 rounded-lg ${getNotificationBg(notification.type)} flex items-center justify-center shrink-0`}>
                       {getNotificationIcon(notification.type)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <h4 className={`font-medium ${!notification.read ? 'text-foreground' : 'text-muted-foreground'}`}>
+                      <div className="flex items-start justify-between gap-4 flex-wrap">
+                        <div className="flex-1 min-w-0">
+                          <h4 className={`font-medium ${!notification.read ? 'text-foreground font-semibold' : 'text-muted-foreground'}`}>
                             {notification.title}
                           </h4>
-                          <p className="text-sm text-muted-foreground mt-1">
+                          <p className="text-sm text-muted-foreground mt-1 break-words">
                             {notification.message}
                           </p>
                         </div>
@@ -120,13 +150,13 @@ export default function NotificationsPage() {
                           {formatRelativeTime(notification.createdAt)}
                         </span>
                       </div>
-                      <div className="flex items-center gap-4 mt-3">
+                      <div className="flex items-center gap-2 mt-3 flex-wrap">
                         {notification.link && (
                           <Link href={notification.link}>
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-auto p-0 text-primary hover:text-primary/80"
+                              data-testid={`button-view-details-${notification.id}`}
                             >
                               {t('notifications.viewDetails')}
                             </Button>
@@ -136,13 +166,22 @@ export default function NotificationsPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-auto p-0 text-muted-foreground hover:text-foreground"
-                            onClick={() => markAsRead(notification.id)}
+                            onClick={() => handleMarkAsRead(notification.id)}
                             data-testid={`button-mark-read-${notification.id}`}
                           >
+                            <Eye className="w-4 h-4 mr-1" />
                             {t('notifications.markAsRead')}
                           </Button>
                         )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDelete(notification.id)}
+                          data-testid={`button-delete-${notification.id}`}
+                        >
+                          <Trash2 className="w-4 h-4 mr-1 text-destructive" />
+                          {t('notifications.delete')}
+                        </Button>
                       </div>
                     </div>
                     {!notification.read && (

@@ -694,6 +694,7 @@ export const de = {
     recentActivity: "Letzte Aktivität",
     viewDetails: "Details anzeigen",
     markAsRead: "Als gelesen markieren",
+    delete: "Löschen",
   },
   contact: {
     title: "Kontakt",
