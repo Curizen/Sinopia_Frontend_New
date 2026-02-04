@@ -104,6 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       const newUser: User = {
         id: userData?.id || userData?.user_id || Date.now().toString(),
+        userId: userData?.user_id ? Number(userData.user_id) : undefined,
         email: userData?.email || email,
         role: userRole,
         firstName: userData?.full_name?.split(' ')[0] || undefined,

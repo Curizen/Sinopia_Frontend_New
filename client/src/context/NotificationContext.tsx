@@ -54,11 +54,13 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const fetchNotifications = useCallback(async () => {
-    if (!user?.id || !token) return;
+    // Use userId (the actual user_id from backend) for the notifications API
+    const notificationUserId = user?.userId || user?.id;
+    if (!notificationUserId || !token) return;
     
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/notifications/user/${user.id}`, {
+      const response = await fetch(`/api/notifications/user/${notificationUserId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

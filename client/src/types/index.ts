@@ -4,6 +4,7 @@ import type { UserRole, ProjectStatus, OfferStatus, ContractStatus, InvoiceStatu
 
 export interface User {
   id: string;
+  userId?: number;
   email: string;
   role: UserRole;
   avatar?: string;
