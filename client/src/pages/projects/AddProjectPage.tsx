@@ -862,15 +862,66 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5" />
-              {t('useCases.termsTitle')}
+              {t('useCases.confirmUseCase')}
             </DialogTitle>
           </DialogHeader>
 
-          <div className="flex-1 min-h-0 overflow-y-auto max-h-96 bg-muted/30 rounded-md p-4" data-testid="terms-modal-content">
-            <TermsContent 
-              content={t('terms.content')} 
-              className="text-sm leading-relaxed text-muted-foreground"
-            />
+          {/* Use Case Summary Section */}
+          <div className="flex-1 min-h-0 overflow-y-auto max-h-80 space-y-4" data-testid="terms-modal-content">
+            {/* Use Case Title */}
+            <div className="bg-muted/30 rounded-md p-4">
+              <h4 className="text-sm font-semibold mb-2 text-muted-foreground">{t('useCases.title')}</h4>
+              <p className="text-base font-medium" data-testid="text-usecase-title">{pendingFormData?.title || title}</p>
+            </div>
+
+            {/* Use Case Description */}
+            <div className="bg-muted/30 rounded-md p-4">
+              <h4 className="text-sm font-semibold mb-2 text-muted-foreground">{t('useCases.description')}</h4>
+              <p className="text-sm" data-testid="text-usecase-description">{pendingFormData?.description || description}</p>
+            </div>
+
+            {/* Use Case Objectives */}
+            {(pendingFormData?.objectives || objectives).filter(o => o.trim()).length > 0 && (
+              <div className="bg-muted/30 rounded-md p-4">
+                <h4 className="text-sm font-semibold mb-2 text-muted-foreground">{t('useCases.objectives')}</h4>
+                <ul className="list-disc list-inside space-y-1" data-testid="list-usecase-objectives">
+                  {(pendingFormData?.objectives || objectives).filter(o => o.trim()).map((objective, idx) => (
+                    <li key={idx} className="text-sm">{objective}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Analysis Summary if available */}
+            {analysisResult && (
+              <div className="bg-muted/30 rounded-md p-4">
+                <h4 className="text-sm font-semibold mb-2 text-muted-foreground">{t('useCases.analysisResults')}</h4>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-muted-foreground" />
+                    <span>{t('useCases.totalHours')}: <strong>{analysisResult.total_project_hours}</strong></span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Euro className="w-4 h-4 text-muted-foreground" />
+                    <span>{t('useCases.totalCost')}: <strong>€{analysisResult.total_project_cost?.toLocaleString()}</strong></span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* View Terms & Conditions Link */}
+            <div className="border-t pt-4">
+              <p className="text-sm text-muted-foreground mb-2">{t('useCases.termsAgreementNote')}</p>
+              <Link 
+                href="/terms" 
+                target="_blank"
+                className="text-primary hover:underline inline-flex items-center gap-1 text-sm font-medium"
+                data-testid="link-view-terms"
+              >
+                <FileText className="w-4 h-4" />
+                {t('useCases.viewTermsButton')}
+              </Link>
+            </div>
           </div>
 
           <div className="border-t pt-4 mt-4">

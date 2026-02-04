@@ -53,7 +53,17 @@ export default function SignInPage() {
       const destination = returnUrl && returnUrl.startsWith('/') ? returnUrl : '/profile';
       setLocation(destination);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : t('auth.signInError');
+      // Always use translated error message for invalid credentials
+      // This ensures language consistency regardless of backend response language
+      const rawMessage = error instanceof Error ? error.message.toLowerCase() : '';
+      const isInvalidCredentials = rawMessage.includes('invalid') || 
+                                   rawMessage.includes('ungültig') ||
+                                   rawMessage.includes('incorrect') ||
+                                   rawMessage.includes('wrong') ||
+                                   rawMessage.includes('failed') ||
+                                   rawMessage.includes('not found');
+      
+      const errorMessage = isInvalidCredentials ? t('auth.signInError') : t('auth.signInError');
       toast({
         title: t('common.error'),
         description: errorMessage,
