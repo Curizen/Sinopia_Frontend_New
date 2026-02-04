@@ -753,7 +753,7 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
                                   <Users className="w-4 h-4 text-primary" />
                                 </div>
                                 <span className="text-lg font-semibold">
-                                  {role.number_of_employees} {role.number_of_employees === 1 ? t('useCases.employee') : t('useCases.employees')}
+                                  {t('useCases.requiredSkills')}
                                 </span>
                               </div>
                               {role.required_skills && role.required_skills.length > 0 && (

@@ -1218,6 +1218,7 @@ Die Verarbeitung personenbezogener Daten erfolgt gemäß DSGVO und der Datenschu
     requiredRolesDetailed: "Erforderliche Ressourcen",
     employee: "Ressource",
     employees: "Ressourcen",
+    requiredSkills: "Erforderliche Fähigkeiten",
     implementationStages: "Umsetzungsphasen",
     uploadedUseCase: "Hochgeladener Anwendungsfall",
     uploadedUseCaseDesc: "Anwendungsfalldetails aus hochgeladener Datei extrahiert",

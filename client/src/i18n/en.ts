@@ -1200,6 +1200,7 @@ The processing of personal data is carried out in accordance with the GDPR and S
     requiredRolesDetailed: "Required Resources",
     employee: "Resource",
     employees: "Resources",
+    requiredSkills: "Required skills",
     implementationStages: "Implementation Stages",
     uploadedUseCase: "Uploaded Use Case",
     uploadedUseCaseDesc: "Use case details extracted from uploaded file",
