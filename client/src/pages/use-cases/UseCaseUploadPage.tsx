@@ -30,6 +30,44 @@ interface TemplateFile {
 
 const ANALYSIS_CACHE_KEY = 'use_case_analysis_cache';
 
+// Helper function to get company context from user profile
+const getCompanyContext = (): string | null => {
+  try {
+    const profileCache = localStorage.getItem('user_profile_cache');
+    if (profileCache) {
+      const profile = JSON.parse(profileCache);
+      const companySize = profile.company_size || profile.companySize;
+      const industry = profile.industry;
+      
+      if (companySize && industry) {
+        return `The company's size for implementing the project is ${companySize}, and it is a ${industry} company`;
+      }
+    }
+  } catch (e) {
+    console.error('Error getting company context:', e);
+  }
+  return null;
+};
+
+// Helper function to inject company context into objectives array
+const injectCompanyContext = (objectives: string[] | undefined): string[] => {
+  const baseObjectives = Array.isArray(objectives) && objectives.length > 0 
+    ? objectives 
+    : [];
+  
+  const companyContext = getCompanyContext();
+  if (companyContext) {
+    // Check if context already exists to avoid duplicates
+    const alreadyHasContext = baseObjectives.some(obj => 
+      obj.includes("The company's size for implementing the project")
+    );
+    if (!alreadyHasContext) {
+      return [...baseObjectives, companyContext];
+    }
+  }
+  return baseObjectives;
+};
+
 export default function UseCaseUploadPage() {
   const { t } = useI18n();
   const { toast } = useToast();
@@ -232,6 +270,13 @@ export default function UseCaseUploadPage() {
       }
 
       const analysisData = await response.json();
+      
+      // Inject company context into objectives before caching
+      if (analysisData.objectives) {
+        analysisData.objectives = injectCompanyContext(analysisData.objectives);
+      } else {
+        analysisData.objectives = injectCompanyContext([]);
+      }
       
       // Cache the analysis result for the create page
       localStorage.setItem(ANALYSIS_CACHE_KEY, JSON.stringify(analysisData));
