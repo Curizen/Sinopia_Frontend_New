@@ -214,7 +214,7 @@ export const de = {
       minLength: "Mindestens 8 Zeichen",
       uppercase: "Mindestens ein Großbuchstabe",
       number: "Mindestens eine Zahl",
-      specialChar: "Mindestens ein Sonderzeichen (!@#$%^&*)",
+      specialChar: "Mindestens ein Sonderzeichen (!@#$%^&*+)",
     },
     cvUpload: {
       title: "Lebenslauf hochladen",

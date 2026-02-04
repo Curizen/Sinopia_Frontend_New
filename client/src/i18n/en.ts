@@ -206,7 +206,7 @@ export const en = {
       minLength: "At least 8 characters",
       uppercase: "At least one uppercase letter",
       number: "At least one number",
-      specialChar: "At least one special character (!@#$%^&*)",
+      specialChar: "At least one special character (!@#$%^&*+)",
     },
     cvUpload: {
       title: "Upload Your CV",

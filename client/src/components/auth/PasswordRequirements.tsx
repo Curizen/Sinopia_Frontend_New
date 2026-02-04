@@ -13,7 +13,7 @@ export function validatePassword(password: string): PasswordValidation {
     minLength: password.length >= 8,
     hasUppercase: /[A-Z]/.test(password),
     hasNumber: /[0-9]/.test(password),
-    hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    hasSpecialChar: /[!@#$%^&*(),.?":{}|<>+]/.test(password),
   };
 }
 
