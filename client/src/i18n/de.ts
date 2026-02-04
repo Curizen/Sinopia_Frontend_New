@@ -1141,6 +1141,13 @@ Die Verarbeitung personenbezogener Daten erfolgt gemäß DSGVO und der Datenschu
     uploadSubtitle:
       "Laden Sie ein PDF- oder Word-Dokument hoch, das Ihre Aufgabe beschreibt",
     selectFile: "Datei auswählen",
+    selectTemplateLabel: "Oder wählen Sie eine Vorlagendatei:",
+    selectTemplatePlaceholder: "Vorlage auswählen...",
+    downloadingTemplate: "Vorlage wird heruntergeladen...",
+    templateSelected: "Vorlage ausgewählt",
+    templateSelectedDesc: "Vorlagendatei wurde geladen. Klicken Sie auf Absenden zum Analysieren.",
+    loadingTemplates: "Vorlagen werden geladen...",
+    noTemplatesAvailable: "Keine Vorlagen verfügbar",
     dragDropText: "Datei hierher ziehen und ablegen",
     orBrowse: "oder klicken zum Durchsuchen",
     browseFiles: "Dateien durchsuchen",

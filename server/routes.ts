@@ -867,6 +867,36 @@ export async function registerRoutes(
     }
   });
 
+  // Get available template files for use case upload
+  app.get("/api/use-case/files", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+
+      console.log("[DEBUG] GET /api/use-case/files");
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/use-case/files`, {
+        method: "GET",
+        headers,
+      });
+
+      forwardCookies(response, res);
+      const data = await response.json();
+      console.log("[DEBUG] GET /api/use-case/files - Response status:", response.status);
+      console.log("[DEBUG] GET /api/use-case/files - Response data:", JSON.stringify(data, null, 2));
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Get template files proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to fetch template files" });
+    }
+  });
+
   // Get user's use cases
   app.get("/api/use-case/my-usecases", async (req, res) => {
     try {

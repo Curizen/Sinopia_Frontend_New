@@ -1,11 +1,13 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useI18n } from '@/i18n';
-import { ArrowLeft, Upload, FileText, X, Check, AlertCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, Upload, FileText, X, Check, AlertCircle, Loader2, Download } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const ALLOWED_TYPES = [
   'application/pdf',
@@ -21,6 +23,11 @@ interface UploadedFile {
   id: string;
 }
 
+interface TemplateFile {
+  file_name: string;
+  file_url: string;
+}
+
 const ANALYSIS_CACHE_KEY = 'use_case_analysis_cache';
 
 export default function UseCaseUploadPage() {
@@ -31,6 +38,72 @@ export default function UseCaseUploadPage() {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [templateFiles, setTemplateFiles] = useState<TemplateFile[]>([]);
+  const [isLoadingTemplates, setIsLoadingTemplates] = useState(true);
+  const [isDownloadingTemplate, setIsDownloadingTemplate] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<string>('');
+
+  useEffect(() => {
+    const fetchTemplateFiles = async () => {
+      try {
+        const token = localStorage.getItem('sinopia_token');
+        const response = await fetch('/api/use-case/files', {
+          headers: {
+            ...(token && { 'Authorization': `Bearer ${token}` }),
+          },
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setTemplateFiles(Array.isArray(data) ? data : []);
+        }
+      } catch (err) {
+        console.error('Failed to fetch template files:', err);
+      } finally {
+        setIsLoadingTemplates(false);
+      }
+    };
+
+    fetchTemplateFiles();
+  }, []);
+
+  const handleTemplateSelect = async (fileName: string) => {
+    const template = templateFiles.find(t => t.file_name === fileName);
+    if (!template) return;
+
+    setSelectedTemplate(fileName);
+    setIsDownloadingTemplate(true);
+    setError(null);
+
+    try {
+      const response = await fetch(template.file_url);
+      if (!response.ok) {
+        throw new Error('Failed to download template file');
+      }
+
+      const blob = await response.blob();
+      const file = new File([blob], fileName + '.pdf', { type: 'application/pdf' });
+
+      const uploadedFile: UploadedFile = {
+        file,
+        id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+      };
+
+      setUploadedFiles([uploadedFile]);
+
+      toast({
+        title: t('useCases.templateSelected'),
+        description: t('useCases.templateSelectedDesc'),
+      });
+    } catch (err) {
+      console.error('Template download error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to download template');
+      setSelectedTemplate('');
+    } finally {
+      setIsDownloadingTemplate(false);
+    }
+  };
 
   const validateFile = (file: File): string | null => {
     const extension = '.' + file.name.split('.').pop()?.toLowerCase();
@@ -204,6 +277,63 @@ export default function UseCaseUploadPage() {
             <CardTitle>{t('useCases.selectFile')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
+            {/* Template File Selector */}
+            <div className="space-y-2">
+              <Label htmlFor="template-select">{t('useCases.selectTemplateLabel')}</Label>
+              <Select
+                value={selectedTemplate}
+                onValueChange={handleTemplateSelect}
+                disabled={isLoadingTemplates || isDownloadingTemplate}
+              >
+                <SelectTrigger id="template-select" data-testid="select-template">
+                  {isDownloadingTemplate ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {t('useCases.downloadingTemplate')}
+                    </span>
+                  ) : isLoadingTemplates ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {t('useCases.loadingTemplates')}
+                    </span>
+                  ) : (
+                    <SelectValue placeholder={t('useCases.selectTemplatePlaceholder')} />
+                  )}
+                </SelectTrigger>
+                <SelectContent>
+                  {templateFiles.length === 0 ? (
+                    <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                      {t('useCases.noTemplatesAvailable')}
+                    </div>
+                  ) : (
+                    templateFiles.map((template) => (
+                      <SelectItem
+                        key={template.file_name}
+                        value={template.file_name}
+                        data-testid={`template-option-${template.file_name}`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <Download className="w-4 h-4" />
+                          {template.file_name}
+                        </div>
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Divider */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">{t('useCases.orBrowse')}</span>
+              </div>
+            </div>
+
+            {/* Drag and Drop Area */}
             <div
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
