@@ -268,6 +268,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     
     localStorage.setItem('company_profile_cache', JSON.stringify(responseData));
+    localStorage.setItem('user_profile_cache', JSON.stringify(responseData));
     
     const updatedUser: User = {
       ...user,
