@@ -1227,7 +1227,40 @@ export async function registerRoutes(
   // Notifications API Routes
   // ===============================
 
-  // Get user notifications
+  // Get all notifications for authenticated user (new endpoint)
+  app.get("/api/notifications", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      
+      if (!authHeader) {
+        return res.status(401).json({ status: "error", message: "Authorization required" });
+      }
+
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "Authorization": authHeader,
+        "Cookie": getClientCookies(req),
+      };
+
+      console.log("[DEBUG] GET /api/notifications - Proxying to sinopia.eu");
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/notifications`, {
+        method: "GET",
+        headers,
+      });
+
+      forwardCookies(response, res);
+      const data = await response.json();
+      console.log("[DEBUG] GET /api/notifications - Response status:", response.status);
+      console.log("[DEBUG] GET /api/notifications - Response data:", JSON.stringify(data, null, 2).substring(0, 500));
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Get notifications proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to fetch notifications" });
+    }
+  });
+
+  // Get user notifications (legacy endpoint)
   app.get("/api/notifications/user/:userId", async (req, res) => {
     try {
       const { userId } = req.params;

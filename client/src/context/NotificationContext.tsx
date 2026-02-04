@@ -58,7 +58,8 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     
     setIsLoading(true);
     try {
-      const response = await fetch('https://sinopia.eu/api/notifications', {
+      // Route through backend proxy to avoid CORS issues
+      const response = await fetch('/api/notifications', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
