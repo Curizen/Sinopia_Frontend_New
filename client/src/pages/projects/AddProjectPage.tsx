@@ -875,29 +875,20 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
             
             {/* Section 1: Use Case Overview */}
             <div className="border rounded-lg p-4 bg-card">
-              <h3 className="text-base font-bold mb-3 flex items-center gap-2 text-foreground">
-                <FileText className="w-5 h-5 text-primary" />
+              <h3 className="text-base font-bold mb-3 text-foreground">
                 {t('useCases.useCaseOverview')}
               </h3>
               
               <div className="space-y-3">
-                <div>
-                  <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.title')}</span>
-                  <p className="text-base font-semibold mt-1" data-testid="text-usecase-title">{pendingFormData?.title || title}</p>
-                </div>
-                
-                <div>
-                  <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.description')}</span>
-                  <p className="text-sm mt-1 leading-relaxed" data-testid="text-usecase-description">{pendingFormData?.description || description}</p>
-                </div>
+                <p className="text-base font-semibold" data-testid="text-usecase-title">{pendingFormData?.title || title}</p>
+                <p className="text-sm leading-relaxed" data-testid="text-usecase-description">{pendingFormData?.description || description}</p>
               </div>
             </div>
 
             {/* Section 2: Objectives */}
             {(pendingFormData?.objectives || objectives).filter(o => o.trim()).length > 0 && (
               <div className="border rounded-lg p-4 bg-card">
-                <h3 className="text-base font-bold mb-3 flex items-center gap-2 text-foreground">
-                  <CheckCircle className="w-5 h-5 text-primary" />
+                <h3 className="text-base font-bold mb-3 text-foreground">
                   {t('useCases.objectives')}
                 </h3>
                 <ol className="list-decimal list-inside space-y-2" data-testid="list-usecase-objectives">
@@ -913,23 +904,20 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
             {/* Section 3: Analysis Results (if available) */}
             {analysisResult && (
               <div className="border rounded-lg p-4 bg-card">
-                <h3 className="text-base font-bold mb-3 flex items-center gap-2 text-foreground">
-                  <Brain className="w-5 h-5 text-primary" />
+                <h3 className="text-base font-bold mb-3 text-foreground">
                   {t('useCases.analysisResults')}
                 </h3>
                 
                 {/* Project Totals */}
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div className="bg-muted/50 rounded-md p-3">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Clock className="w-4 h-4 text-muted-foreground" />
+                    <div className="mb-1">
                       <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.totalHours')}</span>
                     </div>
                     <p className="text-xl font-bold text-foreground">{analysisResult.total_project_hours?.toLocaleString()}</p>
                   </div>
                   <div className="bg-muted/50 rounded-md p-3">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Euro className="w-4 h-4 text-muted-foreground" />
+                    <div className="mb-1">
                       <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.totalCost')}</span>
                     </div>
                     <p className="text-xl font-bold text-foreground">€{analysisResult.total_project_cost?.toLocaleString()}</p>
@@ -939,8 +927,7 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
                 {/* Required Roles */}
                 {analysisResult.required_job_titles?.job_titles && analysisResult.required_job_titles.job_titles.length > 0 && (
                   <div className="mb-4">
-                    <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                      <Users className="w-4 h-4 text-muted-foreground" />
+                    <h4 className="text-sm font-semibold mb-2">
                       {t('useCases.requiredSkills')}
                     </h4>
                     <div className="flex flex-wrap gap-2">
@@ -961,8 +948,7 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
                 {/* Project Stages */}
                 {analysisResult.stages?.required_stages && analysisResult.stages.required_stages.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                      <Layers className="w-4 h-4 text-muted-foreground" />
+                    <h4 className="text-sm font-semibold mb-2">
                       {t('useCases.projectStages')}
                     </h4>
                     <div className="space-y-1">
