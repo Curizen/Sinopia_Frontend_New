@@ -31,6 +31,7 @@ export const de = {
     optional: "freiwillig",
     untitled: "Ohne Titel",
     unknown: "Unbekannt",
+    more: "weitere",
   },
   nav: {
     home: "Startseite",
@@ -1192,6 +1193,7 @@ Die Verarbeitung personenbezogener Daten erfolgt gemäß DSGVO und der Datenschu
     contractTitle: "Sinopia Aufgabenvertrag",
     agreeAndCreate: "Ich stimme zu & erstelle",
     confirmUseCase: "Aufgabe bestätigen",
+    useCaseOverview: "Aufgabenübersicht",
     termsAgreementNote: "Durch Klicken auf 'Ich stimme zu & erstelle' akzeptieren Sie unsere Allgemeinen Geschäftsbedingungen.",
     viewTermsButton: "Allgemeine Geschäftsbedingungen ansehen",
     created: "Aufgabe erstellt!",
@@ -1214,7 +1216,6 @@ Die Verarbeitung personenbezogener Daten erfolgt gemäß DSGVO und der Datenschu
     requiredRoles: "Erforderliche Rollen",
     roles: "Rollen",
     jobTitles: "Erforderliche Berufsbezeichnungen",
-    projectStages: "Anwendungsfall phasen",
     analyzeHint: "Klicken Sie auf «Aufgabe analysieren», um KI-gestützte Erkenntnisse zu erhalten.",
     projectOverview: "Anwendungsfall Übersicht",
     projectSummary: "Zusammenfassung des Anwendungsfalls",

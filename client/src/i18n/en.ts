@@ -33,6 +33,7 @@ export const en = {
     optional: "optional",
     untitled: "Untitled",
     unknown: "Unknown",
+    more: "more",
   },
   nav: {
     home: "Home",
@@ -1174,6 +1175,7 @@ The processing of personal data is carried out in accordance with the GDPR and S
     contractTitle: "Sinopia Use Case Contract",
     agreeAndCreate: "I Agree & Create",
     confirmUseCase: "Confirm Use Case",
+    useCaseOverview: "Use Case Overview",
     termsAgreementNote: "By clicking 'I Agree & Create', you accept our Terms & Conditions.",
     viewTermsButton: "View Terms & Conditions",
     created: "Use Case created!",
@@ -1196,7 +1198,6 @@ The processing of personal data is carried out in accordance with the GDPR and S
     requiredRoles: "Required Roles",
     roles: "roles",
     jobTitles: "Required Job Titles",
-    projectStages: "Project Stages",
     analyzeHint: "Click 'Analyze Use Case' to get AI-powered insights before creating.",
     projectOverview: "Use Case Overview",
     projectSummary: "Use Case Summary",

@@ -21,11 +21,15 @@ interface RequiredSkill {
 }
 
 interface JobTitle {
+  job_title?: string;
+  level_job_title?: string;
+  level?: string;
   number_of_employees: number;
   required_skills: RequiredSkill[];
 }
 
 interface RequiredStage {
+  stage_order?: number;
   stage_name: string;
   total_stage_hours: number;
 }
@@ -867,55 +871,125 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
           </DialogHeader>
 
           {/* Use Case Summary Section */}
-          <div className="flex-1 min-h-0 overflow-y-auto max-h-80 space-y-4" data-testid="terms-modal-content">
-            {/* Use Case Title */}
-            <div className="bg-muted/30 rounded-md p-4">
-              <h4 className="text-sm font-semibold mb-2 text-muted-foreground">{t('useCases.title')}</h4>
-              <p className="text-base font-medium" data-testid="text-usecase-title">{pendingFormData?.title || title}</p>
+          <div className="flex-1 min-h-0 overflow-y-auto max-h-[60vh] space-y-5" data-testid="terms-modal-content">
+            
+            {/* Section 1: Use Case Overview */}
+            <div className="border rounded-lg p-4 bg-card">
+              <h3 className="text-base font-bold mb-3 flex items-center gap-2 text-foreground">
+                <FileText className="w-5 h-5 text-primary" />
+                {t('useCases.useCaseOverview')}
+              </h3>
+              
+              <div className="space-y-3">
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.title')}</span>
+                  <p className="text-base font-semibold mt-1" data-testid="text-usecase-title">{pendingFormData?.title || title}</p>
+                </div>
+                
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.description')}</span>
+                  <p className="text-sm mt-1 leading-relaxed" data-testid="text-usecase-description">{pendingFormData?.description || description}</p>
+                </div>
+              </div>
             </div>
 
-            {/* Use Case Description */}
-            <div className="bg-muted/30 rounded-md p-4">
-              <h4 className="text-sm font-semibold mb-2 text-muted-foreground">{t('useCases.description')}</h4>
-              <p className="text-sm" data-testid="text-usecase-description">{pendingFormData?.description || description}</p>
-            </div>
-
-            {/* Use Case Objectives */}
+            {/* Section 2: Objectives */}
             {(pendingFormData?.objectives || objectives).filter(o => o.trim()).length > 0 && (
-              <div className="bg-muted/30 rounded-md p-4">
-                <h4 className="text-sm font-semibold mb-2 text-muted-foreground">{t('useCases.objectives')}</h4>
-                <ul className="list-disc list-inside space-y-1" data-testid="list-usecase-objectives">
+              <div className="border rounded-lg p-4 bg-card">
+                <h3 className="text-base font-bold mb-3 flex items-center gap-2 text-foreground">
+                  <CheckCircle className="w-5 h-5 text-primary" />
+                  {t('useCases.objectives')}
+                </h3>
+                <ol className="list-decimal list-inside space-y-2" data-testid="list-usecase-objectives">
                   {(pendingFormData?.objectives || objectives).filter(o => o.trim()).map((objective, idx) => (
-                    <li key={idx} className="text-sm">{objective}</li>
+                    <li key={idx} className="text-sm leading-relaxed">
+                      <span className="ml-1">{objective}</span>
+                    </li>
                   ))}
-                </ul>
+                </ol>
               </div>
             )}
 
-            {/* Analysis Summary if available */}
+            {/* Section 3: Analysis Results (if available) */}
             {analysisResult && (
-              <div className="bg-muted/30 rounded-md p-4">
-                <h4 className="text-sm font-semibold mb-2 text-muted-foreground">{t('useCases.analysisResults')}</h4>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-muted-foreground" />
-                    <span>{t('useCases.totalHours')}: <strong>{analysisResult.total_project_hours}</strong></span>
+              <div className="border rounded-lg p-4 bg-card">
+                <h3 className="text-base font-bold mb-3 flex items-center gap-2 text-foreground">
+                  <Brain className="w-5 h-5 text-primary" />
+                  {t('useCases.analysisResults')}
+                </h3>
+                
+                {/* Project Totals */}
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="bg-muted/50 rounded-md p-3">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Clock className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.totalHours')}</span>
+                    </div>
+                    <p className="text-xl font-bold text-foreground">{analysisResult.total_project_hours?.toLocaleString()}</p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Euro className="w-4 h-4 text-muted-foreground" />
-                    <span>{t('useCases.totalCost')}: <strong>€{analysisResult.total_project_cost?.toLocaleString()}</strong></span>
+                  <div className="bg-muted/50 rounded-md p-3">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Euro className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.totalCost')}</span>
+                    </div>
+                    <p className="text-xl font-bold text-foreground">€{analysisResult.total_project_cost?.toLocaleString()}</p>
                   </div>
                 </div>
+
+                {/* Required Roles */}
+                {analysisResult.required_job_titles?.job_titles && analysisResult.required_job_titles.job_titles.length > 0 && (
+                  <div className="mb-4">
+                    <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
+                      <Users className="w-4 h-4 text-muted-foreground" />
+                      {t('useCases.requiredSkills')}
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {analysisResult.required_job_titles.job_titles.slice(0, 8).map((job: any, idx: number) => (
+                        <Badge key={idx} variant="secondary" className="text-xs">
+                          {job.job_title} ({job.level_job_title || job.level})
+                        </Badge>
+                      ))}
+                      {analysisResult.required_job_titles.job_titles.length > 8 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{analysisResult.required_job_titles.job_titles.length - 8} {t('common.more')}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Project Stages */}
+                {analysisResult.stages?.required_stages && analysisResult.stages.required_stages.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-semibold mb-2 flex items-center gap-2">
+                      <Layers className="w-4 h-4 text-muted-foreground" />
+                      {t('useCases.projectStages')}
+                    </h4>
+                    <div className="space-y-1">
+                      {analysisResult.stages.required_stages.map((stage: RequiredStage, idx: number) => (
+                        <div key={idx} className="flex items-center justify-between text-sm bg-muted/30 rounded px-3 py-2">
+                          <span className="flex items-center gap-2">
+                            <span className="w-5 h-5 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-semibold">
+                              {stage.stage_order || idx + 1}
+                            </span>
+                            <span>{stage.stage_name}</span>
+                          </span>
+                          <span className="text-muted-foreground text-xs">{stage.total_stage_hours?.toLocaleString()} {t('useCases.hours')}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
             {/* View Terms & Conditions Link */}
-            <div className="border-t pt-4">
-              <p className="text-sm text-muted-foreground mb-2">{t('useCases.termsAgreementNote')}</p>
+            <div className="border-t pt-4 mt-2">
+              <p className="text-sm text-muted-foreground mb-3">{t('useCases.termsAgreementNote')}</p>
               <Link 
                 href="/terms" 
                 target="_blank"
-                className="text-primary hover:underline inline-flex items-center gap-1 text-sm font-medium"
+                className="text-primary hover:underline inline-flex items-center gap-1.5 text-sm font-medium"
                 data-testid="link-view-terms"
               >
                 <FileText className="w-4 h-4" />
