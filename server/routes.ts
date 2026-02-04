@@ -1294,14 +1294,34 @@ export async function registerRoutes(
       });
 
       forwardCookies(response, res);
+      console.log(`[DEBUG] DELETE /api/notifications/${id} - Response status:`, response.status);
       
-      // Handle empty response for DELETE
-      if (response.status === 204 || response.headers.get('content-length') === '0') {
+      // Handle success responses (200, 204, or empty body)
+      if (response.status === 200 || response.status === 204 || response.headers.get('content-length') === '0') {
+        // Try to parse response body if exists
+        const text = await response.text();
+        if (text) {
+          try {
+            const data = JSON.parse(text);
+            console.log(`[DEBUG] DELETE /api/notifications/${id} - Response data:`, data);
+            return res.status(200).json(data);
+          } catch {
+            // Non-JSON response, return success
+            return res.status(200).json({ success: true, message: "Notification deleted" });
+          }
+        }
         return res.status(200).json({ success: true, message: "Notification deleted" });
       }
       
-      const data = await response.json();
-      console.log(`[DEBUG] DELETE /api/notifications/${id} - Response status:`, response.status);
+      // Handle error responses
+      const text = await response.text();
+      let data;
+      try {
+        data = text ? JSON.parse(text) : { error: "Unknown error" };
+      } catch {
+        data = { error: text || "Unknown error" };
+      }
+      console.log(`[DEBUG] DELETE /api/notifications/${id} - Error response:`, data);
       res.status(response.status).json(data);
     } catch (error) {
       console.error("Delete notification proxy error:", error);
