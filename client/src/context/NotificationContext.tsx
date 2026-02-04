@@ -54,13 +54,11 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const fetchNotifications = useCallback(async () => {
-    // Use userId (the actual user_id from backend) for the notifications API
-    const notificationUserId = user?.userId || user?.id;
-    if (!notificationUserId || !token) return;
+    if (!token) return;
     
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/notifications/user/${notificationUserId}`, {
+      const response = await fetch('https://sinopia.eu/api/notifications', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -95,7 +93,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id, token]);
+  }, [token]);
 
   // Fetch notifications when user logs in
   useEffect(() => {
