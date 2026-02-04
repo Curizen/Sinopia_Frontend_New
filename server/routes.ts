@@ -1359,7 +1359,139 @@ export async function registerRoutes(
     }
   });
 
-  // Chat webhook proxy for AI assistant
+  // Centralized Chat API - determines role from token and routes to correct N8N webhook
+  app.post("/api/chat", async (req, res) => {
+    try {
+      // Hardcoded webhook URLs
+      const GIVER_WEBHOOK_URL = "https://sinopia.app.n8n.cloud/webhook/Chatbot_SkillGiver";
+      const SEARCHER_WEBHOOK_URL = "https://sinopia.app.n8n.cloud/webhook/Skill_Searcher_chatbot";
+      const GUEST_WEBHOOK_URL = "https://sinopia.app.n8n.cloud/webhook/Guest_Chatbot";
+      
+      const { message } = req.body;
+      
+      // Validate required message field
+      if (!message || typeof message !== 'string' || !message.trim()) {
+        return res.status(400).json({ success: false, error: "Message is required" });
+      }
+
+      // Determine role from Authorization token
+      let detectedRole: 'guest' | 'skill_giver' | 'skill_searcher' = 'guest';
+      let userId: number | null = null;
+      
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.substring(7);
+        
+        // Verify token with Sinopia API to get user info
+        try {
+          const verifyResponse = await fetch(`${EXTERNAL_API_BASE}/api/profile/me`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          
+          if (verifyResponse.ok) {
+            const userData = await verifyResponse.json();
+            userId = userData.user_id || userData.id || null;
+            
+            // Check role from userData or from stored role in request header
+            if (userData.role === 'skill_giver') {
+              detectedRole = 'skill_giver';
+            } else if (userData.role === 'skill_searcher') {
+              detectedRole = 'skill_searcher';
+            } else {
+              // Fallback: Check x-user-role header if role not in profile response
+              const roleHeader = req.headers['x-user-role'] as string;
+              if (roleHeader === 'skill_giver') {
+                detectedRole = 'skill_giver';
+              } else if (roleHeader === 'skill_searcher') {
+                detectedRole = 'skill_searcher';
+              }
+            }
+          }
+        } catch (tokenError) {
+          console.log("[DEBUG] Token verification failed, treating as guest:", tokenError);
+        }
+      }
+
+      // Handle guest session_id
+      let sessionId: string | undefined;
+      if (detectedRole === 'guest') {
+        // Check for existing session from header or generate new one
+        sessionId = req.headers['x-guest-session-id'] as string || `guest_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+      }
+
+      // Select webhook URL and construct payload based on detected role
+      let webhookUrl: string;
+      let webhookPayload: Record<string, unknown>;
+      
+      if (detectedRole === 'guest') {
+        webhookUrl = GUEST_WEBHOOK_URL;
+        webhookPayload = {
+          User_query: message.trim(),
+          session_id: sessionId,
+        };
+      } else if (detectedRole === 'skill_searcher') {
+        webhookUrl = SEARCHER_WEBHOOK_URL;
+        webhookPayload = {
+          skill_searcher_id: userId,
+          message: message.trim(),
+        };
+      } else {
+        // skill_giver
+        webhookUrl = GIVER_WEBHOOK_URL;
+        webhookPayload = {
+          user_id: userId,
+          message: message.trim(),
+        };
+      }
+
+      console.log("[DEBUG] POST /api/chat - Detected Role:", detectedRole, "User ID:", userId, "URL:", webhookUrl);
+      console.log("[DEBUG] POST /api/chat - Payload:", JSON.stringify(webhookPayload, null, 2));
+
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(webhookPayload),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("[DEBUG] Chat webhook error:", errorText);
+        return res.status(response.status).json({ 
+          success: false, 
+          error: "Chat service error",
+          role: detectedRole 
+        });
+      }
+
+      const n8nData = await response.json();
+      console.log("[DEBUG] Chat webhook response:", JSON.stringify(n8nData, null, 2));
+      
+      // Return standardized response
+      const standardResponse: Record<string, unknown> = {
+        success: true,
+        role: detectedRole,
+        n8nResponse: n8nData,
+      };
+      
+      // Include session_id only for guests
+      if (detectedRole === 'guest' && sessionId) {
+        standardResponse.session_id = sessionId;
+      }
+      
+      res.status(200).json(standardResponse);
+    } catch (error) {
+      console.error("Chat API error:", error);
+      res.status(500).json({ success: false, error: "Failed to process chat message" });
+    }
+  });
+
+  // Legacy endpoint for backward compatibility
   app.post("/api/chat/webhook", async (req, res) => {
     try {
       // Hardcoded webhook URLs (no environment variables needed)

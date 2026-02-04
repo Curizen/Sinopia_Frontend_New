@@ -11,66 +11,32 @@ interface Message {
   timestamp: Date;
 }
 
-const CHAT_API_URL = '/api/chat/webhook';
+const CHAT_API_URL = '/api/chat';
+const GUEST_SESSION_KEY = 'guest_chat_session_id';
 
-type UserRole = 'skill_giver' | 'skill_searcher' | 'guest';
-
-interface UserInfo {
-  userId: number | null;
-  role: UserRole;
-  sessionId?: string;
+function getGuestSessionId(): string | null {
+  return sessionStorage.getItem(GUEST_SESSION_KEY);
 }
 
-function getOrCreateGuestSessionId(): string {
-  const SESSION_KEY = 'guest_session_id';
-  let sessionId = sessionStorage.getItem(SESSION_KEY);
-  
-  if (!sessionId) {
-    sessionId = `guest_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-    sessionStorage.setItem(SESSION_KEY, sessionId);
-  }
-  
-  return sessionId;
+function saveGuestSessionId(sessionId: string): void {
+  sessionStorage.setItem(GUEST_SESSION_KEY, sessionId);
 }
 
-function getUserInfoFromStorage(): UserInfo {
+function getAuthToken(): string | null {
+  return localStorage.getItem('sinopia_token');
+}
+
+function getUserRole(): string | null {
   try {
-    // Get role from sinopia_user
     const sinopiaUser = localStorage.getItem('sinopia_user');
-    let role: UserRole | null = null;
     if (sinopiaUser) {
       const parsed = JSON.parse(sinopiaUser);
-      role = parsed.role || null;
-    }
-    
-    // Get user_id from cache
-    const userCache = localStorage.getItem('user_profile_cache');
-    if (userCache) {
-      const parsed = JSON.parse(userCache);
-      return { 
-        userId: parsed.user_id || parsed.id || null,
-        role: role || 'guest'
-      };
-    }
-    
-    // Fallback to sinopia_user for user_id
-    if (sinopiaUser) {
-      const parsed = JSON.parse(sinopiaUser);
-      return { 
-        userId: parsed.user_id || parsed.id || null,
-        role: role || 'guest'
-      };
+      return parsed.role || null;
     }
   } catch (e) {
-    console.error('Failed to get user info from storage:', e);
+    console.error('Failed to get user role:', e);
   }
-  
-  // Not logged in - return guest with session ID
-  return { 
-    userId: null, 
-    role: 'guest',
-    sessionId: getOrCreateGuestSessionId()
-  };
+  return null;
 }
 
 export function ChatWidget() {
@@ -112,39 +78,35 @@ export function ChatWidget() {
     setIsTyping(true);
 
     try {
-      const { userId, role, sessionId } = getUserInfoFromStorage();
+      const token = getAuthToken();
+      const userRole = getUserRole();
+      const guestSessionId = getGuestSessionId();
       
-      // Build payload based on role
-      let payload: Record<string, unknown>;
-      if (role === 'guest') {
-        // Guest payload with session_id
-        payload = {
-          role: 'guest',
-          session_id: sessionId,
-          message: trimmedMessage,
-        };
-      } else if (role === 'skill_searcher') {
-        payload = {
-          role: 'skill_searcher',
-          skill_searcher_id: userId,
-          message: trimmedMessage,
-        };
-      } else {
-        // Default to skill_giver format
-        payload = {
-          role: 'skill_giver',
-          user_id: userId,
-          message: trimmedMessage,
-        };
+      // Build headers
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      // Add Authorization header if logged in
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
+      // Add role header as fallback for role detection
+      if (userRole) {
+        headers['x-user-role'] = userRole;
+      }
+      
+      // Add guest session ID header if available (for maintaining context)
+      if (!token && guestSessionId) {
+        headers['x-guest-session-id'] = guestSessionId;
       }
       
       const response = await fetch(CHAT_API_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         credentials: 'include',
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ message: trimmedMessage }),
       });
 
       if (!response.ok) {
@@ -152,7 +114,24 @@ export function ChatWidget() {
       }
 
       const data = await response.json();
-      const botResponse = data.output || data.message || t('chatWidget.errorResponse');
+      
+      // Store guest session_id for future messages
+      if (data.session_id && data.role === 'guest') {
+        saveGuestSessionId(data.session_id);
+      }
+      
+      // Extract bot response from standardized format
+      let botResponse = t('chatWidget.errorResponse');
+      if (data.n8nResponse) {
+        // Handle different possible response structures
+        botResponse = data.n8nResponse.output || 
+                      data.n8nResponse.message || 
+                      data.n8nResponse.response ||
+                      (typeof data.n8nResponse === 'string' ? data.n8nResponse : botResponse);
+      } else if (data.output || data.message) {
+        // Fallback for legacy format
+        botResponse = data.output || data.message;
+      }
 
       const botMessage: Message = {
         id: `bot-${Date.now()}`,
@@ -220,12 +199,12 @@ export function ChatWidget() {
                 className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[80%] px-3 py-2 rounded-lg text-sm ${
+                  className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
                     message.sender === 'user'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-orange-100 dark:bg-orange-900/30 text-foreground'
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-muted text-foreground'
                   }`}
-                  data-testid={`message-${message.sender}-${message.id}`}
+                  data-testid={`chat-message-${message.sender}`}
                 >
                   {message.content}
                 </div>
@@ -233,19 +212,19 @@ export function ChatWidget() {
             ))}
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-orange-100 dark:bg-orange-900/30 px-3 py-2 rounded-lg">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                  </div>
+                <div className="bg-muted text-foreground rounded-lg px-3 py-2 text-sm">
+                  <span className="inline-flex items-center gap-1">
+                    <span className="animate-bounce" style={{ animationDelay: '0ms' }}>.</span>
+                    <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
+                    <span className="animate-bounce" style={{ animationDelay: '300ms' }}>.</span>
+                  </span>
                 </div>
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Footer */}
+          {/* Input Area */}
           <div className="p-3 border-t border-border">
             <div className="flex gap-2">
               <Input
@@ -254,15 +233,15 @@ export function ChatWidget() {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={t('chatWidget.inputPlaceholder')}
-                disabled={isTyping}
                 className="flex-1"
+                disabled={isTyping}
                 data-testid="input-chat-message"
               />
               <Button
                 size="icon"
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim() || isTyping}
-                className="bg-orange-500 text-white"
+                className="bg-orange-500 hover:bg-orange-600"
                 data-testid="button-send-message"
               >
                 <Send className="h-4 w-4" />
@@ -272,15 +251,19 @@ export function ChatWidget() {
         </div>
       )}
 
-      {/* Floating Button - Custom FAB requires explicit sizing */}
-      <button
-        type="button"
-        className="h-14 w-14 rounded-full bg-orange-500 text-white shadow-lg flex items-center justify-center hover-elevate active-elevate-2"
+      {/* Toggle Button */}
+      <Button
+        size="icon"
+        className="h-14 w-14 rounded-full bg-orange-500 hover:bg-orange-600 shadow-lg"
         onClick={() => setIsOpen(!isOpen)}
         data-testid="button-toggle-chat"
       >
-        {isOpen ? <X className="h-6 w-6" /> : <Bot className="h-6 w-6" />}
-      </button>
+        {isOpen ? (
+          <X className="h-6 w-6" />
+        ) : (
+          <Bot className="h-6 w-6" />
+        )}
+      </Button>
     </div>
   );
 }
