@@ -350,6 +350,10 @@ export const en = {
     noSkillsRequired: "No specific skills required",
     acceptOfferPlaceholder: "Accept offer functionality will be implemented.",
     rejectOfferPlaceholder: "Reject offer functionality will be implemented.",
+    offerOverview: "Offer Overview",
+    totalHoursLabel: "Total Hours",
+    termsAgreementNote: "By clicking 'I Agree & Accept', you accept our Terms & Conditions.",
+    viewTermsButton: "View Terms & Conditions",
   },
   contracts: {
     title: "Contracts",

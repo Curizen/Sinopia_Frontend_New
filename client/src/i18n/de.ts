@@ -358,6 +358,10 @@ export const de = {
     noSkillsRequired: "Keine spezifischen Fähigkeiten erforderlich",
     acceptOfferPlaceholder: "Angebot annehmen Funktion wird implementiert.",
     rejectOfferPlaceholder: "Angebot ablehnen Funktion wird implementiert.",
+    offerOverview: "Angebotsübersicht",
+    totalHoursLabel: "Gesamtstunden",
+    termsAgreementNote: "Durch Klicken auf 'Ich stimme zu & akzeptiere' akzeptieren Sie unsere Allgemeinen Geschäftsbedingungen.",
+    viewTermsButton: "Allgemeine Geschäftsbedingungen ansehen",
   },
   contracts: {
     title: "Verträge",

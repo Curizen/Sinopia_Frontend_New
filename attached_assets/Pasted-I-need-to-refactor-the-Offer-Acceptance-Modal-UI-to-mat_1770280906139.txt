@@ -1,0 +1,35 @@
+I need to refactor the "Offer Acceptance" Modal UI to match the exact design of the "Confirm Use Case" modal (from the Project Creation flow).
+
+Please modify the `OfferDetails` component (specifically the Modal section) to implement the following structure:
+
+### 1. UI Structure Change
+Replace the current large scrollable Terms text box with this layout:
+
+**A. Offer Overview Section (Top Card)**
+- Create a gray/white card displaying the key financial/work details.
+- **Left:** "TOTAL HOURS" -> Display `offer.total_hours`.
+- **Right:** "HOURLY RATE" (or Total Amount) -> Display `offer.hourly_rate` (and calculate total if possible).
+- **Sub-section:** "Role / Job Title" -> Display `offer.job_title`.
+
+**B. Description/Skills Section**
+- Show the `offer.description` or a summary of the `required_skills` in a clean text block, similar to the "Use Case Overview" in the reference design.
+
+**C. Terms & Conditions Link (Middle)**
+- **Remove** the visible scrollable text container of the Terms & Conditions.
+- **Add** this exact consent text:
+  `"By clicking 'I Agree & Accept', you accept our Terms & Conditions."`
+- **Add** a clickable link/button below it:
+  `"View Terms & Conditions"` (Styled in orange/red color).
+- *Logic:* Clicking this link should toggle a collapse/modal to show the full text (optional) or just be a placeholder for now, but the text itself must be hidden by default to save space.
+
+**D. Digital Signature Section (Bottom)**
+- Keep the existing "Digital Signature" block with the gray background (`bg-gray-50`), User Name, and Date.
+
+### 2. PDF Generation Note
+- Ensure the "Download PDF" button still functions.
+- *Important:* Since the T&C text is now hidden from the UI, the PDF generation logic might need to grab the text from a hidden variable or strictly print the "Offer Contract" summary + Signature. For now, ensure the PDF captures the new visible summary and signature properly.
+
+### 3. Styling
+- Use the same padding, rounded corners, and shadow styles as the `CreateUseCase` modal to ensure consistency across the platform.
+
+Please update the Offer Modal to look like the "Confirm Use Case" summary card.

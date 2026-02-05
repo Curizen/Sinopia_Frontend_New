@@ -18,7 +18,6 @@ import {
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient, apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { TermsContent } from '@/components/TermsContent';
 import { 
   ArrowLeft, 
   Clock, 
@@ -677,10 +676,9 @@ export default function OfferDetailsPage() {
       </div>
 
       <Dialog open={showTermsModal} onOpenChange={setShowTermsModal}>
-        <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
+        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <FileText className="w-5 h-5" />
+            <DialogTitle>
               {t('offers.termsAgreementTitle')}
             </DialogTitle>
             <DialogDescription>
@@ -688,17 +686,87 @@ export default function OfferDetailsPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex-1 min-h-0 overflow-y-auto max-h-96 bg-muted/30 rounded-md p-4" data-testid="terms-modal-content">
-            <TermsContent 
-              content={t('terms.content')} 
-              className="text-sm leading-relaxed text-muted-foreground"
-            />
-          </div>
+          <div className="flex-1 min-h-0 overflow-y-auto max-h-[60vh] space-y-5" data-testid="terms-modal-content">
+            
+            {/* Section 1: Offer Overview */}
+            <div className="border rounded-lg p-4 bg-card">
+              <h3 className="text-base font-bold mb-3 text-foreground">
+                {t('offers.offerOverview')}
+              </h3>
+              
+              <div className="space-y-3">
+                <p className="text-base font-semibold" data-testid="text-offer-project-title">
+                  {offer.project?.title || t('offers.untitledProject')}
+                </p>
+                <p className="text-sm leading-relaxed" data-testid="text-offer-job-title">
+                  {offer.job_title?.job_title || '-'}
+                  {offer.job_title?.level_job_title && ` (${offer.job_title.level_job_title})`}
+                </p>
+              </div>
 
-          <div className="border-t pt-4 mt-4">
+              {/* Offer Totals */}
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="bg-muted/50 rounded-md p-3">
+                  <div className="mb-1">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('offers.totalHoursLabel')}</span>
+                  </div>
+                  <p className="text-xl font-bold text-foreground" data-testid="text-offer-hours">{offer.job_title?.total_hours?.toLocaleString() || 0}</p>
+                </div>
+                <div className="bg-muted/50 rounded-md p-3">
+                  <div className="mb-1">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('offers.employeesRequired')}</span>
+                  </div>
+                  <p className="text-xl font-bold text-foreground" data-testid="text-offer-employees">{offer.job_title?.required_employees || 1}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Section 2: Description */}
+            {offer.job_title?.description && (
+              <div className="border rounded-lg p-4 bg-card">
+                <h3 className="text-base font-bold mb-3 text-foreground">
+                  {t('offers.description')}
+                </h3>
+                <p className="text-sm leading-relaxed" data-testid="text-offer-description">
+                  {offer.job_title.description}
+                </p>
+              </div>
+            )}
+
+            {/* Section 3: Required Skills */}
+            {offer.job_title?.skills_required && offer.job_title.skills_required.length > 0 && (
+              <div className="border rounded-lg p-4 bg-card">
+                <h3 className="text-base font-bold mb-3 text-foreground">
+                  {t('offers.requiredSkills')}
+                </h3>
+                <div className="flex flex-wrap gap-2" data-testid="list-offer-skills">
+                  {offer.job_title.skills_required.slice(0, 8).map((skill, idx) => (
+                    <Badge key={idx} variant="secondary" className="text-xs">
+                      {skill.skill_name} ({skill.required_level})
+                    </Badge>
+                  ))}
+                  {offer.job_title.skills_required.length > 8 && (
+                    <Badge variant="outline" className="text-xs">
+                      +{offer.job_title.skills_required.length - 8} {t('common.more')}
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* View Terms & Conditions Link */}
+            <div className="border-t pt-4 mt-2">
+              <p className="text-sm text-muted-foreground mb-2" data-testid="text-terms-agreement-note">
+                {t('offers.termsAgreementNote')}
+              </p>
+              <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 hover:underline text-sm font-medium" data-testid="link-view-terms">
+                {t('offers.viewTermsButton')}
+              </a>
+            </div>
+
+            {/* Digital Signature Section */}
             <div className="bg-muted/50 rounded-md p-4" data-testid="signature-section">
-              <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <FileText className="w-4 h-4" />
+              <h4 className="text-sm font-semibold mb-3">
                 {t('offers.digitalSignature')}
               </h4>
               <div className="space-y-2">
@@ -722,7 +790,7 @@ export default function OfferDetailsPage() {
             </div>
           </div>
 
-          <DialogFooter className="flex-col sm:flex-row gap-2 pt-4">
+          <DialogFooter className="flex-col sm:flex-row gap-2 pt-4 border-t">
             <Button
               variant="outline"
               onClick={handleDownloadPdf}
