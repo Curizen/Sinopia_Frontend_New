@@ -17,7 +17,6 @@ import {
   TrendingUp,
   ArrowRight,
   Clock,
-  Euro,
   Plus,
   Upload,
 } from 'lucide-react';
@@ -178,8 +177,7 @@ export default function DashboardPage() {
                             <div className="flex-1 min-w-0">
                               <h4 className="font-medium truncate">{project.title}</h4>
                               <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
-                                <span className="flex items-center gap-1">
-                                  <Euro className="w-3 h-3" />
+                                <span>
                                   {formatCurrency(project.budget)}
                                 </span>
                                 <span className="flex items-center gap-1">
