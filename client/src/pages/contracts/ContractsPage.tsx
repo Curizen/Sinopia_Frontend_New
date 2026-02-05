@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { formatCurrency, formatDate } from '@/lib/utils/formatters';
-import { Search, Handshake, FileSignature, Calendar, DollarSign } from 'lucide-react';
+import { Search, Handshake, FileSignature, Calendar, Euro } from 'lucide-react';
 
 export default function ContractsPage() {
   const { user } = useAuth();
@@ -136,7 +136,7 @@ export default function ContractsPage() {
                       </div>
                       <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">
-                          <DollarSign className="w-4 h-4" />
+                          <Euro className="w-4 h-4" />
                           {formatCurrency(contract.amount)}
                         </span>
                         <span className="flex items-center gap-1">

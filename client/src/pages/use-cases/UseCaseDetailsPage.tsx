@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   ArrowLeft, 
   Clock, 
-  DollarSign, 
+  Euro, 
   Users, 
   Target, 
   Briefcase,
@@ -232,7 +232,7 @@ export default function UseCaseDetailsPage() {
               </div>
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-2 bg-muted/50 rounded-lg px-4 py-2">
-                  <DollarSign className="w-5 h-5 text-primary" />
+                  <Euro className="w-5 h-5 text-primary" />
                   <div>
                     <p className="text-xs text-muted-foreground">{t('projects.totalCost')}</p>
                     <p className="font-semibold text-lg">{formatCurrency(useCase.total_cost)}</p>
@@ -311,7 +311,7 @@ export default function UseCaseDetailsPage() {
                         </span>
                         {job.hourly_rate > 0 && (
                           <span className="flex items-center gap-1">
-                            <DollarSign className="w-3.5 h-3.5 text-muted-foreground" />
+                            <Euro className="w-3.5 h-3.5 text-muted-foreground" />
                             {formatCurrency(job.hourly_rate)}/{t('useCaseDetails.perHour')}
                           </span>
                         )}

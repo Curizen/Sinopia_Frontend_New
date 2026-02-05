@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Search, Plus, Clock, DollarSign, FolderKanban, Users, Loader2, Target } from 'lucide-react';
+import { Search, Plus, Clock, Euro, FolderKanban, Users, Loader2, Target } from 'lucide-react';
 
 interface UseCase {
   id: number;
@@ -317,7 +317,7 @@ export default function ProjectsPage() {
                     <div className="flex flex-col">
                       <span className="text-muted-foreground text-xs">{t('projects.totalCost')}</span>
                       <span className="font-semibold flex items-center gap-1">
-                        <DollarSign className="w-3.5 h-3.5" />
+                        <Euro className="w-3.5 h-3.5" />
                         {formatCurrency(project.total_cost)}
                       </span>
                     </div>
