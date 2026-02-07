@@ -307,11 +307,6 @@ export default function UseCaseDetailsPage() {
                           <Clock className="w-3.5 h-3.5 text-muted-foreground" />
                           {formatHours(job.total_hours)} {t('useCases.hours')}
                         </span>
-                        {job.hourly_rate > 0 && (
-                          <span className="flex items-center gap-1">
-                            {formatCurrency(job.hourly_rate)}/{t('useCaseDetails.perHour')}
-                          </span>
-                        )}
                       </div>
                       {job.skills && job.skills.length > 0 && (
                         <div className="pt-2 border-t">
