@@ -1,12 +1,8 @@
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { useI18n } from '@/i18n';
-import { Link } from 'wouter';
 
 export default function PrivacyPage() {
   const { t } = useI18n();
-
-  const processingItems = t('privacy.processingItems').split('|');
-  const processingItemsAutoList = t('privacy.processingItemsAutoList').split('|');
 
   return (
     <PublicLayout>
@@ -16,104 +12,10 @@ export default function PrivacyPage() {
             {t('privacy.title')}
           </h1>
 
-          <div className="prose prose-lg max-w-none text-muted-foreground space-y-8">
-            <section>
-              <p>{t('privacy.introductionText')}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('privacy.ipAddresses')}
-              </h2>
-              <p>{t('privacy.ipAddressesText')}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('privacy.security')}
-              </h2>
-              <p>{t('privacy.securityText')}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('privacy.advertising')}
-              </h2>
-              <p>{t('privacy.advertisingText')}</p>
-            </section>
-
-            <section>
-              <p>{t('privacy.contactFormReference')}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('privacy.contactFormTitle')}
-              </h2>
-              <p>{t('privacy.contactFormText')}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('privacy.processingScope')}
-              </h2>
-              <ul className="list-disc pl-6 mt-4 space-y-1">
-                {processingItems.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-              <p className="mt-4">{t('privacy.processingItemsAuto')}</p>
-              <ul className="list-disc pl-6 mt-2 space-y-1">
-                {processingItemsAutoList.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('privacy.legalBasis')}
-              </h2>
-              <p>{t('privacy.legalBasisText')}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('privacy.purpose')}
-              </h2>
-              <p>{t('privacy.purposeText')}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('privacy.storageDuration')}
-              </h2>
-              <p>{t('privacy.storageDurationText')}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('privacy.contactDetails')}
-              </h2>
-              <p>
-                {t('privacy.contactDetailsText')}{' '}
-                <Link 
-                  href="/imprint" 
-                  className="text-primary hover:underline"
-                  data-testid="link-privacy-imprint"
-                >
-                  {t('privacy.contactDetailsLink')}
-                </Link>
-                ).
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('privacy.yourRights')}
-              </h2>
-              <p>{t('privacy.yourRightsText')}</p>
-            </section>
+          <div className="prose prose-lg max-w-none text-muted-foreground" data-testid="text-privacy-content">
+            <p style={{ whiteSpace: 'pre-line' }}>
+              {t('privacy.content')}
+            </p>
           </div>
         </div>
       </div>
