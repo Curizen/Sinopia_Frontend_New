@@ -237,6 +237,12 @@ export default function UseCaseDetailsPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 bg-muted/50 rounded-lg px-4 py-2">
+                  <div>
+                    <p className="text-xs text-muted-foreground">{t('projects.totalWithVat')}</p>
+                    <p className="font-semibold text-lg" data-testid="text-total-with-vat">{formatCurrency(useCase.total_cost * 1.19)}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 bg-muted/50 rounded-lg px-4 py-2">
                   <Clock className="w-5 h-5 text-primary" />
                   <div>
                     <p className="text-xs text-muted-foreground">{t('useCases.totalHours')}</p>

@@ -319,6 +319,9 @@ export default function ProjectsPage() {
                       <span className="font-semibold">
                         {formatCurrency(project.total_cost)}
                       </span>
+                      <span className="text-muted-foreground text-xs mt-0.5" data-testid={`text-total-with-vat-${project.id}`}>
+                        ({formatCurrency(project.total_cost * 1.19)} {t('projects.totalWithVat')})
+                      </span>
                     </div>
                     <div className="flex flex-col">
                       <span className="text-muted-foreground text-xs">{t('useCases.totalHours')}</span>

@@ -418,7 +418,12 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
 
     // Analysis Results Box
     if (analysisResult) {
-      const analysisBoxHeight = 40;
+      const netCost = analysisResult.total_project_cost || 0;
+      const vatAmount = netCost * 0.19;
+      const totalWithVat = netCost * 1.19;
+      const currencyFormat = (val: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }).format(val);
+
+      const analysisBoxHeight = 60;
       addNewPageIfNeeded(analysisBoxHeight + 10);
       
       doc.setDrawColor(200, 200, 200);
@@ -438,10 +443,21 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
       doc.text(`${analysisResult.total_project_hours} ${t('useCases.hours')}`, margin + 60, yPosition);
 
       doc.setFont('helvetica', 'bold');
-      doc.text(`${t('useCases.totalCost')}:`, margin + 100, yPosition);
+      doc.text(`${t('useCases.netAmount')}:`, margin + 100, yPosition);
       doc.setFont('helvetica', 'normal');
-      const costFormatted = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(analysisResult.total_project_cost || 0);
-      doc.text(costFormatted, margin + 130, yPosition);
+      doc.text(currencyFormat(netCost), margin + 135, yPosition);
+      yPosition += 8;
+
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${t('useCases.vatRate')}:`, margin + 100, yPosition);
+      doc.setFont('helvetica', 'normal');
+      doc.text(currencyFormat(vatAmount), margin + 135, yPosition);
+      yPosition += 8;
+
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${t('useCases.totalWithVat')}:`, margin + 100, yPosition);
+      doc.setFont('helvetica', 'normal');
+      doc.text(currencyFormat(totalWithVat), margin + 135, yPosition);
       yPosition += 15;
     }
 
@@ -726,9 +742,29 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
                               <Euro className="w-5 h-5 text-green-600" />
                             </div>
                             <div>
-                              <p className="text-sm text-muted-foreground">{t('useCases.totalCost')}</p>
+                              <p className="text-sm text-muted-foreground">{t('useCases.netAmount')}</p>
                               <p className="text-xl font-bold text-green-600" data-testid="text-total-cost">
-                                {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(analysisResult.total_project_cost || 0)}
+                                {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }).format(analysisResult.total_project_cost || 0)}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10" />
+                            <div>
+                              <p className="text-sm text-muted-foreground">{t('useCases.vatRate')}</p>
+                              <p className="text-lg font-semibold" data-testid="text-vat-amount">
+                                {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }).format((analysisResult.total_project_cost || 0) * 0.19)}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="w-10" />
+                            <div>
+                              <p className="text-sm text-muted-foreground font-semibold">{t('useCases.totalWithVat')}</p>
+                              <p className="text-xl font-bold text-green-600" data-testid="text-total-with-vat">
+                                {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }).format((analysisResult.total_project_cost || 0) * 1.19)}
                               </p>
                             </div>
                           </div>
@@ -918,9 +954,29 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
                   </div>
                   <div className="bg-muted/50 rounded-md p-3">
                     <div className="mb-1">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.totalCost')}</span>
+                      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.netAmount')}</span>
                     </div>
-                    <p className="text-xl font-bold text-foreground">€{analysisResult.total_project_cost?.toLocaleString()}</p>
+                    <p className="text-xl font-bold text-foreground">
+                      {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }).format(analysisResult.total_project_cost || 0)}
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="bg-muted/50 rounded-md p-3">
+                    <div className="mb-1">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.vatRate')}</span>
+                    </div>
+                    <p className="text-lg font-semibold text-foreground">
+                      {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }).format((analysisResult.total_project_cost || 0) * 0.19)}
+                    </p>
+                  </div>
+                  <div className="bg-muted/50 rounded-md p-3">
+                    <div className="mb-1">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.totalWithVat')}</span>
+                    </div>
+                    <p className="text-xl font-bold text-foreground">
+                      {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }).format((analysisResult.total_project_cost || 0) * 1.19)}
+                    </p>
                   </div>
                 </div>
 
