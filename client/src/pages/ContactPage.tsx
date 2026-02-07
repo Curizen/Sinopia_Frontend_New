@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, MapPin, Send } from 'lucide-react';
 
 export default function ContactPage() {
   const { toast } = useToast();
@@ -121,20 +121,6 @@ export default function ContactPage() {
                     <div>
                       <h3 className="font-semibold mb-1">{t('contact.info.email')}</h3>
                       <p className="text-sm text-muted-foreground">info@sinopia.eu</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      <Phone className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-1">{t('contact.info.phone')}</h3>
-                      <p className="text-sm text-muted-foreground">+49 177 4928319</p>
                     </div>
                   </div>
                 </CardContent>

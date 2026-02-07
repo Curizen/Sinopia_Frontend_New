@@ -848,8 +848,6 @@ Deckerstr. 39
 
 Deutschland 
 
-Tel.: +491774928319 
-
 E-Mail: info@sinopia.eu 
 
 Website: www.sinopia.eu 
@@ -1161,7 +1159,7 @@ Diese Datenschutzerklärung wurde durch den Datenschutzerklärungs-Generator der
     representedByTitle: "Vertreten durch:",
     representedByNames: "Jens Uwe Jung, Tobias Bahlinger und Eyad Dawood",
     contactTitle: "Kontakt:",
-    contactDetails: "Telefon: 0177-4928319\ninfo@sinopia.eu",
+    contactDetails: "info@sinopia.eu",
     vatIdTitle: "Umsatzsteuer-ID:",
     vatIdNumber: "DE455888790",
     responsibleTitle: "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:",

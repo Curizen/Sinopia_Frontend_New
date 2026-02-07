@@ -839,8 +839,6 @@ Deckerstr. 39
 
 Deutschland 
 
-Phone: +491774928319 
-
 Email: info@sinopia.eu 
 
 Website: www.sinopia.eu 
@@ -1149,7 +1147,7 @@ Developed by the specialists for LegalTech at Willing & Able that also devel
     representedByTitle: "Represented by:",
     representedByNames: "Jens Uwe Jung, Tobias Bahlinger, and Eyad Dawood",
     contactTitle: "Contact:",
-    contactDetails: "Phone: 0177-4928319\ninfo@sinopia.eu",
+    contactDetails: "info@sinopia.eu",
     vatIdTitle: "VAT ID:",
     vatIdNumber: "DE455888790",
     responsibleTitle: "Responsible for content according to § 18 Abs. 2 MStV:",
