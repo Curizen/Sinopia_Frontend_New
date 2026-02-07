@@ -354,6 +354,7 @@ export const de = {
     role: "Rolle",
     description: "Beschreibung",
     workload: "Arbeitsbelastung",
+    amountPerPerson: "Betrag pro Person",
     hours: "Stunden",
     employeesRequired: "Erforderliche Mitarbeiter",
     requiredSkills: "Erforderliche Fähigkeiten",

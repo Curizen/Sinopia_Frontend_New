@@ -30,7 +30,8 @@ import {
   XCircle,
   Calendar,
   Download,
-  FileText
+  FileText,
+  Banknote
 } from 'lucide-react';
 
 interface SkillRequired {
@@ -43,7 +44,9 @@ interface JobTitle {
   level_job_title: string;
   description: string;
   total_hours: number;
+  hourly_rate: number;
   required_employees: number;
+  employees_required: number;
   skills_required: SkillRequired[];
 }
 
@@ -292,7 +295,7 @@ export default function OfferDetailsPage() {
     doc.setDrawColor(200, 200, 200);
     doc.setFillColor(250, 250, 250);
     
-    const jobBoxHeight = 70;
+    const jobBoxHeight = 80;
     doc.roundedRect(margin, yPosition, maxWidth, jobBoxHeight, 3, 3, 'FD');
     
     yPosition += 10;
@@ -319,18 +322,29 @@ export default function OfferDetailsPage() {
     doc.text(`${jobTitle}${jobLevel ? ` (${jobLevel})` : ''}`, margin + 50, yPosition);
     yPosition += 8;
 
-    const totalHours = offer?.job_title?.total_hours || 0;
+    const pdfEmployeeCount = offer?.job_title?.required_employees || offer?.job_title?.employees_required || 1;
+    const pdfTotalHours = offer?.job_title?.total_hours || 0;
+    const pdfTotalRate = offer?.job_title?.hourly_rate || 0;
+    const pdfDisplayedHours = pdfEmployeeCount > 1 ? pdfTotalHours / pdfEmployeeCount : pdfTotalHours;
+    const pdfDisplayedRate = pdfEmployeeCount > 1 ? pdfTotalRate / pdfEmployeeCount : pdfTotalRate;
+    const pdfCurrencyFormat = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
     doc.setFont('helvetica', 'bold');
     doc.text(`${t('offers.workload')}:`, margin + 10, yPosition);
     doc.setFont('helvetica', 'normal');
-    doc.text(`${totalHours} ${t('offers.hours')}`, margin + 50, yPosition);
+    doc.text(`${pdfDisplayedHours} ${t('offers.hours')}`, margin + 50, yPosition);
     yPosition += 8;
 
-    const requiredEmployees = offer?.job_title?.required_employees || 1;
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${t('offers.amountPerPerson')}:`, margin + 10, yPosition);
+    doc.setFont('helvetica', 'normal');
+    doc.text(pdfCurrencyFormat.format(pdfDisplayedRate), margin + 60, yPosition);
+    yPosition += 8;
+
     doc.setFont('helvetica', 'bold');
     doc.text(`${t('offers.employeesRequired')}:`, margin + 10, yPosition);
     doc.setFont('helvetica', 'normal');
-    doc.text(`${requiredEmployees}`, margin + 50, yPosition);
+    doc.text(`${pdfEmployeeCount}`, margin + 60, yPosition);
     yPosition += 8;
 
     if (offer?.job_title?.description) {
@@ -570,21 +584,40 @@ export default function OfferDetailsPage() {
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-4 pt-2">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-xs text-muted-foreground">{t('offers.workload')}</p>
-                    <p className="font-medium" data-testid="text-total-hours">{offer.job_title?.total_hours || 0} {t('offers.hours')}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-xs text-muted-foreground">{t('offers.employeesRequired')}</p>
-                    <p className="font-medium" data-testid="text-employees-required">{offer.job_title?.required_employees || 1}</p>
-                  </div>
-                </div>
+              <div className="grid grid-cols-3 gap-4 pt-2">
+                {(() => {
+                  const employeeCount = offer.job_title?.required_employees || offer.job_title?.employees_required || 1;
+                  const totalHours = offer.job_title?.total_hours || 0;
+                  const totalRate = offer.job_title?.hourly_rate || 0;
+                  const displayedHours = employeeCount > 1 ? totalHours / employeeCount : totalHours;
+                  const displayedRate = employeeCount > 1 ? totalRate / employeeCount : totalRate;
+                  const currencyFormat = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+                  return (
+                    <>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-muted-foreground" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">{t('offers.workload')}</p>
+                          <p className="font-medium" data-testid="text-total-hours">{displayedHours} {t('offers.hours')}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Banknote className="w-4 h-4 text-muted-foreground" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">{t('offers.amountPerPerson')}</p>
+                          <p className="font-medium" data-testid="text-rate-per-person">{currencyFormat.format(displayedRate)}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-muted-foreground" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">{t('offers.employeesRequired')}</p>
+                          <p className="font-medium" data-testid="text-employees-required">{employeeCount}</p>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
             </CardContent>
           </Card>
@@ -705,20 +738,36 @@ export default function OfferDetailsPage() {
               </div>
 
               {/* Offer Totals */}
-              <div className="grid grid-cols-2 gap-4 mt-4">
-                <div className="bg-muted/50 rounded-md p-3">
-                  <div className="mb-1">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('offers.totalHoursLabel')}</span>
+              {(() => {
+                const empCount = offer.job_title?.required_employees || offer.job_title?.employees_required || 1;
+                const tHours = offer.job_title?.total_hours || 0;
+                const tRate = offer.job_title?.hourly_rate || 0;
+                const dHours = empCount > 1 ? tHours / empCount : tHours;
+                const dRate = empCount > 1 ? tRate / empCount : tRate;
+                const fmt = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+                return (
+                  <div className="grid grid-cols-3 gap-4 mt-4">
+                    <div className="bg-muted/50 rounded-md p-3">
+                      <div className="mb-1">
+                        <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('offers.workload')}</span>
+                      </div>
+                      <p className="text-xl font-bold text-foreground" data-testid="text-offer-hours">{dHours} {t('offers.hours')}</p>
+                    </div>
+                    <div className="bg-muted/50 rounded-md p-3">
+                      <div className="mb-1">
+                        <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('offers.amountPerPerson')}</span>
+                      </div>
+                      <p className="text-xl font-bold text-foreground" data-testid="text-offer-rate">{fmt.format(dRate)}</p>
+                    </div>
+                    <div className="bg-muted/50 rounded-md p-3">
+                      <div className="mb-1">
+                        <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('offers.employeesRequired')}</span>
+                      </div>
+                      <p className="text-xl font-bold text-foreground" data-testid="text-offer-employees">{empCount}</p>
+                    </div>
                   </div>
-                  <p className="text-xl font-bold text-foreground" data-testid="text-offer-hours">{offer.job_title?.total_hours?.toLocaleString() || 0}</p>
-                </div>
-                <div className="bg-muted/50 rounded-md p-3">
-                  <div className="mb-1">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('offers.employeesRequired')}</span>
-                  </div>
-                  <p className="text-xl font-bold text-foreground" data-testid="text-offer-employees">{offer.job_title?.required_employees || 1}</p>
-                </div>
-              </div>
+                );
+              })()}
             </div>
 
             {/* Section 2: Description */}

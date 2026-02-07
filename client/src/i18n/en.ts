@@ -346,6 +346,7 @@ export const en = {
     role: "Role",
     description: "Description",
     workload: "Workload",
+    amountPerPerson: "Amount per person",
     hours: "hours",
     employeesRequired: "Employees Required",
     requiredSkills: "Required Skills",
