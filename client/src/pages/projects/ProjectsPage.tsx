@@ -313,7 +313,7 @@ export default function ProjectsPage() {
                   )}
                 </CardContent>
                 <CardFooter className="pt-3 border-t">
-                  <div className="grid grid-cols-3 gap-4 w-full text-sm">
+                  <div className="grid grid-cols-2 gap-4 w-full text-sm">
                     <div className="flex flex-col">
                       <span className="text-muted-foreground text-xs">{t('projects.totalCost')}</span>
                       <span className="font-semibold">
@@ -321,13 +321,6 @@ export default function ProjectsPage() {
                       </span>
                       <span className="text-muted-foreground text-xs mt-0.5" data-testid={`text-total-with-vat-${project.id}`}>
                         ({formatCurrency(project.total_cost * 1.19)} {t('projects.totalWithVat')})
-                      </span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-muted-foreground text-xs">{t('useCases.totalHours')}</span>
-                      <span className="font-semibold flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5" />
-                        {formatHours(project.total_project_hours)} {t('useCases.hours')}
                       </span>
                     </div>
                     <div className="flex flex-col">
