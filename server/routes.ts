@@ -585,6 +585,108 @@ export async function registerRoutes(
     }
   });
 
+  // Languages API proxy - Get all languages for current user
+  app.get("/api/languages/by-user", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/languages/by-user`, {
+        method: "GET",
+        headers,
+      });
+      forwardCookies(response, res);
+      const data = await response.json();
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Get languages proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to fetch languages" });
+    }
+  });
+
+  // Languages API proxy - Create
+  app.post("/api/languages", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/languages`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(req.body),
+      });
+      forwardCookies(response, res);
+      const data = await response.json();
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Create language proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to create language" });
+    }
+  });
+
+  // Languages API proxy - Update
+  app.put("/api/languages/:id", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/languages/${req.params.id}`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify(req.body),
+      });
+      forwardCookies(response, res);
+      const data = await response.json();
+      res.status(response.status).json(data);
+    } catch (error) {
+      console.error("Update language proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to update language" });
+    }
+  });
+
+  // Languages API proxy - Delete
+  app.delete("/api/languages/:id", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization;
+      const headers: Record<string, string> = { 
+        "Content-Type": "application/json",
+        "Cookie": getClientCookies(req),
+      };
+      if (authHeader) {
+        headers["Authorization"] = authHeader;
+      }
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/languages/${req.params.id}`, {
+        method: "DELETE",
+        headers,
+      });
+      forwardCookies(response, res);
+      if (response.status === 204) {
+        res.status(204).send();
+      } else {
+        const data = await response.json();
+        res.status(response.status).json(data);
+      }
+    } catch (error) {
+      console.error("Delete language proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to delete language" });
+    }
+  });
+
   // Skills API proxy - Get all skills for current user
   app.get("/api/skills", async (req, res) => {
     try {

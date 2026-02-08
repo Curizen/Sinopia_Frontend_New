@@ -83,6 +83,12 @@ interface PersonalProject {
   projectUrl: string;
 }
 
+interface Language {
+  id: number;
+  language: string;
+  level: string;
+}
+
 interface SkillGiverProfile {
   bio: string;
   jobTitle: string;
@@ -499,6 +505,10 @@ export default function ProfilePage() {
   const [eduDialog, setEduDialog] = useState<{ open: boolean; edu: Education | null }>({ open: false, edu: null });
   const [certDialog, setCertDialog] = useState<{ open: boolean; cert: Certification | null }>({ open: false, cert: null });
   const [projDialog, setProjDialog] = useState<{ open: boolean; proj: PersonalProject | null }>({ open: false, proj: null });
+  const [langDialog, setLangDialog] = useState<{ open: boolean; lang: Language | null }>({ open: false, lang: null });
+  const [languages, setLanguages] = useState<Language[]>([]);
+  const [langForm, setLangForm] = useState<{ language: string; level: string }>({ language: '', level: '' });
+  const [langSaving, setLangSaving] = useState(false);
   const [contactDialog, setContactDialog] = useState(false);
   const [companySummaryDialog, setCompanySummaryDialog] = useState(false);
   const [cvUploading, setCvUploading] = useState(false);
@@ -655,6 +665,33 @@ export default function ProfilePage() {
 
     if (isSkillGiver) {
       fetchSkillsFromBackend();
+    }
+  }, [isSkillGiver]);
+
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      try {
+        const token = localStorage.getItem('sinopia_token');
+        if (!token) return;
+        const response = await fetch('/api/languages/by-user', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          credentials: 'include',
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const langsArray = data?.data || (Array.isArray(data) ? data : []);
+          setLanguages(langsArray);
+        }
+      } catch (error) {
+        console.error('Error fetching languages:', error);
+      }
+    };
+    if (isSkillGiver) {
+      fetchLanguages();
     }
   }, [isSkillGiver]);
 
@@ -1714,6 +1751,82 @@ export default function ProfilePage() {
       }
     } catch (error) {
       console.error('Failed to remove project from localStorage cache:', error);
+    }
+  };
+
+  const openLangDialog = (lang: Language | null) => {
+    if (lang) {
+      setLangForm({ language: lang.language, level: lang.level });
+    } else {
+      setLangForm({ language: '', level: '' });
+    }
+    setLangDialog({ open: true, lang });
+  };
+
+  const handleSaveLanguage = async () => {
+    if (!langForm.language.trim() || !langForm.level) return;
+    setLangSaving(true);
+    const token = localStorage.getItem('sinopia_token');
+    try {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const isEdit = langDialog.lang !== null;
+      const url = isEdit ? `/api/languages/${langDialog.lang!.id}` : '/api/languages';
+      const method = isEdit ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method,
+        headers,
+        credentials: 'include',
+        body: JSON.stringify({ language: langForm.language.trim(), level: langForm.level }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (isEdit) {
+          const updated = data?.data || { ...langDialog.lang, ...langForm };
+          setLanguages(prev => prev.map(l => l.id === langDialog.lang!.id ? { ...l, language: langForm.language.trim(), level: langForm.level, ...updated } : l));
+        } else {
+          const newLang = data?.data || { id: Date.now(), language: langForm.language.trim(), level: langForm.level };
+          setLanguages(prev => [...prev, newLang]);
+        }
+        toast({ title: t('profile.languageSaved') });
+        setLangDialog({ open: false, lang: null });
+      } else {
+        toast({ title: t('profile.languageSaveFailed'), variant: 'destructive' });
+      }
+    } catch (error) {
+      console.error('Save language error:', error);
+      toast({ title: t('profile.languageSaveFailed'), variant: 'destructive' });
+    } finally {
+      setLangSaving(false);
+    }
+  };
+
+  const handleDeleteLanguage = async (id: number) => {
+    const confirmDelete = window.confirm(t('profile.confirmDeleteLanguage'));
+    if (!confirmDelete) return;
+    const token = localStorage.getItem('sinopia_token');
+    try {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const response = await fetch(`/api/languages/${id}`, {
+        method: 'DELETE',
+        headers,
+        credentials: 'include',
+      });
+
+      if (response.ok || response.status === 204) {
+        setLanguages(prev => prev.filter(l => l.id !== id));
+        toast({ title: t('profile.languageDeleted') });
+      } else {
+        toast({ title: t('profile.languageDeleteFailed'), variant: 'destructive' });
+      }
+    } catch (error) {
+      console.error('Delete language error:', error);
+      toast({ title: t('profile.languageDeleteFailed'), variant: 'destructive' });
     }
   };
 
@@ -3127,9 +3240,110 @@ export default function ProfilePage() {
                 </CardContent>
               </Card>
             )}
+
+            {isSkillGiver && (
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
+                  <CardTitle className="flex items-center gap-2">
+                    <Globe className="w-5 h-5" />
+                    {t('profile.languages')}
+                  </CardTitle>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => openLangDialog(null)}
+                    data-testid="button-add-language"
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    {t('profile.addLanguage')}
+                  </Button>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {languages.length === 0 ? (
+                    <p className="text-muted-foreground text-sm">{t('profile.noLanguages')}</p>
+                  ) : (
+                    languages.map((lang) => (
+                      <div key={lang.id} className="flex items-center justify-between gap-4 p-3 rounded-lg border" data-testid={`lang-item-${lang.id}`}>
+                        <div className="flex items-center gap-3">
+                          <span className="font-medium" data-testid={`text-lang-name-${lang.id}`}>{lang.language}</span>
+                          <Badge variant="secondary" data-testid={`badge-lang-level-${lang.id}`}>
+                            {lang.level ? capitalizeFirstLetter(lang.level) : ''}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => openLangDialog(lang)}
+                            data-testid={`button-edit-lang-${lang.id}`}
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => handleDeleteLanguage(lang.id)}
+                            className="text-destructive hover:text-destructive"
+                            data-testid={`button-delete-lang-${lang.id}`}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>
+
+      <Dialog open={langDialog.open} onOpenChange={(open) => { if (!open) setLangDialog({ open: false, lang: null }); }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              {langDialog.lang ? t('profile.editLanguage') : t('profile.addLanguage')}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label>{t('profile.languageName')}</Label>
+              <Input
+                value={langForm.language}
+                onChange={(e) => setLangForm(prev => ({ ...prev, language: e.target.value }))}
+                placeholder={t('profile.languageNamePlaceholder')}
+                data-testid="input-language-name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>{t('profile.languageLevel')}</Label>
+              <Select value={langForm.level} onValueChange={(val) => setLangForm(prev => ({ ...prev, level: val }))}>
+                <SelectTrigger data-testid="select-language-level">
+                  <SelectValue placeholder={t('profile.selectLevel')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Beginner">{t('profile.languageLevelBeginner')}</SelectItem>
+                  <SelectItem value="Intermediate">{t('profile.languageLevelIntermediate')}</SelectItem>
+                  <SelectItem value="Advanced">{t('profile.languageLevelAdvanced')}</SelectItem>
+                  <SelectItem value="Expert">{t('profile.languageLevelExpert')}</SelectItem>
+                  <SelectItem value="Native">{t('profile.languageLevelNative')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setLangDialog({ open: false, lang: null })} data-testid="button-cancel-language">
+              <X className="w-4 h-4 mr-1" />
+              {t('common.cancel')}
+            </Button>
+            <Button onClick={handleSaveLanguage} disabled={langSaving || !langForm.language.trim() || !langForm.level} data-testid="button-save-language">
+              <Save className="w-4 h-4 mr-1" />
+              {langSaving ? t('common.saving') : t('common.save')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <ContactDialog
         open={contactDialog}
