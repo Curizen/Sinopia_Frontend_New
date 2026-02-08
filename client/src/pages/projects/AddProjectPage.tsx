@@ -438,26 +438,21 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
 
       doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
-      doc.text(`${t('useCases.totalHours')}:`, margin + 10, yPosition);
+      doc.text(`${t('useCases.netAmount')}:`, margin + 10, yPosition);
       doc.setFont('helvetica', 'normal');
-      doc.text(`${analysisResult.total_project_hours} ${t('useCases.hours')}`, margin + 60, yPosition);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text(`${t('useCases.netAmount')}:`, margin + 100, yPosition);
-      doc.setFont('helvetica', 'normal');
-      doc.text(currencyFormat(netCost), margin + 135, yPosition);
+      doc.text(currencyFormat(netCost), margin + 55, yPosition);
       yPosition += 8;
 
       doc.setFont('helvetica', 'bold');
-      doc.text(`${t('useCases.vatRate')}:`, margin + 100, yPosition);
+      doc.text(`${t('useCases.vatRate')}:`, margin + 10, yPosition);
       doc.setFont('helvetica', 'normal');
-      doc.text(currencyFormat(vatAmount), margin + 135, yPosition);
+      doc.text(currencyFormat(vatAmount), margin + 55, yPosition);
       yPosition += 8;
 
       doc.setFont('helvetica', 'bold');
-      doc.text(`${t('useCases.totalWithVat')}:`, margin + 100, yPosition);
+      doc.text(`${t('useCases.totalWithVat')}:`, margin + 10, yPosition);
       doc.setFont('helvetica', 'normal');
-      doc.text(currencyFormat(totalWithVat), margin + 135, yPosition);
+      doc.text(currencyFormat(totalWithVat), margin + 55, yPosition);
       yPosition += 15;
     }
 
@@ -595,7 +590,6 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
               <div className="space-y-2">
                 <Label htmlFor="title">
                   {t('useCases.titleLabel')}
-                  {hasFileAnalysis && <span className="text-muted-foreground text-xs ml-2">({t('common.optional')})</span>}
                 </Label>
                 <Input
                   id="title"
@@ -610,7 +604,6 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
               <div className="space-y-2">
                 <Label htmlFor="description">
                   {t('useCases.descriptionLabel')}
-                  {hasFileAnalysis && <span className="text-muted-foreground text-xs ml-2">({t('common.optional')})</span>}
                 </Label>
                 <Textarea
                   id="description"
@@ -626,7 +619,6 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
               <div className="space-y-3">
                 <Label>
                   {t('useCases.objectiveLabel')}
-                  {hasFileAnalysis && <span className="text-muted-foreground text-xs ml-2">({t('common.optional')})</span>}
                 </Label>
                 <div className="space-y-3">
                   {objectives.map((objective, index) => (
@@ -727,16 +719,7 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
                         <h4 className="font-semibold">{t('useCases.projectOverview')}</h4>
                       </div>
                       <div className="p-4 bg-background rounded-lg space-y-3">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div className="flex items-center gap-3">
-                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
-                              <Clock className="w-5 h-5 text-primary" />
-                            </div>
-                            <div>
-                              <p className="text-sm text-muted-foreground">{t('useCases.totalHours')}</p>
-                              <p className="text-xl font-bold" data-testid="text-total-hours">{analysisResult.total_project_hours} {t('useCases.hours')}</p>
-                            </div>
-                          </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                           <div className="flex items-center gap-3">
                             <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-500/10">
                               <Euro className="w-5 h-5 text-green-600" />
@@ -748,10 +731,10 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
                               </p>
                             </div>
                           </div>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                           <div className="flex items-center gap-3">
-                            <div className="w-10" />
+                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-500/10">
+                              <Euro className="w-5 h-5 text-green-600" />
+                            </div>
                             <div>
                               <p className="text-sm text-muted-foreground">{t('useCases.vatRate')}</p>
                               <p className="text-lg font-semibold" data-testid="text-vat-amount">
@@ -760,7 +743,9 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
                             </div>
                           </div>
                           <div className="flex items-center gap-3">
-                            <div className="w-10" />
+                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-500/10">
+                              <Euro className="w-5 h-5 text-green-600" />
+                            </div>
                             <div>
                               <p className="text-sm text-muted-foreground font-semibold">{t('useCases.totalWithVat')}</p>
                               <p className="text-xl font-bold text-green-600" data-testid="text-total-with-vat">
@@ -825,21 +810,24 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
                           {/* Timeline line */}
                           <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-border" />
                           <div className="space-y-3">
-                            {analysisResult.stages.required_stages.map((stage, index) => (
-                              <div key={index} className="relative pl-10">
-                                {/* Timeline dot */}
-                                <div className="absolute left-2.5 top-4 w-3 h-3 rounded-full bg-primary border-2 border-background" />
-                                <div className="p-4 bg-background rounded-lg">
-                                  <div className="flex items-center justify-between flex-wrap gap-2">
-                                    <p className="font-medium">{stage.stage_name}</p>
-                                    <Badge variant="outline" className="text-xs">
-                                      <Clock className="w-3 h-3 mr-1" />
-                                      {stage.total_stage_hours} {t('useCases.hours')}
-                                    </Badge>
+                            {analysisResult.stages.required_stages.map((stage, index) => {
+                              const totalHours = analysisResult.total_project_hours || 1;
+                              const percentage = ((stage.total_stage_hours / totalHours) * 100).toFixed(1);
+                              return (
+                                <div key={index} className="relative pl-10">
+                                  <div className="absolute left-2.5 top-4 w-3 h-3 rounded-full bg-primary border-2 border-background" />
+                                  <div className="p-4 bg-background rounded-lg">
+                                    <div className="flex items-center justify-between flex-wrap gap-2">
+                                      <p className="font-medium">{stage.stage_name}</p>
+                                      <Badge variant="outline" className="text-xs">
+                                        <Clock className="w-3 h-3 mr-1" />
+                                        {percentage}%
+                                      </Badge>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         </div>
                       </div>
@@ -945,13 +933,7 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
                 </h3>
                 
                 {/* Project Totals */}
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="bg-muted/50 rounded-md p-3">
-                    <div className="mb-1">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.totalHours')}</span>
-                    </div>
-                    <p className="text-xl font-bold text-foreground">{analysisResult.total_project_hours?.toLocaleString()}</p>
-                  </div>
+                <div className="grid grid-cols-3 gap-4 mb-4">
                   <div className="bg-muted/50 rounded-md p-3">
                     <div className="mb-1">
                       <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.netAmount')}</span>
@@ -960,8 +942,6 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
                       {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }).format(analysisResult.total_project_cost || 0)}
                     </p>
                   </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4 mb-4">
                   <div className="bg-muted/50 rounded-md p-3">
                     <div className="mb-1">
                       <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('useCases.vatRate')}</span>
