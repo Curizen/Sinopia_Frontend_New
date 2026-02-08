@@ -509,33 +509,6 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
       yPosition += 2;
     }
 
-    // Digital Signature Box
-    addNewPageIfNeeded(70);
-    yPosition += 10;
-
-    doc.setDrawColor(100, 100, 100);
-    doc.setFillColor(248, 248, 248);
-    doc.roundedRect(margin, yPosition, maxWidth, 55, 3, 3, 'FD');
-
-    yPosition += 12;
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text(t('offers.digitalSignature'), margin + 10, yPosition);
-    
-    yPosition += 14;
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text(t('offers.digitallySignedBy'), margin + 10, yPosition);
-    
-    doc.setFont('helvetica', 'bolditalic');
-    doc.setFontSize(14);
-    doc.text(userName, margin + 10 + doc.getTextWidth(t('offers.digitallySignedBy')) + 5, yPosition);
-
-    yPosition += 12;
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`${t('offers.signatureDate')} ${currentDate}`, margin + 10, yPosition);
-
     // Save PDF
     doc.save('Sinopia_UseCase_Contract.pdf');
   };
@@ -996,33 +969,6 @@ ${formData.objectives.map(obj => `- ${obj}`).join('\n')}`;
                 <FileText className="w-4 h-4" />
                 {t('useCases.viewTermsButton')}
               </Link>
-            </div>
-          </div>
-
-          <div className="border-t pt-4 mt-4">
-            <div className="bg-muted/50 rounded-md p-4" data-testid="signature-section">
-              <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <FileText className="w-4 h-4" />
-                {t('offers.digitalSignature')}
-              </h4>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">{t('offers.digitallySignedBy')}</span>
-                  <span 
-                    className="text-lg font-semibold italic" 
-                    style={{ fontFamily: 'Georgia, serif' }}
-                    data-testid="text-signature-name"
-                  >
-                    {userName}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">{t('offers.signatureDate')}</span>
-                  <span className="text-sm font-medium" data-testid="text-signature-date">
-                    {currentDate}
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
 
