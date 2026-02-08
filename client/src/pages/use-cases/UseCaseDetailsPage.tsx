@@ -6,6 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { 
   ArrowLeft, 
   Clock, 
@@ -15,7 +22,9 @@ import {
   GraduationCap,
   Loader2,
   AlertCircle,
-  CheckCircle2
+  CheckCircle2,
+  Rocket,
+  X
 } from 'lucide-react';
 
 interface Skill {
@@ -59,6 +68,7 @@ export default function UseCaseDetailsPage() {
   const [useCase, setUseCase] = useState<UseCaseDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   const id = params?.id;
 
@@ -363,6 +373,54 @@ export default function UseCaseDetailsPage() {
           </Card>
         )}
       </div>
+
+      <div className="sticky bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 p-4 z-50">
+        <div className="max-w-4xl mx-auto flex items-center justify-end gap-3">
+          <Button
+            variant="outline"
+            className="border-destructive text-destructive"
+            onClick={() => setShowComingSoon(true)}
+            data-testid="button-reject-usecase"
+          >
+            <X className="w-4 h-4 mr-2" />
+            {t('useCaseDetails.reject')}
+          </Button>
+          <Button
+            onClick={() => setShowComingSoon(true)}
+            data-testid="button-accept-usecase"
+          >
+            <CheckCircle2 className="w-4 h-4 mr-2" />
+            {t('useCaseDetails.acceptUseCase')}
+          </Button>
+        </div>
+      </div>
+
+      <Dialog open={showComingSoon} onOpenChange={setShowComingSoon}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex flex-col items-center text-center gap-3 pt-2">
+              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+                <Rocket className="w-7 h-7 text-primary" />
+              </div>
+              <DialogTitle className="text-xl">
+                {t('useCaseDetails.comingSoonTitle')}
+              </DialogTitle>
+            </div>
+          </DialogHeader>
+          <p className="text-center text-muted-foreground py-2">
+            {t('useCaseDetails.comingSoonBody')}{' '}
+            <span className="font-semibold text-foreground">{t('useCaseDetails.comingSoonDate')}</span>.
+          </p>
+          <DialogFooter className="sm:justify-center">
+            <Button
+              onClick={() => setShowComingSoon(false)}
+              data-testid="button-close-coming-soon"
+            >
+              OK
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }

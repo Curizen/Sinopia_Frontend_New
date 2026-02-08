@@ -282,6 +282,11 @@ export const en = {
     implementationStages: "Implementation Stages",
     requiredSkills: "Required Skills",
     perHour: "hr",
+    acceptUseCase: "Accept Use Case",
+    reject: "Reject",
+    comingSoonTitle: "Coming Soon",
+    comingSoonBody: "This feature will be fully available on",
+    comingSoonDate: "February 16th",
   },
   projectDetail: {
     notFound: "Use Case not found",

@@ -290,6 +290,11 @@ export const de = {
     implementationStages: "Implementierungsphasen",
     requiredSkills: "Erforderliche Fähigkeiten",
     perHour: "Std.",
+    acceptUseCase: "Aufgabe annehmen",
+    reject: "Ablehnen",
+    comingSoonTitle: "Demnächst verfügbar",
+    comingSoonBody: "Diese Funktion wird vollständig verfügbar sein am",
+    comingSoonDate: "16. Februar",
   },
   projectDetail: {
     notFound: "Anwendungsfall nicht gefunden",
