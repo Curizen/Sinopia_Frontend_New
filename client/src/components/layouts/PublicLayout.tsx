@@ -247,15 +247,12 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             </div>
 
             <div className="text-center">
-              <a
-                href="https://curizen.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
-                data-testid="link-powered-by"
+              <span
+                className="text-xs text-muted-foreground"
+                data-testid="text-powered-by"
               >
                 {t('footer.poweredBy')}
-              </a>
+              </span>
             </div>
           </div>
         </div>
