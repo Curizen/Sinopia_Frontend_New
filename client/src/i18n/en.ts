@@ -282,7 +282,7 @@ export const en = {
     implementationStages: "Implementation Stages",
     requiredSkills: "Required Skills",
     perHour: "hr",
-    acceptUseCase: "Accept Use Case",
+    acceptUseCase: "Accept Offer",
     reject: "Reject",
     comingSoonTitle: "Coming Soon",
     comingSoonBody: "This feature will be fully available on",
