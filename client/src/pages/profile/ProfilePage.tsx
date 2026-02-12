@@ -2231,6 +2231,7 @@ export default function ProfilePage() {
   };
 
   // Handle Bio/Summary save via API
+  // Uses the same endpoint and payload structure as handleSaveContact
   const handleSaveBio = async () => {
     if (!editBuffer || !('bio' in editBuffer)) return;
     
@@ -2243,14 +2244,14 @@ export default function ProfilePage() {
 
       const newSummary = (editBuffer.bio || '').trim() || null;
 
-      // Build payload for POST /api/profile/ with correct field mapping
-      // API expects: full_name, email, bio, summary, skills array
       const payload = {
         full_name: cachedUserProfile.fullName || null,
+        linkedin: cachedUserProfile.linkedin || null,
         email: cachedUserProfile.email || null,
-        bio: newSummary,
+        phone: cachedUserProfile.phone || null,
+        country: cachedUserProfile.country || null,
+        city: cachedUserProfile.city || null,
         summary: newSummary,
-        skills: giverProfile.skills.map(s => s.name),
       };
 
       console.log('[DEBUG] Saving bio (POST):', payload);
@@ -2269,21 +2270,17 @@ export default function ProfilePage() {
       console.log('[DEBUG] Save bio response status:', response.status);
       console.log('[DEBUG] Save bio response:', data);
 
-      // Handle 200 or 201 as success
       if (response.ok || response.status === 201) {
-        // 1. Update UI state
         setCachedUserProfile(prev => ({
           ...prev,
           summary: newSummary || '',
         }));
 
-        // 2. Update giverProfile bio as well
         setGiverProfile(prev => ({
           ...prev,
           bio: newSummary || '',
         }));
 
-        // 3. Update localStorage cache
         updateProfileCache({ summary: newSummary });
 
         setEditingSection(null);
