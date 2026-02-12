@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Search, Plus, Clock, FolderKanban, Users, Loader2, Target, DollarSign, Briefcase, Hash } from 'lucide-react';
+import { Search, Plus, Clock, FolderKanban, Users, Loader2, Target, Euro, Briefcase, Hash } from 'lucide-react';
 
 interface UseCase {
   id: number;
@@ -353,7 +353,7 @@ export default function ProjectsPage() {
                       </div>
                       <div className="flex flex-col" data-testid={`text-hourly-rate-${project.id}`}>
                         <span className="text-muted-foreground text-xs flex items-center gap-1">
-                          <DollarSign className="w-3 h-3" />
+                          <Euro className="w-3 h-3" />
                           {t('projects.hourlyRate')}
                         </span>
                         <span className="font-semibold">{formatCurrency(project.hourly_rate)}</span>
