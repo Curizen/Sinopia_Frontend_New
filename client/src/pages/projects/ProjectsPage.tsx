@@ -304,7 +304,7 @@ export default function ProjectsPage() {
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <CardTitle className="text-lg flex items-center gap-2">
-                      {isSkillGiver && project.data_id && (
+                      {project.data_id && (
                         <Badge variant="outline" className="text-xs font-normal" data-testid={`badge-data-id-${project.id}`}>
                           #{project.data_id}
                         </Badge>
