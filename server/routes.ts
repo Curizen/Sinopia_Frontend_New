@@ -701,7 +701,7 @@ export async function registerRoutes(
       
       console.log("[DEBUG] GET /api/skills - Fetching skills from external API");
       
-      const response = await fetch(`${EXTERNAL_API_BASE}/api/skills/`, {
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/skills`, {
         method: "GET",
         headers,
       });
@@ -739,7 +739,7 @@ export async function registerRoutes(
       console.log("[DEBUG] POST /api/skills - Original body:", JSON.stringify(req.body));
       console.log("[DEBUG] POST /api/skills - Transformed body:", JSON.stringify(transformedBody));
       
-      const response = await fetch(`${EXTERNAL_API_BASE}/api/skills/`, {
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/skills`, {
         method: "POST",
         headers,
         body: JSON.stringify(transformedBody),
