@@ -513,6 +513,8 @@ export default function ProfilePage() {
   const [editBuffer, setEditBuffer] = useState<SkillGiverProfile | SkillSearcherProfile | null>(null);
 
   const [skillDialog, setSkillDialog] = useState<{ open: boolean; skill: Skill | null }>({ open: false, skill: null });
+  const [selectedSkillIds, setSelectedSkillIds] = useState<string[]>([]);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
   const [expDialog, setExpDialog] = useState<{ open: boolean; exp: Experience | null }>({ open: false, exp: null });
   const [eduDialog, setEduDialog] = useState<{ open: boolean; edu: Education | null }>({ open: false, edu: null });
   const [certDialog, setCertDialog] = useState<{ open: boolean; cert: Certification | null }>({ open: false, cert: null });
@@ -1012,6 +1014,68 @@ export default function ProfilePage() {
         description: t('profile.deleteFailed'),
         variant: 'destructive',
       });
+    }
+  };
+
+  const handleBulkDeleteSkills = async () => {
+    if (selectedSkillIds.length === 0) return;
+
+    setIsBulkDeleting(true);
+    const token = localStorage.getItem('sinopia_token');
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    try {
+      const results = await Promise.all(
+        selectedSkillIds.map(id =>
+          fetch(`/api/skills/${id}`, {
+            method: 'DELETE',
+            headers,
+            credentials: 'include',
+          }).then(res => ({ id, ok: res.ok || res.status === 204 }))
+            .catch(() => ({ id, ok: false }))
+        )
+      );
+
+      const deletedIds = results.filter(r => r.ok).map(r => r.id);
+      const failedCount = results.filter(r => !r.ok).length;
+
+      if (deletedIds.length > 0) {
+        setGiverProfile(prev => ({
+          ...prev,
+          skills: prev.skills.filter(s => !deletedIds.includes(s.id)),
+        }));
+
+        deletedIds.forEach(id => removeSkillFromLocalStorageCache(id));
+      }
+
+      setSelectedSkillIds([]);
+
+      if (failedCount > 0) {
+        toast({
+          title: t('common.error'),
+          description: `${deletedIds.length} ${t('profile.skillsDeletedCount')}, ${failedCount} ${t('profile.skillsDeleteFailed')}`,
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: t('profile.skillsDeletedSuccess'),
+          description: `${deletedIds.length} ${t('profile.skillsDeletedCount')}`,
+        });
+      }
+    } catch (error) {
+      console.error('[DEBUG] Bulk delete failed:', error);
+      toast({
+        title: t('common.error'),
+        description: t('profile.deleteFailed'),
+        variant: 'destructive',
+      });
+    } finally {
+      setIsBulkDeleting(false);
     }
   };
 
@@ -2957,15 +3021,33 @@ export default function ProfilePage() {
                     <Code className="w-5 h-5" />
                     {t('profile.skills')}
                   </CardTitle>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setSkillDialog({ open: true, skill: null })}
-                    data-testid="button-add-skill"
-                  >
-                    <Plus className="w-4 h-4 mr-1" />
-                    {t('profile.addSkill')}
-                  </Button>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {selectedSkillIds.length > 0 && (
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        disabled={isBulkDeleting}
+                        onClick={() => {
+                          if (window.confirm(t('profile.confirmBulkDeleteSkills').replace('{count}', String(selectedSkillIds.length)))) {
+                            handleBulkDeleteSkills();
+                          }
+                        }}
+                        data-testid="button-bulk-delete-skills"
+                      >
+                        <Trash2 className="w-4 h-4 mr-1" />
+                        {isBulkDeleting ? t('common.loading') : `${t('profile.deleteSelected')} (${selectedSkillIds.length})`}
+                      </Button>
+                    )}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setSkillDialog({ open: true, skill: null })}
+                      data-testid="button-add-skill"
+                    >
+                      <Plus className="w-4 h-4 mr-1" />
+                      {t('profile.addSkill')}
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   {giverProfile.skills.length === 0 ? (
@@ -2974,6 +3056,20 @@ export default function ProfilePage() {
                     </p>
                   ) : (
                     <div className="space-y-2">
+                      <div className="flex items-center gap-2 pb-2 border-b border-border">
+                        <Checkbox
+                          checked={selectedSkillIds.length === giverProfile.skills.length && giverProfile.skills.length > 0}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setSelectedSkillIds(giverProfile.skills.map(s => s.id));
+                            } else {
+                              setSelectedSkillIds([]);
+                            }
+                          }}
+                          data-testid="checkbox-select-all-skills"
+                        />
+                        <span className="text-sm text-muted-foreground">{t('profile.selectAll')}</span>
+                      </div>
                       {giverProfile.skills.map((skill) => (
                         <div
                           key={skill.id}
@@ -2981,6 +3077,17 @@ export default function ProfilePage() {
                           data-testid={`skill-item-${skill.id}`}
                         >
                           <div className="flex items-center gap-3">
+                            <Checkbox
+                              checked={selectedSkillIds.includes(skill.id)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setSelectedSkillIds(prev => [...prev, skill.id]);
+                                } else {
+                                  setSelectedSkillIds(prev => prev.filter(id => id !== skill.id));
+                                }
+                              }}
+                              data-testid={`checkbox-skill-${skill.id}`}
+                            />
                             <div>
                               <p className="font-medium">{skill.name}</p>
                               <div className="flex gap-1 mt-1">
