@@ -117,7 +117,7 @@ export default function ProjectsPage() {
                 total_hours: totalHours,
                 level_job_title: levelJobTitle,
                 required_employees: requiredEmployees,
-                data_id: item.id || null,
+                data_id: jobTitle.projects.id || null,
               });
             }
           }
