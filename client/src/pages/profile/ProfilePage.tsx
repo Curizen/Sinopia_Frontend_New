@@ -115,6 +115,9 @@ interface SkillSearcherProfile {
   city: string;
   country: string;
   companySize: string;
+  street: string;
+  zipCode: string;
+  state: string;
 }
 
 const STORAGE_KEY = 'sinopia_skill_giver_profile';
@@ -448,6 +451,9 @@ export default function ProfilePage() {
     city: user?.city || '',
     country: user?.country || '',
     companySize: user?.companySize || '',
+    street: '',
+    zipCode: '',
+    state: '',
   });
 
   const loadSearcherProfileFromStorage = (): SkillSearcherProfile => {
@@ -470,6 +476,9 @@ export default function ProfilePage() {
           city: apiData.city ?? defaults.city,
           country: apiData.country ?? defaults.country,
           companySize: apiData.company_size ?? defaults.companySize,
+          street: defaults.street,
+          zipCode: defaults.zipCode,
+          state: defaults.state,
         };
       }
       
@@ -488,6 +497,9 @@ export default function ProfilePage() {
           city: parsed.city ?? defaults.city,
           country: parsed.country ?? defaults.country,
           companySize: parsed.companySize ?? defaults.companySize,
+          street: parsed.street ?? defaults.street,
+          zipCode: parsed.zipCode ?? defaults.zipCode,
+          state: parsed.state ?? defaults.state,
         };
       }
     } catch (e) {
@@ -548,6 +560,9 @@ export default function ProfilePage() {
     contactPhone: '',
     industry: '',
     bio: '',
+    street: '',
+    zipCode: '',
+    state: '',
   });
 
   // State for cached user profile from API (for sidebar and bio)
@@ -2238,6 +2253,9 @@ export default function ProfilePage() {
       contactPhone: searcherProfile.contactPhone,
       industry: searcherProfile.industry,
       bio: searcherProfile.bio,
+      street: searcherProfile.street,
+      zipCode: searcherProfile.zipCode,
+      state: searcherProfile.state,
     });
     setCompanySummaryDialog(true);
   };
@@ -2258,6 +2276,9 @@ export default function ProfilePage() {
       contactPhone: companySummaryForm.contactPhone.trim(),
       industry: companySummaryForm.industry.trim(),
       bio: companySummaryForm.bio.trim(),
+      street: companySummaryForm.street.trim(),
+      zipCode: companySummaryForm.zipCode.trim(),
+      state: companySummaryForm.state.trim(),
     };
     
     setSearcherProfile(prev => ({ ...prev, ...updatedProfile }));
@@ -2699,8 +2720,20 @@ export default function ProfilePage() {
                       <span className="font-medium">{displayValue(searcherProfile.industry)}</span>
                     </div>
                     <div>
+                      <span className="text-muted-foreground">{t('profile.street')}: </span>
+                      <span className="font-medium">{displayValue(searcherProfile.street)}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">{t('profile.zipCode')}: </span>
+                      <span className="font-medium">{displayValue(searcherProfile.zipCode)}</span>
+                    </div>
+                    <div>
                       <span className="text-muted-foreground">{t('profile.city')}: </span>
                       <span className="font-medium">{displayValue(searcherProfile.city)}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">{t('profile.state')}: </span>
+                      <span className="font-medium">{displayValue(searcherProfile.state)}</span>
                     </div>
                     <div>
                       <span className="text-muted-foreground">{t('profile.country')}: </span>
@@ -3905,8 +3938,8 @@ function ProjectDialog({ open, onOpenChange, proj, onSave, t }: {
 function CompanySummaryDialog({ open, onOpenChange, form, setForm, onSave, t }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  form: { companyName: string; website: string; city: string; country: string; companySize: string; contactEmail: string; contactPhone: string; industry: string; bio: string };
-  setForm: (form: { companyName: string; website: string; city: string; country: string; companySize: string; contactEmail: string; contactPhone: string; industry: string; bio: string }) => void;
+  form: { companyName: string; website: string; city: string; country: string; companySize: string; contactEmail: string; contactPhone: string; industry: string; bio: string; street: string; zipCode: string; state: string };
+  setForm: (form: { companyName: string; website: string; city: string; country: string; companySize: string; contactEmail: string; contactPhone: string; industry: string; bio: string; street: string; zipCode: string; state: string }) => void;
   onSave: () => void;
   t: (key: string) => string;
 }) {
@@ -3936,7 +3969,25 @@ function CompanySummaryDialog({ open, onOpenChange, form, setForm, onSave, t }: 
               data-testid="input-summary-website"
             />
           </div>
+          <div className="space-y-2">
+            <Label>{t('profile.street')}</Label>
+            <Input
+              value={form.street}
+              onChange={(e) => setForm({ ...form, street: e.target.value })}
+              placeholder={t('profile.streetPlaceholder')}
+              data-testid="input-summary-street"
+            />
+          </div>
           <div className="grid sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>{t('profile.zipCode')}</Label>
+              <Input
+                value={form.zipCode}
+                onChange={(e) => setForm({ ...form, zipCode: e.target.value })}
+                placeholder={t('profile.zipCodePlaceholder')}
+                data-testid="input-summary-zip-code"
+              />
+            </div>
             <div className="space-y-2">
               <Label>{t('profile.city')}</Label>
               <Input
@@ -3944,6 +3995,17 @@ function CompanySummaryDialog({ open, onOpenChange, form, setForm, onSave, t }: 
                 onChange={(e) => setForm({ ...form, city: e.target.value })}
                 placeholder={t('profile.cityPlaceholder')}
                 data-testid="input-summary-city"
+              />
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>{t('profile.state')}</Label>
+              <Input
+                value={form.state}
+                onChange={(e) => setForm({ ...form, state: e.target.value })}
+                placeholder={t('profile.statePlaceholder')}
+                data-testid="input-summary-state"
               />
             </div>
             <div className="space-y-2">
