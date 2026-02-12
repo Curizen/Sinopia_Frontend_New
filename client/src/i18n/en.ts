@@ -269,6 +269,12 @@ export const en = {
     vatRate: "VAT 19%",
     totalWithVat: "Total incl. VAT",
     expertStatus: "Expert Status",
+    hourlyRate: "Hourly Rate",
+    totalHours: "Total Hours",
+    useCaseId: "Use Case ID",
+    levelJobTitle: "Level / Job Title",
+    requiredEmployees: "Required Employees",
+    totalAmountDue: "Total Amount Due",
     fetchError: "Failed to load use cases. Please try again.",
   },
   useCaseDetails: {

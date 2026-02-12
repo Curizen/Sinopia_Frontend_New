@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Search, Plus, Clock, FolderKanban, Users, Loader2, Target } from 'lucide-react';
+import { Search, Plus, Clock, FolderKanban, Users, Loader2, Target, DollarSign, Briefcase, Hash } from 'lucide-react';
 
 interface UseCase {
   id: number;
@@ -26,6 +26,11 @@ interface UseCase {
   status: string;
   skill_giver_status: string;
   total_project_hours: number;
+  hourly_rate: number;
+  total_hours: number;
+  level_job_title: string;
+  required_employees: number;
+  data_id: number | null;
 }
 
 interface ProjectJobTitle {
@@ -87,7 +92,6 @@ export default function ProjectsPage() {
           for (const item of rawProjects) {
             if (!item?.project_job_titles) continue;
             
-            // Normalize to array if it's an object
             const jobTitles = Array.isArray(item.project_job_titles) 
               ? item.project_job_titles 
               : [item.project_job_titles];
@@ -95,6 +99,11 @@ export default function ProjectsPage() {
             for (const jobTitle of jobTitles) {
               if (!jobTitle?.projects?.id) continue;
               
+              const hourlyRate = jobTitle.hourly_rate || jobTitle.projects?.hourly_rate || 0;
+              const totalHours = jobTitle.total_hours || jobTitle.projects?.total_hours || 0;
+              const requiredEmployees = jobTitle.required_employees || jobTitle.projects?.required_employees || 1;
+              const levelJobTitle = jobTitle.level_job_title || jobTitle.job_title || '';
+
               mappedProjects.push({
                 id: jobTitle.projects.id,
                 title: jobTitle.projects.title || t('common.untitled'),
@@ -104,6 +113,11 @@ export default function ProjectsPage() {
                 status: jobTitle.projects.status || 'pending',
                 skill_giver_status: jobTitle.projects.status || 'pending',
                 total_project_hours: jobTitle.projects.total_project_hours || 0,
+                hourly_rate: hourlyRate,
+                total_hours: totalHours,
+                level_job_title: levelJobTitle,
+                required_employees: requiredEmployees,
+                data_id: item.id || null,
               });
             }
           }
@@ -123,7 +137,15 @@ export default function ProjectsPage() {
 
           const data = await response.json();
           console.log('[DEBUG] Fetched use cases:', data);
-          setProjects(data.use_cases || []);
+          const useCases = (data.use_cases || []).map((uc: any) => ({
+            ...uc,
+            hourly_rate: uc.hourly_rate || 0,
+            total_hours: uc.total_hours || 0,
+            level_job_title: uc.level_job_title || '',
+            required_employees: uc.required_employees || 1,
+            data_id: uc.id || null,
+          }));
+          setProjects(useCases);
         }
       } catch (error) {
         console.error('Error fetching projects:', error);
@@ -313,24 +335,75 @@ export default function ProjectsPage() {
                   )}
                 </CardContent>
                 <CardFooter className="pt-3 border-t">
-                  <div className="grid grid-cols-2 gap-4 w-full text-sm">
-                    <div className="flex flex-col">
-                      <span className="text-muted-foreground text-xs">{t('projects.totalCost')}</span>
-                      <span className="font-semibold">
-                        {formatCurrency(project.total_cost)}
-                      </span>
-                      <span className="text-muted-foreground text-xs mt-0.5" data-testid={`text-total-with-vat-${project.id}`}>
-                        ({formatCurrency(project.total_cost * 1.19)} {t('projects.totalWithVat')})
-                      </span>
+                  {isSkillGiver ? (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full text-sm">
+                      {project.data_id && (
+                        <div className="flex flex-col" data-testid={`text-data-id-${project.id}`}>
+                          <span className="text-muted-foreground text-xs flex items-center gap-1">
+                            <Hash className="w-3 h-3" />
+                            {t('projects.useCaseId')}
+                          </span>
+                          <span className="font-semibold">{project.data_id}</span>
+                        </div>
+                      )}
+                      <div className="flex flex-col" data-testid={`text-level-${project.id}`}>
+                        <span className="text-muted-foreground text-xs flex items-center gap-1">
+                          <Briefcase className="w-3 h-3" />
+                          {t('projects.levelJobTitle')}
+                        </span>
+                        <span className="font-semibold">{project.level_job_title || '-'}</span>
+                      </div>
+                      <div className="flex flex-col" data-testid={`text-hourly-rate-${project.id}`}>
+                        <span className="text-muted-foreground text-xs flex items-center gap-1">
+                          <DollarSign className="w-3 h-3" />
+                          {t('projects.hourlyRate')}
+                        </span>
+                        <span className="font-semibold">{formatCurrency(project.hourly_rate)}</span>
+                      </div>
+                      <div className="flex flex-col" data-testid={`text-total-hours-${project.id}`}>
+                        <span className="text-muted-foreground text-xs flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          {t('projects.totalHours')}
+                        </span>
+                        <span className="font-semibold">{formatHours(project.total_hours)} h</span>
+                      </div>
+                      <div className="flex flex-col" data-testid={`text-required-employees-${project.id}`}>
+                        <span className="text-muted-foreground text-xs flex items-center gap-1">
+                          <Users className="w-3 h-3" />
+                          {t('projects.requiredEmployees')}
+                        </span>
+                        <span className="font-semibold">{project.required_employees}</span>
+                      </div>
+                      <div className="flex flex-col" data-testid={`text-status-${project.id}`}>
+                        <span className="text-muted-foreground text-xs">{t('projects.status')}</span>
+                        <span className="font-semibold">
+                          {getTranslatedStatus(project.status)}
+                        </span>
+                      </div>
+                      <div className="flex flex-col" data-testid={`text-total-amount-due-${project.id}`}>
+                        <span className="text-muted-foreground text-xs">{t('projects.totalAmountDue')}</span>
+                        <span className="font-semibold">
+                          {formatCurrency(project.required_employees > 0 ? (project.total_hours / project.required_employees) * project.hourly_rate : 0)}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex flex-col">
-                      <span className="text-muted-foreground text-xs">{t('projects.expertStatus')}</span>
-                      <span className="font-semibold flex items-center gap-1">
-                        <Users className="w-3.5 h-3.5" />
-                        {getTranslatedStatus(project.skill_giver_status)}
-                      </span>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-4 w-full text-sm">
+                      <div className="flex flex-col">
+                        <span className="text-muted-foreground text-xs">{t('projects.totalCost')}</span>
+                        <span className="font-semibold">
+                          {formatCurrency(project.total_cost)}
+                        </span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-muted-foreground text-xs">{t('projects.expertStatus')}</span>
+                        <span className="font-semibold flex items-center gap-1">
+                          <Users className="w-3.5 h-3.5" />
+                          {getTranslatedStatus(project.skill_giver_status)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </CardFooter>
               </Card>
               </Link>

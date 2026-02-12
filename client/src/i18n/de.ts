@@ -277,6 +277,12 @@ export const de = {
     vatRate: "MwSt. 19%",
     totalWithVat: "Gesamt inkl. MwSt.",
     expertStatus: "Experten-Status",
+    hourlyRate: "Stundensatz",
+    totalHours: "Gesamtstunden",
+    useCaseId: "Aufgaben-ID",
+    levelJobTitle: "Level / Berufsbezeichnung",
+    requiredEmployees: "Benötigte Mitarbeiter",
+    totalAmountDue: "Fälliger Gesamtbetrag",
     fetchError: "Anwendungsfälle konnten nicht geladen werden. Bitte versuchen Sie es erneut.",
   },
   useCaseDetails: {
