@@ -218,8 +218,8 @@ export default function ProjectsPage() {
     return new Intl.NumberFormat('de-DE', {
       style: 'currency',
       currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(amount);
   };
 
@@ -303,7 +303,14 @@ export default function ProjectsPage() {
               <Card className="hover-elevate cursor-pointer" data-testid={`card-project-${project.id}`}>
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-4 flex-wrap">
-                    <CardTitle className="text-lg">{project.title}</CardTitle>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      {isSkillGiver && project.data_id && (
+                        <Badge variant="outline" className="text-xs font-normal" data-testid={`badge-data-id-${project.id}`}>
+                          #{project.data_id}
+                        </Badge>
+                      )}
+                      {project.title}
+                    </CardTitle>
                     <span className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${getStatusColor(project.status)}`}>
                       {getTranslatedStatus(project.status)}
                     </span>
@@ -337,15 +344,6 @@ export default function ProjectsPage() {
                 <CardFooter className="pt-3 border-t">
                   {isSkillGiver ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full text-sm">
-                      {project.data_id && (
-                        <div className="flex flex-col" data-testid={`text-data-id-${project.id}`}>
-                          <span className="text-muted-foreground text-xs flex items-center gap-1">
-                            <Hash className="w-3 h-3" />
-                            {t('projects.useCaseId')}
-                          </span>
-                          <span className="font-semibold">{project.data_id}</span>
-                        </div>
-                      )}
                       <div className="flex flex-col" data-testid={`text-level-${project.id}`}>
                         <span className="text-muted-foreground text-xs flex items-center gap-1">
                           <Briefcase className="w-3 h-3" />
