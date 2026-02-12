@@ -38,6 +38,7 @@ interface Offer {
   offer_id: number;
   offer_status: string;
   project: Project;
+  project_id: number | null;
   job_title: JobTitle;
   created_at: string;
 }
@@ -145,7 +146,12 @@ export default function OffersListPage() {
                 >
                   <CardHeader className="pb-2">
                     <div className="flex items-start justify-between gap-2">
-                      <CardTitle className="text-lg line-clamp-2" data-testid={`text-project-title-${offer.offer_id}`}>
+                      <CardTitle className="text-lg line-clamp-2 flex items-center gap-2" data-testid={`text-project-title-${offer.offer_id}`}>
+                        {offer.project_id && (
+                          <Badge variant="outline" className="text-xs font-normal shrink-0" data-testid={`badge-project-id-${offer.offer_id}`}>
+                            #{offer.project_id}
+                          </Badge>
+                        )}
                         {offer.project?.title || t('offers.untitledProject')}
                       </CardTitle>
                       <Badge className={getStatusColor(offer.offer_status)} data-testid={`badge-status-${offer.offer_id}`}>
