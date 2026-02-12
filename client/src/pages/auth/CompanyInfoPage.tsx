@@ -40,6 +40,9 @@ export default function CompanyInfoPage() {
     contactEmail: user?.email || '',
     contactPhone: '',
     companySize: '',
+    street: '',
+    zipCode: '',
+    state: '',
     city: '',
     country: '',
     bio: '',
@@ -49,7 +52,8 @@ export default function CompanyInfoPage() {
   const [websiteError, setWebsiteError] = useState<string | null>(null);
 
   const populateFormFromApiData = (data: CompanyProfileData) => {
-    setFormData({
+    setFormData(prev => ({
+      ...prev,
       companyName: data.company_name || '',
       industry: data.industry || '',
       contactEmail: data.email || user?.email || '',
@@ -59,7 +63,7 @@ export default function CompanyInfoPage() {
       country: data.country || '',
       bio: data.bio || '',
       website: data.website || '',
-    });
+    }));
   };
 
   useEffect(() => {
@@ -336,6 +340,43 @@ export default function CompanyInfoPage() {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="street">{t('profile.street')}</Label>
+                <Input
+                  id="street"
+                  type="text"
+                  placeholder={t('profile.streetPlaceholder')}
+                  value={formData.street}
+                  onChange={(e) => setFormData(prev => ({ ...prev, street: e.target.value }))}
+                  data-testid="input-company-street"
+                />
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="state">{t('profile.state')}</Label>
+                  <Input
+                    id="state"
+                    type="text"
+                    placeholder={t('profile.statePlaceholder')}
+                    value={formData.state}
+                    onChange={(e) => setFormData(prev => ({ ...prev, state: e.target.value }))}
+                    data-testid="input-company-state"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="zipCode">{t('profile.zipCode')}</Label>
+                  <Input
+                    id="zipCode"
+                    type="text"
+                    placeholder={t('profile.zipCodePlaceholder')}
+                    value={formData.zipCode}
+                    onChange={(e) => setFormData(prev => ({ ...prev, zipCode: e.target.value }))}
+                    data-testid="input-company-zip-code"
+                  />
+                </div>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
