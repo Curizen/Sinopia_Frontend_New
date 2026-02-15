@@ -2510,9 +2510,9 @@ export default function ProfilePage() {
           credentialId: cert.credential_id || '',
         })),
         
-        // Languages
-        languages: (cvData.languages || []).map((lang: { language?: string; name?: string; level?: string; proficiency?: string }) => ({
-          language: lang.language || lang.name || '',
+        // Languages - API returns language_name field
+        languages: (cvData.languages || []).map((lang: { language_name?: string; language?: string; name?: string; level?: string; proficiency?: string }) => ({
+          language: lang.language_name || lang.language || lang.name || '',
           level: lang.level || lang.proficiency || 'intermediate',
         })).filter((l: { language: string }) => l.language),
       };
