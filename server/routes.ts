@@ -8,7 +8,7 @@ const EXTERNAL_API_BASE = process.env.EXTERNAL_API_URL || "https://sinopia.eu";
 // Configure multer for memory storage (we'll forward the file to external API)
 const upload = multer({ 
   storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB limit
 });
 
 function forwardCookies(externalResponse: Response, res: any) {
