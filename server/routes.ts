@@ -727,22 +727,12 @@ export async function registerRoutes(
         headers["Authorization"] = authHeader;
       }
       
-      // Transform frontend format to backend format
-      // Frontend: skill_type "technical" or "soft" → Backend: "technical_skills" or "soft_skills"
-      // Frontend: level "Advanced" → Backend: "advanced" (lowercase)
-      const transformedBody = {
-        ...req.body,
-        skill_type: req.body.skill_type === 'soft' ? 'soft_skills' : 'technical_skills',
-        level: req.body.level?.toLowerCase() || 'intermediate',
-      };
-      
-      console.log("[DEBUG] POST /api/skills - Original body:", JSON.stringify(req.body));
-      console.log("[DEBUG] POST /api/skills - Transformed body:", JSON.stringify(transformedBody));
+      console.log("[DEBUG] POST /api/skills - req.body:", JSON.stringify(req.body));
       
       const response = await fetch(`${EXTERNAL_API_BASE}/api/skills`, {
         method: "POST",
         headers,
-        body: JSON.stringify(transformedBody),
+        body: JSON.stringify(req.body),
       });
       forwardCookies(response, res);
       const data = await response.json();
@@ -766,20 +756,12 @@ export async function registerRoutes(
         headers["Authorization"] = authHeader;
       }
       
-      // Transform frontend format to backend format
-      const transformedBody = {
-        ...req.body,
-        skill_type: req.body.skill_type === 'soft' ? 'soft_skills' : 'technical_skills',
-        level: req.body.level?.toLowerCase() || 'intermediate',
-      };
-      
-      console.log("[DEBUG] PUT /api/skills - Original body:", JSON.stringify(req.body));
-      console.log("[DEBUG] PUT /api/skills - Transformed body:", JSON.stringify(transformedBody));
+      console.log("[DEBUG] PUT /api/skills - req.body:", JSON.stringify(req.body));
       
       const response = await fetch(`${EXTERNAL_API_BASE}/api/skills/${req.params.id}`, {
         method: "PUT",
         headers,
-        body: JSON.stringify(transformedBody),
+        body: JSON.stringify(req.body),
       });
       forwardCookies(response, res);
       const data = await response.json();

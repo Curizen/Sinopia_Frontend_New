@@ -39,8 +39,8 @@ import {
 } from 'lucide-react';
 
 type EditingSection = 'about' | 'skills' | 'experience' | 'education' | 'certifications' | 'company' | 'contact' | 'projects' | null;
-type SkillLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
-type SkillType = 'technical' | 'soft';
+type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert';
+type SkillType = 'technical_skills' | 'soft_skills';
 
 interface Skill {
   id: string;
@@ -190,12 +190,12 @@ interface CachedUserProfile {
   summary: string;
 }
 
-// Helper to normalize skill_type from backend format (technical_skills/soft_skills) to frontend format (technical/soft)
+// Helper to normalize skill_type to backend format (technical_skills/soft_skills), handles legacy values
 const normalizeSkillType = (skillType: string | undefined): SkillType => {
   if (skillType === 'soft_skills' || skillType === 'soft') {
-    return 'soft';
+    return 'soft_skills';
   }
-  return 'technical'; // Default to technical for technical_skills or any other value
+  return 'technical_skills';
 };
 
 // Helper to format LinkedIn URL
@@ -242,35 +242,11 @@ const transformApiDataToGiverProfile = (apiData: ApiUserData): Partial<SkillGive
   
   if (Array.isArray(apiData.skills)) {
     profile.skills = apiData.skills.map(s => {
-      // Map backend skill_type to frontend format
-      // Backend sends "technical_skills" or "soft_skills", frontend expects "technical" or "soft"
-      let skillType: SkillType = 'technical';
-      if (s.skill_type) {
-        const st = s.skill_type.toLowerCase();
-        if (st.includes('soft')) {
-          skillType = 'soft';
-        } else {
-          skillType = 'technical';
-        }
-      }
-      
-      // Map backend level to frontend format (capitalize first letter)
-      // Backend sends "advanced", "intermediate", "beginner", "expert" (lowercase)
-      // Frontend expects "Advanced", "Intermediate", "Beginner", "Expert" (capitalized)
-      let level: SkillLevel = 'Intermediate';
-      if (s.level) {
-        const lvl = s.level.toLowerCase();
-        if (lvl === 'beginner') level = 'Beginner';
-        else if (lvl === 'intermediate') level = 'Intermediate';
-        else if (lvl === 'advanced') level = 'Advanced';
-        else if (lvl === 'expert') level = 'Expert';
-      }
-      
       return {
         id: s.id?.toString() || generateId(),
         name: s.skill_name || '',
-        level,
-        skill_type: skillType,
+        level: (s.level?.toLowerCase() || 'intermediate') as SkillLevel,
+        skill_type: normalizeSkillType(s.skill_type),
       };
     }).filter(s => s.name);
   }
@@ -383,7 +359,7 @@ const loadGiverProfileFromStorage = (): SkillGiverProfile => {
           : (Array.isArray(localData.skills) ? localData.skills.map((s: { id?: string; name?: string; level?: SkillLevel; skill_type?: string }) => ({
               id: s.id || generateId(),
               name: s.name || '',
-              level: s.level || 'Intermediate',
+              level: (s.level?.toLowerCase() || 'intermediate') as SkillLevel,
               skill_type: normalizeSkillType(s.skill_type),
             })).filter((s: Skill) => s.name) : defaults.skills),
         experience: transformedData.experience && transformedData.experience.length > 0 
@@ -417,7 +393,7 @@ const loadGiverProfileFromStorage = (): SkillGiverProfile => {
         skills: Array.isArray(parsed.skills) ? parsed.skills.map((s: { id?: string; name?: string; level?: SkillLevel; skill_type?: string }) => ({
           id: s.id || generateId(),
           name: s.name || '',
-          level: s.level || 'Intermediate',
+          level: (s.level?.toLowerCase() || 'intermediate') as SkillLevel,
           skill_type: normalizeSkillType(s.skill_type),
         })).filter((s: Skill) => s.name) : defaults.skills,
         experience: Array.isArray(parsed.experience) ? parsed.experience : defaults.experience,
@@ -629,30 +605,11 @@ export default function ProfilePage() {
 
           if (skillsArray.length > 0) {
             const transformedSkills: Skill[] = skillsArray.map((s: any) => {
-              // Map backend skill_type to frontend format
-              let skillType: SkillType = 'technical';
-              if (s.skill_type) {
-                const st = s.skill_type.toLowerCase();
-                if (st.includes('soft')) {
-                  skillType = 'soft';
-                }
-              }
-              
-              // Map backend level to frontend format (capitalize first letter)
-              let level: SkillLevel = 'Intermediate';
-              if (s.level) {
-                const lvl = s.level.toLowerCase();
-                if (lvl === 'beginner') level = 'Beginner';
-                else if (lvl === 'intermediate') level = 'Intermediate';
-                else if (lvl === 'advanced') level = 'Advanced';
-                else if (lvl === 'expert') level = 'Expert';
-              }
-              
               return {
                 id: s.id?.toString() || generateId(),
                 name: s.skill_name || s.name || '',
-                level,
-                skill_type: skillType,
+                level: (s.level?.toLowerCase() || 'intermediate') as SkillLevel,
+                skill_type: normalizeSkillType(s.skill_type),
               };
             }).filter((s: Skill) => s.name);
 
@@ -787,18 +744,18 @@ export default function ProfilePage() {
 
   const getLevelLabel = (level: SkillLevel) => {
     const labels: Record<SkillLevel, string> = {
-      Beginner: t('profile.levelBeginner'),
-      Intermediate: t('profile.levelIntermediate'),
-      Advanced: t('profile.levelAdvanced'),
-      Expert: t('profile.levelExpert'),
+      beginner: t('profile.levelBeginner'),
+      intermediate: t('profile.levelIntermediate'),
+      advanced: t('profile.levelAdvanced'),
+      expert: t('profile.levelExpert'),
     };
     return labels[level];
   };
 
   const getSkillTypeLabel = (skillType: SkillType) => {
     const labels: Record<SkillType, string> = {
-      technical: t('profile.skillTypeTechnical'),
-      soft: t('profile.skillTypeSoft'),
+      technical_skills: t('profile.skillTypeTechnical'),
+      soft_skills: t('profile.skillTypeSoft'),
     };
     return labels[skillType];
   };
@@ -868,21 +825,18 @@ export default function ProfilePage() {
     try {
       if (skill.id) {
         // UPDATE - PUT request
-        console.log('[DEBUG] PUT Skill Request body:', { 
+        const putPayload = { 
           skill_name: skill.name, 
           skill_type: skill.skill_type, 
           level: skill.level 
-        });
+        };
+        console.log('[DEBUG] PUT Skill Request body:', putPayload);
         
         const response = await fetch(`/api/skills/${skill.id}`, {
           method: 'PUT',
           headers,
           credentials: 'include',
-          body: JSON.stringify({
-            skill_name: skill.name,
-            skill_type: skill.skill_type,
-            level: skill.level.toLowerCase(),
-          }),
+          body: JSON.stringify(putPayload),
         });
         
         const data = await response.json();
@@ -909,22 +863,19 @@ export default function ProfilePage() {
         }
       } else {
         // CREATE - POST request
-        console.log('[DEBUG] POST Skill - Sending token:', token);
-        console.log('[DEBUG] POST Skill - Request body:', { 
+        const postPayload = { 
           skill_name: skill.name, 
           skill_type: skill.skill_type, 
           level: skill.level 
-        });
+        };
+        console.log('[DEBUG] POST Skill - Sending token:', token);
+        console.log('[DEBUG] POST Skill - Request body:', postPayload);
         
         const response = await fetch('/api/skills', {
           method: 'POST',
           headers,
           credentials: 'include',
-          body: JSON.stringify({
-            skill_name: skill.name,
-            skill_type: skill.skill_type,
-            level: skill.level.toLowerCase(),
-          }),
+          body: JSON.stringify(postPayload),
         });
         
         const data = await response.json();
@@ -2468,7 +2419,7 @@ export default function ProfilePage() {
           id: generateId(),
           name: skill.skill_name || skill.name || '',
           skill_type: normalizeSkillType(skill.skill_type),
-          level: capitalizeFirstLetter(skill.level || 'intermediate') as SkillLevel,
+          level: (skill.level?.toLowerCase() || 'intermediate') as SkillLevel,
         })).filter((s: Skill) => s.name),
         
         // Education - map fields
@@ -3714,13 +3665,13 @@ function SkillDialog({ open, onOpenChange, skill, onSave, t, getLevelLabel, getS
   getLevelLabel: (level: SkillLevel) => string;
   getSkillTypeLabel: (skillType: SkillType) => string;
 }) {
-  const [form, setForm] = useState<Skill>({ id: '', name: '', level: 'Intermediate', skill_type: 'technical' });
+  const [form, setForm] = useState<Skill>({ id: '', name: '', level: 'intermediate', skill_type: 'technical_skills' });
 
   useEffect(() => {
     if (skill) {
       setForm(skill);
     } else {
-      setForm({ id: '', name: '', level: 'Intermediate', skill_type: 'technical' });
+      setForm({ id: '', name: '', level: 'intermediate', skill_type: 'technical_skills' });
     }
   }, [skill, open]);
 
@@ -3747,8 +3698,8 @@ function SkillDialog({ open, onOpenChange, skill, onSave, t, getLevelLabel, getS
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="technical">{getSkillTypeLabel('technical')}</SelectItem>
-                <SelectItem value="soft">{getSkillTypeLabel('soft')}</SelectItem>
+                <SelectItem value="technical_skills">{getSkillTypeLabel('technical_skills')}</SelectItem>
+                <SelectItem value="soft_skills">{getSkillTypeLabel('soft_skills')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -3759,10 +3710,10 @@ function SkillDialog({ open, onOpenChange, skill, onSave, t, getLevelLabel, getS
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Beginner">{getLevelLabel('Beginner')}</SelectItem>
-                <SelectItem value="Intermediate">{getLevelLabel('Intermediate')}</SelectItem>
-                <SelectItem value="Advanced">{getLevelLabel('Advanced')}</SelectItem>
-                <SelectItem value="Expert">{getLevelLabel('Expert')}</SelectItem>
+                <SelectItem value="beginner">{getLevelLabel('beginner')}</SelectItem>
+                <SelectItem value="intermediate">{getLevelLabel('intermediate')}</SelectItem>
+                <SelectItem value="advanced">{getLevelLabel('advanced')}</SelectItem>
+                <SelectItem value="expert">{getLevelLabel('expert')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
