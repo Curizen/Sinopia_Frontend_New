@@ -2509,6 +2509,12 @@ export default function ProfilePage() {
           expiryDate: cert.expiry || '',
           credentialId: cert.credential_id || '',
         })),
+        
+        // Languages
+        languages: (cvData.languages || []).map((lang: { language?: string; name?: string; level?: string; proficiency?: string }) => ({
+          language: lang.language || lang.name || '',
+          level: lang.level || lang.proficiency || 'intermediate',
+        })).filter((l: { language: string }) => l.language),
       };
       
       console.log('[DEBUG] Mapped extracted data:', JSON.stringify(extractedData, null, 2));
@@ -2568,6 +2574,43 @@ export default function ProfilePage() {
         city: extractedData.city || prev.city,
         country: extractedData.country || prev.country,
       }));
+
+      // Save extracted languages to backend API
+      if (extractedData.languages.length > 0) {
+        const existingLangNames = languages.map(l => l.language.toLowerCase());
+        const newLangs = extractedData.languages.filter(
+          (l: { language: string; level: string }) => !existingLangNames.includes(l.language.toLowerCase())
+        );
+        
+        if (newLangs.length > 0) {
+          const langHeaders: Record<string, string> = { 'Content-Type': 'application/json' };
+          if (token) langHeaders['Authorization'] = `Bearer ${token}`;
+          
+          const savedLangs: Language[] = [];
+          for (const lang of newLangs) {
+            try {
+              const langRes = await fetch('/api/languages', {
+                method: 'POST',
+                headers: langHeaders,
+                credentials: 'include',
+                body: JSON.stringify({ language: lang.language, level: lang.level }),
+              });
+              if (langRes.ok) {
+                const langData = await langRes.json();
+                const saved = langData?.data || { id: Date.now(), language: lang.language, level: lang.level };
+                savedLangs.push(saved);
+              }
+            } catch (langErr) {
+              console.error('[DEBUG] Failed to save language:', lang.language, langErr);
+            }
+          }
+          
+          if (savedLangs.length > 0) {
+            setLanguages(prev => [...prev, ...savedLangs]);
+          }
+          console.log('[DEBUG] CV languages saved:', savedLangs.length, 'of', newLangs.length);
+        }
+      }
 
       setCvUploaded(true);
       updateCvStatus(true, file.name, file.size);
