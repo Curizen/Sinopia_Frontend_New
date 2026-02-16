@@ -76,11 +76,11 @@ interface Certification {
 
 interface PersonalProject {
   id: string;
-  name: string;
+  project_name: string;
   description: string;
-  technologies: string;
+  technologies: string[];
   duration: string;
-  projectUrl: string;
+  project_url: string;
 }
 
 interface Language {
@@ -283,13 +283,13 @@ const transformApiDataToGiverProfile = (apiData: ApiUserData): Partial<SkillGive
   }
   
   if (Array.isArray(apiData.projects)) {
-    profile.personalProjects = apiData.projects.map((p: { id?: number; project_name?: string; name?: string; technologies?: string; project_url?: string; description?: string; duration?: string }) => ({
+    profile.personalProjects = apiData.projects.map((p: { id?: number; project_name?: string; name?: string; technologies?: string | string[]; project_url?: string; description?: string; duration?: string }) => ({
       id: p.id?.toString() || generateId(),
-      name: p.project_name || p.name || '',
+      project_name: p.project_name || p.name || '',
       description: p.description || '',
-      technologies: p.technologies || '',
+      technologies: Array.isArray(p.technologies) ? p.technologies : (typeof p.technologies === 'string' && p.technologies ? p.technologies.split(',').map(t => t.trim()) : []),
       duration: p.duration || '',
-      projectUrl: p.project_url || '',
+      project_url: p.project_url || '',
     }));
   }
   
@@ -1741,11 +1741,11 @@ export default function ProfilePage() {
         const apiProj = {
           id: parseInt(updatedProj.id) || updatedProj.id,
           user_id: cache.projects?.[0]?.user_id || null,
-          name: updatedProj.name,
+          project_name: updatedProj.project_name,
           description: updatedProj.description,
           technologies: updatedProj.technologies,
           duration: updatedProj.duration,
-          project_url: updatedProj.projectUrl || '',
+          project_url: updatedProj.project_url || '',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
@@ -1877,11 +1877,11 @@ export default function ProfilePage() {
         }
         
         const requestBody = {
-          name: proj.name,
+          project_name: proj.project_name,
           description: proj.description,
           technologies: proj.technologies,
           duration: proj.duration,
-          project_url: proj.projectUrl || '',
+          project_url: proj.project_url || '',
         };
         
         console.log('[DEBUG] PUT Project Request body:', requestBody);
@@ -1935,11 +1935,11 @@ export default function ProfilePage() {
         }
         
         const requestBody = {
-          name: proj.name,
+          project_name: proj.project_name,
           description: proj.description,
           technologies: proj.technologies,
           duration: proj.duration,
-          project_url: proj.projectUrl || '',
+          project_url: proj.project_url || '',
         };
         
         console.log('[DEBUG] POST Project Request body:', requestBody);
@@ -2445,10 +2445,10 @@ export default function ProfilePage() {
         // Projects - map fields
         projects: (cvData.projects || []).map((proj: { project_name?: string; name?: string; description?: string; project_url?: string; url?: string; technologies?: string[] }) => ({
           id: generateId(),
-          name: proj.project_name || proj.name || '',
+          project_name: proj.project_name || proj.name || '',
           description: proj.description || '',
-          url: proj.project_url || proj.url || '',
-          technologies: proj.technologies || [],
+          project_url: proj.project_url || proj.url || '',
+          technologies: Array.isArray(proj.technologies) ? proj.technologies : [],
         })),
         
         // Certifications
@@ -3331,10 +3331,10 @@ export default function ProfilePage() {
                           <FolderKanban className="w-5 h-5 text-primary" />
                         </div>
                         <div className="flex-1">
-                          <h4 className="font-semibold">{proj.name}</h4>
-                          {proj.technologies && (
+                          <h4 className="font-semibold">{proj.project_name}</h4>
+                          {proj.technologies && proj.technologies.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-1">
-                              {(Array.isArray(proj.technologies) ? proj.technologies : (typeof proj.technologies === 'string' ? proj.technologies.split(',') : [])).map((tech: string, i: number) => (
+                              {proj.technologies.map((tech: string, i: number) => (
                                 <Badge key={i} variant="outline" className="text-xs">
                                   {tech.trim()}
                                 </Badge>
@@ -3959,13 +3959,16 @@ function ProjectDialog({ open, onOpenChange, proj, onSave, t }: {
   onSave: (proj: PersonalProject) => void;
   t: (key: string) => string;
 }) {
-  const [form, setForm] = useState<PersonalProject>({ id: '', name: '', description: '', technologies: '', duration: '', projectUrl: '' });
+  const [form, setForm] = useState<PersonalProject>({ id: '', project_name: '', description: '', technologies: [], duration: '', project_url: '' });
+  const [techInput, setTechInput] = useState('');
 
   useEffect(() => {
     if (proj) {
-      setForm({ ...proj, projectUrl: proj.projectUrl || '' });
+      setForm({ ...proj, project_url: proj.project_url || '' });
+      setTechInput(Array.isArray(proj.technologies) ? proj.technologies.join(', ') : '');
     } else {
-      setForm({ id: '', name: '', description: '', technologies: '', duration: '', projectUrl: '' });
+      setForm({ id: '', project_name: '', description: '', technologies: [], duration: '', project_url: '' });
+      setTechInput('');
     }
   }, [proj, open]);
 
@@ -3979,8 +3982,8 @@ function ProjectDialog({ open, onOpenChange, proj, onSave, t }: {
           <div className="space-y-2">
             <Label>{t('profile.projectName')}</Label>
             <Input
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              value={form.project_name}
+              onChange={(e) => setForm({ ...form, project_name: e.target.value })}
               placeholder={t('profile.projectNamePlaceholder')}
               data-testid="input-proj-name"
             />
@@ -3998,8 +4001,12 @@ function ProjectDialog({ open, onOpenChange, proj, onSave, t }: {
           <div className="space-y-2">
             <Label>{t('profile.projectTechnologies')}</Label>
             <Input
-              value={form.technologies}
-              onChange={(e) => setForm({ ...form, technologies: e.target.value })}
+              value={techInput}
+              onChange={(e) => {
+                setTechInput(e.target.value);
+                const techs = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
+                setForm({ ...form, technologies: techs });
+              }}
               placeholder={t('profile.projectTechnologiesPlaceholder')}
               data-testid="input-proj-technologies"
             />
@@ -4017,8 +4024,8 @@ function ProjectDialog({ open, onOpenChange, proj, onSave, t }: {
             <Label>{t('profile.projectUrl')}</Label>
             <Input
               type="url"
-              value={form.projectUrl}
-              onChange={(e) => setForm({ ...form, projectUrl: e.target.value })}
+              value={form.project_url}
+              onChange={(e) => setForm({ ...form, project_url: e.target.value })}
               placeholder={t('profile.projectUrlPlaceholder')}
               data-testid="input-proj-url"
             />
@@ -4026,7 +4033,7 @@ function ProjectDialog({ open, onOpenChange, proj, onSave, t }: {
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>{t('common.cancel')}</Button>
-          <Button onClick={() => onSave(form)} disabled={!form.name.trim()}>{t('common.save')}</Button>
+          <Button onClick={() => onSave(form)} disabled={!form.project_name.trim()}>{t('common.save')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

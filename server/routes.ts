@@ -497,19 +497,12 @@ export async function registerRoutes(
         headers["Authorization"] = authHeader;
       }
       
-      // Map frontend field names to API field names
-      const apiBody = {
-        project_name: req.body.name,
-        description: req.body.description,
-        technologies: req.body.technologies,
-        duration: req.body.duration,
-        project_url: req.body.project_url,
-      };
+      console.log("[DEBUG] POST /api/projects - req.body:", JSON.stringify(req.body));
       
       const response = await fetch(`${EXTERNAL_API_BASE}/api/personal-projects`, {
         method: "POST",
         headers,
-        body: JSON.stringify(apiBody),
+        body: JSON.stringify(req.body),
       });
       forwardCookies(response, res);
       const data = await response.json();
@@ -532,19 +525,12 @@ export async function registerRoutes(
         headers["Authorization"] = authHeader;
       }
       
-      // Map frontend field names to API field names
-      const apiBody = {
-        project_name: req.body.name,
-        description: req.body.description,
-        technologies: req.body.technologies,
-        duration: req.body.duration,
-        project_url: req.body.project_url,
-      };
+      console.log("[DEBUG] PUT /api/projects - req.body:", JSON.stringify(req.body));
       
       const response = await fetch(`${EXTERNAL_API_BASE}/api/personal-projects/${req.params.id}`, {
         method: "PUT",
         headers,
-        body: JSON.stringify(apiBody),
+        body: JSON.stringify(req.body),
       });
       forwardCookies(response, res);
       const data = await response.json();
