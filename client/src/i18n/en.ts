@@ -505,8 +505,8 @@ export const en = {
     levelAdvanced: "Advanced",
     levelExpert: "Expert",
     skillType: "Skill Type",
-    skillTypeTechnical: "Technical",
-    skillTypeSoft: "Soft Skill",
+    skillTypeTechnical: "Skills",
+    skillTypeSoft: "Competence",
     editSkill: "Edit Skill",
     skillAdded: "Skill added successfully",
     skillUpdated: "Skill updated successfully",
@@ -1064,9 +1064,6 @@ Section 17: Final Provisions
     purpose: "Purpose of data processing",
     purposeText:
       "This form is used to contact Sinopia Deutschland GmbH. The data you submit will be used for informational purposes and to send you event notifications from Sinopia Deutschland GmbH. You may object to being contacted and to the processing of your data at any time.",
-    storageDuration: "Storage duration",
-    storageDurationText:
-      "Your data will be stored for communication purposes with Sinopia Deutschland GmbH as long as your email address is valid or until you object to its storage. You can object at any time by sending an informal notice to info[at]sinopia.de. Your data will then be completely deleted.",
     contactDetails: "Contact details",
     contactDetailsText:
       "The company responsible for this website is Sinopia Deutschland GmbH (see",
@@ -1087,26 +1084,6 @@ Section 17: Final Provisions
     contactDetails: "info@sinopia.eu",
     vatIdTitle: "VAT ID:",
     vatIdNumber: "DE455888790",
-    responsibleTitle: "Responsible for content according to § 18 Abs. 2 MStV:",
-    responsibleDetails: "Jens Uwe Jung\nDeckerstr. 39\n70372 Stuttgart",
-    disclaimerTitle: "Disclaimer:",
-    euDisputeTitle: "EU Dispute Resolution",
-    euDisputeText:
-      "The European Commission provides a platform for online dispute resolution (OS):",
-    euDisputeEmail: "You can find our email address in the imprint above.",
-    consumerDisputeTitle:
-      "Consumer Dispute Resolution / Universal Arbitration Board",
-    consumerDisputeText:
-      "We are neither willing nor obliged to participate in dispute resolution proceedings before a consumer arbitration board.",
-    contentLiabilityTitle: "Liability for Content",
-    contentLiabilityText:
-      "As a service provider, we are responsible for our own content on these pages in accordance with general laws pursuant to § 7 Abs.1 TMG. According to §§ 8 to 10 TMG, however, we are not obliged as a service provider to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity. Obligations to remove or block the use of information under general law remain unaffected. However, liability in this regard is only possible from the time of knowledge of a specific infringement. Upon becoming aware of such infringements, we will remove this content immediately.",
-    linkLiabilityTitle: "Liability for Links",
-    linkLiabilityText:
-      "Our offer contains links to external websites of third parties, on whose contents we have no influence. Therefore, we cannot assume any liability for these external contents. The respective provider or operator of the pages is always responsible for the contents of the linked pages. The linked pages were checked for possible legal violations at the time of linking. Illegal contents were not recognizable at the time of linking. However, permanent monitoring of the content of the linked pages is not reasonable without concrete evidence of an infringement. Upon becoming aware of legal violations, we will remove such links immediately.",
-    copyrightTitle: "Copyright",
-    copyrightText:
-      "The content and works on these pages created by the site operators are subject to German copyright law. The reproduction, editing, distribution, and any kind of exploitation outside the limits of copyright require the written consent of the respective author or creator. Downloads and copies of this site are only permitted for private, non-commercial use. Insofar as the content on this site was not created by the operator, the copyrights of third parties are respected. In particular, third-party content is identified as such. Should you nevertheless become aware of a copyright infringement, please inform us accordingly. Upon becoming aware of infringements, we will remove such content immediately.",
     privacyTitle: "Privacy",
     privacyText: "Information about data protection can be found in our",
   },

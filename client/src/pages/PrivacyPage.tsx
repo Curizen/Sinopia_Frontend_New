@@ -86,13 +86,6 @@ export default function PrivacyPage() {
 
             <section>
               <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('privacy.storageDuration')}
-              </h2>
-              <p>{t('privacy.storageDurationText')}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
                 {t('privacy.contactDetails')}
               </h2>
               <p>

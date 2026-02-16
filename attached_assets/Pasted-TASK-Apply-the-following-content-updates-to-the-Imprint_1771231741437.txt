@@ -1,0 +1,99 @@
+TASK:
+Apply the following content updates to the Imprint (Impressum) 
+and Privacy Policy pages in BOTH German and English versions.
+
+IMPORTANT:
+- Do NOT change routing
+- Do NOT break i18n
+- Do NOT modify unrelated sections
+- No console or runtime errors
+- Apply changes consistently in DE and EN
+
+========================================
+PART 1 — IMPRINT (IMPRESSUM)
+========================================
+
+1) DELETE SECTION CONTENT:
+
+Remove the entire section starting from:
+
+"Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV"
+
+UNTIL (and including) the entire section:
+
+"Urheberrecht"
+
+This includes:
+- Responsible for content
+- Haftungsausschluss
+- EU-Streitschlichtung
+- Verbraucherstreitbeteiligung
+- Haftung für Inhalte
+- Haftung für Links
+- Urheberrecht
+
+Remove the equivalent English sections as well
+if they exist.
+
+Keep the rest of the Imprint intact.
+
+========================================
+PART 2 — PRIVACY POLICY
+========================================
+
+2) REMOVE SECTION:
+
+Delete the entire section titled:
+
+"Storage duration"
+
+(Delete both German and English versions)
+
+========================================
+PART 3 — EMAIL CORRECTION
+========================================
+
+3) Replace:
+
+info[at]sinopia.de
+
+WITH:
+
+info@sinopia.de
+
+4) Make the email clickable
+BUT instead of mailto:
+
+It must link to:
+"/contact"
+
+So it becomes a hyperlink routing to Contact Us page.
+
+Example:
+German:
+info@sinopia.de → Link to /contact
+
+English:
+info@sinopia.de → Link to /contact
+
+========================================
+TECHNICAL REQUIREMENTS
+========================================
+
+- Use existing routing system (e.g., Link component if used)
+- Do NOT hardcode full URLs
+- Maintain current styling
+- Keep spacing and formatting clean
+- Do NOT introduce unused translation keys
+
+========================================
+FINAL VALIDATION
+========================================
+
+✔ Deleted sections removed completely
+✔ No leftover empty headings
+✔ Email corrected everywhere
+✔ Email now routes to Contact page
+✔ Works in German & English
+✔ No runtime or build errors
+✔ Layout remains clean
