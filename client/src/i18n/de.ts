@@ -299,8 +299,8 @@ export const de = {
     acceptUseCase: "Angebot annehmen",
     reject: "Ablehnen",
     comingSoonTitle: "Demnächst verfügbar",
-    comingSoonBody: "Diese Funktion wird vollständig verfügbar sein am",
-    comingSoonDate: "16. Februar",
+    comingSoonBody: "",
+    comingSoonDate: "",
   },
   projectDetail: {
     notFound: "Anwendungsfall nicht gefunden",

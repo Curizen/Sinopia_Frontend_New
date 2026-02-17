@@ -291,8 +291,8 @@ export const en = {
     acceptUseCase: "Accept Offer",
     reject: "Reject",
     comingSoonTitle: "Coming Soon",
-    comingSoonBody: "This feature will be fully available on",
-    comingSoonDate: "February 16th",
+    comingSoonBody: "",
+    comingSoonDate: "",
   },
   projectDetail: {
     notFound: "Use Case not found",
