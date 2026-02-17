@@ -1,5 +1,22 @@
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { useI18n } from '@/i18n';
+import { Link } from 'wouter';
+
+function renderTextWithContactLink(text: string) {
+  const email = 'info@sinopia.eu';
+  const parts = text.split(email);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) => (
+    <span key={i}>
+      {part}
+      {i < parts.length - 1 && (
+        <Link href="/contact" className="text-primary underline hover-elevate" data-testid="link-privacy-contact">
+          {email}
+        </Link>
+      )}
+    </span>
+  ));
+}
 
 export default function PrivacyPage() {
   const { t } = useI18n();
@@ -26,7 +43,7 @@ export default function PrivacyPage() {
               if (isNumberedHeading) {
                 return (
                   <h2 key={index} className="text-xl font-bold text-foreground mt-8 mb-3">
-                    {trimmed}
+                    {renderTextWithContactLink(trimmed)}
                   </h2>
                 );
               }
@@ -34,18 +51,18 @@ export default function PrivacyPage() {
               if (isLetterHeading) {
                 return (
                   <h3 key={index} className="text-lg font-semibold text-foreground mt-6 mb-2">
-                    {trimmed}
+                    {renderTextWithContactLink(trimmed)}
                   </h3>
                 );
               }
 
-              if (trimmed === 'Privacy Policy') {
+              if (trimmed === 'Privacy Policy' || trimmed === 'Datenschutzerkl\u00E4rung') {
                 return null;
               }
 
               return (
                 <p key={index} className="leading-relaxed">
-                  {trimmed}
+                  {renderTextWithContactLink(trimmed)}
                 </p>
               );
             })}
