@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'wouter';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { useI18n } from '@/i18n';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { Mail, MapPin, Send } from 'lucide-react';
 
@@ -19,9 +21,20 @@ export default function ContactPage() {
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!privacyAccepted) {
+      toast({
+        title: t('common.error'),
+        description: t('privacy.agreeError'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -32,6 +45,7 @@ export default function ContactPage() {
     });
     
     setFormData({ name: '', email: '', subject: '', message: '' });
+    setPrivacyAccepted(false);
     setIsSubmitting(false);
   };
 
@@ -102,7 +116,34 @@ export default function ContactPage() {
                         data-testid="input-contact-message"
                       />
                     </div>
-                    <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting} data-testid="button-contact-submit">
+
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="privacy-checkbox-contact"
+                        checked={privacyAccepted}
+                        onCheckedChange={(checked) => setPrivacyAccepted(checked === true)}
+                        data-testid="checkbox-privacy-contact"
+                      />
+                      <Label
+                        htmlFor="privacy-checkbox-contact"
+                        className="text-sm leading-relaxed cursor-pointer"
+                      >
+                        {t('privacy.agreeLabel').split(t('privacy.title')).map((part, i, arr) =>
+                          i < arr.length - 1 ? (
+                            <span key={i}>
+                              {part}
+                              <Link href="/privacy" className="text-primary hover:underline" data-testid="link-privacy-contact" target="_blank">
+                                {t('privacy.title')}
+                              </Link>
+                            </span>
+                          ) : (
+                            <span key={i}>{part}</span>
+                          )
+                        )}
+                      </Label>
+                    </div>
+
+                    <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting || !privacyAccepted} data-testid="button-contact-submit">
                       {isSubmitting ? t('common.loading') : t('contact.sendButton')}
                       <Send className="ml-2 w-4 h-4" />
                     </Button>

@@ -639,7 +639,7 @@ export const de = {
     findTalent: "Talente finden",
     manageTeams: "Teams verwalten",
     legal: "Rechtliches",
-    terms: "Nutzungsbedingungen",
+    terms: "Allgemeine Geschäftsbedingungen",
     privacy: "Datenschutzerklärung",
     contactUs: "Kontakt",
     copyright: "Alle Rechte vorbehalten.",
@@ -815,6 +815,7 @@ export const de = {
   },
   terms: {
     title: "Allgemeine Geschäftsbedingungen (AGB)",
+    titleShort: "Allgemeinen Geschäftsbedingungen",
     viewTerms: "Bedingungen ansehen",
     openFullTerms: "Vollständige Nutzungsbedingungen öffnen",
     agreeLabel: "Ich habe die Allgemeinen Geschäftsbedingungen gelesen und akzeptiere sie",
@@ -1077,42 +1078,218 @@ Für Standardleistungen (Sinopia Standard Use Cases) 14 Tage ab Rechnungsstellun
   },
   privacy: {
     title: "Datenschutzerklärung",
-    introductionText:
-      "Die Nutzung unserer Website ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf unseren Seiten personenbezogene Daten (z. B. Name, Anschrift oder E-Mail-Adressen) erhoben werden, erfolgt dies stets auf freiwilliger Basis, soweit möglich. Diese Daten werden ohne Ihre ausdrückliche Zustimmung nicht an Dritte weitergegeben.",
-    ipAddresses: "IP-Adressen und Protokolldateien",
-    ipAddressesText:
-      "Beim Aufruf dieser Website werden die IP-Adressen der Besucher erfasst und in Logfiles gespeichert. Diese IP-Adressen werden für maximal sieben Tage gespeichert, um Angriffe zu erkennen und zu verhindern.",
-    security: "Sicherheitshinweis",
-    securityText:
-      "Wir weisen darauf hin, dass die Datenübertragung im Internet (z. B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein vollständiger Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.",
-    advertising: "Widerspruch gegen unerwünschte Werbung",
-    advertisingText:
-      "Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten durch Dritte zur Übersendung von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit ausdrücklich widersprochen. Die Betreiber dieser Website behalten sich rechtliche Schritte im Falle unverlangter Zusendung von Werbeinformationen, etwa durch Spam-E-Mails, vor.",
-    contactFormReference:
-      "Hinweise zum Kontaktformular finden Sie im nachfolgenden Abschnitt dieser Datenschutzerklärung.",
-    contactFormTitle: "Datenschutzbestimmungen zum Kontaktformular",
-    contactFormText:
-      "Über das Kontaktformular werden personenbezogene Daten erhoben. Gemäß Art. 13 der EU-Datenschutz-Grundverordnung (DSGVO) informieren wir Sie hiermit über die mit dieser Erhebung verbundene Datenverarbeitung. Ergänzend gilt die allgemeine Datenschutzerklärung für die Website der Sinopia Deutschland GmbH.",
-    processingScope: "Umfang der Verarbeitung personenbezogener Daten",
-    processingItems:
-      "Vorname|Firmenname|E-Mail-Adresse|Telefonnummer|Ihre Nachricht",
-    processingItemsAuto:
-      "Zusätzlich werden folgende Daten automatisch erhoben:",
-    processingItemsAutoList:
-      "Bestätigung Ihrer Einwilligungserklärung|Datum und Uhrzeit der Formularübermittlung",
-    legalBasis: "Rechtsgrundlage",
-    legalBasisText:
-      "Die Erhebung der Formulardaten erfolgt auf Grundlage der Einwilligung der betroffenen Personen gemäß Art. 6 Abs. 1 lit. a DSGVO.",
-    purpose: "Zweck der Datenverarbeitung",
-    purposeText:
-      "Das Formular dient der Kontaktaufnahme mit der Sinopia Deutschland GmbH. Die von Ihnen übermittelten Daten werden zu Informationszwecken sowie zur Zusendung von Veranstaltungsinformationen der Sinopia Deutschland GmbH verwendet. Sie können der Kontaktaufnahme und der Verarbeitung Ihrer Daten jederzeit widersprechen.",
-    contactDetails: "Kontaktangaben",
-    contactDetailsText:
-      "Verantwortlich für diese Website ist die Sinopia Deutschland GmbH (siehe",
-    contactDetailsLink: "Impressum",
-    yourRights: "Ihre Rechte als betroffene Person",
-    yourRightsText:
-      "Als betroffene Person können Sie Ihre Rechte gemäß der EU-Datenschutz-Grundverordnung jederzeit geltend machen.",
+    content: `Datenschutzerkl\u00E4rung
+
+Wir freuen uns sehr \u00FCber Ihr Interesse an unserem Unternehmen. Datenschutz hat einen besonders hohen Stellenwert f\u00FCr die Gesch\u00E4ftsleitung der Sinopia Deutschland GmbH. Eine Nutzung der Internetseiten der Sinopia Deutschland GmbH ist grunds\u00E4tzlich ohne jede Angabe personenbezogener Daten m\u00F6glich. Sofern eine betroffene Person besondere Services unseres Unternehmens \u00FCber unsere Internetseite in Anspruch nehmen m\u00F6chte, k\u00F6nnte jedoch eine Verarbeitung personenbezogener Daten erforderlich werden. Ist die Verarbeitung personenbezogener Daten erforderlich und besteht f\u00FCr eine solche Verarbeitung keine gesetzliche Grundlage, holen wir generell eine Einwilligung der betroffenen Person ein.
+
+Die Verarbeitung personenbezogener Daten, beispielsweise des Namens, der Anschrift, E-Mail-Adresse oder Telefonnummer einer betroffenen Person, erfolgt stets im Einklang mit der Datenschutz-Grundverordnung (DSGVO) und in \u00DCbereinstimmung mit den f\u00FCr die Sinopia Deutschland GmbH geltenden landesspezifischen Datenschutzbestimmungen. Mittels dieser Datenschutzerkl\u00E4rung m\u00F6chte unser Unternehmen die \u00D6ffentlichkeit \u00FCber Art, Umfang und Zweck der von uns erhobenen, genutzten und verarbeiteten personenbezogenen Daten informieren. Ferner werden betroffene Personen mittels dieser Datenschutzerkl\u00E4rung \u00FCber die ihnen zustehenden Rechte aufgekl\u00E4rt.
+
+Die Sinopia Deutschland GmbH hat als f\u00FCr die Verarbeitung Verantwortlicher zahlreiche technische und organisatorische Ma\u00DFnahmen umgesetzt, um einen m\u00F6glichst l\u00FCckenlosen Schutz der \u00FCber diese Internetseite verarbeiteten personenbezogenen Daten sicherzustellen. Dennoch k\u00F6nnen internetbasierte Daten\u00FCbertragungen grunds\u00E4tzlich Sicherheitsl\u00FCcken aufweisen, sodass ein absoluter Schutz nicht gew\u00E4hrleistet werden kann. Aus diesem Grund steht es jeder betroffenen Person frei, personenbezogene Daten auch auf alternativen Wegen, beispielsweise telefonisch, an uns zu \u00FCbermitteln.
+
+1. Begriffsbestimmungen
+
+Die Datenschutzerkl\u00E4rung der Sinopia Deutschland GmbH beruht auf den Begrifflichkeiten, die durch den Europ\u00E4ischen Richtlinien- und Verordnungsgeber beim Erlass der Datenschutz-Grundverordnung (DSGVO) verwendet wurden. Unsere Datenschutzerkl\u00E4rung soll sowohl f\u00FCr die \u00D6ffentlichkeit als auch f\u00FCr unsere Kunden und Gesch\u00E4ftspartner einfach lesbar und verst\u00E4ndlich sein. Um dies zu gew\u00E4hrleisten, m\u00F6chten wir vorab die verwendeten Begrifflichkeiten erl\u00E4utern.
+
+Wir verwenden in dieser Datenschutzerkl\u00E4rung unter anderem die folgenden Begriffe:
+
+a) Personenbezogene Daten
+
+Personenbezogene Daten sind alle Informationen, die sich auf eine identifizierte oder identifizierbare nat\u00FCrliche Person (im Folgenden \u201Ebetroffene Person\u201C) beziehen. Als identifizierbar wird eine nat\u00FCrliche Person angesehen, die direkt oder indirekt, insbesondere mittels Zuordnung zu einer Kennung wie einem Namen, zu einer Kennnummer, zu Standortdaten, zu einer Online-Kennung oder zu einem oder mehreren besonderen Merkmalen identifiziert werden kann.
+
+b) Betroffene Person
+
+Betroffene Person ist jede identifizierte oder identifizierbare nat\u00FCrliche Person, deren personenbezogene Daten von dem f\u00FCr die Verarbeitung Verantwortlichen verarbeitet werden.
+
+c) Verarbeitung
+
+Verarbeitung ist jeder mit oder ohne Hilfe automatisierter Verfahren ausgef\u00FChrte Vorgang oder jede solche Vorgangsreihe im Zusammenhang mit personenbezogenen Daten wie das Erheben, das Erfassen, die Organisation, das Ordnen, die Speicherung, die Anpassung oder Ver\u00E4nderung, das Auslesen, das Abfragen, die Verwendung, die Offenlegung durch \u00DCbermittlung, Verbreitung oder eine andere Form der Bereitstellung, den Abgleich oder die Verkn\u00FCpfung, die Einschr\u00E4nkung, das L\u00F6schen oder die Vernichtung.
+
+d) Einschr\u00E4nkung der Verarbeitung
+
+Einschr\u00E4nkung der Verarbeitung ist die Markierung gespeicherter personenbezogener Daten mit dem Ziel, ihre k\u00FCnftige Verarbeitung einzuschr\u00E4nken.
+
+e) Profiling
+
+Profiling ist jede Art der automatisierten Verarbeitung personenbezogener Daten, die darin besteht, dass diese personenbezogenen Daten verwendet werden, um bestimmte pers\u00F6nliche Aspekte, die sich auf eine nat\u00FCrliche Person beziehen, zu bewerten, insbesondere um Aspekte bez\u00FCglich Arbeitsleistung, wirtschaftlicher Lage, Gesundheit, pers\u00F6nlicher Vorlieben, Interessen, Zuverl\u00E4ssigkeit, Verhalten, Aufenthaltsort oder Ortswechsel dieser nat\u00FCrlichen Person zu analysieren oder vorherzusagen.
+
+f) Pseudonymisierung
+
+Pseudonymisierung ist die Verarbeitung personenbezogener Daten in einer Weise, dass die personenbezogenen Daten ohne Hinzuziehung zus\u00E4tzlicher Informationen nicht mehr einer spezifischen betroffenen Person zugeordnet werden k\u00F6nnen, sofern diese zus\u00E4tzlichen Informationen gesondert aufbewahrt werden und technischen und organisatorischen Ma\u00DFnahmen unterliegen, die gew\u00E4hrleisten, dass die personenbezogenen Daten nicht einer identifizierten oder identifizierbaren nat\u00FCrlichen Person zugewiesen werden.
+
+g) Verantwortlicher oder f\u00FCr die Verarbeitung Verantwortlicher
+
+Verantwortlicher oder f\u00FCr die Verarbeitung Verantwortlicher ist die nat\u00FCrliche oder juristische Person, Beh\u00F6rde, Einrichtung oder andere Stelle, die allein oder gemeinsam mit anderen \u00FCber die Zwecke und Mittel der Verarbeitung von personenbezogenen Daten entscheidet.
+
+h) Auftragsverarbeiter
+
+Auftragsverarbeiter ist eine nat\u00FCrliche oder juristische Person, Beh\u00F6rde, Einrichtung oder andere Stelle, die personenbezogene Daten im Auftrag des Verantwortlichen verarbeitet.
+
+i) Empf\u00E4nger
+
+Empf\u00E4nger ist eine nat\u00FCrliche oder juristische Person, Beh\u00F6rde, Einrichtung oder andere Stelle, der personenbezogene Daten offengelegt werden, unabh\u00E4ngig davon, ob es sich bei ihr um einen Dritten handelt oder nicht.
+
+j) Dritter
+
+Dritter ist eine nat\u00FCrliche oder juristische Person, Beh\u00F6rde, Einrichtung oder andere Stelle, au\u00DFer der betroffenen Person, dem Verantwortlichen, dem Auftragsverarbeiter und den Personen, die unter der unmittelbaren Verantwortung des Verantwortlichen oder des Auftragsverarbeiters befugt sind, die personenbezogenen Daten zu verarbeiten.
+
+k) Einwilligung
+
+Einwilligung ist jede von der betroffenen Person freiwillig f\u00FCr den bestimmten Fall in informierter Weise und unmissverst\u00E4ndlich abgegebene Willensbekundung in Form einer Erkl\u00E4rung oder einer sonstigen eindeutigen best\u00E4tigenden Handlung, mit der die betroffene Person zu verstehen gibt, dass sie mit der Verarbeitung der sie betreffenden personenbezogenen Daten einverstanden ist.
+
+2. Name und Anschrift des f\u00FCr die Verarbeitung Verantwortlichen
+
+Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO), sonstiger in den Mitgliedstaaten der Europ\u00E4ischen Union geltenden Datenschutzgesetze und anderer Bestimmungen mit datenschutzrechtlichem Charakter ist:
+
+Sinopia Deutschland GmbH
+Deckerstr. 39
+70372 Stuttgart
+Deutschland
+Telefon: +491774928319
+E-Mail: info@sinopia.eu
+Website: www.sinopia.eu
+
+3. Erfassung von allgemeinen Daten und Informationen
+
+Die Internetseite der Sinopia Deutschland GmbH erfasst mit jedem Aufruf der Internetseite durch eine betroffene Person oder ein automatisiertes System eine Reihe von allgemeinen Daten und Informationen. Diese allgemeinen Daten und Informationen werden in den Logfiles des Servers gespeichert. Erfasst werden k\u00F6nnen die (1) verwendeten Browsertypen und Versionen, (2) das vom zugreifenden System verwendete Betriebssystem, (3) die Internetseite, von welcher ein zugreifendes System auf unsere Internetseite gelangt (sogenannte Referrer), (4) die Unterwebseiten, (5) das Datum und die Uhrzeit eines Zugriffs auf die Internetseite, (6) eine Internet-Protokoll-Adresse (IP-Adresse), (7) der Internet-Service-Provider des zugreifenden Systems und (8) sonstige \u00E4hnliche Daten und Informationen, die der Gefahrenabwehr im Falle von Angriffen auf unsere informationstechnologischen Systeme dienen.
+
+Bei der Nutzung dieser allgemeinen Daten und Informationen zieht die Sinopia Deutschland GmbH keine R\u00FCckschl\u00FCsse auf die betroffene Person. Diese Informationen werden vielmehr ben\u00F6tigt, um (1) die Inhalte unserer Internetseite korrekt auszuliefern, (2) die Inhalte unserer Internetseite sowie die Werbung f\u00FCr diese zu optimieren, (3) die dauerhafte Funktionsf\u00E4higkeit unserer informationstechnologischen Systeme und der Technik unserer Internetseite zu gew\u00E4hrleisten sowie (4) um Strafverfolgungsbeh\u00F6rden im Falle eines Cyberangriffes die zur Strafverfolgung notwendigen Informationen bereitzustellen. Diese anonym erhobenen Daten und Informationen werden durch die Sinopia Deutschland GmbH daher einerseits statistisch und ferner mit dem Ziel ausgewertet, den Datenschutz und die Datensicherheit in unserem Unternehmen zu erh\u00F6hen, um letztlich ein optimales Schutzniveau f\u00FCr die von uns verarbeiteten personenbezogenen Daten sicherzustellen. Die anonymen Daten der Server-Logfiles werden getrennt von allen durch eine betroffene Person angegebenen personenbezogenen Daten gespeichert.
+
+4. Registrierung auf unserer Internetseite
+
+Die betroffene Person hat die M\u00F6glichkeit, sich auf der Internetseite des f\u00FCr die Verarbeitung Verantwortlichen unter Angabe von personenbezogenen Daten zu registrieren. Welche personenbezogenen Daten dabei an den f\u00FCr die Verarbeitung Verantwortlichen \u00FCbermittelt werden, ergibt sich aus der jeweiligen Eingabemaske, die f\u00FCr die Registrierung verwendet wird. Die von der betroffenen Person eingegebenen personenbezogenen Daten werden ausschlie\u00DFlich f\u00FCr die interne Verwendung bei dem f\u00FCr die Verarbeitung Verantwortlichen und f\u00FCr eigene Zwecke erhoben und gespeichert. Der f\u00FCr die Verarbeitung Verantwortliche kann die Weitergabe an einen oder mehrere Auftragsverarbeiter, beispielsweise einen Paketdienstleister, veranlassen, der die personenbezogenen Daten ebenfalls ausschlie\u00DFlich f\u00FCr eine interne Verwendung, die dem f\u00FCr die Verarbeitung Verantwortlichen zuzurechnen ist, nutzt.
+
+Durch eine Registrierung auf der Internetseite des f\u00FCr die Verarbeitung Verantwortlichen wird ferner die vom Internet-Service-Provider (ISP) der betroffenen Person vergebene IP-Adresse, das Datum sowie die Uhrzeit der Registrierung gespeichert. Die Speicherung dieser Daten erfolgt vor dem Hintergrund, dass nur so der Missbrauch unserer Dienste verhindert werden kann, und diese Daten im Bedarfsfall erm\u00F6glichen, begangene Straftaten aufzukl\u00E4ren. Insofern ist die Speicherung dieser Daten zur Absicherung des f\u00FCr die Verarbeitung Verantwortlichen erforderlich. Eine Weitergabe dieser Daten an Dritte erfolgt grunds\u00E4tzlich nicht, sofern keine gesetzliche Pflicht zur Weitergabe besteht oder die Weitergabe der Strafverfolgung dient.
+
+Die Registrierung der betroffenen Person unter freiwilliger Angabe personenbezogener Daten dient dem f\u00FCr die Verarbeitung Verantwortlichen dazu, der betroffenen Person Inhalte oder Leistungen anzubieten, die aufgrund der Natur der Sache nur registrierten Benutzern angeboten werden k\u00F6nnen. Registrierten Personen steht die M\u00F6glichkeit frei, die bei der Registrierung angegebenen personenbezogenen Daten jederzeit abzu\u00E4ndern oder vollst\u00E4ndig aus dem Datenbestand des f\u00FCr die Verarbeitung Verantwortlichen l\u00F6schen zu lassen.
+
+Der f\u00FCr die Verarbeitung Verantwortliche erteilt jeder betroffenen Person jederzeit auf Anfrage Auskunft dar\u00FCber, welche personenbezogenen Daten \u00FCber die betroffene Person gespeichert sind. Ferner berichtigt oder l\u00F6scht der f\u00FCr die Verarbeitung Verantwortliche personenbezogene Daten auf Wunsch oder Hinweis der betroffenen Person, soweit dem keine gesetzlichen Aufbewahrungspflichten entgegenstehen. Die Gesamtheit der Mitarbeiter des f\u00FCr die Verarbeitung Verantwortlichen stehen der betroffenen Person in diesem Zusammenhang als Ansprechpartner zur Verf\u00FCgung.
+
+5. Kontaktm\u00F6glichkeit \u00FCber die Internetseite
+
+Die Internetseite der Sinopia Deutschland GmbH enth\u00E4lt aufgrund von gesetzlichen Vorschriften Angaben, die eine schnelle elektronische Kontaktaufnahme zu unserem Unternehmen sowie eine unmittelbare Kommunikation mit uns erm\u00F6glichen, was ebenfalls eine allgemeine Adresse der sogenannten elektronischen Post (E-Mail-Adresse) umfasst. Sofern eine betroffene Person per E-Mail oder \u00FCber ein Kontaktformular den Kontakt mit dem f\u00FCr die Verarbeitung Verantwortlichen aufnimmt, werden die von der betroffenen Person \u00FCbermittelten personenbezogenen Daten automatisch gespeichert. Solche auf freiwilliger Basis von einer betroffenen Person an den f\u00FCr die Verarbeitung Verantwortlichen \u00FCbermittelten personenbezogenen Daten werden f\u00FCr Zwecke der Bearbeitung oder der Kontaktaufnahme zur betroffenen Person gespeichert. Es erfolgt keine Weitergabe dieser personenbezogenen Daten an Dritte.
+
+6. Routinem\u00E4\u00DFige L\u00F6schung und Sperrung von personenbezogenen Daten
+
+Der f\u00FCr die Verarbeitung Verantwortliche verarbeitet und speichert personenbezogene Daten der betroffenen Person nur f\u00FCr den Zeitraum, der zur Erreichung des Speicherungszwecks erforderlich ist oder sofern dies durch den Europ\u00E4ischen Richtlinien- und Verordnungsgeber oder einen anderen Gesetzgeber in Gesetzen oder Vorschriften, welchen der f\u00FCr die Verarbeitung Verantwortliche unterliegt, vorgesehen wurde.
+
+Entf\u00E4llt der Speicherungszweck oder l\u00E4uft eine vom Europ\u00E4ischen Richtlinien- und Verordnungsgeber oder einem anderen zust\u00E4ndigen Gesetzgeber vorgeschriebene Speicherfrist ab, werden die personenbezogenen Daten routinem\u00E4\u00DFig und entsprechend den gesetzlichen Vorschriften gesperrt oder gel\u00F6scht.
+
+7. Rechte der betroffenen Person
+
+a) Recht auf Best\u00E4tigung
+
+Jede betroffene Person hat das vom Europ\u00E4ischen Richtlinien- und Verordnungsgeber einger\u00E4umte Recht, von dem f\u00FCr die Verarbeitung Verantwortlichen eine Best\u00E4tigung dar\u00FCber zu verlangen, ob sie betreffende personenbezogene Daten verarbeitet werden. M\u00F6chte eine betroffene Person dieses Best\u00E4tigungsrecht in Anspruch nehmen, kann sie sich hierzu jederzeit an einen Mitarbeiter des f\u00FCr die Verarbeitung Verantwortlichen wenden.
+
+b) Recht auf Auskunft
+
+Jede von der Verarbeitung personenbezogener Daten betroffene Person hat das vom Europ\u00E4ischen Richtlinien- und Verordnungsgeber gew\u00E4hrte Recht, jederzeit von dem f\u00FCr die Verarbeitung Verantwortlichen unentgeltliche Auskunft \u00FCber die zu seiner Person gespeicherten personenbezogenen Daten und eine Kopie dieser Auskunft zu erhalten. Ferner hat der Europ\u00E4ische Richtlinien- und Verordnungsgeber der betroffenen Person Auskunft \u00FCber folgende Informationen zugestanden:
+
+die Verarbeitungszwecke;
+die Kategorien personenbezogener Daten, die verarbeitet werden;
+die Empf\u00E4nger oder Kategorien von Empf\u00E4ngern, gegen\u00FCber denen die personenbezogenen Daten offengelegt worden sind oder noch offengelegt werden, insbesondere bei Empf\u00E4ngern in Drittl\u00E4ndern oder bei internationalen Organisationen;
+falls m\u00F6glich die geplante Dauer, f\u00FCr die die personenbezogenen Daten gespeichert werden, oder, falls dies nicht m\u00F6glich ist, die Kriterien f\u00FCr die Festlegung dieser Dauer;
+das Bestehen eines Rechts auf Berichtigung oder L\u00F6schung der sie betreffenden personenbezogenen Daten oder auf Einschr\u00E4nkung der Verarbeitung durch den Verantwortlichen oder eines Widerspruchsrechts gegen diese Verarbeitung;
+das Bestehen eines Beschwerderechts bei einer Aufsichtsbeh\u00F6rde;
+wenn die personenbezogenen Daten nicht bei der betroffenen Person erhoben werden: Alle verf\u00FCgbaren Informationen \u00FCber die Herkunft der Daten;
+das Bestehen einer automatisierten Entscheidungsfindung einschlie\u00DFlich Profiling gem\u00E4\u00DF Artikel 22 Abs. 1 und 4 DSGVO und \u2014 zumindest in diesen F\u00E4llen \u2014 aussagekr\u00E4ftige Informationen \u00FCber die involvierte Logik sowie die Tragweite und die angestrebten Auswirkungen einer derartigen Verarbeitung f\u00FCr die betroffene Person.
+
+Ferner steht der betroffenen Person ein Auskunftsrecht dar\u00FCber zu, ob personenbezogene Daten an ein Drittland oder an eine internationale Organisation \u00FCbermittelt wurden. Sofern dies der Fall ist, so steht der betroffenen Person im \u00DCbrigen das Recht zu, Auskunft \u00FCber die geeigneten Garantien im Zusammenhang mit der \u00DCbermittlung zu erhalten.
+
+M\u00F6chte eine betroffene Person dieses Auskunftsrecht in Anspruch nehmen, kann sie sich hierzu jederzeit an einen Mitarbeiter des f\u00FCr die Verarbeitung Verantwortlichen wenden.
+
+c) Recht auf Berichtigung
+
+Jede von der Verarbeitung personenbezogener Daten betroffene Person hat das vom Europ\u00E4ischen Richtlinien- und Verordnungsgeber gew\u00E4hrte Recht, die unverz\u00FCgliche Berichtigung sie betreffender unrichtiger personenbezogener Daten zu verlangen. Ferner steht der betroffenen Person das Recht zu, unter Ber\u00FCcksichtigung der Zwecke der Verarbeitung, die Vervollst\u00E4ndigung unvollst\u00E4ndiger personenbezogener Daten \u2014 auch mittels einer erg\u00E4nzenden Erkl\u00E4rung \u2014 zu verlangen.
+
+M\u00F6chte eine betroffene Person dieses Berichtigungsrecht in Anspruch nehmen, kann sie sich hierzu jederzeit an einen Mitarbeiter des f\u00FCr die Verarbeitung Verantwortlichen wenden.
+
+d) Recht auf L\u00F6schung (Recht auf Vergessen werden)
+
+Jede von der Verarbeitung personenbezogener Daten betroffene Person hat das vom Europ\u00E4ischen Richtlinien- und Verordnungsgeber gew\u00E4hrte Recht, von dem Verantwortlichen zu verlangen, dass die sie betreffenden personenbezogenen Daten unverz\u00FCglich gel\u00F6scht werden, sofern einer der folgenden Gr\u00FCnde zutrifft und soweit die Verarbeitung nicht erforderlich ist:
+
+Die personenbezogenen Daten wurden f\u00FCr solche Zwecke erhoben oder auf sonstige Weise verarbeitet, f\u00FCr welche sie nicht mehr notwendig sind.
+Die betroffene Person widerruft ihre Einwilligung, auf die sich die Verarbeitung gem\u00E4\u00DF Art. 6 Abs. 1 Buchstabe a DSGVO oder Art. 9 Abs. 2 Buchstabe a DSGVO st\u00FCtzte, und es fehlt an einer anderweitigen Rechtsgrundlage f\u00FCr die Verarbeitung.
+Die betroffene Person legt gem\u00E4\u00DF Art. 21 Abs. 1 DSGVO Widerspruch gegen die Verarbeitung ein, und es liegen keine vorrangigen berechtigten Gr\u00FCnde f\u00FCr die Verarbeitung vor, oder die betroffene Person legt gem\u00E4\u00DF Art. 21 Abs. 2 DSGVO Widerspruch gegen die Verarbeitung ein.
+Die personenbezogenen Daten wurden unrechtm\u00E4\u00DFig verarbeitet.
+Die L\u00F6schung der personenbezogenen Daten ist zur Erf\u00FCllung einer rechtlichen Verpflichtung nach dem Unionsrecht oder dem Recht der Mitgliedstaaten erforderlich, dem der Verantwortliche unterliegt.
+Die personenbezogenen Daten wurden in Bezug auf angebotene Dienste der Informationsgesellschaft gem\u00E4\u00DF Art. 8 Abs. 1 DSGVO erhoben.
+
+Sofern einer der oben genannten Gr\u00FCnde zutrifft und eine betroffene Person die L\u00F6schung von personenbezogenen Daten, die bei der Sinopia Deutschland GmbH gespeichert sind, veranlassen m\u00F6chte, kann sie sich hierzu jederzeit an einen Mitarbeiter des f\u00FCr die Verarbeitung Verantwortlichen wenden. Der Mitarbeiter der Sinopia Deutschland GmbH wird veranlassen, dass dem L\u00F6schverlangen unverz\u00FCglich nachgekommen wird.
+
+Hat der f\u00FCr die Verarbeitung Verantwortliche personenbezogene Daten \u00F6ffentlich gemacht und ist er gem\u00E4\u00DF Art. 17 Abs. 1 DSGVO zur L\u00F6schung der personenbezogenen Daten verpflichtet, so trifft der f\u00FCr die Verarbeitung Verantwortliche unter Ber\u00FCcksichtigung der verf\u00FCgbaren Technologie und der Implementierungskosten angemessene Ma\u00DFnahmen, auch technischer Art, um andere f\u00FCr die Datenverarbeitung Verantwortliche, welche die ver\u00F6ffentlichten personenbezogenen Daten verarbeiten, dar\u00FCber in Kenntnis zu setzen, dass die betroffene Person von diesen anderen f\u00FCr die Datenverarbeitung Verantwortlichen die L\u00F6schung s\u00E4mtlicher Links zu diesen personenbezogenen Daten oder von Kopien oder Replikationen dieser personenbezogenen Daten verlangt hat, soweit die Verarbeitung nicht erforderlich ist. Der Mitarbeiter der Sinopia Deutschland GmbH wird im Einzelfall das Notwendige veranlassen.
+
+e) Recht auf Einschr\u00E4nkung der Verarbeitung
+
+Jede von der Verarbeitung personenbezogener Daten betroffene Person hat das vom Europ\u00E4ischen Richtlinien- und Verordnungsgeber gew\u00E4hrte Recht, von dem Verantwortlichen die Einschr\u00E4nkung der Verarbeitung zu verlangen, wenn eine der folgenden Voraussetzungen gegeben ist:
+
+Die Richtigkeit der personenbezogenen Daten wird von der betroffenen Person bestritten, und zwar f\u00FCr eine Dauer, die es dem Verantwortlichen erm\u00F6glicht, die Richtigkeit der personenbezogenen Daten zu \u00FCberpr\u00FCfen.
+Die Verarbeitung ist unrechtm\u00E4\u00DFig, die betroffene Person lehnt die L\u00F6schung der personenbezogenen Daten ab und verlangt stattdessen die Einschr\u00E4nkung der Nutzung der personenbezogenen Daten.
+Der Verantwortliche ben\u00F6tigt die personenbezogenen Daten f\u00FCr die Zwecke der Verarbeitung nicht l\u00E4nger, die betroffene Person ben\u00F6tigt sie jedoch zur Geltendmachung, Aus\u00FCbung oder Verteidigung von Rechtsanspr\u00FCchen.
+Die betroffene Person hat Widerspruch gegen die Verarbeitung gem. Art. 21 Abs. 1 DSGVO eingelegt und es steht noch nicht fest, ob die berechtigten Gr\u00FCnde des Verantwortlichen gegen\u00FCber denen der betroffenen Person \u00FCberwiegen.
+
+Sofern eine der oben genannten Voraussetzungen gegeben ist und eine betroffene Person die Einschr\u00E4nkung von personenbezogenen Daten, die bei der Sinopia Deutschland GmbH gespeichert sind, verlangen m\u00F6chte, kann sie sich hierzu jederzeit an einen Mitarbeiter des f\u00FCr die Verarbeitung Verantwortlichen wenden. Der Mitarbeiter der Sinopia Deutschland GmbH wird die Einschr\u00E4nkung der Verarbeitung veranlassen.
+
+f) Recht auf Daten\u00FCbertragbarkeit
+
+Jede von der Verarbeitung personenbezogener Daten betroffene Person hat das vom Europ\u00E4ischen Richtlinien- und Verordnungsgeber gew\u00E4hrte Recht, die sie betreffenden personenbezogenen Daten, welche durch die betroffene Person einem Verantwortlichen bereitgestellt wurden, in einem strukturierten, g\u00E4ngigen und maschinenlesbaren Format zu erhalten. Sie hat au\u00DFerdem das Recht, diese Daten einem anderen Verantwortlichen ohne Behinderung durch den Verantwortlichen, dem die personenbezogenen Daten bereitgestellt wurden, zu \u00FCbermitteln, sofern die Verarbeitung auf der Einwilligung gem\u00E4\u00DF Art. 6 Abs. 1 Buchstabe a DSGVO oder Art. 9 Abs. 2 Buchstabe a DSGVO oder auf einem Vertrag gem\u00E4\u00DF Art. 6 Abs. 1 Buchstabe b DSGVO beruht und die Verarbeitung mithilfe automatisierter Verfahren erfolgt, sofern die Verarbeitung nicht f\u00FCr die Wahrnehmung einer Aufgabe erforderlich ist, die im \u00F6ffentlichen Interesse liegt oder in Aus\u00FCbung \u00F6ffentlicher Gewalt erfolgt, welche dem Verantwortlichen \u00FCbertragen wurde.
+
+Ferner hat die betroffene Person bei der Aus\u00FCbung ihres Rechts auf Daten\u00FCbertragbarkeit gem\u00E4\u00DF Art. 20 Abs. 1 DSGVO das Recht, zu erwirken, dass die personenbezogenen Daten direkt von einem Verantwortlichen an einen anderen Verantwortlichen \u00FCbermittelt werden, soweit dies technisch machbar ist und sofern hiervon nicht die Rechte und Freiheiten anderer Personen beeintr\u00E4chtigt werden.
+
+Zur Geltendmachung des Rechts auf Daten\u00FCbertragbarkeit kann sich die betroffene Person jederzeit an einen Mitarbeiter der Sinopia Deutschland GmbH wenden.
+
+g) Recht auf Widerspruch
+
+Jede von der Verarbeitung personenbezogener Daten betroffene Person hat das vom Europ\u00E4ischen Richtlinien- und Verordnungsgeber gew\u00E4hrte Recht, aus Gr\u00FCnden, die sich aus ihrer besonderen Situation ergeben, jederzeit gegen die Verarbeitung sie betreffender personenbezogener Daten, die aufgrund von Art. 6 Abs. 1 Buchstaben e oder f DSGVO erfolgt, Widerspruch einzulegen. Dies gilt auch f\u00FCr ein auf diese Bestimmungen gest\u00FCtztes Profiling.
+
+Die Sinopia Deutschland GmbH verarbeitet die personenbezogenen Daten im Falle des Widerspruchs nicht mehr, es sei denn, wir k\u00F6nnen zwingende schutzw\u00FCrdige Gr\u00FCnde f\u00FCr die Verarbeitung nachweisen, die den Interessen, Rechten und Freiheiten der betroffenen Person \u00FCberwiegen, oder die Verarbeitung dient der Geltendmachung, Aus\u00FCbung oder Verteidigung von Rechtsanspr\u00FCchen.
+
+Verarbeitet die Sinopia Deutschland GmbH personenbezogene Daten, um Direktwerbung zu betreiben, so hat die betroffene Person das Recht, jederzeit Widerspruch gegen die Verarbeitung der personenbezogenen Daten zum Zwecke derartiger Werbung einzulegen. Dies gilt auch f\u00FCr das Profiling, soweit es mit solcher Direktwerbung in Verbindung steht. Widerspricht die betroffene Person gegen\u00FCber der Sinopia Deutschland GmbH der Verarbeitung f\u00FCr Zwecke der Direktwerbung, so wird die Sinopia Deutschland GmbH die personenbezogenen Daten nicht mehr f\u00FCr diese Zwecke verarbeiten.
+
+Zudem hat die betroffene Person das Recht, aus Gr\u00FCnden, die sich aus ihrer besonderen Situation ergeben, gegen die sie betreffende Verarbeitung personenbezogener Daten, die bei der Sinopia Deutschland GmbH zu wissenschaftlichen oder historischen Forschungszwecken oder zu statistischen Zwecken gem\u00E4\u00DF Art. 89 Abs. 1 DSGVO erfolgen, Widerspruch einzulegen, es sei denn, eine solche Verarbeitung ist zur Erf\u00FCllung einer im \u00F6ffentlichen Interesse liegenden Aufgabe erforderlich.
+
+Zur Aus\u00FCbung des Rechts auf Widerspruch kann sich die betroffene Person an jeden Mitarbeiter der Sinopia Deutschland GmbH wenden. Der betroffenen Person steht es ferner frei, im Zusammenhang mit der Nutzung von Diensten der Informationsgesellschaft, ungeachtet der Richtlinie 2002/58/EG, ihr Widerspruchsrecht mittels automatisierter Verfahren auszu\u00FCben, bei denen technische Spezifikationen verwendet werden.
+
+h) Automatisierte Entscheidungen im Einzelfall einschlie\u00DFlich Profiling
+
+Jede von der Verarbeitung personenbezogener Daten betroffene Person hat das vom Europ\u00E4ischen Richtlinien- und Verordnungsgeber gew\u00E4hrte Recht, nicht einer ausschlie\u00DFlich auf einer automatisierten Verarbeitung \u2014 einschlie\u00DFlich Profiling \u2014 beruhenden Entscheidung unterworfen zu werden, die ihr gegen\u00FCber rechtliche Wirkung entfaltet oder sie in \u00E4hnlicher Weise erheblich beeintr\u00E4chtigt, sofern die Entscheidung (1) nicht f\u00FCr den Abschluss oder die Erf\u00FCllung eines Vertrags zwischen der betroffenen Person und dem Verantwortlichen erforderlich ist, oder (2) aufgrund von Rechtsvorschriften der Union oder der Mitgliedstaaten, denen der Verantwortliche unterliegt, zul\u00E4ssig ist und diese Rechtsvorschriften angemessene Ma\u00DFnahmen zur Wahrung der Rechte und Freiheiten sowie der berechtigten Interessen der betroffenen Person enthalten oder (3) mit ausdr\u00FCcklicher Einwilligung der betroffenen Person erfolgt.
+
+Ist die Entscheidung (1) f\u00FCr den Abschluss oder die Erf\u00FCllung eines Vertrags zwischen der betroffenen Person und dem Verantwortlichen erforderlich oder (2) erfolgt sie mit ausdr\u00FCcklicher Einwilligung der betroffenen Person, trifft die Sinopia Deutschland GmbH angemessene Ma\u00DFnahmen, um die Rechte und Freiheiten sowie die berechtigten Interessen der betroffenen Person zu wahren, wozu mindestens das Recht auf Erwirkung des Eingreifens einer Person seitens des Verantwortlichen, auf Darlegung des eigenen Standpunkts und auf Anfechtung der Entscheidung geh\u00F6rt.
+
+M\u00F6chte die betroffene Person Rechte mit Bezug auf automatisierte Entscheidungen geltend machen, kann sie sich hierzu jederzeit an einen Mitarbeiter der Sinopia Deutschland GmbH wenden.
+
+i) Recht auf Widerruf einer datenschutzrechtlichen Einwilligung
+
+Jede von der Verarbeitung personenbezogener Daten betroffene Person hat das vom Europ\u00E4ischen Richtlinien- und Verordnungsgeber gew\u00E4hrte Recht, eine Einwilligung zur Verarbeitung personenbezogener Daten jederzeit zu widerrufen.
+
+M\u00F6chte die betroffene Person ihr Recht auf Widerruf einer Einwilligung geltend machen, kann sie sich hierzu jederzeit an einen Mitarbeiter der Sinopia Deutschland GmbH wenden.
+
+8. Datenschutz bei Bewerbungen und im Bewerbungsverfahren
+
+Der f\u00FCr die Verarbeitung Verantwortliche erhebt und verarbeitet die personenbezogenen Daten von Bewerbern zum Zwecke der Abwicklung des Bewerbungsverfahrens. Die Verarbeitung kann auch auf elektronischem Wege erfolgen. Dies ist insbesondere dann der Fall, wenn ein Bewerber entsprechende Bewerbungsunterlagen auf dem elektronischen Wege, beispielsweise per E-Mail oder \u00FCber ein auf der Internetseite befindliches Webformular, an den f\u00FCr die Verarbeitung Verantwortlichen \u00FCbermittelt. Schlie\u00DFt der f\u00FCr die Verarbeitung Verantwortliche einen Anstellungsvertrag mit einem Bewerber, werden die \u00FCbermittelten Daten zum Zwecke der Abwicklung des Besch\u00E4ftigungsverh\u00E4ltnisses unter Beachtung der gesetzlichen Vorschriften gespeichert. Wird von dem f\u00FCr die Verarbeitung Verantwortlichen kein Anstellungsvertrag mit dem Bewerber geschlossen, so werden die Bewerbungsunterlagen zwei Monate nach Bekanntgabe der Absageentscheidung automatisch gel\u00F6scht, sofern einer L\u00F6schung keine sonstigen berechtigten Interessen des f\u00FCr die Verarbeitung Verantwortlichen entgegenstehen. Sonstiges berechtigtes Interesse in diesem Sinne ist beispielsweise eine Beweispflicht in einem Verfahren nach dem Allgemeinen Gleichbehandlungsgesetz (AGG).
+
+9. Rechtsgrundlage der Verarbeitung
+
+Art. 6 Abs. 1 lit. a DSGVO dient unserem Unternehmen als Rechtsgrundlage f\u00FCr Verarbeitungsvorg\u00E4nge, bei denen wir eine Einwilligung f\u00FCr einen bestimmten Verarbeitungszweck einholen. Ist die Verarbeitung personenbezogener Daten zur Erf\u00FCllung eines Vertrags, dessen Vertragspartei die betroffene Person ist, erforderlich, wie dies beispielsweise bei Verarbeitungsvorg\u00E4ngen der Fall ist, die f\u00FCr eine Lieferung von Waren oder die Erbringung einer sonstigen Leistung oder Gegenleistung notwendig sind, so beruht die Verarbeitung auf Art. 6 Abs. 1 lit. b DSGVO. Gleiches gilt f\u00FCr solche Verarbeitungsvorg\u00E4nge die zur Durchf\u00FChrung vorvertraglicher Ma\u00DFnahmen erforderlich sind, etwa in F\u00E4llen von Anfragen zu unseren Produkten oder Leistungen. Unterliegt unser Unternehmen einer rechtlichen Verpflichtung durch welche eine Verarbeitung von personenbezogenen Daten erforderlich wird, wie beispielsweise zur Erf\u00FCllung steuerlicher Pflichten, so basiert die Verarbeitung auf Art. 6 Abs. 1 lit. c DSGVO. In seltenen F\u00E4llen k\u00F6nnte die Verarbeitung von personenbezogenen Daten erforderlich werden, um lebenswichtige Interessen der betroffenen Person oder einer anderen nat\u00FCrlichen Person zu sch\u00FCtzen. Schlie\u00DFlich k\u00F6nnten Verarbeitungsvorg\u00E4nge auf Art. 6 Abs. 1 lit. f DSGVO beruhen. Auf dieser Rechtsgrundlage basieren Verarbeitungsvorg\u00E4nge, die von keiner der vorgenannten Rechtsgrundlagen erfasst werden, wenn die Verarbeitung zur Wahrung eines berechtigten Interesses unseres Unternehmens oder eines Dritten erforderlich ist, sofern die Interessen, Grundrechte und Grundfreiheiten des Betroffenen nicht \u00FCberwiegen.
+
+10. Berechtigte Interessen an der Verarbeitung, die von dem Verantwortlichen oder einem Dritten verfolgt werden
+
+Basiert die Verarbeitung personenbezogener Daten auf Artikel 6 Abs. 1 lit. f DSGVO ist unser berechtigtes Interesse die Durchf\u00FChrung unserer Gesch\u00E4ftst\u00E4tigkeit zugunsten des Wohlergehens all unserer Mitarbeiter und unserer Anteilseigner.
+
+11. Dauer, f\u00FCr die die personenbezogenen Daten gespeichert werden
+
+Das Kriterium f\u00FCr die Dauer der Speicherung von personenbezogenen Daten ist die jeweilige gesetzliche Aufbewahrungsfrist. Nach Ablauf der Frist werden die entsprechenden Daten routinem\u00E4\u00DFig gel\u00F6scht, sofern sie nicht mehr zur Vertragserf\u00FCllung oder Vertragsanbahnung erforderlich sind.
+
+12. Gesetzliche oder vertragliche Vorschriften zur Bereitstellung der personenbezogenen Daten; Erforderlichkeit f\u00FCr den Vertragsabschluss; Verpflichtung der betroffenen Person, die personenbezogenen Daten bereitzustellen; m\u00F6gliche Folgen der Nichtbereitstellung
+
+Wir kl\u00E4ren Sie dar\u00FCber auf, dass die Bereitstellung personenbezogener Daten zum Teil gesetzlich vorgeschrieben ist (z.B. Steuervorschriften) oder sich auch aus vertraglichen Regelungen (z.B. Angaben zum Vertragspartner) ergeben kann. Mitunter kann es zu einem Vertragsschluss erforderlich sein, dass eine betroffene Person uns personenbezogene Daten zur Verf\u00FCgung stellt, die in der Folge durch uns verarbeitet werden m\u00FCssen. Die betroffene Person ist beispielsweise verpflichtet uns personenbezogene Daten bereitzustellen, wenn unser Unternehmen mit ihr einen Vertrag abschlie\u00DFt. Eine Nichtbereitstellung der personenbezogenen Daten h\u00E4tte zur Folge, dass der Vertrag mit dem Betroffenen nicht geschlossen werden k\u00F6nnte. Vor einer Bereitstellung personenbezogener Daten durch den Betroffenen muss sich der Betroffene an einen unserer Mitarbeiter wenden. Unser Mitarbeiter kl\u00E4rt den Betroffenen einzelfallbezogen dar\u00FCber auf, ob die Bereitstellung der personenbezogenen Daten gesetzlich oder vertraglich vorgeschrieben oder f\u00FCr den Vertragsabschluss erforderlich ist, ob eine Verpflichtung besteht, die personenbezogenen Daten bereitzustellen, und welche Folgen die Nichtbereitstellung der personenbezogenen Daten h\u00E4tte.
+
+13. Bestehen einer automatisierten Entscheidungsfindung
+
+Als verantwortungsbewusstes Unternehmen verzichten wir auf eine automatische Entscheidungsfindung oder ein Profiling.
+
+Entwickelt von den Spezialisten f\u00FCr LegalTech bei Willing & Able, die auch das System f\u00FCr den DSGVO-Urlaubstracker entwickelt haben. Die in unserem Datenschutzerkl\u00E4rungsgenerator enthaltenen Rechtstexte wurden von Prof. Dr. h.c. Heiko Jonny Maniero vom Deutschen Datenschutzverband und Christian Solmecke von WBS law bereitgestellt und ver\u00F6ffentlicht.`,
+    agreeLabel: "Ich habe die Datenschutzerkl\u00E4rung gelesen und akzeptiere sie",
+    agreeError: "Bitte lesen und akzeptieren Sie die Datenschutzerkl\u00E4rung, um fortzufahren.",
   },
   imprint: {
     title: "Impressum",

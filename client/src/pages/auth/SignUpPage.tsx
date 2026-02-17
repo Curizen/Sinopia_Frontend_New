@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Link, useLocation, useSearch } from 'wouter';
 import { useI18n } from '@/i18n';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
@@ -10,11 +10,10 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, UserPlus, Briefcase, User, FileText } from 'lucide-react';
+import { Eye, EyeOff, UserPlus, Briefcase, User } from 'lucide-react';
 import { authService } from '@/services/authService';
 import type { UserRole } from '@/lib/utils/constants';
 import { PasswordRequirements, isPasswordValid } from '@/components/auth/PasswordRequirements';
-import { TermsModal } from '@/components/auth/TermsModal';
 
 export default function SignUpPage() {
   const { toast } = useToast();
@@ -22,7 +21,6 @@ export default function SignUpPage() {
   const [, setLocation] = useLocation();
   const searchString = useSearch();
 
-  // Parse returnUrl from query params for redirect after signup
   const returnUrl = useMemo(() => {
     const params = new URLSearchParams(searchString);
     const url = params.get('returnUrl');
@@ -39,8 +37,7 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [termsModalOpen, setTermsModalOpen] = useState(false);
-  const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -50,27 +47,17 @@ export default function SignUpPage() {
     role: 'skill_giver' as UserRole,
   });
 
-  useEffect(() => {
-    const accepted = localStorage.getItem('sinopia_terms_accepted');
-    if (accepted === 'true') {
-      setHasScrolledToBottom(true);
-      setTermsAccepted(true);
-    }
-  }, []);
-
-  const handleTermsAcceptedChange = (checked: boolean) => {
-    setTermsAccepted(checked);
-    if (checked) {
-      localStorage.setItem('sinopia_terms_accepted', 'true');
-      localStorage.setItem('sinopia_terms_accepted_at', new Date().toISOString());
-    } else {
-      localStorage.removeItem('sinopia_terms_accepted');
-      localStorage.removeItem('sinopia_terms_accepted_at');
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!privacyAccepted) {
+      toast({
+        title: t('common.error'),
+        description: t('privacy.agreeError'),
+        variant: 'destructive',
+      });
+      return;
+    }
 
     if (!termsAccepted) {
       toast({
@@ -105,7 +92,6 @@ export default function SignUpPage() {
                         response.status === 'success';
 
       if (isOtpSent) {
-        // Store signup data in sessionStorage for OTP resend (cleared when tab closes)
         sessionStorage.setItem('pending_signup', JSON.stringify({
           email: formData.email,
           password: formData.password,
@@ -117,7 +103,6 @@ export default function SignUpPage() {
           title: t('auth.verificationRequired'),
           description: t('auth.verificationCodeSent'),
         });
-        // Propagate returnUrl to OTP verification page
         const returnParam = returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}` : '';
         setLocation('/verify-otp?email=' + encodeURIComponent(formData.email) + '&role=' + formData.role + returnParam);
       } else {
@@ -302,69 +287,70 @@ export default function SignUpPage() {
                 </div>
               </div>
 
-              <div className="space-y-3 border rounded-lg p-4 bg-muted/30">
+              <div className="space-y-3 pt-2">
+                <div className="flex items-start gap-3">
+                  <Checkbox
+                    id="privacy-checkbox"
+                    checked={privacyAccepted}
+                    onCheckedChange={(checked) => setPrivacyAccepted(checked === true)}
+                    data-testid="checkbox-privacy-accept"
+                  />
+                  <Label
+                    htmlFor="privacy-checkbox"
+                    className="text-sm leading-relaxed cursor-pointer"
+                  >
+                    {t('privacy.agreeLabel').split(t('privacy.title')).map((part, i, arr) =>
+                      i < arr.length - 1 ? (
+                        <span key={i}>
+                          {part}
+                          <Link href="/privacy" className="text-primary hover:underline" data-testid="link-privacy-checkbox" target="_blank">
+                            {t('privacy.title')}
+                          </Link>
+                        </span>
+                      ) : (
+                        <span key={i}>{part}</span>
+                      )
+                    )}
+                  </Label>
+                </div>
+
                 <div className="flex items-start gap-3">
                   <Checkbox
                     id="terms-checkbox"
                     checked={termsAccepted}
-                    onCheckedChange={handleTermsAcceptedChange}
-                    disabled={!hasScrolledToBottom}
+                    onCheckedChange={(checked) => setTermsAccepted(checked === true)}
                     data-testid="checkbox-terms-accept"
                   />
-                  <div className="flex-1 space-y-1">
-                    <Label
-                      htmlFor="terms-checkbox"
-                      className={`text-sm leading-relaxed cursor-pointer ${!hasScrolledToBottom ? 'text-muted-foreground' : ''}`}
-                    >
-                      {t('terms.agreeLabel')}
-                    </Label>
-                    {!hasScrolledToBottom && (
-                      <p className="text-xs text-muted-foreground">
-                        {t('terms.scrollToAccept')}
-                      </p>
+                  <Label
+                    htmlFor="terms-checkbox"
+                    className="text-sm leading-relaxed cursor-pointer"
+                  >
+                    {t('terms.agreeLabel').split(t('terms.titleShort')).map((part, i, arr) =>
+                      i < arr.length - 1 ? (
+                        <span key={i}>
+                          {part}
+                          <Link href="/terms" className="text-primary hover:underline" data-testid="link-terms-checkbox" target="_blank">
+                            {t('terms.titleShort')}
+                          </Link>
+                        </span>
+                      ) : (
+                        <span key={i}>{part}</span>
+                      )
                     )}
-                  </div>
+                  </Label>
                 </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setTermsModalOpen(true)}
-                  className="w-full"
-                  data-testid="button-view-terms"
-                >
-                  <FileText className="w-4 h-4 mr-2" />
-                  {t('terms.viewTerms')}
-                </Button>
               </div>
 
               <Button
                 type="submit"
                 className="w-full"
-                disabled={isLoading || !isPasswordValid(formData.password) || formData.password !== formData.confirmPassword || !termsAccepted}
+                disabled={isLoading || !isPasswordValid(formData.password) || formData.password !== formData.confirmPassword || !termsAccepted || !privacyAccepted}
                 data-testid="button-signup-submit"
               >
                 {isLoading ? t('common.loading') : t('auth.signUpButton')}
                 <UserPlus className="ml-2 w-4 h-4" />
               </Button>
-
-              <p className="text-xs text-center text-muted-foreground">
-                <Link href="/terms" className="hover:underline hover:text-primary transition-colors" data-testid="link-terms-signup">
-                  {t('footer.terms')}
-                </Link>
-                {' & '}
-                <Link href="/privacy" className="hover:underline hover:text-primary transition-colors" data-testid="link-privacy-signup">
-                  {t('privacy.title')}
-                </Link>
-              </p>
             </form>
-
-            <TermsModal
-              open={termsModalOpen}
-              onOpenChange={setTermsModalOpen}
-              onScrolledToBottom={() => setHasScrolledToBottom(true)}
-              hasScrolledToBottom={hasScrolledToBottom}
-            />
 
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">{t('auth.hasAccount')} </span>
