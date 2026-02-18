@@ -1886,7 +1886,7 @@ export default function ProfilePage() {
         
         console.log('[DEBUG] PUT Project Request body:', requestBody);
         
-        const response = await fetch(`/api/projects/${proj.id}`, {
+        const response = await fetch(`/api/personal-projects/${proj.id}`, {
           method: 'PUT',
           headers,
           credentials: 'include',
@@ -1944,7 +1944,7 @@ export default function ProfilePage() {
         
         console.log('[DEBUG] POST Project Request body:', requestBody);
         
-        const response = await fetch('/api/projects', {
+        const response = await fetch('/api/personal-projects', {
           method: 'POST',
           headers,
           credentials: 'include',
@@ -2005,7 +2005,7 @@ export default function ProfilePage() {
       
       console.log('[DEBUG] DELETE Request for project id:', id);
       
-      const response = await fetch(`/api/projects/${id}`, {
+      const response = await fetch(`/api/personal-projects/${id}`, {
         method: 'DELETE',
         headers,
         credentials: 'include',

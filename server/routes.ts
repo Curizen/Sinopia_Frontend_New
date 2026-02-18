@@ -486,7 +486,7 @@ export async function registerRoutes(
   });
 
   // Projects API proxy - Create
-  app.post("/api/projects", async (req, res) => {
+  app.post("/api/personal-projects", async (req, res) => {
     try {
       const authHeader = req.headers.authorization;
       const headers: Record<string, string> = { 
@@ -497,7 +497,7 @@ export async function registerRoutes(
         headers["Authorization"] = authHeader;
       }
       
-      console.log("[DEBUG] POST /api/projects - req.body:", JSON.stringify(req.body));
+      console.log("[DEBUG] POST /api/personal-projects - req.body:", JSON.stringify(req.body));
       
       const response = await fetch(`${EXTERNAL_API_BASE}/api/personal-projects`, {
         method: "POST",
@@ -514,7 +514,7 @@ export async function registerRoutes(
   });
 
   // Projects API proxy - Update
-  app.put("/api/projects/:id", async (req, res) => {
+  app.put("/api/personal-projects/:id", async (req, res) => {
     try {
       const authHeader = req.headers.authorization;
       const headers: Record<string, string> = { 
@@ -525,7 +525,7 @@ export async function registerRoutes(
         headers["Authorization"] = authHeader;
       }
       
-      console.log("[DEBUG] PUT /api/projects - req.body:", JSON.stringify(req.body));
+      console.log("[DEBUG] PUT /api/personal-projects - req.body:", JSON.stringify(req.body));
       
       const response = await fetch(`${EXTERNAL_API_BASE}/api/personal-projects/${req.params.id}`, {
         method: "PUT",
@@ -542,7 +542,7 @@ export async function registerRoutes(
   });
 
   // Projects API proxy - Delete
-  app.delete("/api/projects/:id", async (req, res) => {
+  app.delete("/api/personal-projects/:id", async (req, res) => {
     try {
       const authHeader = req.headers.authorization;
       const headers: Record<string, string> = { 
