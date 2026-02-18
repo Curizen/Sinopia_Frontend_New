@@ -1664,5 +1664,33 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/contact", async (req, res) => {
+    try {
+      const { name, email, subject, message } = req.body;
+
+      if (!name || !email || !subject || !message) {
+        return res.status(400).json({ status: "error", message: "All fields are required" });
+      }
+
+      const response = await fetch(`${EXTERNAL_API_BASE}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, subject, message }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("[DEBUG] Contact API error:", errorText);
+        return res.status(response.status).json({ status: "error", message: "Failed to send message" });
+      }
+
+      const data = await response.json().catch(() => ({}));
+      res.status(200).json({ status: "success", ...data });
+    } catch (error) {
+      console.error("Contact proxy error:", error);
+      res.status(500).json({ status: "error", message: "Failed to send message" });
+    }
+  });
+
   return httpServer;
 }

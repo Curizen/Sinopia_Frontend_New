@@ -750,6 +750,7 @@ export const en = {
     messagePlaceholder: "Tell us more about your inquiry...",
     sendButton: "Send Message",
     successMessage: "Thank you for your message. We'll get back to you soon!",
+    errorMessage: "Failed to send your message. Please try again later.",
     info: {
       email: "Email",
       phone: "Phone",

@@ -36,17 +36,37 @@ export default function ContactPage() {
     }
 
     setIsSubmitting(true);
-    
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: t('common.success'),
-      description: t('contact.successMessage'),
-    });
-    
-    setFormData({ name: '', email: '', subject: '', message: '' });
-    setPrivacyAccepted(false);
-    setIsSubmitting(false);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        toast({
+          title: t('common.success'),
+          description: t('contact.successMessage'),
+        });
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setPrivacyAccepted(false);
+      } else {
+        toast({
+          title: t('common.error'),
+          description: t('contact.errorMessage'),
+          variant: 'destructive',
+        });
+      }
+    } catch {
+      toast({
+        title: t('common.error'),
+        description: t('contact.errorMessage'),
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

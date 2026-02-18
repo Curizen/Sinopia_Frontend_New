@@ -759,6 +759,7 @@ export const de = {
     sendButton: "Nachricht senden",
     successMessage:
       "Vielen Dank für Ihre Nachricht. Wir melden uns bald bei Ihnen!",
+    errorMessage: "Ihre Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es sp\u00E4ter erneut.",
     info: {
       email: "E-Mail",
       phone: "Telefon",
