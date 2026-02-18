@@ -287,7 +287,7 @@ const transformApiDataToGiverProfile = (apiData: ApiUserData): Partial<SkillGive
       id: p.id?.toString() || generateId(),
       project_name: p.project_name || p.name || '',
       description: p.description || '',
-      technologies: Array.isArray(p.technologies) ? p.technologies : (typeof p.technologies === 'string' && p.technologies ? p.technologies.split(',').map(t => t.trim()) : []),
+      technologies: Array.isArray(p.technologies) ? p.technologies.map((t: string) => { try { const parsed = JSON.parse(t); return Array.isArray(parsed) ? parsed : t; } catch { return t; } }).flat() : (typeof p.technologies === 'string' && p.technologies ? (() => { try { const parsed = JSON.parse(p.technologies as string); return Array.isArray(parsed) ? parsed : [p.technologies]; } catch { return p.technologies.split(',').map((t: string) => t.trim()); } })() : []),
       duration: p.duration || '',
       project_url: p.project_url || '',
     }));
@@ -1876,10 +1876,13 @@ export default function ProfilePage() {
           headers['Authorization'] = `Bearer ${token}`;
         }
         
+        const cleanTechnologies = (proj.technologies || []).map((t: string) => {
+          try { const parsed = JSON.parse(t); return Array.isArray(parsed) ? parsed : t; } catch { return t; }
+        }).flat().filter((t: string) => t && t !== '[]');
         const requestBody = {
           project_name: proj.project_name,
           description: proj.description,
-          technologies: proj.technologies,
+          technologies: cleanTechnologies,
           duration: proj.duration,
           project_url: proj.project_url || '',
         };
@@ -1934,10 +1937,13 @@ export default function ProfilePage() {
           headers['Authorization'] = `Bearer ${token}`;
         }
         
+        const cleanTechnologies = (proj.technologies || []).map((t: string) => {
+          try { const parsed = JSON.parse(t); return Array.isArray(parsed) ? parsed : t; } catch { return t; }
+        }).flat().filter((t: string) => t && t !== '[]');
         const requestBody = {
           project_name: proj.project_name,
           description: proj.description,
-          technologies: proj.technologies,
+          technologies: cleanTechnologies,
           duration: proj.duration,
           project_url: proj.project_url || '',
         };
@@ -1956,7 +1962,7 @@ export default function ProfilePage() {
         
         if (response.ok) {
           // Use the ID from the server response if available
-          const newProjId = data.data?.id?.toString() || data.id?.toString() || generateId();
+          const newProjId = data.data?.data?.id?.toString() || data.data?.id?.toString() || data.id?.toString() || generateId();
           const newProj = { ...proj, id: newProjId };
           
           // 1. Update UI state
