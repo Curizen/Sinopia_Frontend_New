@@ -868,6 +868,8 @@ export async function registerRoutes(
   // CV Upload API proxy - Upload and extract with AI
   app.post("/api/upload-cv", upload.single('cvFile'), async (req, res) => {
     try {
+      req.setTimeout(300000);
+      res.setTimeout(300000);
       const authHeader = req.headers.authorization;
       const file = req.file;
       
@@ -894,6 +896,7 @@ export async function registerRoutes(
         method: "POST",
         headers,
         body: formData,
+        signal: AbortSignal.timeout(300000),
       });
       
       forwardCookies(response, res);
@@ -1092,6 +1095,8 @@ export async function registerRoutes(
   // Use Case File Analysis endpoint (for PDF/DOC uploads)
   app.post("/api/use-case/analysis-file", upload.single('file'), async (req, res) => {
     try {
+      req.setTimeout(300000);
+      res.setTimeout(300000);
       const authHeader = req.headers.authorization;
       
       if (!authHeader) {
@@ -1116,6 +1121,7 @@ export async function registerRoutes(
           "Cookie": getClientCookies(req),
         },
         body: formData,
+        signal: AbortSignal.timeout(300000),
       });
 
       console.log("[DEBUG] POST /api/use-case/analysis-file - Response status:", response.status);
