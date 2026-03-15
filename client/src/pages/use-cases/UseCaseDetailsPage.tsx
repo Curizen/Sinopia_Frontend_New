@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
 import {
   Dialog,
   DialogContent,
@@ -24,7 +25,12 @@ import {
   AlertCircle,
   CheckCircle2,
   Rocket,
-  X
+  X,
+  FileText,
+  Building2,
+  Phone,
+  Mail,
+  Globe,
 } from 'lucide-react';
 
 interface Skill {
@@ -48,6 +54,11 @@ interface Stage {
   total_hours: number;
 }
 
+interface SkillSearcher {
+  company_size?: string;
+  industry?: string;
+}
+
 interface UseCaseDetails {
   id: number;
   title: string;
@@ -59,6 +70,298 @@ interface UseCaseDetails {
   total_project_hours: number;
   job_titles: JobTitle[];
   stages: Stage[];
+  skill_searcher?: SkillSearcher;
+}
+
+function ContractSection({
+  useCase,
+  t,
+  formatCurrency,
+}: {
+  useCase: UseCaseDetails;
+  t: (key: string) => string;
+  formatCurrency: (amount: number) => string;
+}) {
+  const today = new Date();
+  const expiry = new Date(today);
+  expiry.setDate(expiry.getDate() + 7);
+
+  const formatDate = (date: Date) =>
+    date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+  const tc = (key: string) => t(`useCaseDetails.contract.${key}`);
+
+  return (
+    <div className="mt-2">
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <FileText className="w-5 h-5" />
+            {tc('sectionTitle')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {/* Document container */}
+          <div className="bg-white dark:bg-zinc-950 border rounded-md p-8 max-w-4xl mx-auto space-y-8 text-sm text-foreground">
+
+            {/* Sinopia letterhead */}
+            <div className="flex flex-col md:flex-row md:justify-between gap-6 pb-6 border-b">
+              <div className="space-y-1">
+                <p className="font-bold text-base">Sinopia Deutschland GmbH</p>
+                <p className="text-muted-foreground">Deckerstraße 39</p>
+                <p className="text-muted-foreground">70372 Stuttgart</p>
+              </div>
+              <div className="space-y-1 md:text-right">
+                <p className="font-semibold">{tc('salesPerson')}</p>
+                <p className="text-muted-foreground">Herrn Jens Uwe Jung</p>
+                <div className="flex items-center gap-1.5 md:justify-end text-muted-foreground">
+                  <Phone className="w-3.5 h-3.5 shrink-0" />
+                  <span>0177 492 8319</span>
+                </div>
+                <div className="flex items-center gap-1.5 md:justify-end text-muted-foreground">
+                  <Mail className="w-3.5 h-3.5 shrink-0" />
+                  <span>procurement@sinopia.eu</span>
+                </div>
+                <div className="flex items-center gap-1.5 md:justify-end text-muted-foreground">
+                  <Globe className="w-3.5 h-3.5 shrink-0" />
+                  <span>www.sinopia.eu</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Offer header */}
+            <div className="space-y-3">
+              <div className="flex flex-wrap gap-6">
+                <div>
+                  <span className="font-semibold">{tc('offerNo')}:</span>{' '}
+                  <span className="text-muted-foreground">{useCase.id}</span>
+                </div>
+                <div>
+                  <span className="font-semibold">{tc('offerDate')}:</span>{' '}
+                  <span className="text-muted-foreground">{formatDate(today)}</span>
+                </div>
+              </div>
+              <p className="font-medium">{tc('greeting')}</p>
+              <p className="text-muted-foreground leading-relaxed">
+                {tc('intro')} ({useCase.id}){' '}
+                <span className="font-medium text-foreground">{useCase.title}</span>.
+              </p>
+            </div>
+
+            <Separator />
+
+            {/* 2. Management Summary */}
+            <div className="space-y-2">
+              <h3 className="font-bold text-base flex items-center gap-2">
+                <span className="text-muted-foreground font-normal text-xs">2.</span>
+                {tc('managementSummary')}
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">{useCase.description}</p>
+            </div>
+
+            <Separator />
+
+            {/* 3. Implementation Phases */}
+            {useCase.stages && useCase.stages.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="font-bold text-base flex items-center gap-2">
+                  <span className="text-muted-foreground font-normal text-xs">3.</span>
+                  {tc('implementationPhases')}
+                </h3>
+                <div className="space-y-2">
+                  {useCase.stages.map((stage, index) => (
+                    <div key={index} className="pl-4 border-l-2 border-border space-y-0.5">
+                      <p className="font-semibold">{stage.stage_name}</p>
+                      <p className="text-muted-foreground">{stage.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <Separator />
+
+            {/* 4. Scope of Services */}
+            {useCase.objectives && useCase.objectives.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="font-bold text-base flex items-center gap-2">
+                  <span className="text-muted-foreground font-normal text-xs">4.</span>
+                  {tc('scopeOfServices')}
+                </h3>
+                <ul className="space-y-1">
+                  {useCase.objectives.map((obj, index) => (
+                    <li key={index} className="flex items-start gap-2 text-muted-foreground">
+                      <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                      <span>{obj}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <Separator />
+
+            {/* 5. Required Skills & Roles */}
+            {useCase.job_titles && useCase.job_titles.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="font-bold text-base flex items-center gap-2">
+                  <span className="text-muted-foreground font-normal text-xs">5.</span>
+                  {tc('requiredSkillsRoles')}
+                </h3>
+                <div className="space-y-3">
+                  {useCase.job_titles.map((job, index) => (
+                    <div key={index} className="pl-4 border-l-2 border-border space-y-1">
+                      <p className="font-semibold">{job.job_title}</p>
+                      {job.description && (
+                        <p className="text-muted-foreground text-xs">{job.description}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <Separator />
+
+            {/* 6. Prerequisites & Assumptions */}
+            <div className="space-y-3">
+              <h3 className="font-bold text-base flex items-center gap-2">
+                <span className="text-muted-foreground font-normal text-xs">6.</span>
+                {tc('prerequisites')}
+              </h3>
+              {(useCase.skill_searcher?.company_size || useCase.skill_searcher?.industry) && (
+                <div className="flex flex-wrap gap-6 mb-2">
+                  {useCase.skill_searcher?.company_size && (
+                    <div className="flex items-center gap-2">
+                      <Building2 className="w-4 h-4 text-muted-foreground" />
+                      <span className="font-medium">{tc('companySizeLabel')}:</span>
+                      <span className="text-muted-foreground">{useCase.skill_searcher.company_size}</span>
+                    </div>
+                  )}
+                  {useCase.skill_searcher?.industry && (
+                    <div className="flex items-center gap-2">
+                      <Briefcase className="w-4 h-4 text-muted-foreground" />
+                      <span className="font-medium">{tc('industryLabel')}:</span>
+                      <span className="text-muted-foreground">{useCase.skill_searcher.industry}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+              <div className="space-y-1">
+                <p className="font-medium mb-2">{tc('assumptionsTitle')}</p>
+                {(['assumption1','assumption2','assumption3','assumption4','assumption5'] as const).map((key) => (
+                  <div key={key} className="flex items-start gap-2 text-muted-foreground">
+                    <span className="mt-1 w-1.5 h-1.5 rounded-full bg-muted-foreground shrink-0" />
+                    <span>{tc(key)}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="space-y-1 mt-2">
+                <p className="font-medium mb-2">{tc('scopeLimits')}</p>
+                {(['scopeLimit1','scopeLimit2','scopeLimit3'] as const).map((key) => (
+                  <div key={key} className="flex items-start gap-2 text-muted-foreground">
+                    <span className="mt-1 w-1.5 h-1.5 rounded-full bg-muted-foreground shrink-0" />
+                    <span>{tc(key)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* 7. Service Hours */}
+            <div className="space-y-2">
+              <h3 className="font-bold text-base flex items-center gap-2">
+                <span className="text-muted-foreground font-normal text-xs">7.</span>
+                {tc('serviceHours')}
+              </h3>
+              <p className="text-muted-foreground">{tc('serviceHoursText')}</p>
+              <p className="text-muted-foreground">{tc('workingDay')}</p>
+            </div>
+
+            <Separator />
+
+            {/* 8. Travel Expenses */}
+            <div className="space-y-2">
+              <h3 className="font-bold text-base flex items-center gap-2">
+                <span className="text-muted-foreground font-normal text-xs">8.</span>
+                {tc('travelExpenses')}
+              </h3>
+              <p className="text-muted-foreground">{tc('travelExpensesText')}</p>
+            </div>
+
+            <Separator />
+
+            {/* 9. Payment Plan */}
+            {useCase.stages && useCase.stages.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="font-bold text-base flex items-center gap-2">
+                  <span className="text-muted-foreground font-normal text-xs">9.</span>
+                  {tc('paymentPlan')}
+                </h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm border-collapse">
+                    <thead>
+                      <tr className="bg-muted/50">
+                        <th className="text-left py-2 px-3 font-semibold border border-border">{t('useCaseDetails.implementationStages')}</th>
+                        <th className="text-right py-2 px-3 font-semibold border border-border">{t('useCaseDetails.requiredSkills')}</th>
+                        <th className="text-right py-2 px-3 font-semibold border border-border">%</th>
+                        <th className="text-right py-2 px-3 font-semibold border border-border">{t('projects.totalCost')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {useCase.stages.map((stage, index) => {
+                        const pct = useCase.total_project_hours > 0
+                          ? (stage.total_hours / useCase.total_project_hours) * 100
+                          : 0;
+                        const stageCost = useCase.total_cost * (pct / 100);
+                        return (
+                          <tr key={index} className="border-b border-border">
+                            <td className="py-2 px-3 border border-border">{stage.stage_name}</td>
+                            <td className="py-2 px-3 text-right border border-border text-muted-foreground">{stage.total_hours}h</td>
+                            <td className="py-2 px-3 text-right border border-border text-muted-foreground">{pct.toFixed(1)}%</td>
+                            <td className="py-2 px-3 text-right border border-border font-medium">{formatCurrency(stageCost)}</td>
+                          </tr>
+                        );
+                      })}
+                      <tr className="bg-muted/30 font-semibold">
+                        <td className="py-2 px-3 border border-border">Total</td>
+                        <td className="py-2 px-3 text-right border border-border">{useCase.total_project_hours}h</td>
+                        <td className="py-2 px-3 text-right border border-border">100%</td>
+                        <td className="py-2 px-3 text-right border border-border">{formatCurrency(useCase.total_cost)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p className="text-muted-foreground text-xs">{tc('invoiceNote')}</p>
+              </div>
+            )}
+
+            <Separator />
+
+            {/* 10. Acceptance */}
+            <div className="space-y-2">
+              <h3 className="font-bold text-base flex items-center gap-2">
+                <span className="text-muted-foreground font-normal text-xs">10.</span>
+                {tc('acceptance')}
+              </h3>
+              <div className="flex flex-wrap gap-6 text-muted-foreground">
+                <div>
+                  <span className="font-medium text-foreground">{tc('offerDate')}:</span>{' '}
+                  {formatDate(today)}
+                </div>
+                <div>
+                  <span className="font-medium text-foreground">{tc('offerValidUntil')}:</span>{' '}
+                  {formatDate(expiry)}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
 
 export default function UseCaseDetailsPage() {
@@ -372,6 +675,9 @@ export default function UseCaseDetailsPage() {
             </CardContent>
           </Card>
         )}
+
+        {/* Contract / Offer Section */}
+        <ContractSection useCase={useCase} t={t} formatCurrency={formatCurrency} />
       </div>
 
       <div className="sticky bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 p-4 z-50">
