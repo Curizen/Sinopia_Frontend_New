@@ -87,6 +87,17 @@ function ContractSection({
 
   const tc = (key: string) => t(`useCaseDetails.contract.${key}`);
 
+  // Read skill_searcher info from use case API response first,
+  // then fall back to the user profile stored in localStorage after login
+  const cachedProfile = (() => {
+    try {
+      const raw = localStorage.getItem('user_profile_cache');
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  })();
+  const companySize = useCase.skill_searcher?.company_size || cachedProfile?.company_size || '';
+  const industry = useCase.skill_searcher?.industry || cachedProfile?.industry || '';
+
   return (
     <div className="mt-2">
       <Card>
@@ -203,31 +214,25 @@ function ContractSection({
               <p className="text-muted-foreground">{tc('prerequisitesIntro')}</p>
 
               {/* Client Environment */}
-              {(useCase.skill_searcher?.company_size || useCase.skill_searcher?.industry) && (
-                <div className="space-y-2">
-                  <p className="font-semibold">{tc('clientEnvironment')}</p>
-                  <div className="space-y-1 pl-2">
-                    {useCase.skill_searcher?.company_size && (
-                      <div className="flex items-start gap-2 text-muted-foreground">
-                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-muted-foreground shrink-0" />
-                        <span>
-                          <span className="font-medium text-foreground">{tc('companySizeLabel')}:</span>{' '}
-                          {useCase.skill_searcher.company_size} {tc('companySizeSuffix')}
-                        </span>
-                      </div>
-                    )}
-                    {useCase.skill_searcher?.industry && (
-                      <div className="flex items-start gap-2 text-muted-foreground">
-                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-muted-foreground shrink-0" />
-                        <span>
-                          <span className="font-medium text-foreground">{tc('industryLabel')}:</span>{' '}
-                          {useCase.skill_searcher.industry}.
-                        </span>
-                      </div>
-                    )}
+              <div className="space-y-2">
+                <p className="font-semibold">{tc('clientEnvironment')}</p>
+                <div className="space-y-1 pl-2">
+                  <div className="flex items-start gap-2 text-muted-foreground">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-muted-foreground shrink-0" />
+                    <span>
+                      <span className="font-medium text-foreground">{tc('companySizeLabel')}:</span>{' '}
+                      {companySize || '—'} {tc('companySizeSuffix')}
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2 text-muted-foreground">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-muted-foreground shrink-0" />
+                    <span>
+                      <span className="font-medium text-foreground">{tc('industryLabel')}:</span>{' '}
+                      {industry || '—'}.
+                    </span>
                   </div>
                 </div>
-              )}
+              </div>
 
               {/* Client Obligations */}
               <div className="space-y-2">
