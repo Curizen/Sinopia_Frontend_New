@@ -296,7 +296,7 @@ export const de = {
     implementationStages: "Implementierungsphasen",
     requiredSkills: "Erforderliche Fähigkeiten",
     perHour: "Std.",
-    acceptUseCase: "Angebot annehmen",
+    acceptUseCase: "Angebot generieren",
     reject: "Ablehnen",
     comingSoonTitle: "Demnächst verfügbar",
     comingSoonBody: "",
