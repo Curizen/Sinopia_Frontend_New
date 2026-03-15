@@ -28,9 +28,6 @@ import {
   X,
   FileText,
   Building2,
-  Phone,
-  Mail,
-  Globe,
 } from 'lucide-react';
 
 interface Skill {
@@ -103,31 +100,6 @@ function ContractSection({
         <CardContent>
           {/* Document container */}
           <div className="bg-white dark:bg-zinc-950 border rounded-md p-8 max-w-4xl mx-auto space-y-8 text-sm text-foreground">
-
-            {/* Sinopia letterhead */}
-            <div className="flex flex-col md:flex-row md:justify-between gap-6 pb-6 border-b">
-              <div className="space-y-1">
-                <p className="font-bold text-base">Sinopia Deutschland GmbH</p>
-                <p className="text-muted-foreground">Deckerstraße 39</p>
-                <p className="text-muted-foreground">70372 Stuttgart</p>
-              </div>
-              <div className="space-y-1 md:text-right">
-                <p className="font-semibold">{tc('salesPerson')}</p>
-                <p className="text-muted-foreground">Herrn Jens Uwe Jung</p>
-                <div className="flex items-center gap-1.5 md:justify-end text-muted-foreground">
-                  <Phone className="w-3.5 h-3.5 shrink-0" />
-                  <span>0177 492 8319</span>
-                </div>
-                <div className="flex items-center gap-1.5 md:justify-end text-muted-foreground">
-                  <Mail className="w-3.5 h-3.5 shrink-0" />
-                  <span>procurement@sinopia.eu</span>
-                </div>
-                <div className="flex items-center gap-1.5 md:justify-end text-muted-foreground">
-                  <Globe className="w-3.5 h-3.5 shrink-0" />
-                  <span>www.sinopia.eu</span>
-                </div>
-              </div>
-            </div>
 
             {/* Offer header */}
             <div className="space-y-3">
