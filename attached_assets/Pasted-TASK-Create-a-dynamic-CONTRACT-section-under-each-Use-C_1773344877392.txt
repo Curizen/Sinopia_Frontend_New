@@ -1,0 +1,160 @@
+TASK
+Create a dynamic CONTRACT section under each Use Case in the Skill Giver "Offers" page
+using the Offer document provided as the template.
+
+The contract must appear directly UNDER the Use Case card.
+
+IMPORTANT
+Do not break existing layout.
+Do not change routes.
+Do not remove existing functionality.
+No runtime or console errors.
+
+----------------------------------------------------
+
+CONTRACT STRUCTURE
+
+Create a new section called:
+
+Contract
+
+Place it under the Use Case.
+
+Structure:
+
+Use Case
+↓
+Contract Preview
+↓
+Contract Details
+
+----------------------------------------------------
+
+CONTRACT TEMPLATE
+
+Use the provided Offer document as the base structure.
+
+The contract should contain these sections:
+
+1. Management Summary
+2. Implementation Phases & Milestones
+3. Scope of Services (Objectives)
+4. Required Skills and Roles
+5. Prerequisites
+
+----------------------------------------------------
+
+STATIC CONTENT (same for every contract)
+
+These sections remain FIXED:
+
+Implementation Phases & Milestones
+
+Discovery & Design
+Core Development
+Testing & QA
+Deployment
+Continuous Improvement & Expansion
+
+Required Skills and Roles table
+
+AI Solution Architect
+Business Analyst
+AI/ML Engineer
+Backend Developer
+Frontend Developer
+QA Engineer
+DevOps Engineer
+Security Specialist
+UX Designer
+Data Engineer
+Integration Engineer
+AI Research Scientist
+Marketplace Specialist
+Technical Writer
+Product Manager
+
+----------------------------------------------------
+
+DYNAMIC CONTENT (changes per Use Case)
+
+Replace these dynamically:
+
+Use Case title
+Use Case description
+Objectives
+Total hours
+Total cost
+Company name
+Skill giver name
+
+Bind them to existing data fields:
+
+useCase.title
+useCase.description
+useCase.objectives
+offer.price
+offer.totalHours
+skillSearcher.company
+skillGiver.name
+
+----------------------------------------------------
+
+CONTRACT PREVIEW
+
+Render the contract inside a styled document container
+that visually looks like a PDF preview.
+
+Design rules:
+
+white background
+document padding
+section titles bold
+tables styled cleanly
+max width centered
+
+----------------------------------------------------
+
+CONTRACT IMAGE
+
+Add a document preview image header at the top of the contract
+(similar to a proposal document).
+
+----------------------------------------------------
+
+RESPONSIVE DESIGN
+
+The contract must:
+
+work on desktop
+work on mobile
+not overflow layout
+
+----------------------------------------------------
+
+TRANSLATION SUPPORT
+
+Add translation keys for:
+
+Contract
+Management Summary
+Implementation Phases & Milestones
+Scope of Services
+Required Skills and Roles
+Prerequisites
+
+Use the existing i18n system.
+
+----------------------------------------------------
+
+FINAL RESULT
+
+Each Offer will appear as:
+
+Use Case Card
+↓
+Contract Section
+↓
+Document-style Contract
+
+The contract automatically updates depending on the Use Case.
