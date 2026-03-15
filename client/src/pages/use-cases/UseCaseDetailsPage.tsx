@@ -27,7 +27,6 @@ import {
   Rocket,
   X,
   FileText,
-  Building2,
 } from 'lucide-react';
 
 interface Skill {
@@ -196,46 +195,51 @@ function ContractSection({
             <Separator />
 
             {/* 6. Prerequisites & Assumptions */}
-            <div className="space-y-3">
+            <div className="space-y-4">
               <h3 className="font-bold text-base flex items-center gap-2">
                 <span className="text-muted-foreground font-normal text-xs">6.</span>
                 {tc('prerequisites')}
               </h3>
+              <p className="text-muted-foreground">{tc('prerequisitesIntro')}</p>
+
+              {/* Client Environment */}
               {(useCase.skill_searcher?.company_size || useCase.skill_searcher?.industry) && (
-                <div className="flex flex-wrap gap-6 mb-2">
-                  {useCase.skill_searcher?.company_size && (
-                    <div className="flex items-center gap-2">
-                      <Building2 className="w-4 h-4 text-muted-foreground" />
-                      <span className="font-medium">{tc('companySizeLabel')}:</span>
-                      <span className="text-muted-foreground">{useCase.skill_searcher.company_size}</span>
-                    </div>
-                  )}
-                  {useCase.skill_searcher?.industry && (
-                    <div className="flex items-center gap-2">
-                      <Briefcase className="w-4 h-4 text-muted-foreground" />
-                      <span className="font-medium">{tc('industryLabel')}:</span>
-                      <span className="text-muted-foreground">{useCase.skill_searcher.industry}</span>
-                    </div>
-                  )}
+                <div className="space-y-2">
+                  <p className="font-semibold">{tc('clientEnvironment')}</p>
+                  <div className="space-y-1 pl-2">
+                    {useCase.skill_searcher?.company_size && (
+                      <div className="flex items-start gap-2 text-muted-foreground">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-muted-foreground shrink-0" />
+                        <span>
+                          <span className="font-medium text-foreground">{tc('companySizeLabel')}:</span>{' '}
+                          {useCase.skill_searcher.company_size} {tc('companySizeSuffix')}
+                        </span>
+                      </div>
+                    )}
+                    {useCase.skill_searcher?.industry && (
+                      <div className="flex items-start gap-2 text-muted-foreground">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-muted-foreground shrink-0" />
+                        <span>
+                          <span className="font-medium text-foreground">{tc('industryLabel')}:</span>{' '}
+                          {useCase.skill_searcher.industry}.
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
-              <div className="space-y-1">
-                <p className="font-medium mb-2">{tc('assumptionsTitle')}</p>
-                {(['assumption1','assumption2','assumption3','assumption4','assumption5'] as const).map((key) => (
-                  <div key={key} className="flex items-start gap-2 text-muted-foreground">
-                    <span className="mt-1 w-1.5 h-1.5 rounded-full bg-muted-foreground shrink-0" />
-                    <span>{tc(key)}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="space-y-1 mt-2">
-                <p className="font-medium mb-2">{tc('scopeLimits')}</p>
-                {(['scopeLimit1','scopeLimit2','scopeLimit3'] as const).map((key) => (
-                  <div key={key} className="flex items-start gap-2 text-muted-foreground">
-                    <span className="mt-1 w-1.5 h-1.5 rounded-full bg-muted-foreground shrink-0" />
-                    <span>{tc(key)}</span>
-                  </div>
-                ))}
+
+              {/* Client Obligations */}
+              <div className="space-y-2">
+                <p className="font-semibold">{tc('clientObligations')}</p>
+                <div className="space-y-1.5 pl-2">
+                  {(['obligationProvisioning','obligationAccess','obligationDocumentation','obligationFacilities','obligationOnboarding'] as const).map((key) => (
+                    <div key={key} className="flex items-start gap-2 text-muted-foreground">
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-muted-foreground shrink-0" />
+                      <span>{tc(key)}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
