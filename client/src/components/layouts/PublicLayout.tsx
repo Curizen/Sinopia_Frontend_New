@@ -242,17 +242,16 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               </Link>
             </div>
 
-            <div className="text-center text-sm text-muted-foreground">
-              <p>&copy; {new Date().getFullYear()} Sinopia. {t('footer.copyright')}</p>
-            </div>
-
             <div className="text-center">
-              <span
-                className="text-xs text-muted-foreground"
+              <a
+                href="https://www.curizen.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                 data-testid="text-powered-by"
               >
                 {t('footer.poweredBy')}
-              </span>
+              </a>
             </div>
           </div>
         </div>
