@@ -2543,6 +2543,38 @@ export default function ProfilePage() {
       if (extractedData.certifications.length > 0) cacheUpdateData.certifications = extractedData.certifications;
       
       updateProfileCache(cacheUpdateData);
+
+      // Refetch skills from the API to replace temp generated IDs with real numeric IDs
+      // (CV upload already saved skills server-side; we need the real IDs for delete to work)
+      try {
+        const skillsRes = await fetch('/api/skills', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+          },
+          credentials: 'include',
+        });
+        if (skillsRes.ok) {
+          const skillsData = await skillsRes.json();
+          const skillsArray = Array.isArray(skillsData) ? skillsData : (skillsData.skills || []);
+          if (skillsArray.length > 0) {
+            const realSkills: Skill[] = skillsArray.map((s: any) => ({
+              id: s.id?.toString() || generateId(),
+              name: s.skill_name || s.name || '',
+              level: normalizeSkillLevel(s.level),
+              skill_type: normalizeSkillType(s.skill_type),
+            })).filter((s: Skill) => s.name);
+            setGiverProfile(prev => ({ ...prev, skills: realSkills }));
+            const cacheStr = localStorage.getItem(USER_PROFILE_CACHE_KEY);
+            if (cacheStr) {
+              const cache = JSON.parse(cacheStr);
+              cache.skills = skillsArray;
+              localStorage.setItem(USER_PROFILE_CACHE_KEY, JSON.stringify(cache));
+            }
+          }
+        }
+      } catch (_) {}
       
       // Update cached profile display values
       setCachedUserProfile(prev => ({
