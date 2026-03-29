@@ -765,27 +765,25 @@ export default function AddProjectPage() {
                 </Link>
                 
                 {/* Step 1: Analyze Button */}
-                {!isFileUpload && (
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={handleAnalyze}
-                    disabled={isAnalyzing || isLoading}
-                    data-testid="button-analyze-usecase"
-                  >
-                    {isAnalyzing ? (
-                      <>
-                        <Sparkles className="w-4 h-4 mr-2 animate-pulse" />
-                        {t('useCases.analyzing')}
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-4 h-4 mr-2" />
-                        {t('useCases.analyzeButton')}
-                      </>
-                    )}
-                  </Button>
-                )}
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleAnalyze}
+                  disabled={isAnalyzing || isLoading}
+                  data-testid="button-analyze-usecase"
+                >
+                  {isAnalyzing ? (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2 animate-pulse" />
+                      {t('useCases.analyzing')}
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      {t('useCases.analyzeButton')}
+                    </>
+                  )}
+                </Button>
 
                 {/* Step 2: Create Button */}
                 <Button
