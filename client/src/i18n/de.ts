@@ -549,7 +549,7 @@ export const de = {
     contactInfo: "Kontaktdaten",
     levelBeginner: "Anfänger",
     levelIntermediate: "Mittelstufe",
-    levelAdvanced: "Fortgeschritten",
+    levelSpecialist: "Spezialist",
     levelExpert: "Experte",
     skillType: "Fähigkeitstyp",
     skillTypeTechnical: "Fähigkeiten",

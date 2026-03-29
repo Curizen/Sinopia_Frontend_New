@@ -39,7 +39,15 @@ import {
 } from 'lucide-react';
 
 type EditingSection = 'about' | 'skills' | 'experience' | 'education' | 'certifications' | 'company' | 'contact' | 'projects' | null;
-type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert';
+type SkillLevel = 'beginner' | 'intermediate' | 'specialist' | 'expert';
+
+const normalizeSkillLevel = (level: string | null | undefined): SkillLevel => {
+  const l = (level || 'intermediate').toLowerCase();
+  if (l === 'advanced') return 'specialist';
+  if (l === 'beginner' || l === 'intermediate' || l === 'specialist' || l === 'expert') return l as SkillLevel;
+  return 'intermediate';
+}
+
 type SkillType = 'technical_skills' | 'soft_skills';
 
 interface Skill {
@@ -250,7 +258,7 @@ const transformApiDataToGiverProfile = (apiData: ApiUserData): Partial<SkillGive
       return {
         id: s.id?.toString() || generateId(),
         name: s.skill_name || '',
-        level: (s.level?.toLowerCase() || 'intermediate') as SkillLevel,
+        level: normalizeSkillLevel(s.level),
         skill_type: normalizeSkillType(s.skill_type),
       };
     }).filter(s => s.name);
@@ -364,7 +372,7 @@ const loadGiverProfileFromStorage = (): SkillGiverProfile => {
           : (Array.isArray(localData.skills) ? localData.skills.map((s: { id?: string; name?: string; level?: SkillLevel; skill_type?: string }) => ({
               id: s.id || generateId(),
               name: s.name || '',
-              level: (s.level?.toLowerCase() || 'intermediate') as SkillLevel,
+              level: normalizeSkillLevel(s.level),
               skill_type: normalizeSkillType(s.skill_type),
             })).filter((s: Skill) => s.name) : defaults.skills),
         experience: transformedData.experience && transformedData.experience.length > 0 
@@ -398,7 +406,7 @@ const loadGiverProfileFromStorage = (): SkillGiverProfile => {
         skills: Array.isArray(parsed.skills) ? parsed.skills.map((s: { id?: string; name?: string; level?: SkillLevel; skill_type?: string }) => ({
           id: s.id || generateId(),
           name: s.name || '',
-          level: (s.level?.toLowerCase() || 'intermediate') as SkillLevel,
+          level: normalizeSkillLevel(s.level),
           skill_type: normalizeSkillType(s.skill_type),
         })).filter((s: Skill) => s.name) : defaults.skills,
         experience: Array.isArray(parsed.experience) ? parsed.experience : defaults.experience,
@@ -617,7 +625,7 @@ export default function ProfilePage() {
               return {
                 id: s.id?.toString() || generateId(),
                 name: s.skill_name || s.name || '',
-                level: (s.level?.toLowerCase() || 'intermediate') as SkillLevel,
+                level: normalizeSkillLevel(s.level),
                 skill_type: normalizeSkillType(s.skill_type),
               };
             }).filter((s: Skill) => s.name);
@@ -755,7 +763,7 @@ export default function ProfilePage() {
     const labels: Record<SkillLevel, string> = {
       beginner: t('profile.levelBeginner'),
       intermediate: t('profile.levelIntermediate'),
-      advanced: t('profile.levelAdvanced'),
+      specialist: t('profile.levelSpecialist'),
       expert: t('profile.levelExpert'),
     };
     return labels[level];
@@ -3791,7 +3799,7 @@ function SkillDialog({ open, onOpenChange, skill, onSave, t, getLevelLabel, getS
               <SelectContent>
                 <SelectItem value="beginner">{getLevelLabel('beginner')}</SelectItem>
                 <SelectItem value="intermediate">{getLevelLabel('intermediate')}</SelectItem>
-                <SelectItem value="advanced">{getLevelLabel('advanced')}</SelectItem>
+                <SelectItem value="specialist">{getLevelLabel('specialist')}</SelectItem>
                 <SelectItem value="expert">{getLevelLabel('expert')}</SelectItem>
               </SelectContent>
             </Select>

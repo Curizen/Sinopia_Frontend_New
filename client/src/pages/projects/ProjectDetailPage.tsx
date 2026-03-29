@@ -153,7 +153,7 @@ export default function ProjectDetailPage() {
     switch (level.toLowerCase()) {
       case 'expert':
         return 'default';
-      case 'advanced':
+      case 'specialist':
         return 'secondary';
       default:
         return 'outline';

@@ -541,7 +541,7 @@ export const en = {
     contactInfo: "Contact Info",
     levelBeginner: "Beginner",
     levelIntermediate: "Intermediate",
-    levelAdvanced: "Advanced",
+    levelSpecialist: "Specialist",
     levelExpert: "Expert",
     skillType: "Skill Type",
     skillTypeTechnical: "Skills",
