@@ -637,6 +637,8 @@ export const de = {
     zipCodePlaceholder: "PLZ",
     state: "Bundesland / Kanton",
     statePlaceholder: "Bundesland oder Kanton",
+    vatNumber: "USt-IdNr.",
+    vatNumberPlaceholder: "z.B. DE123456789",
     cityPlaceholder: "Stadt",
     countryPlaceholder: "Land",
     companySizePlaceholder: "z.B. 10-50 Mitarbeiter",

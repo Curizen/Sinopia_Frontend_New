@@ -24,6 +24,10 @@ interface CompanyProfileData {
   country?: string | null;
   city?: string | null;
   bio?: string | null;
+  street_address?: string | null;
+  vat_number?: string | null;
+  state?: string | null;
+  zip_code?: string | null;
 }
 
 export default function CompanyInfoPage() {
@@ -47,6 +51,7 @@ export default function CompanyInfoPage() {
     country: '',
     bio: '',
     website: '',
+    vatNumber: '',
   });
 
   const [websiteError, setWebsiteError] = useState<string | null>(null);
@@ -63,6 +68,10 @@ export default function CompanyInfoPage() {
       country: data.country || '',
       bio: data.bio || '',
       website: data.website || '',
+      street: data.street_address || '',
+      zipCode: data.zip_code || '',
+      state: data.state || '',
+      vatNumber: data.vat_number || '',
     }));
   };
 
@@ -213,6 +222,10 @@ export default function CompanyInfoPage() {
         country: formData.country.trim(),
         bio: formData.bio.trim() || undefined,
         website: formData.website.trim() || undefined,
+        street: formData.street.trim() || undefined,
+        zipCode: formData.zipCode.trim() || undefined,
+        state: formData.state.trim() || undefined,
+        vatNumber: formData.vatNumber.trim() || undefined,
       });
 
       toast({
@@ -377,6 +390,18 @@ export default function CompanyInfoPage() {
                     data-testid="input-company-zip-code"
                   />
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="vatNumber">{t('profile.vatNumber')} ({t('common.optional')})</Label>
+                <Input
+                  id="vatNumber"
+                  type="text"
+                  placeholder={t('profile.vatNumberPlaceholder')}
+                  value={formData.vatNumber}
+                  onChange={(e) => setFormData(prev => ({ ...prev, vatNumber: e.target.value }))}
+                  data-testid="input-company-vat-number"
+                />
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">

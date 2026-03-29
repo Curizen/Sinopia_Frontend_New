@@ -629,6 +629,8 @@ export const en = {
     zipCodePlaceholder: "ZIP / Postal code",
     state: "State / Province",
     statePlaceholder: "State or province",
+    vatNumber: "VAT Number",
+    vatNumberPlaceholder: "e.g. DE123456789",
     cityPlaceholder: "City",
     countryPlaceholder: "Country",
     companySizePlaceholder: "e.g., 10-50 employees",

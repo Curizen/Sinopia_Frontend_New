@@ -118,6 +118,7 @@ interface SkillSearcherProfile {
   street: string;
   zipCode: string;
   state: string;
+  vatNumber: string;
 }
 
 const STORAGE_KEY = 'sinopia_skill_giver_profile';
@@ -143,6 +144,10 @@ interface ApiUserData {
   industry?: string;
   website?: string;
   company_size?: string;
+  street_address?: string;
+  vat_number?: string;
+  state?: string;
+  zip_code?: string;
   skills?: Array<{
     id?: number;
     skill_name?: string;
@@ -430,6 +435,7 @@ export default function ProfilePage() {
     street: '',
     zipCode: '',
     state: '',
+    vatNumber: '',
   });
 
   const loadSearcherProfileFromStorage = (): SkillSearcherProfile => {
@@ -452,9 +458,10 @@ export default function ProfilePage() {
           city: apiData.city ?? defaults.city,
           country: apiData.country ?? defaults.country,
           companySize: apiData.company_size ?? defaults.companySize,
-          street: defaults.street,
-          zipCode: defaults.zipCode,
-          state: defaults.state,
+          street: apiData.street_address ?? defaults.street,
+          zipCode: apiData.zip_code ?? defaults.zipCode,
+          state: apiData.state ?? defaults.state,
+          vatNumber: apiData.vat_number ?? defaults.vatNumber,
         };
       }
       
@@ -476,6 +483,7 @@ export default function ProfilePage() {
           street: parsed.street ?? defaults.street,
           zipCode: parsed.zipCode ?? defaults.zipCode,
           state: parsed.state ?? defaults.state,
+          vatNumber: parsed.vatNumber ?? defaults.vatNumber,
         };
       }
     } catch (e) {
@@ -541,6 +549,7 @@ export default function ProfilePage() {
     street: '',
     zipCode: '',
     state: '',
+    vatNumber: '',
   });
 
   // State for cached user profile from API (for sidebar and bio)
@@ -2274,6 +2283,7 @@ export default function ProfilePage() {
       street: searcherProfile.street,
       zipCode: searcherProfile.zipCode,
       state: searcherProfile.state,
+      vatNumber: searcherProfile.vatNumber,
     });
     setCompanySummaryDialog(true);
   };
@@ -2297,6 +2307,7 @@ export default function ProfilePage() {
       street: companySummaryForm.street.trim(),
       zipCode: companySummaryForm.zipCode.trim(),
       state: companySummaryForm.state.trim(),
+      vatNumber: companySummaryForm.vatNumber.trim(),
     };
     
     setSearcherProfile(prev => ({ ...prev, ...updatedProfile }));
@@ -2313,6 +2324,10 @@ export default function ProfilePage() {
         city: updatedProfile.city,
         bio: updatedProfile.bio,
         company_size: updatedProfile.companySize,
+        street_address: updatedProfile.street,
+        zip_code: updatedProfile.zipCode,
+        state: updatedProfile.state,
+        vat_number: updatedProfile.vatNumber,
       };
       
       console.log('[DEBUG] Saving company profile to API:', apiPayload);
@@ -2799,6 +2814,10 @@ export default function ProfilePage() {
                     <div>
                       <span className="text-muted-foreground">{t('profile.country')}: </span>
                       <span className="font-medium">{displayValue(searcherProfile.country)}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">{t('profile.vatNumber')}: </span>
+                      <span className="font-medium">{displayValue(searcherProfile.vatNumber)}</span>
                     </div>
                     <div>
                       <span className="text-muted-foreground">{t('profile.companyName')}: </span>
@@ -4049,8 +4068,8 @@ function ProjectDialog({ open, onOpenChange, proj, onSave, t }: {
 function CompanySummaryDialog({ open, onOpenChange, form, setForm, onSave, t }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  form: { companyName: string; website: string; city: string; country: string; companySize: string; contactEmail: string; contactPhone: string; industry: string; bio: string; street: string; zipCode: string; state: string };
-  setForm: (form: { companyName: string; website: string; city: string; country: string; companySize: string; contactEmail: string; contactPhone: string; industry: string; bio: string; street: string; zipCode: string; state: string }) => void;
+  form: { companyName: string; website: string; city: string; country: string; companySize: string; contactEmail: string; contactPhone: string; industry: string; bio: string; street: string; zipCode: string; state: string; vatNumber: string };
+  setForm: (form: { companyName: string; website: string; city: string; country: string; companySize: string; contactEmail: string; contactPhone: string; industry: string; bio: string; street: string; zipCode: string; state: string; vatNumber: string }) => void;
   onSave: () => void;
   t: (key: string) => string;
 }) {
@@ -4128,6 +4147,15 @@ function CompanySummaryDialog({ open, onOpenChange, form, setForm, onSave, t }: 
                 data-testid="input-summary-country"
               />
             </div>
+          </div>
+          <div className="space-y-2">
+            <Label>{t('profile.vatNumber')}</Label>
+            <Input
+              value={form.vatNumber}
+              onChange={(e) => setForm({ ...form, vatNumber: e.target.value })}
+              placeholder={t('profile.vatNumberPlaceholder')}
+              data-testid="input-summary-vat-number"
+            />
           </div>
           <div className="space-y-2">
             <Label>{t('profile.companySize')}</Label>

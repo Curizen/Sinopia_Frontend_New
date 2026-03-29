@@ -20,6 +20,10 @@ interface CompanyInfoData {
   contactPhone: string;
   bio?: string;
   website?: string;
+  street?: string;
+  zipCode?: string;
+  state?: string;
+  vatNumber?: string;
 }
 
 interface AuthContextType {
@@ -237,6 +241,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       country: data.country,
       bio: data.bio || '',
       website: data.website || '',
+      street_address: data.street || '',
+      zip_code: data.zipCode || '',
+      state: data.state || '',
+      vat_number: data.vatNumber || '',
     };
     
     // Step C: Merge cached data with form data - form data overwrites cached values
