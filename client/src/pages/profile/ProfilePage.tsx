@@ -2760,16 +2760,6 @@ export default function ProfilePage() {
                         </a>
                       </div>
                     )}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full mt-2"
-                      onClick={openCompanySummaryDialog}
-                      data-testid="button-edit-company-summary"
-                    >
-                      <Edit2 className="w-4 h-4 mr-2" />
-                      {t('profile.editCompanyInfo')}
-                    </Button>
                   </>
                 )}
               </div>
@@ -2779,7 +2769,7 @@ export default function ProfilePage() {
           <div className="lg:col-span-2 space-y-6">
             {!isSkillGiver && (
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0">
+                <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0 border-b pb-4">
                   <CardTitle className="flex items-center gap-2">
                     <Building2 className="w-5 h-5" />
                     {t('profile.companyInfo')}
@@ -2794,116 +2784,124 @@ export default function ProfilePage() {
                     {t('profile.editCompanyInfo')}
                   </Button>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="pt-6">
                   {/* General section */}
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">{t('profile.companyInfoSectionMain')}</p>
-                    <div className="grid sm:grid-cols-2 gap-3 text-sm">
+                    <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase mb-4">{t('profile.companyInfoSectionMain')}</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <p className="text-xs text-muted-foreground mb-0.5">{t('profile.companyName')}</p>
-                        <p className="font-medium" data-testid="text-company-name">
+                        <p className="text-sm text-muted-foreground mb-1">{t('profile.companyName')}</p>
+                        <p className="text-base font-medium text-foreground" data-testid="text-company-name">
                           {searcherProfile.companyName?.trim() || <span className="text-muted-foreground italic">{t('profile.notSpecified')}</span>}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground mb-0.5">{t('profile.industry')}</p>
-                        <p className="font-medium" data-testid="text-company-industry">
+                        <p className="text-sm text-muted-foreground mb-1">{t('profile.industry')}</p>
+                        <p className="text-base font-medium text-foreground" data-testid="text-company-industry">
                           {searcherProfile.industry?.trim() || <span className="text-muted-foreground italic">{t('profile.notSpecified')}</span>}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground mb-0.5">{t('profile.companySize')}</p>
-                        <p className="font-medium" data-testid="text-company-size">
+                        <p className="text-sm text-muted-foreground mb-1">{t('profile.companySize')}</p>
+                        <p className="text-base font-medium text-foreground" data-testid="text-company-size">
                           {searcherProfile.companySize?.trim() || <span className="text-muted-foreground italic">{t('profile.notSpecified')}</span>}
                         </p>
                       </div>
                     </div>
                     {searcherProfile.bio?.trim() && (
-                      <div className="mt-3 p-3 rounded-md bg-muted/40 text-sm">
-                        <p className="text-xs text-muted-foreground mb-1">{t('profile.bio')}</p>
-                        <p className="font-medium leading-relaxed" data-testid="text-company-bio">{searcherProfile.bio}</p>
+                      <div className="mt-6">
+                        <p className="text-sm text-muted-foreground mb-2">{t('profile.bio')}</p>
+                        <div className="border-l-4 border-primary pl-4 py-1">
+                          <p className="text-foreground/80 italic leading-relaxed" data-testid="text-company-bio">{searcherProfile.bio}</p>
+                        </div>
                       </div>
                     )}
                   </div>
 
+                  <hr className="my-6 border-border/50" />
+
                   {/* Contact section */}
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">{t('profile.companyInfoSectionContact')}</p>
-                    <div className="grid sm:grid-cols-2 gap-3 text-sm">
+                    <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase mb-4">{t('profile.companyInfoSectionContact')}</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <p className="text-xs text-muted-foreground mb-0.5">{t('profile.contactEmail')}</p>
-                        <p className="font-medium" data-testid="text-company-email">
+                        <p className="text-sm text-muted-foreground mb-1">{t('profile.contactEmail')}</p>
+                        <p className="text-base font-medium text-foreground" data-testid="text-company-email">
                           {searcherProfile.contactEmail?.trim() || <span className="text-muted-foreground italic">{t('profile.notSpecified')}</span>}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground mb-0.5">{t('profile.contactPhone')}</p>
-                        <p className="font-medium" data-testid="text-company-phone">
+                        <p className="text-sm text-muted-foreground mb-1">{t('profile.contactPhone')}</p>
+                        <p className="text-base font-medium text-foreground" data-testid="text-company-phone">
                           {searcherProfile.contactPhone?.trim() || <span className="text-muted-foreground italic">{t('profile.notSpecified')}</span>}
                         </p>
                       </div>
-                      <div className="sm:col-span-2">
-                        <p className="text-xs text-muted-foreground mb-0.5">{t('profile.website')}</p>
+                      <div className="md:col-span-2">
+                        <p className="text-sm text-muted-foreground mb-1">{t('profile.website')}</p>
                         {searcherProfile.website?.trim() ? (
                           <a
                             href={searcherProfile.website}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-medium text-primary hover:underline"
+                            className="text-base font-medium text-primary hover:underline"
                             data-testid="link-company-website"
                           >
                             {searcherProfile.website.replace(/^https?:\/\//, '')}
                           </a>
                         ) : (
-                          <p className="text-muted-foreground italic text-sm">{t('profile.notSpecified')}</p>
+                          <p className="text-base text-muted-foreground italic">{t('profile.notSpecified')}</p>
                         )}
                       </div>
                     </div>
                   </div>
 
+                  <hr className="my-6 border-border/50" />
+
                   {/* Location section */}
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">{t('profile.companyInfoSectionLocation')}</p>
-                    <div className="grid sm:grid-cols-2 gap-3 text-sm">
-                      <div className="sm:col-span-2">
-                        <p className="text-xs text-muted-foreground mb-0.5">{t('profile.street')}</p>
-                        <p className="font-medium" data-testid="text-company-street">
+                    <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase mb-4">{t('profile.companyInfoSectionLocation')}</p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="md:col-span-3">
+                        <p className="text-sm text-muted-foreground mb-1">{t('profile.street')}</p>
+                        <p className="text-base font-medium text-foreground" data-testid="text-company-street">
                           {searcherProfile.street?.trim() || <span className="text-muted-foreground italic">{t('profile.notSpecified')}</span>}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground mb-0.5">{t('profile.city')}</p>
-                        <p className="font-medium" data-testid="text-company-city">
+                        <p className="text-sm text-muted-foreground mb-1">{t('profile.city')}</p>
+                        <p className="text-base font-medium text-foreground" data-testid="text-company-city">
                           {searcherProfile.city?.trim() || <span className="text-muted-foreground italic">{t('profile.notSpecified')}</span>}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground mb-0.5">{t('profile.state')}</p>
-                        <p className="font-medium" data-testid="text-company-state">
+                        <p className="text-sm text-muted-foreground mb-1">{t('profile.state')}</p>
+                        <p className="text-base font-medium text-foreground" data-testid="text-company-state">
                           {searcherProfile.state?.trim() || <span className="text-muted-foreground italic">{t('profile.notSpecified')}</span>}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground mb-0.5">{t('profile.zipCode')}</p>
-                        <p className="font-medium" data-testid="text-company-zip">
+                        <p className="text-sm text-muted-foreground mb-1">{t('profile.zipCode')}</p>
+                        <p className="text-base font-medium text-foreground" data-testid="text-company-zip">
                           {searcherProfile.zipCode?.trim() || <span className="text-muted-foreground italic">{t('profile.notSpecified')}</span>}
                         </p>
                       </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-0.5">{t('profile.country')}</p>
-                        <p className="font-medium" data-testid="text-company-country">
+                      <div className="md:col-span-3">
+                        <p className="text-sm text-muted-foreground mb-1">{t('profile.country')}</p>
+                        <p className="text-base font-medium text-foreground" data-testid="text-company-country">
                           {searcherProfile.country?.trim() || <span className="text-muted-foreground italic">{t('profile.notSpecified')}</span>}
                         </p>
                       </div>
                     </div>
                   </div>
 
+                  <hr className="my-6 border-border/50" />
+
                   {/* Legal section */}
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3">{t('profile.companyInfoSectionLegal')}</p>
-                    <div className="text-sm">
-                      <p className="text-xs text-muted-foreground mb-0.5">{t('profile.vatNumber')}</p>
-                      <p className="font-medium" data-testid="text-company-vat">
+                    <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase mb-4">{t('profile.companyInfoSectionLegal')}</p>
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">{t('profile.vatNumber')}</p>
+                      <p className="text-base font-medium text-foreground" data-testid="text-company-vat">
                         {searcherProfile.vatNumber?.trim() || <span className="text-muted-foreground italic">{t('profile.notSpecified')}</span>}
                       </p>
                     </div>
