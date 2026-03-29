@@ -196,20 +196,21 @@ export default function AddProjectPage() {
     try {
       const token = localStorage.getItem('sinopia_token');
 
-      // Build the use_case_file payload object
-      const useCasePayload: Record<string, unknown> = {
+      // Merge estimation fields into deliverables as formatted strings
+      const combinedDeliverables = [...formData.objectives];
+      if (durationMonths !== '') combinedDeliverables.push(`Project Duration: ${durationMonths} Months`);
+      combinedDeliverables.push(`Team Size: ${teamSize}`);
+      combinedDeliverables.push(`Engagement Type: ${engagementType}`);
+      if (engagementType === 'Part-Time / Fractional') {
+        if (customDaysPerWeek !== '') combinedDeliverables.push(`Days per week: ${customDaysPerWeek}`);
+        if (customHoursPerDay !== '') combinedDeliverables.push(`Hours per day: ${customHoursPerDay}`);
+      }
+
+      const useCasePayload = {
         title: formData.title,
         description: formData.description,
-        deliverables: formData.objectives,
-        duration_months: durationMonths === '' ? undefined : durationMonths,
-        team_size: teamSize,
-        engagement_type: engagementType,
+        deliverables: combinedDeliverables,
       };
-
-      if (engagementType === 'Part-Time / Fractional') {
-        useCasePayload.custom_days_per_week = customDaysPerWeek === '' ? undefined : customDaysPerWeek;
-        useCasePayload.custom_hours_per_day = customHoursPerDay === '' ? undefined : customHoursPerDay;
-      }
 
       const response = await fetch('/api/use-case/analysis', {
         method: 'POST',
