@@ -2357,7 +2357,23 @@ export default function ProfilePage() {
         throw new Error(responseData.message || 'Failed to save company profile');
       }
       
-      localStorage.setItem('company_profile_cache', JSON.stringify(responseData));
+      // Merge all returned fields (including street_address, zip_code, state, vat_number)
+      // into user_profile_cache so they survive a page refresh
+      updateProfileCache({
+        company_name: responseData.company_name ?? updatedProfile.companyName,
+        industry: responseData.industry ?? updatedProfile.industry,
+        website: responseData.website ?? updatedProfile.website,
+        phone: responseData.phone ?? updatedProfile.contactPhone,
+        email: responseData.email ?? updatedProfile.contactEmail,
+        country: responseData.country ?? updatedProfile.country,
+        city: responseData.city ?? updatedProfile.city,
+        bio: responseData.bio ?? updatedProfile.bio,
+        company_size: responseData.company_size ?? updatedProfile.companySize,
+        street_address: responseData.street_address ?? updatedProfile.street,
+        zip_code: responseData.zip_code ?? updatedProfile.zipCode,
+        state: responseData.state ?? updatedProfile.state,
+        vat_number: responseData.vat_number ?? updatedProfile.vatNumber,
+      });
       setCompanySummaryDialog(false);
       toast({ title: t('profile.profileUpdated'), description: t('profile.changesSaved') });
     } catch (error) {
