@@ -1,0 +1,45 @@
+I need to enhance the manual "Use Case Details" form (the component with Title, Description, and Deliverables) by adding project estimation fields. 
+
+**Important Condition:** These new fields should ONLY be rendered when the user is manually creating a use case, NOT when they are uploading a static file.
+
+Please add the following state variables and UI inputs below the "Deliverables" section:
+
+### 1. New UI Fields:
+**A. Project Duration (Months)**
+- Type: Number Input
+- Required: Yes
+- Label: "Project Duration (Months)"
+- State mapping: `duration_months`
+
+**B. Team Size**
+- Type: Number Input
+- Required: No (Default value should be 1)
+- Label: "Team Size"
+- State mapping: `team_size`
+
+**C. Engagement Type**
+- Type: Select Dropdown or Radio Buttons
+- Options: "Full-Time (160 hours/month)" and "Part-Time / Fractional"
+- Required: Yes
+- Default: "Full-Time"
+- State mapping: `engagement_type`
+
+**D. Conditional Fields (Render ONLY if Engagement Type === 'Part-Time / Fractional')**
+- **Days per week:** Number Input (Min: 1, Max: 6). Required. State: `custom_days_per_week`
+- **Hours per day:** Number Input (Min: 1, Max: 8). Required. State: `custom_hours_per_day`
+
+### 2. Submission & Payload Logic:
+The backend expects the payload to have a specific format, passing everything inside a single stringified key:
+`{ "use_case_file": "..." }`
+
+When the user clicks "Save Use Case" or "Analyze Use Case", update the submit handler to:
+1. Gather all form data: `title`, `description`, `deliverables`, `duration_months`, `team_size`, `engagement_type`, and (if part-time) `custom_days_per_week` and `custom_hours_per_day`.
+2. `JSON.stringify` this entire object.
+3. Send it as the value of `use_case_file`.
+
+Example expected payload output to the API:
+```json
+{
+  "use_case_file": "{\"title\":\"My Title\",\"description\":\"Desc\",\"duration_months\":3,\"team_size\":1,\"engagement_type\":\"Part-Time\",\"custom_days_per_week\":3,\"custom_hours_per_day\":4}"
+}
+Please update the form layout using Tailwind CSS to make it look clean and integrated with the existing design.
