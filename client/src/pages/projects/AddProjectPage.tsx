@@ -65,6 +65,8 @@ export default function AddProjectPage() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [pendingFormData, setPendingFormData] = useState<{ title: string; description: string; objectives: string[] } | null>(null);
+  // True only when the analysis was pre-loaded from a file upload (cache on mount)
+  const [isFileUpload, setIsFileUpload] = useState(false);
 
   // Estimation fields (manual mode only)
   const [durationMonths, setDurationMonths] = useState<number | ''>('');
@@ -108,6 +110,7 @@ export default function AddProjectPage() {
       try {
         const parsedAnalysis = JSON.parse(cached);
         setAnalysisResult(parsedAnalysis);
+        setIsFileUpload(true); // analysis came from a file upload, hide estimation fields
         
         // Pre-populate form fields from cached analysis
         if (parsedAnalysis.title) {
@@ -650,8 +653,8 @@ export default function AddProjectPage() {
                 </Button>
               </div>
 
-              {/* Project Estimation Fields — manual mode only */}
-              {!hasFileAnalysis && (
+              {/* Project Estimation Fields — manual mode only (always visible after analysis) */}
+              {!isFileUpload && (
                 <div className="space-y-6 pt-2 border-t">
                   <p className="text-sm font-semibold text-foreground">{t('useCases.estimationSectionTitle')}</p>
 
@@ -751,6 +754,53 @@ export default function AddProjectPage() {
                     </div>
                   )}
                 </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-4 pt-4">
+                <Link href="/dashboard">
+                  <Button type="button" variant="outline" data-testid="button-cancel">
+                    {t('common.cancel')}
+                  </Button>
+                </Link>
+                
+                {/* Step 1: Analyze Button */}
+                {!isFileUpload && (
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={handleAnalyze}
+                    disabled={isAnalyzing || isLoading}
+                    data-testid="button-analyze-usecase"
+                  >
+                    {isAnalyzing ? (
+                      <>
+                        <Sparkles className="w-4 h-4 mr-2 animate-pulse" />
+                        {t('useCases.analyzing')}
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        {t('useCases.analyzeButton')}
+                      </>
+                    )}
+                  </Button>
+                )}
+
+                {/* Step 2: Create Button */}
+                <Button
+                  type="submit"
+                  disabled={isLoading || isAnalyzing || !analysisResult}
+                  data-testid="button-create-usecase"
+                >
+                  {isLoading ? t('common.loading') : t('useCases.createButton')}
+                </Button>
+              </div>
+
+              {!analysisResult && (
+                <p className="text-sm text-muted-foreground">
+                  {t('useCases.analyzeHint')}
+                </p>
               )}
 
               {/* AI Analyzing Animation */}
@@ -930,49 +980,6 @@ export default function AddProjectPage() {
                 </Card>
               )}
 
-              <div className="flex flex-wrap gap-4 pt-4">
-                <Link href="/dashboard">
-                  <Button type="button" variant="outline" data-testid="button-cancel">
-                    {t('common.cancel')}
-                  </Button>
-                </Link>
-                
-                {/* Step 1: Analyze Button */}
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={handleAnalyze}
-                  disabled={isAnalyzing || isLoading}
-                  data-testid="button-analyze-usecase"
-                >
-                  {isAnalyzing ? (
-                    <>
-                      <Sparkles className="w-4 h-4 mr-2 animate-pulse" />
-                      {t('useCases.analyzing')}
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      {t('useCases.analyzeButton')}
-                    </>
-                  )}
-                </Button>
-
-                {/* Step 2: Create Button */}
-                <Button
-                  type="submit"
-                  disabled={isLoading || isAnalyzing || !analysisResult}
-                  data-testid="button-create-usecase"
-                >
-                  {isLoading ? t('common.loading') : t('useCases.createButton')}
-                </Button>
-              </div>
-
-              {!analysisResult && (
-                <p className="text-sm text-muted-foreground">
-                  {t('useCases.analyzeHint')}
-                </p>
-              )}
             </form>
           </CardContent>
         </Card>
