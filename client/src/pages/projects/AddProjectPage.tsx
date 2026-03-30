@@ -68,13 +68,6 @@ export default function AddProjectPage() {
   // True only when the analysis was pre-loaded from a file upload (cache on mount)
   const [isFileUpload, setIsFileUpload] = useState(false);
 
-  // Estimation fields (manual mode only)
-  const [durationMonths, setDurationMonths] = useState<number | ''>('');
-  const [teamSize, setTeamSize] = useState<number>(1);
-  const [engagementType, setEngagementType] = useState<string>('Full-Time (160 hours/month)');
-  const [customDaysPerWeek, setCustomDaysPerWeek] = useState<number | ''>(3);
-  const [customHoursPerDay, setCustomHoursPerDay] = useState<number | ''>(4);
-
   const getUserName = () => {
     try {
       const profileCache = localStorage.getItem('user_profile_cache');
@@ -199,20 +192,10 @@ export default function AddProjectPage() {
     try {
       const token = localStorage.getItem('sinopia_token');
 
-      // Merge estimation fields into deliverables as formatted strings
-      const combinedDeliverables = [...formData.objectives];
-      if (durationMonths !== '') combinedDeliverables.push(`Project Duration: ${durationMonths} Months`);
-      combinedDeliverables.push(`Team Size: ${teamSize}`);
-      combinedDeliverables.push(`Engagement Type: ${engagementType}`);
-      if (engagementType === 'Part-Time / Fractional') {
-        if (customDaysPerWeek !== '') combinedDeliverables.push(`Days per week: ${customDaysPerWeek}`);
-        if (customHoursPerDay !== '') combinedDeliverables.push(`Hours per day: ${customHoursPerDay}`);
-      }
-
       const useCasePayload = {
         title: formData.title,
         description: formData.description,
-        deliverables: combinedDeliverables,
+        deliverables: formData.objectives,
       };
 
       const response = await fetch('/api/use-case/analysis', {
@@ -652,109 +635,6 @@ export default function AddProjectPage() {
                   {t('useCases.addObjective')}
                 </Button>
               </div>
-
-              {/* Project Estimation Fields — manual mode only (always visible after analysis) */}
-              {!isFileUpload && (
-                <div className="space-y-6 pt-2 border-t">
-                  <p className="text-sm font-semibold text-foreground">{t('useCases.estimationSectionTitle')}</p>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* Project Duration */}
-                    <div className="space-y-2">
-                      <Label htmlFor="duration-months">
-                        {t('useCases.durationMonthsLabel')} <span className="text-destructive">*</span>
-                      </Label>
-                      <Input
-                        id="duration-months"
-                        type="number"
-                        min={1}
-                        placeholder="3"
-                        value={durationMonths}
-                        onChange={(e) => setDurationMonths(e.target.value === '' ? '' : Number(e.target.value))}
-                        required={!hasFileAnalysis}
-                        data-testid="input-duration-months"
-                      />
-                    </div>
-
-                    {/* Team Size */}
-                    <div className="space-y-2">
-                      <Label htmlFor="team-size">{t('useCases.teamSizeLabel')}</Label>
-                      <Input
-                        id="team-size"
-                        type="number"
-                        min={1}
-                        placeholder="1"
-                        value={teamSize}
-                        onChange={(e) => setTeamSize(Math.max(1, Number(e.target.value) || 1))}
-                        data-testid="input-team-size"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Engagement Type */}
-                  <div className="space-y-2">
-                    <Label htmlFor="engagement-type">
-                      {t('useCases.engagementTypeLabel')} <span className="text-destructive">*</span>
-                    </Label>
-                    <Select
-                      value={engagementType}
-                      onValueChange={setEngagementType}
-                    >
-                      <SelectTrigger id="engagement-type" data-testid="select-engagement-type">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Full-Time (160 hours/month)">{t('useCases.engagementFullTime')}</SelectItem>
-                        <SelectItem value="Part-Time / Fractional">{t('useCases.engagementPartTime')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Conditional Part-Time Fields */}
-                  {engagementType === 'Part-Time / Fractional' && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-muted/40 rounded-md">
-                      <div className="space-y-2">
-                        <Label htmlFor="days-per-week">
-                          {t('useCases.daysPerWeekLabel')} <span className="text-destructive">*</span>
-                        </Label>
-                        <Input
-                          id="days-per-week"
-                          type="number"
-                          min={1}
-                          max={6}
-                          placeholder="3"
-                          value={customDaysPerWeek}
-                          onChange={(e) => {
-                            const v = Number(e.target.value);
-                            setCustomDaysPerWeek(e.target.value === '' ? '' : Math.min(6, Math.max(1, v)));
-                          }}
-                          required
-                          data-testid="input-days-per-week"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="hours-per-day">
-                          {t('useCases.hoursPerDayLabel')} <span className="text-destructive">*</span>
-                        </Label>
-                        <Input
-                          id="hours-per-day"
-                          type="number"
-                          min={1}
-                          max={8}
-                          placeholder="4"
-                          value={customHoursPerDay}
-                          onChange={(e) => {
-                            const v = Number(e.target.value);
-                            setCustomHoursPerDay(e.target.value === '' ? '' : Math.min(8, Math.max(1, v)));
-                          }}
-                          required
-                          data-testid="input-hours-per-day"
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
 
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-4 pt-4">
