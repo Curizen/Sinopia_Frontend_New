@@ -1,0 +1,90 @@
+TASK:
+I will paste TWO full legal texts manually:
+1) German Terms & Conditions
+2) English Terms & Conditions
+
+Your job is ONLY to:
+- Store them correctly
+- Wire them to the existing i18n system
+- Show them in the Sign-Up Terms modal and Terms page
+- Switch automatically based on site language (DE / EN)
+
+DO NOT generate, summarize, translate, or modify the legal text.
+DO NOT invent missing content.
+USE EXACT TEXT I PROVIDE.
+
+================================================
+STEP 1: IDENTIFY CURRENT IMPLEMENTATION
+================================================
+
+- Locate the current Terms & Conditions modal used in Sign-Up
+- Locate the Terms page (if separate)
+- Locate i18n / translation system (e.g. next-intl, i18next, vue-i18n, custom)
+
+================================================
+STEP 2: CREATE TRANSLATION KEYS (NO PLACEHOLDERS)
+================================================
+
+Create two keys only:
+
+terms.title
+terms.content
+
+DO NOT use section1Text, section2Text, or placeholders.
+
+================================================
+STEP 3: I WILL PASTE THE TEXTS
+================================================
+
+WAIT for me to paste:
+
+--- GERMAN TERMS START ---
+[PASTE EXACT GERMAN TEXT HERE]
+--- GERMAN TERMS END ---
+
+--- ENGLISH TERMS START ---
+[PASTE EXACT ENGLISH TEXT HERE]
+--- ENGLISH TERMS END ---
+
+You must insert the German text into:
+locales/de/terms.json → terms.content
+
+And the English text into:
+locales/en/terms.json → terms.content
+
+Preserve:
+- Paragraphs
+- Line breaks
+- Section symbols (§)
+- Legal formatting
+
+================================================
+STEP 4: UI BINDING
+================================================
+
+- Bind modal and Terms page to:
+  t("terms.title")
+  t("terms.content")
+
+- Render content using:
+  white-space: pre-line (or equivalent)
+  to preserve formatting
+
+================================================
+STEP 5: ACCEPTANCE LOGIC (DO NOT BREAK)
+================================================
+
+- Keep scroll-to-bottom acceptance logic intact
+- Keep checkbox / accept button behavior unchanged
+- Do NOT introduce validation errors
+
+================================================
+FINAL CHECK
+================================================
+
+✔ German text appears when language = DE
+✔ English text appears when language = EN
+✔ No missing translation keys
+✔ No runtime errors
+✔ No console warnings
+✔ Works in Sign-Up modal and Terms page

@@ -10,7 +10,6 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Link } from 'wouter';
 import { formatCurrency, formatDate } from '@/lib/utils/formatters';
-import { UnderDevelopment } from '@/components/common/UnderDevelopment';
 import {
   FolderKanban,
   FileText,
@@ -18,7 +17,6 @@ import {
   TrendingUp,
   ArrowRight,
   Clock,
-  DollarSign,
   Plus,
   Upload,
 } from 'lucide-react';
@@ -48,7 +46,7 @@ export default function DashboardPage() {
   const signedContracts = contracts.filter(c => c.status === 'signed');
   const totalEarnings = signedContracts.reduce((sum, c) => sum + c.amount, 0);
 
-  const stats = [
+  const allStats = [
     {
       titleKey: 'dashboard.recentProjects',
       value: activeProjects.length,
@@ -62,6 +60,7 @@ export default function DashboardPage() {
       icon: FileText,
       color: 'text-yellow-600',
       bg: 'bg-yellow-100 dark:bg-yellow-900/30',
+      skillGiverOnly: true,
     },
     {
       titleKey: 'dashboard.activeContracts',
@@ -78,6 +77,8 @@ export default function DashboardPage() {
       bg: 'bg-primary/10',
     },
   ];
+
+  const stats = allStats.filter(stat => !stat.skillGiverOnly || isSkillGiver);
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
@@ -106,34 +107,40 @@ export default function DashboardPage() {
           </div>
           <div className="flex gap-2 flex-wrap">
             {!isSkillGiver && (
-              <Link href="/use-cases/upload">
-                <Button variant="outline" data-testid="button-upload-usecase">
-                  <Upload className="w-4 h-4 mr-2" />
-                  {t('useCases.uploadUseCase')}
-                </Button>
-              </Link>
+              <>
+                <Link href="/use-cases/upload">
+                  <Button variant="outline" data-testid="button-upload-usecase">
+                    <Upload className="w-4 h-4 mr-2" />
+                    {t('useCases.uploadUseCase')}
+                  </Button>
+                </Link>
+                <Link href="/projects/new">
+                  <Button data-testid="button-dashboard-action">
+                    <Plus className="w-4 h-4 mr-2" />
+                    {t('useCases.postUseCase')}
+                  </Button>
+                </Link>
+              </>
             )}
-            <Link href={isSkillGiver ? '/projects' : '/projects/new'}>
-              <Button data-testid="button-dashboard-action">
-                <Plus className="w-4 h-4 mr-2" />
-                {isSkillGiver ? t('footer.findProjects') : t('useCases.postUseCase')}
-              </Button>
-            </Link>
           </div>
         </div>
 
-        <UnderDevelopment className="mb-6" />
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div 
+          className="grid gap-4"
+          style={{
+            gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, 200px), 1fr))`
+          }}
+        >
           {stats.map((stat) => (
-            <Card key={stat.titleKey}>
-              <CardContent className="pt-6">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-sm text-muted-foreground">{t(stat.titleKey)}</p>
-                    <p className="text-2xl font-bold mt-1">{stat.value}</p>
+            <Card key={stat.titleKey} className="min-w-0">
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm text-muted-foreground truncate">{t(stat.titleKey)}</p>
+                    <p className="text-2xl font-bold mt-2 truncate">{stat.value}</p>
                   </div>
-                  <div className={`w-10 h-10 rounded-lg ${stat.bg} flex items-center justify-center`}>
+                  <div className={`w-11 h-11 rounded-lg ${stat.bg} flex items-center justify-center shrink-0`}>
                     <stat.icon className={`w-5 h-5 ${stat.color}`} />
                   </div>
                 </div>
@@ -170,8 +177,7 @@ export default function DashboardPage() {
                             <div className="flex-1 min-w-0">
                               <h4 className="font-medium truncate">{project.title}</h4>
                               <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
-                                <span className="flex items-center gap-1">
-                                  <DollarSign className="w-3 h-3" />
+                                <span>
                                   {formatCurrency(project.budget)}
                                 </span>
                                 <span className="flex items-center gap-1">
@@ -200,47 +206,49 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between gap-4">
-              <CardTitle className="text-lg">{t('dashboard.pendingOffers')}</CardTitle>
-              <Link href="/offers">
-                <Button variant="ghost" size="sm">
-                  {t('dashboard.viewAll')}
-                  <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </Link>
-            </CardHeader>
-            <CardContent>
-              {pendingOffers.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">{t('dashboard.noOffers')}</p>
-              ) : (
-                <div className="space-y-4">
-                  {pendingOffers.slice(0, 3).map((offer) => (
-                    <Link key={offer.id} href={`/offers/${offer.id}`}>
-                      <div className="p-4 rounded-lg border border-border hover-elevate cursor-pointer">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-medium truncate">{offer.projectTitle}</h4>
-                            <p className="text-sm text-muted-foreground mt-1">
-                              {offer.fromUserName}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-bold text-primary">
-                              {formatCurrency(offer.amount)}
-                            </p>
-                            <p className="text-xs text-muted-foreground mt-1">
-                              {formatDate(offer.createdAt)}
-                            </p>
+          {isSkillGiver && (
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between gap-4">
+                <CardTitle className="text-lg">{t('dashboard.pendingOffers')}</CardTitle>
+                <Link href="/offers">
+                  <Button variant="ghost" size="sm">
+                    {t('dashboard.viewAll')}
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </Link>
+              </CardHeader>
+              <CardContent>
+                {pendingOffers.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-8">{t('dashboard.noOffers')}</p>
+                ) : (
+                  <div className="space-y-4">
+                    {pendingOffers.slice(0, 3).map((offer) => (
+                      <Link key={offer.id} href={`/offers/${offer.id}`}>
+                        <div className="p-4 rounded-lg border border-border hover-elevate cursor-pointer">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium truncate">{offer.projectTitle}</h4>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {offer.fromUserName}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-bold text-primary">
+                                {formatCurrency(offer.amount)}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {formatDate(offer.createdAt)}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </DashboardLayout>

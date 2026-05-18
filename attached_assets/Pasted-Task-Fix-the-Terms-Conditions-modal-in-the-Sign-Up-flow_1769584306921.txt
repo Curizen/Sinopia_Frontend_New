@@ -1,0 +1,90 @@
+Task:
+Fix the Terms & Conditions modal in the Sign Up flow so that
+the actual Terms content is rendered instead of translation keys
+(e.g. "terms.section1Text").
+
+IMPORTANT:
+- NO errors (build, runtime, console)
+- Use existing i18n system only
+- Keep modal behavior and scroll-to-accept logic
+- Support German & English correctly
+
+====================================
+ROOT CAUSE TO FIX
+====================================
+
+The UI currently renders translation KEYS instead of values
+because:
+- Keys are missing or incorrectly structured in locale files
+OR
+- The component expects plain text but receives unresolved keys
+
+====================================
+STEP 1: FIX TRANSLATION FILES
+====================================
+
+Ensure BOTH language files exist and are loaded:
+
+/locales/de/terms.json
+/locales/en/terms.json
+
+Correct structure example:
+
+{
+  "title": "Allgemeine Geschäftsbedingungen",
+  "lastUpdated": "Stand: 27.01.2026",
+  "sections": {
+    "section1": {
+      "title": "§ 1 Geltungsbereich und Begriffsbestimmungen",
+      "text": "Diese Allgemeinen Geschäftsbedingungen gelten für sämtliche Verträge ..."
+    },
+    "section2": {
+      "title": "§ 2 Gegenstand der Dienstleistung",
+      "text": "Gegenstand des Vertrages ist die Erbringung der jeweils vereinbarten Dienstleistung ..."
+    }
+  }
+}
+
+English file must mirror the SAME keys.
+
+====================================
+STEP 2: FIX COMPONENT RENDERING
+====================================
+
+In the Terms modal component:
+
+- Do NOT render raw strings like "terms.section1Text"
+- Use the translation function properly:
+
+Example:
+t("terms.sections.section1.text")
+
+Titles:
+t("terms.sections.section1.title")
+
+====================================
+STEP 3: PREVENT FALLBACK KEY DISPLAY
+====================================
+
+- Enable strict translation loading
+- Ensure terms namespace is included in i18n initialization
+- Do NOT allow fallback to key name when translation is missing
+
+====================================
+STEP 4: KEEP CURRENT UX
+====================================
+
+- Scroll-to-bottom requirement stays
+- Accept button remains disabled until scroll end
+- Modal layout, size, and buttons unchanged
+
+====================================
+EXPECTED RESULT
+====================================
+
+✔ Terms modal shows full legal text (not keys)
+✔ Language switches dynamically (DE / EN)
+✔ German by default
+✔ English when site language = EN
+✔ No console warnings
+✔ No hydration / rendering errors

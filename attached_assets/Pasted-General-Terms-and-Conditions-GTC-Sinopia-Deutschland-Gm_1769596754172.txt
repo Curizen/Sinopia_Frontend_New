@@ -1,0 +1,136 @@
+General Terms and Conditions (GTC)
+
+Sinopia Deutschland GmbH
+(Version: 27 January 2026)
+
+§ 1 Scope of Application and Definitions
+
+(1) These General Terms and Conditions apply to all usage and contractual relationships between Sinopia Deutschland GmbH (hereinafter referred to as “Sinopia”) and the users of the Sinopia platform.
+
+(2) Users of the platform are:
+
+Skill Searchers: Companies or organizations that publish specific use cases on the platform and request services.
+
+Skill Givers: Self-employed individuals, freelancers, or companies that offer their skills and competencies via the platform.
+
+(3) Sinopia operates a digital platform for the mediation of services but is not itself the provider of the services performed by Skill Givers.
+
+(4) Deviating terms and conditions of Skill Searchers or Skill Givers shall not apply unless Sinopia expressly agrees to their validity in writing.
+
+(5) Individual agreements between Sinopia and users shall take precedence over these GTC.
+
+§ 2 Subject Matter of the Platform and Services of Sinopia
+
+(1) Sinopia provides a digital platform through which:
+
+Skill Searchers can describe and submit specific use cases, and
+
+Skill Givers receive suitable offers to implement these use cases.
+
+(2) In particular, Sinopia provides the following services:
+
+Analysis and structuring of the Skill Searcher’s request,
+
+Preparation of an offer including pricing for the Skill Searcher,
+
+Selection and engagement of a suitable Skill Giver,
+
+Coordination of the assignment and processing via the platform.
+
+(3) Sinopia does not owe a specific economic or technical success of the mediated service, but solely the proper mediation and provision of the platform.
+
+§ 3 Conclusion of Contract and Contractual Relationships
+
+(1) A contract between Sinopia and the Skill Searcher is concluded once the Skill Searcher accepts an offer submitted by Sinopia.
+
+(2) A separate contract between Sinopia and the Skill Giver is concluded once the Skill Giver accepts a service offer submitted by Sinopia.
+
+(3) No direct contractual relationship is established between the Skill Searcher and the Skill Giver unless expressly agreed otherwise in writing.
+
+(4) Sinopia is entitled to reject requests or offers without stating reasons.
+
+§ 4 Offer and Service Process
+
+(1) The Skill Searcher receives a binding offer from Sinopia including a description of services, price, and term.
+
+(2) The Skill Giver receives a separate offer from Sinopia for the performance of the requested service.
+
+(3) Offers are valid only for the period specified in each case.
+
+(4) The provision of services is carried out exclusively by the Skill Giver under their own responsibility.
+
+§ 5 Role and Obligations of Skill Givers
+
+(1) Skill Givers act independently and on their own account.
+
+(2) No employment, service, or partnership relationship exists between Sinopia and the Skill Giver.
+
+(3) Skill Givers are responsible for the proper, professional, and timely performance of the services.
+
+(4) Skill Givers warrant that they possess the required qualifications and rights to perform the services.
+
+§ 6 Role and Obligations of Skill Searchers
+
+(1) Skill Searchers are obliged to describe their use cases completely, accurately, and truthfully.
+
+(2) Changes to the scope of services require the prior written consent of Sinopia.
+
+(3) Delays or additional costs resulting from incomplete or incorrect information shall be borne by the Skill Searcher.
+
+§ 7 Remuneration and Payment Processing
+
+(1) The remuneration payable by the Skill Searcher is determined by the offer submitted by Sinopia.
+
+(2) Sinopia is entitled to receive payments in trust and to forward them to the Skill Giver after the service has been rendered.
+
+(3) Sinopia reserves the right to charge a platform and/or mediation fee.
+
+(4) All prices are exclusive of statutory value-added tax (VAT), where applicable.
+
+§ 8 Liability
+
+(1) Sinopia shall be liable without limitation for damages resulting from injury to life, body, or health.
+
+(2) For other damages, Sinopia shall be liable only in cases of intent or gross negligence.
+
+(3) Sinopia shall not be liable for the actual performance of services by Skill Givers, nor for their quality or results.
+
+§ 9 Defects and Complaints
+
+(1) Complaints must be submitted to Sinopia without undue delay.
+
+(2) Sinopia is entitled to clarify the matter with the Skill Giver and to mediate a remedy or correction.
+
+(3) Any further claims shall exist only within the scope of the statutory provisions.
+
+§ 10 Termination and Cancellation
+
+(1) Contracts may be terminated in accordance with the conditions specified in the respective offer.
+
+(2) Services already rendered shall be remunerated on a pro-rata basis.
+
+(3) Sinopia is entitled to exclude users from the platform in the event of violations of these GTC.
+
+§ 11 Copyright and Usage Rights
+
+(1) Rights to work results remain with the Skill Giver unless expressly agreed otherwise.
+
+(2) The Skill Searcher receives a non-exclusive right of use within the agreed scope.
+
+§ 12 Confidentiality
+
+(1) All parties undertake to maintain confidentiality regarding non-public information.
+
+(2) This obligation shall continue to apply after termination of the contractual relationship.
+
+§ 13 Data Protection
+
+The processing of personal data is carried out in accordance with the GDPR and Sinopia’s Privacy Policy.
+
+§ 14 Final Provisions
+
+(1) German law shall apply.
+
+(2) The place of jurisdiction shall be Stuttgart, insofar as legally permissible.
+
+(3) Should any provision of these GTC be or become invalid, the validity of the remaining provisions shall remain unaffected.

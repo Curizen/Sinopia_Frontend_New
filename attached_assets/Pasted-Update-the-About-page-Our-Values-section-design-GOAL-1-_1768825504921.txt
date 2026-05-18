@@ -1,0 +1,42 @@
+Update the About page “Our Values” section design.
+
+GOAL:
+1) The SINOPIA letters must visually appear next to each other in order, so the reader clearly sees the word:
+S I N O P I A
+(letters aligned side-by-side in one row on desktop, and wrap nicely on mobile while still keeping the order)
+
+2) Remove the “short list” values shown above (the chips/list):
+Service Expertise, Innovation, New Thinking, Orchestration, Partnership, Integrity, Achievement
+→ Delete this entire top list/chips section. Keep ONLY the SINOPIA acronym design.
+
+DESIGN REQUIREMENTS:
+- Create a top “SINOPIA” letter row:
+  - 7 circular badges (S, I, N, O, P, I, A)
+  - visually connected or evenly spaced
+  - when a user clicks/taps a letter badge, show that letter’s title + description below (or next to it).
+- Layout suggestion (implement one clean option):
+  Option A (recommended): “Tabs” behavior:
+    - Top row: letter badges as tabs (S I N O P I A)
+    - Below: a single content card that updates with the selected letter’s title + description
+  Option B: Row of 7 mini-cards (one per letter) with title + description inside each card (still aligned as SINOPIA)
+- Must be responsive:
+  - Desktop: one row shows “SINOPIA”
+  - Mobile: wraps to 2 rows but preserves order and still reads “SINOPIA”
+
+CONTENT & TRANSLATION (CRITICAL):
+- Keep the exact German content you already have.
+- Keep the accurate English translations you already added.
+- Ensure ALL texts are fully translated with i18n keys (no hardcoded strings).
+- The language toggle must switch the title/description for each letter (EN/DE).
+
+IMPLEMENTATION NOTES:
+- Remove any old list/chips render from the About page component.
+- Keep section title “Our Values / Unsere Werte”.
+- Use existing UI library (shadcn/ui) if available:
+  - Tabs component is preferred if already in the project, otherwise implement a simple internal state “activeLetter”.
+- No TypeScript/build errors.
+
+FINAL CHECK:
+- The top letters clearly display as “SINOPIA”.
+- No extra “Service Expertise / Innovation / …” list exists above.
+- Clicking each letter shows the correct title + description in EN/DE.

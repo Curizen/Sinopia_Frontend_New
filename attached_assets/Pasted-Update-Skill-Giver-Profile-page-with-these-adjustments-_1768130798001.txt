@@ -1,0 +1,49 @@
+Update Skill Giver Profile page with these adjustments:
+
+A) SKILLS SECTION (remove per-skill icons)
+1) Remove the icon field/picker from each individual skill.
+2) Keep ONLY one icon next to the SECTION TITLE "Skills" (e.g., a lucide icon beside the word Skills).
+3) Skills should only have:
+   - Skill name (string)
+   - Skill level dropdown: (junior, intermediate, advance, expert)
+4) Update UI:
+   - Each skill row shows: Skill Name + Level (no icon per skill)
+   - Add/Edit/Delete still works
+5) Update data model accordingly:
+   - Remove "icon" from skills array objects everywhere.
+
+B) CONTACT INFO EDIT (edit all contact fields + add Job Title first)
+1) In the LEFT SUMMARY card (profile summary), create a clear "Contact Info" block with an Edit button (pencil).
+2) When user clicks Edit, open a modal/drawer/form to edit ALL these fields:
+   - Job Title (NEW) -> must be the first field shown
+   - Address (or Location text)  (if you currently store city/country, keep them, but also allow a single Address field shown to user)
+   - Email
+   - Phone number
+   - LinkedIn URL
+3) After saving:
+   - Left summary displays in this order:
+     1) Job Title (top, under avatar)
+     2) Address / Location
+     3) Email
+     4) Phone
+     5) LinkedIn
+4) Keep existing design system and styling (same cards, spacing, fonts).
+5) Persist changes with the same localStorage/mock storage pattern already used in the app.
+
+C) i18n (EN + DE)
+1) All new strings must use translation keys (no hardcoded UI text).
+2) Add EN + DE translations for:
+   - Contact Info, Edit Contact Info
+   - Job Title
+   - Address / Location
+   - Email, Phone Number, LinkedIn URL
+   - Save, Cancel
+   - Skill level values: Junior, Intermediate, Advance, Expert
+3) Ensure switching language updates these labels instantly.
+
+D) Acceptance
+- No skill icon appears per skill (only next to the "Skills" section title).
+- Contact Info edit updates job title + address + email + phone + LinkedIn.
+- Job Title appears first in the summary.
+- Works fully in both English and German.
+- No TypeScript errors.

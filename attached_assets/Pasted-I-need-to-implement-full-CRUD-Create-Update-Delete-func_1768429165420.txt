@@ -1,0 +1,40 @@
+I need to implement full CRUD (Create, Update, Delete) functionality for the **Experience** section, following the exact same pattern used for Certifications and Education.
+
+Please implement the following:
+
+### 1. Experience Modal & UI
+- Create/Reuse a Modal for adding and editing work experience.
+- **Input Fields:**
+  1. **Job Title:** Text input (key: `title`).
+  2. **Company Name:** Text input (key: `company`). *Note: Even if the Add example omitted it, please include it in the form.*
+  3. **Start Date:** Date picker (key: `start_date`, format: YYYY-MM-DD).
+  4. **End Date:** Date picker (key: `end_date`, format: YYYY-MM-DD).
+  5. **Description/Details:** Textarea (key: `experience_details`).
+
+### 2. API Implementation
+Use `${EXTERNAL_API_URL}` and include the `Authorization: Bearer <token>` header for all requests.
+
+#### A. Add Experience (POST)
+- **Endpoint:** `POST /api/experience`
+- **Body:** `{ title, company, start_date, end_date, experience_details }`
+- **On Success:**
+  - Close modal.
+  - Add the new item (returned in `response.data`) to the local `experience` state.
+  - **Local Storage Sync:** Retrieve `user_profile_cache`, push the new experience object to `userData.experience`, and save back to localStorage.
+
+#### B. Update Experience (PUT)
+- **Trigger:** Clicking the "Pencil" icon (pre-fill the modal with existing data).
+- **Endpoint:** `PUT /api/experience/{experienceId}`
+- **Body:** Send only the updated fields.
+- **On Success:**
+  - Update the item in the local `experience` state.
+  - **Local Storage Sync:** Parse `user_profile_cache`, find the experience item by `id` in `userData.experience`, update its fields, and save.
+
+#### C. Delete Experience (DELETE)
+- **Trigger:** Clicking the "Trash" icon (Add a `window.confirm` check).
+- **Endpoint:** `DELETE /api/experience/{experienceId}`
+- **On Success:**
+  - Remove the item from the local `experience` state.
+  - **Local Storage Sync:** Parse `user_profile_cache`, filter out the item with the matching `id` from `userData.experience`, and save.
+
+Please write the code to implement this flow, ensuring the UI updates instantly and data persists on refresh.

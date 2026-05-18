@@ -1,0 +1,78 @@
+I need to implement the "My Projects" workflow for the "Skill Giver" role. Currently, the projects page shows "No results".
+
+Please update the `Projects` page (List View) and create a `ProjectDetails` page based on the following API specifications:
+
+### 1. Projects List View (Skill Giver)
+**Endpoint:** `GET https://sinopia.eu/api/use-case/skill-giver`
+**Headers:** `Authorization: Bearer <token>`
+
+**Data Mapping:**
+The API returns an array. Map through the data to display project cards. Note the nested structure:
+- **Project Title:** `item.project_job_titles.projects.title`
+- **Job Role:** `item.project_job_titles.job_title`
+- **Status:** `item.project_job_titles.projects.status`
+- **Project ID (for navigation):** `item.project_job_titles.projects.id`
+- **Hours:** `item.project_job_titles.projects.total_project_hours`
+
+**Interaction:**
+When a user clicks on a project card, navigate them to the details page: `/projects/:id`.
+
+**Response Sample (List):**
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "id": 118,
+            "project_job_titles": {
+                "id": 416,
+                "job_title": "Python Developer",
+                "projects": {
+                    "id": 106,
+                    "title": "Entwicklung einer Agentic AI Plattform",
+                    "status": "pending",
+                    "total_project_hours": 460
+                }
+            }
+        }
+    ]
+}
+2. Project Details View
+Route: /projects/:id Endpoint: GET https://sinopia.eu/api/use-case/skill-giver/{id} Headers: Authorization: Bearer <token>
+
+UI Requirements:
+
+Display the Title and Description.
+
+Objectives: Render the list of objectives.
+
+Stages: Display the implementation stages (Timeline or List) showing stage_name and description.
+
+Required Skills: Display skills as tags/chips (skill_name + required_level).
+
+Response Sample (Details):
+
+JSON
+{
+    "success": true,
+    "data": {
+        "id": 106,
+        "title": "Entwicklung einer Agentic AI Plattform",
+        "description": "Technical Skills...",
+        "objectives": ["Durchführung einer fachlichen..."],
+        "status": "pending",
+        "stages": [
+            {
+                "stage_name": "Discovery & Design",
+                "description": "Conducting a detailed..."
+            }
+        ],
+        "required_skills": [
+            {
+                "skill_name": "Machine Learning",
+                "required_level": "intermediate"
+            }
+        ]
+    }
+}
+Please implement the data fetching, state management, and UI for both the List and Detail views using these specific schemas.

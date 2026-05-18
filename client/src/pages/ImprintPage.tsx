@@ -37,8 +37,14 @@ export default function ImprintPage() {
               <h2 className="text-xl font-bold text-foreground mb-3">
                 {t('imprint.contactTitle')}
               </h2>
-              <p className="whitespace-pre-line">
-                {t('imprint.contactDetails')}
+              <p>
+                <Link
+                  href="/contact"
+                  className="text-primary hover:underline"
+                  data-testid="link-imprint-contact-email"
+                >
+                  {t('imprint.contactDetails')}
+                </Link>
               </p>
             </section>
 
@@ -47,67 +53,6 @@ export default function ImprintPage() {
                 {t('imprint.vatIdTitle')}
               </h2>
               <p>{t('imprint.vatIdNumber')}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('imprint.responsibleTitle')}
-              </h2>
-              <p className="whitespace-pre-line">
-                {t('imprint.responsibleDetails')}
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('imprint.disclaimerTitle')}
-              </h2>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('imprint.euDisputeTitle')}
-              </h2>
-              <p>
-                {t('imprint.euDisputeText')}{' '}
-                <a 
-                  href="https://consumer-redress.ec.europa.eu/index_de" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  https://consumer-redress.ec.europa.eu/index_de
-                </a>
-              </p>
-              <p className="mt-2">{t('imprint.euDisputeEmail')}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('imprint.consumerDisputeTitle')}
-              </h2>
-              <p>{t('imprint.consumerDisputeText')}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('imprint.contentLiabilityTitle')}
-              </h2>
-              <p>{t('imprint.contentLiabilityText')}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('imprint.linkLiabilityTitle')}
-              </h2>
-              <p>{t('imprint.linkLiabilityText')}</p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-foreground mb-3">
-                {t('imprint.copyrightTitle')}
-              </h2>
-              <p>{t('imprint.copyrightText')}</p>
             </section>
 
             <section>

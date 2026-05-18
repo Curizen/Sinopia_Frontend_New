@@ -1,0 +1,45 @@
+I need to create a "Use Case Details" page that opens when a user clicks on a project card.
+
+Please implement the following:
+
+### 1. Routing & Navigation
+- **New Route:** Add a new route in the router configuration: path `/use-case/:id` mapping to a new component `UseCaseDetails`.
+- **Navigation:** Update the existing **Projects** page/component. Make the project cards clickable. When clicked, navigate to `/use-case/${project.id}`.
+
+### 2. The `UseCaseDetails` Component
+Create this new component to fetch and display data based on the URL parameter `id`.
+
+**A. API Fetching:**
+- **Endpoint:** `GET https://sinopia.eu/api/use-case/{id}`
+- **Headers:** `Authorization: Bearer <token>`
+- **Loading State:** Show a loading spinner while fetching.
+- **Error State:** Handle 404 or errors gracefully.
+
+**B. UI Layout (Data Visualization):**
+Render the data in a clean, dashboard-like layout. **Exclude** technical fields like `id`, `user_id`, `created_at`, `updated_at`, and `invoice_multiplier`.
+
+**Section 1: Header & Stats**
+- **Title:** Large heading (`title`).
+- **Badges:** `status` and `skill_giver_status` (use colored badges).
+- **Key Metrics:** Display `total_cost` (formatted as currency) and `total_project_hours` (formatted as hours) prominently.
+
+**Section 2: Overview**
+- **Description:** Display the `description` text.
+- **Objectives:** Render `objectives` as a list of tags or bullet points.
+
+**Section 3: Team Composition (Job Titles)**
+- Section Title: "Required Experts".
+- Map through the `job_titles` array. For each item, display a card showing:
+  - Job Title & Level (`job_title`, `level_job_title`).
+  - Employees Count (`number_of_employees`).
+  - Description (`description`).
+  - Skills: Render `required_skills` as small tags.
+
+**Section 4: Project Roadmap (Stages)**
+- Section Title: "Implementation Stages".
+- Map through the `stages` array. Display them as a timeline or list showing:
+  - Stage Name (`stage_name`).
+  - Description (`description`).
+  - Hours (`total_stage_hours`).
+
+Please generate the code for the new component and the routing updates.

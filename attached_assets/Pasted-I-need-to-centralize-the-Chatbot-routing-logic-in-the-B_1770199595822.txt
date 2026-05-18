@@ -1,0 +1,49 @@
+I need to centralize the Chatbot routing logic in the Backend. Instead of the Frontend calling N8N directly, it should send a standardized request to `/api/chat`, and the Backend will determine the user role and route to the correct N8N Webhook.
+
+Please refactor both `server/routes.ts` and `ChatWidget.tsx` as follows:
+
+### 1. Backend Logic (`server/routes.ts`)
+Create or update the `POST /api/chat` route.
+
+**Logic Flow:**
+1.  **Extract Token:** Check the `Authorization` header.
+2.  **Determine Role:**
+    * **If Token is Valid:** Decode the user.
+        * If `user.role` is `skill_giver` -> Use **Giver Webhook**.
+        * If `user.role` is `skill_searcher` -> Use **Searcher Webhook**.
+    * **If Token is Missing/Invalid:** Treat as **Guest** -> Use **Guest Webhook**.
+
+3.  **N8N Payload Mapping (Crucial):**
+    * The Input from frontend is always: `{ "message": "text" }`.
+    * **For Guest:**
+        * Generate a `session_id` (e.g., `guest_${Date.now()}`) OR use one provided in the request headers if available.
+        * Payload to N8N: `{ "User_query": message, "session_id": session_id }` (Note: Guest webhook expects `User_query`).
+    * **For Giver:**
+        * Payload to N8N: `{ "user_id": user.id, "message": message }`.
+    * **For Searcher:**
+        * Payload to N8N: `{ "skill_searcher_id": user.id, "message": message }`.
+
+4.  **Standardized Response:**
+    Return the response in this exact format:
+    ```json
+    {
+       "success": true,
+       "role": "<detected_role>", // "guest", "skill_giver", or "skill_searcher"
+       "session_id": "<only_if_guest>",
+       "n8nResponse": { "output": "<n8n_response_text>" }
+    }
+    ```
+
+### 2. Frontend Logic (`ChatWidget.tsx`)
+Refactor the `sendMessage` function to be simple again:
+
+1.  **Endpoint:** Always `POST /api/chat`.
+2.  **Headers:**
+    * Include `Authorization: Bearer <token>` (if user is logged in).
+    * (Optional) If it's a Guest who already has a session, send `x-guest-session-id` header to maintain context.
+3.  **Body:** `{ "message": inputMessage }`.
+4.  **Handling Response:**
+    * If the response contains a `session_id` (for guests), store it in `sessionStorage` to reuse it in the next message (to maintain conversation context).
+    * Display `data.n8nResponse.output` in the chat.
+
+Please implement this centralized routing architecture.

@@ -1,0 +1,70 @@
+I need to fully integrate the backend API with my React frontend (inside the `client` directory) and implement the complete Authentication & Logout flow based on specific requirements.
+
+Please execute the following steps strictly:
+
+### 1. Environment & Base Configuration
+* **Update `.env`**: Set `VITE_API_BASE_URL=http://sinopi.eu` (Note: Use HTTP as specified).
+* **Axios Setup**: In `client/src/lib/api.ts`, ensure the axios instance uses this base URL.
+
+### 2. Create/Update `client/src/services/authService.ts`
+Implement the following async functions matching these specific Endpoints, JSON payloads, and behaviors:
+
+* **`registerUser(payload)`**:
+    * POST `/api/users/register`
+    * Body: `{ email, password, confirmPassword, account_type }` (account_type is "skill_searcher" or "skill_giver").
+* **`verifyRegisterOtp(payload)`**:
+    * POST `/api/users/verify-register-otp`
+    * Body: `{ email, otp }`
+* **`loginUser(payload)`**:
+    * POST `/api/users/login`
+    * Body: `{ email, password }`
+    * *Note:* On success, this returns a `token`.
+* **`forgotPassword(email)`**:
+    * POST `/api/users/forgot-password`
+    * Body: `{ email }`
+* **`verifyForgotPasswordOtp(payload)`**:
+    * POST `/api/users/verify-forgot-password-otp`
+    * Body: `{ email, otp }`
+* **`resetPassword(payload)`**:
+    * POST `/api/users/reset-password`
+    * Body: `{ email, password, confirmPassword }`
+* **`logoutUser()`**:
+    * POST `/api/users/logout`
+    * **CRITICAL Requirement:** The Request Body must be **empty** (`{}`).
+    * **Headers:** Ensure the request includes `Authorization: Bearer <token_from_storage>`.
+
+### 3. Implement Registration Flow (Fixing the "Double Click" Bug)
+* **File**: `client/src/pages/auth/SignUpPage.tsx`
+* **Logic**:
+    * User selects role ("skill_searcher" or "skill_giver").
+    * On Form Submit (`handleSubmit`):
+        * **CRITICAL:** Do NOT wait for a state update or `useEffect`.
+        * Call `await authService.registerUser(...)`.
+        * **Direct Response Check:** If the response message is exactly: **"We are sending your OTP to your email. It should arrive shortly. ✅"**
+        * **IMMEDIATELY** execute: `Maps('/verify-otp', { state: { email: formData.email } })`.
+
+### 4. Implement OTP Verification Flow
+* **File**: `client/src/pages/auth/VerifyOtpPage.tsx` (or similar).
+* **Logic**:
+    * Get `email` from `location.state`.
+    * On Submit, call `authService.verifyRegisterOtp({ email, otp })`.
+    * If response `status` is "success", navigate immediately to `/sign-up/cv`.
+
+### 5. Implement Login Flow
+* **File**: `client/src/pages/auth/SignInPage.tsx`.
+* **Logic**:
+    * Call `authService.loginUser(...)`.
+    * On success, save the `token` to `localStorage`.
+    * Navigate to the Dashboard/Home.
+
+### 6. Implement Logout Flow (Strict Postman Behavior)
+* **UI**: Locate the Logout button/link in the UI and attach an `onClick` handler.
+* **Handler Logic**:
+    1. Call `await authService.logoutUser()`.
+    2. **Cleanup (Always run this, even if API fails):**
+        * `localStorage.removeItem('token');` (and any other user data).
+    3. **Redirect:** Immediately navigate to `/sign-in`.
+
+### 7. General Requirements
+* Ensure proper error handling (displaying alert/toast on API failure).
+* Ensure all types/interfaces are defined in TypeScript.

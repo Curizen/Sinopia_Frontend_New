@@ -8,38 +8,40 @@ import {
 } from 'react';
 import type { User } from '@/types';
 import type { UserRole } from '@/lib/utils/constants';
+import { authService } from '@/services/authService';
+
+interface CompanyInfoData {
+  city: string;
+  country: string;
+  companySize: string;
+  companyName: string;
+  industry: string;
+  contactEmail: string;
+  contactPhone: string;
+  bio?: string;
+  website?: string;
+  street?: string;
+  zipCode?: string;
+  state?: string;
+  vatNumber?: string;
+}
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<{ role: UserRole }>;
   register: (email: string, password: string, role: UserRole, cvFile?: File | null) => Promise<void>;
-  logout: () => void;
-  setMockUser: (role: UserRole) => void;
+  logout: () => Promise<void>;
+  setUserFromToken: (token: string, user: User) => void;
+  completeRegistration: (email: string, role: UserRole, cvUploaded?: boolean, serverToken?: string) => void;
+  updateCvStatus: (uploaded: boolean, fileName?: string, fileSize?: number) => void;
+  updateUserCompanyInfo: (data: CompanyInfoData) => Promise<void>;
+  updateUserProfile: (data: Partial<User>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// todo: remove mock functionality (still used for login / setMockUser)
-const mockUsers: Record<UserRole, User> = {
-  skill_giver: {
-    id: '1',
-    email: 'john@example.com',
-    role: 'skill_giver',
-    avatar: undefined,
-  },
-  skill_searcher: {
-    id: '2',
-    email: 'sarah@techcorp.com',
-    role: 'skill_searcher',
-    avatar: undefined,
-  },
-};
-
-// you can configure this in your .env as VITE_API_BASE_URL
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -56,53 +58,254 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  const login = useCallback(async (email: string, _password: string) => {
-    // todo: replace with real backend login
-    const mockToken = 'mock_token_' + Date.now();
-    const mockUser = email.includes('searcher') ? mockUsers.skill_searcher : mockUsers.skill_giver;
-
-    setToken(mockToken);
-    setUser(mockUser);
-    localStorage.setItem('sinopia_token', mockToken);
-    localStorage.setItem('sinopia_user', JSON.stringify(mockUser));
+  const login = useCallback(async (email: string, password: string): Promise<{ role: UserRole }> => {
+    console.log('[DEBUG] AuthContext login called with email:', email);
+    const response = await authService.loginUser({ email, password });
+    console.log('[DEBUG] AuthContext received response:', response);
+    console.log('[DEBUG] Response.data:', response.data);
+    
+    const isSuccess = response.message?.toLowerCase().includes('successful') || 
+                      response.message?.toLowerCase().includes('session already active') ||
+                      response.status === 'success';
+    
+    console.log('[DEBUG] Login isSuccess:', isSuccess);
+    
+    if (isSuccess) {
+      // API returns userData object with user profile data
+      const apiResponse = response as { 
+        message?: string; 
+        role?: string; 
+        userData?: {
+          id?: string | null;
+          user_id?: string | null;
+          full_name?: string | null;
+          email?: string | null;
+          summary?: string | null;
+          phone?: string | null;
+          linkedin?: string | null;
+          country?: string | null;
+          city?: string | null;
+          certificates?: unknown[];
+          education?: unknown[];
+          experience?: unknown[];
+          projects?: unknown[];
+          skills?: unknown[];
+        };
+        data?: unknown;
+      };
+      
+      console.log('[DEBUG] Full API response object:', apiResponse);
+      console.log('[DEBUG] apiResponse.userData:', apiResponse.userData);
+      console.log('[DEBUG] apiResponse.role:', apiResponse.role);
+      
+      const userData = apiResponse.userData;
+      const userRole = (apiResponse.role || 'skill_giver') as UserRole;
+      
+      // Check if skill_searcher has already completed company onboarding
+      // by checking if company_name exists in userData
+      const hasCompanyData = !!(userData as { company_name?: string })?.company_name;
+      const companyOnboardingCompleted = userRole === 'skill_searcher' ? hasCompanyData : undefined;
+      
+      const newUser: User = {
+        id: userData?.id || userData?.user_id || Date.now().toString(),
+        userId: userData?.user_id ? Number(userData.user_id) : undefined,
+        email: userData?.email || email,
+        role: userRole,
+        firstName: userData?.full_name?.split(' ')[0] || undefined,
+        lastName: userData?.full_name?.split(' ').slice(1).join(' ') || undefined,
+        avatar: undefined,
+        companyOnboardingCompleted,
+      };
+      
+      const sessionToken = response.token || 'session_' + Date.now();
+      setToken(sessionToken);
+      setUser(newUser);
+      localStorage.setItem('sinopia_token', sessionToken);
+      localStorage.setItem('sinopia_user', JSON.stringify(newUser));
+      
+      // Save full userData to cache for profile page
+      if (userData) {
+        console.log('Saving userData to user_profile_cache:', userData);
+        localStorage.setItem('user_profile_cache', JSON.stringify(userData));
+      }
+      
+      // Return the role for routing purposes
+      return { role: userRole };
+    } else {
+      throw new Error(response.message || 'Login failed');
+    }
   }, []);
 
   const register = useCallback(
-    async (email: string, _password: string, role: UserRole, _cvFile?: File | null) => {
-      // todo: replace with real backend registration
-      // For now, use mock registration like login
-      const mockToken = 'mock_token_' + Date.now();
-      const mockUser: User = {
-        id: Date.now().toString(),
+    async (email: string, password: string, role: UserRole, _cvFile?: File | null) => {
+      const response = await authService.registerUser({
         email,
-        role,
-        avatar: undefined,
-      };
-
-      setToken(mockToken);
-      setUser(mockUser);
-      localStorage.setItem('sinopia_token', mockToken);
-      localStorage.setItem('sinopia_user', JSON.stringify(mockUser));
+        password,
+        confirmPassword: password,
+        account_type: role,
+      });
+      
+      if (response.status === 'error') {
+        throw new Error(response.message || 'Registration failed');
+      }
+      
+      return;
     },
     [],
   );
 
-  const logout = useCallback(() => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('sinopia_token');
-    localStorage.removeItem('sinopia_user');
+  const completeRegistration = useCallback((email: string, role: UserRole, cvUploaded: boolean = false, serverToken?: string) => {
+    const newUser: User = {
+      id: Date.now().toString(),
+      email,
+      role,
+      avatar: undefined,
+      cvUploaded,
+    };
+    
+    const tokenToUse = serverToken || 'registered_token_' + Date.now();
+    setToken(tokenToUse);
+    setUser(newUser);
+    localStorage.setItem('sinopia_token', tokenToUse);
+    localStorage.setItem('sinopia_user', JSON.stringify(newUser));
   }, []);
 
-  // todo: remove mock functionality
-  const setMockUser = useCallback((role: UserRole) => {
-    const mockToken = 'mock_token_' + Date.now();
-    const mockUser = mockUsers[role];
-    setToken(mockToken);
-    setUser(mockUser);
-    localStorage.setItem('sinopia_token', mockToken);
-    localStorage.setItem('sinopia_user', JSON.stringify(mockUser));
+  const updateCvStatus = useCallback((uploaded: boolean, fileName?: string, fileSize?: number) => {
+    if (!user) return;
+    const updatedUser: User = {
+      ...user,
+      cvUploaded: uploaded,
+      cvFileName: fileName,
+      cvFileSize: fileSize,
+    };
+    setUser(updatedUser);
+    localStorage.setItem('sinopia_user', JSON.stringify(updatedUser));
+  }, [user]);
+
+  const logout = useCallback(async () => {
+    try {
+      await authService.logoutUser();
+    } catch (error) {
+      console.error('Logout API error:', error);
+    } finally {
+      // Clear React state
+      setToken(null);
+      setUser(null);
+      
+      // Clear ALL localStorage (tokens, profile cache, roles, session info)
+      localStorage.clear();
+      
+      // Clear all cookies
+      document.cookie.split(";").forEach((cookie) => {
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+      });
+      
+      // Clear sessionStorage
+      sessionStorage.clear();
+      
+      console.log('[DEBUG] Logout - All storage cleared');
+      
+      // Hard redirect to sign-in page (forces full browser reload to wipe React state)
+      window.location.href = '/sign-in';
+    }
   }, []);
+
+  const setUserFromToken = useCallback((newToken: string, newUser: User) => {
+    setToken(newToken);
+    setUser(newUser);
+    localStorage.setItem('sinopia_token', newToken);
+    localStorage.setItem('sinopia_user', JSON.stringify(newUser));
+  }, []);
+
+  const updateUserCompanyInfo = useCallback(async (data: CompanyInfoData) => {
+    if (!user) throw new Error('No user logged in');
+    
+    const storedToken = localStorage.getItem('sinopia_token');
+    
+    // Step A: Retrieve existing cached data to preserve fields not in form
+    const cachedDataRaw = localStorage.getItem('company_profile_cache');
+    const cachedData = cachedDataRaw ? JSON.parse(cachedDataRaw) : {};
+    
+    console.log('[DEBUG] updateUserCompanyInfo - Cached data:', cachedData);
+    
+    // Step B: Create form data payload
+    const formPayload = {
+      company_name: data.companyName,
+      industry: data.industry,
+      phone: data.contactPhone,
+      email: data.contactEmail,
+      company_size: data.companySize,
+      city: data.city,
+      country: data.country,
+      bio: data.bio || '',
+      website: data.website || '',
+      street_address: data.street || '',
+      zip_code: data.zipCode || '',
+      state: data.state || '',
+      vat_number: data.vatNumber || '',
+    };
+    
+    // Step C: Merge cached data with form data - form data overwrites cached values
+    // IMPORTANT: Do NOT include id or user_id from stale cache - backend derives these from session
+    // This prevents foreign key constraint errors when a new user has stale cache from previous user
+    const { id: _id, user_id: _userId, ...safeCachedData } = cachedData;
+    const apiPayload = {
+      ...safeCachedData,  // Keep non-ID fields (e.g., created_at, etc.)
+      ...formPayload,     // Overwrite with new form edits
+    };
+    
+    console.log('[DEBUG] updateUserCompanyInfo - Merged payload:', apiPayload);
+    
+    const response = await fetch('/api/profile', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(storedToken && { 'Authorization': `Bearer ${storedToken}` }),
+      },
+      credentials: 'include',
+      body: JSON.stringify(apiPayload),
+    });
+    
+    const responseData = await response.json();
+    console.log('[DEBUG] updateUserCompanyInfo - Response:', responseData);
+    
+    if (!response.ok) {
+      throw new Error(responseData.message || 'Failed to update company info');
+    }
+    
+    localStorage.setItem('company_profile_cache', JSON.stringify(responseData));
+    localStorage.setItem('user_profile_cache', JSON.stringify(responseData));
+    
+    const updatedUser: User = {
+      ...user,
+      city: data.city,
+      country: data.country,
+      companySize: data.companySize,
+      companyName: data.companyName,
+      industry: data.industry,
+      contactEmail: data.contactEmail,
+      contactPhone: data.contactPhone,
+      bio: data.bio,
+      companyOnboardingCompleted: true,
+    };
+    
+    setUser(updatedUser);
+    localStorage.setItem('sinopia_user', JSON.stringify(updatedUser));
+  }, [user]);
+
+  const updateUserProfile = useCallback(async (data: Partial<User>) => {
+    if (!user) throw new Error('No user logged in');
+    
+    const updatedUser: User = {
+      ...user,
+      ...data,
+    };
+    
+    setUser(updatedUser);
+    localStorage.setItem('sinopia_user', JSON.stringify(updatedUser));
+  }, [user]);
 
   return (
     <AuthContext.Provider
@@ -114,7 +317,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
-        setMockUser,
+        setUserFromToken,
+        completeRegistration,
+        updateCvStatus,
+        updateUserCompanyInfo,
+        updateUserProfile,
       }}
     >
       {children}

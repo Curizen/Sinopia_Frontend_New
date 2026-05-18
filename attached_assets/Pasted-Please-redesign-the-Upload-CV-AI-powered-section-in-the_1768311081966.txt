@@ -1,0 +1,57 @@
+Please redesign the “Upload CV (AI-powered)” section in the Skill Giver Profile to look more premium and user-friendly, and reposition it to the very TOP of the profile content.
+
+REQUIREMENTS:
+1) Position
+- Move the CV upload section ABOVE Bio/About and ABOVE Skills/Experience/Education/Certifications (it should be the first section in the Skill Giver profile page).
+
+2) Design (UI/UX)
+- Use the existing design system (shadcn/ui + Tailwind) and match Sinopia theme.
+- Make it look like a modern “dropzone card”:
+  - Large clickable area (drag & drop + click to browse)
+  - Clear title + short helper text
+  - File type hints: PDF/DOC/DOCX
+  - Show upload status states:
+    a) Idle (no file)
+    b) Drag-over (highlight)
+    c) Uploading (progress indicator / spinner)
+    d) Success (check icon + “CV uploaded”)
+    e) Error (red state + message)
+- Add two buttons:
+  - Primary: “Upload & Extract with AI”
+  - Secondary: “Skip for now” (only if CV is optional, keep consistent with earlier logic)
+
+3) Behavior
+- When user uploads a file, show filename and size.
+- On “Upload & Extract with AI”, run the existing mock extraction flow and then auto-fill profile fields where possible.
+- Persist state (cvUploaded boolean + optional filename) using existing storage pattern.
+
+4) i18n
+- All visible text must be fully translated EN + DE with i18n keys (no hardcoded strings):
+  Title, helper text, button labels, status messages, errors.
+
+Suggested strings (add as keys):
+EN:
+- “Upload your CV (AI-powered)”
+- “Drag & drop your CV here, or click to browse”
+- “Supported: PDF, DOC, DOCX”
+- “Upload & Extract with AI”
+- “Skip for now”
+- “Uploading…”
+- “CV uploaded successfully”
+- “We couldn’t extract everything. You can edit manually.”
+
+DE:
+- “Lebenslauf hochladen (KI-gestützt)”
+- “Ziehe deinen Lebenslauf hierher oder klicke zum Auswählen”
+- “Unterstützt: PDF, DOC, DOCX”
+- “Hochladen & mit KI auslesen”
+- “Überspringen”
+- “Wird hochgeladen…”
+- “Lebenslauf erfolgreich hochgeladen”
+- “Nicht alles konnte extrahiert werden. Du kannst es manuell bearbeiten.”
+
+5) Final check
+- CV upload card is now the first section in Skill Giver profile.
+- Looks clean/minimal and matches Sinopia.
+- Responsive on mobile/desktop.
+- No TypeScript/build errors.

@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'wouter';
+import { useState, useMemo } from 'react';
+import { Link, useLocation, useSearch } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
 import { useI18n } from '@/i18n';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
+import sinopiaLogo from '@assets/sinopia_logo.png';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +16,7 @@ export default function SignInPage() {
   const { toast } = useToast();
   const { t } = useI18n();
   const [, setLocation] = useLocation();
+  const searchString = useSearch();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -22,21 +24,49 @@ export default function SignInPage() {
     password: '',
   });
 
+  // Parse returnUrl from query params for redirect after login
+  const returnUrl = useMemo(() => {
+    const params = new URLSearchParams(searchString);
+    const url = params.get('returnUrl');
+    if (url) {
+      try {
+        return decodeURIComponent(url);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }, [searchString]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      await login(formData.email, formData.password);
+      const result = await login(formData.email, formData.password);
       toast({
         title: t('common.success'),
-        description: t('auth.signInTitle'),
+        description: t('auth.signInSuccess'),
       });
-      setLocation('/under-development');
+      
+      // Redirect to return URL if provided, otherwise go to profile
+      const destination = returnUrl && returnUrl.startsWith('/') ? returnUrl : '/profile';
+      setLocation(destination);
     } catch (error) {
+      // Always use translated error message for invalid credentials
+      // This ensures language consistency regardless of backend response language
+      const rawMessage = error instanceof Error ? error.message.toLowerCase() : '';
+      const isInvalidCredentials = rawMessage.includes('invalid') || 
+                                   rawMessage.includes('ungültig') ||
+                                   rawMessage.includes('incorrect') ||
+                                   rawMessage.includes('wrong') ||
+                                   rawMessage.includes('failed') ||
+                                   rawMessage.includes('not found');
+      
+      const errorMessage = isInvalidCredentials ? t('auth.signInError') : t('auth.signInError');
       toast({
         title: t('common.error'),
-        description: t('auth.signInSubtitle'),
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
@@ -52,7 +82,7 @@ export default function SignInPage() {
             <div className="flex items-center justify-center mx-auto mb-4">
               <Link href="/" className="flex items-center gap-2">
                 <img 
-                  src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+                  src={sinopiaLogo} 
                   alt="Sinopia Logo" 
                   className="w-16 h-auto rounded-md object-cover"
                 />
@@ -103,7 +133,7 @@ export default function SignInPage() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading} data-testid="button-signin-submit">
+              <Button type="submit" className="w-full" disabled={isLoading || !formData.password} data-testid="button-signin-submit">
                 {isLoading ? `${t('common.loading')}` : t('auth.signInButton')}
                 <LogIn className="ml-2 w-4 h-4" />
               </Button>
@@ -111,7 +141,10 @@ export default function SignInPage() {
 
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">{t('auth.noAccount')} </span>
-              <Link href="/sign-up" className="text-primary hover:underline font-medium">
+              <Link 
+                href={returnUrl ? `/sign-up?returnUrl=${encodeURIComponent(returnUrl)}` : '/sign-up'} 
+                className="text-primary hover:underline font-medium"
+              >
                 {t('nav.signUp')}
               </Link>
             </div>

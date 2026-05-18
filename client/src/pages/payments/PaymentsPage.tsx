@@ -15,8 +15,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatCurrency, formatDate } from '@/lib/utils/formatters';
-import { Search, CreditCard, DollarSign, TrendingUp, Clock } from 'lucide-react';
-import { UnderDevelopment } from '@/components/common/UnderDevelopment';
+import { Search, CreditCard, Euro, TrendingUp, Clock } from 'lucide-react';
 
 export default function PaymentsPage() {
   const { user } = useAuth();
@@ -62,7 +61,6 @@ export default function PaymentsPage() {
           </p>
         </div>
 
-        <UnderDevelopment className="mb-6" />
 
         <div className="grid sm:grid-cols-3 gap-4">
           <Card>
@@ -101,7 +99,7 @@ export default function PaymentsPage() {
                   <p className="text-2xl font-bold text-red-600">{formatCurrency(totalOverdue)}</p>
                 </div>
                 <div className="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                  <DollarSign className="w-5 h-5 text-red-600" />
+                  <Euro className="w-5 h-5 text-red-600" />
                 </div>
               </div>
             </CardContent>
@@ -184,7 +182,7 @@ export default function PaymentsPage() {
             {payments.length === 0 ? (
               <Card>
                 <CardContent className="py-12 text-center">
-                  <DollarSign className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                  <Euro className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                   <h3 className="font-semibold text-lg mb-2">{t('payments.noPayments')}</h3>
                   <p className="text-muted-foreground">
                     {t('payments.paymentHistoryWillAppear')}

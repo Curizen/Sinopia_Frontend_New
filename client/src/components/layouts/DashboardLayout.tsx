@@ -3,9 +3,9 @@ import { Link, useLocation } from 'wouter';
 import { useAuth } from '@/context/AuthContext';
 import { useNotifications } from '@/context/NotificationContext';
 import { useI18n } from '@/i18n';
+import sinopiaLogo from '@assets/sinopia_logo.png';
 
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +28,7 @@ import {
   Settings,
   Home,
 } from 'lucide-react';
+import { ChatWidget } from '@/components/ChatWidget';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -46,20 +47,22 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     setMobileMenuOpen(false);
   }, [location]);
 
-  const navItems = [
+  const allNavItems = [
     { href: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard },
     { href: '/projects', labelKey: 'nav.projects', icon: FolderKanban },
-    { href: '/offers', labelKey: 'nav.offers', icon: FileText },
+    { href: '/offers', labelKey: 'nav.offers', icon: FileText, skillGiverOnly: true },
     { href: '/contracts', labelKey: 'nav.contracts', icon: Handshake },
     { href: '/payments', labelKey: 'nav.payments', icon: CreditCard },
     { href: '/notifications', labelKey: 'nav.notifications', icon: Bell, badge: unreadCount },
     { href: '/profile', labelKey: 'nav.profile', icon: User },
   ];
 
-  const handleLogout = () => {
-    logout();
+  const navItems = allNavItems.filter(item => !item.skillGiverOnly || isSkillGiver);
+
+  const handleLogout = async () => {
+    await logout();
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    setLocation('/');
+    setLocation('/sign-in');
   };
 
   const handleHomeClick = () => {
@@ -83,7 +86,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
               <img 
-                src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+                src={sinopiaLogo} 
                 alt="Sinopia Logo" 
                 className="w-12 h-auto rounded-md object-cover"
               />
@@ -128,15 +131,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex items-center gap-2"
+                  size="icon"
                   data-testid="button-user-menu"
                 >
-                  <Avatar className="w-8 h-8">
-                    <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                      {user?.firstName?.[0]}
-                      {user?.lastName?.[0]}
-                    </AvatarFallback>
-                  </Avatar>
+                  <User className="w-5 h-5 text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
 
@@ -253,6 +251,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <main className="flex-1 overflow-auto p-4 md:p-6">
         {children}
       </main>
+
+      {/* AI Chat Widget - Available for all authenticated users */}
+      <ChatWidget />
     </div>
   );
 }

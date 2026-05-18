@@ -4,13 +4,25 @@ import type { UserRole, ProjectStatus, OfferStatus, ContractStatus, InvoiceStatu
 
 export interface User {
   id: string;
+  userId?: number;
   email: string;
   role: UserRole;
   avatar?: string;
   firstName?: string;
   lastName?: string;
-
-  cvUrl?: string;        
+  cvUrl?: string;
+  cvUploaded?: boolean;
+  cvFileName?: string;
+  cvFileSize?: number;
+  city?: string;
+  country?: string;
+  companySize?: string;
+  companyName?: string;
+  industry?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  bio?: string;
+  companyOnboardingCompleted?: boolean;
 }
 
 
@@ -39,6 +51,9 @@ export interface SkillSearcherProfile {
   contactEmail: string;
   contactPhone: string;
   location: string;
+  city?: string;
+  country?: string;
+  companySize?: string;
 }
 
 export interface Experience {

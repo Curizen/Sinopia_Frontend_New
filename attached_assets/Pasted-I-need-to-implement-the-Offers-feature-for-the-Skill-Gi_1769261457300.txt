@@ -1,0 +1,57 @@
+I need to implement the "Offers" feature for the Skill Giver role, consisting of an Offers List page and an Offer Details page.
+
+Please implement the following:
+
+### 1. Routing
+- Add a route `/offers` -> Renders `OffersList` component.
+- Add a route `/offers/:id` -> Renders `OfferDetails` component.
+
+### 2. Offers List Page (`/offers`)
+- **API Endpoint:** `GET ${EXTERNAL_API_URL}/api/offers/my-offers`
+- **Headers:** `Authorization: Bearer <token>`
+- **Response Handling:**
+  - The API returns `{ success: true, count: X, data: [...] }`.
+  - Iterate through the `response.data` array.
+- **UI Layout:**
+  - Render a grid of **Cards**.
+  - **Card Content:**
+    - **Header:** Project Title (`item.project.title`) and Offer Status (`item.offer_status`) as a badge.
+    - **Body:** Job Title (`item.job_title.job_title`) and Level (`item.job_title.level_job_title`).
+    - **Footer:** A "View Details" button or make the whole card clickable.
+- **Navigation:** Clicking a card should navigate to `/offers/${item.offer_id}`.
+
+### 3. Offer Details Page (`/offers/:id`)
+- **API Endpoint:** `GET ${EXTERNAL_API_URL}/api/offers/${id}`
+- **Headers:** `Authorization: Bearer <token>`
+- **Response Handling:**
+  - The API returns `{ success: true, data: { ... } }`.
+  - Use `response.data` to populate the view.
+- **UI Layout:**
+  Create a detailed dashboard view with the following sections:
+  
+  **A. Header:**
+  - Project Title: `data.project.title`
+  - Status: `data.offer_status`
+  - Date Sent: `data.created_at` (formatted).
+
+  **B. Job Details:**
+  - **Role:** `data.job_title.job_title` (`data.job_title.level_job_title`)
+  - **Description:** `data.job_title.description`
+  - **Workload:** `data.job_title.total_hours` hours total.
+  - **Employees Required:** `data.job_title.required_employees`
+
+  **C. Required Skills:**
+  - Iterate over `data.job_title.skills_required`.
+  - Display each skill as a tag: `${skill.skill_name} (${skill.required_level})`.
+
+  **D. Action Buttons:**
+  - Place two large buttons at the bottom or top-right:
+    1. **Accept Offer** (Green/Primary)
+    2. **Reject Offer** (Red/Destructive)
+  - *Note:* Just add the buttons for now; the logic will be added later.
+
+### 4. Technical Constraints
+- Handle Loading and Error states for both pages.
+- Ensure strict type safety based on the provided JSON structure (especially nested objects like `project` and `job_title`).
+
+Please generate the code for these two pages and the routing configuration.

@@ -1,0 +1,88 @@
+Task:
+Completely replace the existing
+"Terms & Conditions / Terms of Service"
+content in the website with the following
+updated legal text for Sinopia Deutschland GmbH.
+
+IMPORTANT RULES:
+- Replace ALL existing content (do not append)
+- Keep layout clean, readable, and professional
+- No logic changes, UI-only content update
+- No runtime or build errors
+- Keep routing, links, and anchors intact
+
+====================================
+LANGUAGE STRUCTURE
+====================================
+
+1) German version FIRST
+2) English version SECOND
+3) Same structure and section order in both languages
+4) Clear section titles (§ / Section)
+
+====================================
+GERMAN VERSION (PRIMARY)
+====================================
+
+Title:
+Allgemeine Geschäftsbedingungen (AGB) – Sinopia Deutschland GmbH  
+Stand: 27.01.2026
+
+[Insert the FULL German text exactly as provided by the user,
+without modification of legal meaning,
+keeping paragraphs, numbering, and structure.]
+
+====================================
+ENGLISH VERSION (TRANSLATION)
+====================================
+
+Title:
+Terms and Conditions – Sinopia Deutschland GmbH  
+Last updated: January 27, 2026
+
+Translation Guidelines:
+- Professional legal English
+- Suitable for a digital services & platform company
+- Clear, neutral, non-marketing tone
+- Preserve legal intent, not literal word-for-word translation
+- Use "Service Provider" for Anbieter
+- Use "Customer" for Kunde
+- Reference "German law" where applicable
+
+Sections to include (mirrored from German):
+
+1. Scope and Definitions  
+2. Subject Matter of the Services  
+3. Conclusion of Contract  
+4. Service Delivery  
+5. Customer Obligations  
+6. Fees and Pricing  
+7. Payment Terms  
+8. Delay, Service Disruptions, Force Majeure  
+9. Liability  
+10. Defects and Claims  
+11. Termination of Contract  
+12. Cancellation by the Customer  
+13. Copyright and Usage Rights  
+14. Confidentiality  
+15. Data Protection  
+16. Final Provisions  
+
+====================================
+UI / DISPLAY REQUIREMENTS
+====================================
+
+- Use clear headings (H2 / H3)
+- Maintain spacing between sections
+- Responsive on mobile and desktop
+- No inline styles hardcoded
+- Follow existing typography and theme
+
+====================================
+RESULT
+====================================
+
+- Existing Terms page is fully replaced
+- German + English shown on the same page
+- Content is legally structured and readable
+- No crashes, no console errors

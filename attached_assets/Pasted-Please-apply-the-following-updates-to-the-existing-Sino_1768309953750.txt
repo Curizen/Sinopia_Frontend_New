@@ -1,0 +1,87 @@
+Please apply the following updates to the existing Sinopia project. Keep UI consistent, responsive, and fully translated (EN + DE). Do not break routing, auth, or onboarding flow.
+
+────────────────────────────
+1) Delete “Our Stories” section
+────────────────────────────
+- Find the Home page section/component that renders “Our Stories / Success Stories”.
+- Remove the entire section from the Home page (including mock data, cards, headings).
+- Clean up unused imports, components, and mock arrays related to this section.
+
+────────────────────────────
+2) Skill Giver – CV Upload must be OPTIONAL during signup
+────────────────────────────
+Goal: Skill Giver can complete onboarding WITHOUT uploading a CV.
+
+- Locate the Skill Giver onboarding flow (after OTP).
+- Modify the CV upload step to support:
+  A) Upload CV → continue
+  B) Skip for now → continue without uploading
+
+UI:
+- Add secondary button:
+  - EN: “Skip for now”
+  - DE: “Überspringen”
+- Add helper text:
+  - EN: “You can upload your CV now or skip and add it later.”
+  - DE: “Du kannst deinen Lebenslauf jetzt hochladen oder überspringen und später hinzufügen.”
+
+Logic:
+- Skipping CV must NOT block navigation.
+- Store state like: cvUploaded = false.
+- Route guards must NOT require CV (OTP is still required).
+- Profile should later show CV status = “Not uploaded”.
+
+────────────────────────────
+3) Skill Giver Profile – CV Upload with AI Extraction
+────────────────────────────
+Goal: Allow Skill Giver to upload CV later and extract data using AI.
+
+- In Skill Giver Profile page, add a dedicated section:
+  Title:
+  - EN: “Upload your CV (AI-powered)”
+  - DE: “Lebenslauf hochladen (KI-gestützt)”
+
+Functionality:
+- Allow PDF / Word upload.
+- Button label:
+  - EN: “Upload CV & Extract with AI”
+  - DE: “Lebenslauf hochladen & mit KI auslesen”
+- On upload:
+  - Simulate AI extraction (mock logic is fine).
+  - Parse and auto-fill profile sections if possible:
+    • Skills
+    • Experience
+    • Education
+    • Certifications
+- If extraction fails, show fallback message:
+  - EN: “We couldn’t extract all information. You can edit it manually.”
+  - DE: “Nicht alle Informationen konnten extrahiert werden. Du kannst sie manuell bearbeiten.”
+
+State handling:
+- After successful upload, set cvUploaded = true.
+- Show status label:
+  - EN: “CV uploaded”
+  - DE: “Lebenslauf hochgeladen”
+
+────────────────────────────
+4) i18n (IMPORTANT)
+────────────────────────────
+- Add translation keys for all new texts.
+- Ensure all CV-related labels switch instantly between EN / DE.
+- Do not leave any hardcoded English text.
+
+German examples:
+- “Upload your CV (AI-powered)” → “Lebenslauf hochladen (KI-gestützt)”
+- “Upload CV & Extract with AI” → “Lebenslauf hochladen & mit KI auslesen”
+- “CV uploaded” → “Lebenslauf hochgeladen”
+- “Not uploaded” → “Nicht hochgeladen”
+
+────────────────────────────
+Acceptance Checklist
+────────────────────────────
+✔ “Our Stories” removed completely  
+✔ Skill Giver can finish signup without CV  
+✔ CV upload available later in profile  
+✔ AI extraction simulated and fills profile fields  
+✔ Works in EN + DE  
+✔ No routing or auth regressions

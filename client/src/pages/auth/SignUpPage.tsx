@@ -1,26 +1,44 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'wouter';
-import { usePendingRegistration } from '@/context/PendingRegistrationContext';
+import { useState, useMemo } from 'react';
+import { Link, useLocation, useSearch } from 'wouter';
 import { useI18n } from '@/i18n';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
+import sinopiaLogo from '@assets/sinopia_logo.png';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, UserPlus, Briefcase, User } from 'lucide-react';
+import { authService } from '@/services/authService';
 import type { UserRole } from '@/lib/utils/constants';
+import { PasswordRequirements, isPasswordValid } from '@/components/auth/PasswordRequirements';
 
 export default function SignUpPage() {
-  const { setPendingData, generateOtp } = usePendingRegistration();
   const { toast } = useToast();
   const { t } = useI18n();
   const [, setLocation] = useLocation();
+  const searchString = useSearch();
+
+  const returnUrl = useMemo(() => {
+    const params = new URLSearchParams(searchString);
+    const url = params.get('returnUrl');
+    if (url) {
+      try {
+        return decodeURIComponent(url);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }, [searchString]);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -31,6 +49,24 @@ export default function SignUpPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!privacyAccepted) {
+      toast({
+        title: t('common.error'),
+        description: t('privacy.agreeError'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!termsAccepted) {
+      toast({
+        title: t('common.error'),
+        description: t('terms.acceptError'),
+        variant: 'destructive',
+      });
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
       toast({
@@ -43,26 +79,49 @@ export default function SignUpPage() {
 
     setIsLoading(true);
 
-    const otp = generateOtp();
-    setPendingData({
-      email: formData.email,
-      password: formData.password,
-      role: formData.role,
-      otp,
-      timestamp: Date.now(),
-      stage: 'otp_pending',
-      otpVerified: false,
-    });
-    
-    console.log('Mock OTP for verification:', otp);
-    
-    toast({
-      title: t('auth.verificationRequired'),
-      description: t('auth.verificationCodeSent'),
-    });
+    try {
+      const response = await authService.registerUser({
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+        account_type: formData.role,
+      });
 
-    setIsLoading(false);
-    setLocation('/verify-otp');
+      const isOtpSent = response.message?.toLowerCase().includes('otp') || 
+                        response.message?.toLowerCase().includes('sending') ||
+                        response.status === 'success';
+
+      if (isOtpSent) {
+        sessionStorage.setItem('pending_signup', JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword,
+          account_type: formData.role,
+        }));
+        
+        toast({
+          title: t('auth.verificationRequired'),
+          description: t('auth.verificationCodeSent'),
+        });
+        const returnParam = returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}` : '';
+        setLocation('/verify-otp?email=' + encodeURIComponent(formData.email) + '&role=' + formData.role + returnParam);
+      } else {
+        toast({
+          title: t('common.error'),
+          description: response.message || t('common.error'),
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('common.error');
+      toast({
+        title: t('common.error'),
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -73,7 +132,7 @@ export default function SignUpPage() {
             <div className="flex items-center justify-center mx-auto mb-4">
               <Link href="/" className="flex items-center gap-2">
                 <img 
-                  src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+                  src={sinopiaLogo} 
                   alt="Sinopia Logo" 
                   className="w-16 h-auto rounded-md object-cover"
                 />
@@ -201,6 +260,7 @@ export default function SignUpPage() {
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
+                {formData.password && <PasswordRequirements password={formData.password} />}
               </div>
 
               <div className="space-y-2">
@@ -227,25 +287,69 @@ export default function SignUpPage() {
                 </div>
               </div>
 
+              <div className="space-y-3 pt-2">
+                <div className="flex items-start gap-3">
+                  <Checkbox
+                    id="privacy-checkbox"
+                    checked={privacyAccepted}
+                    onCheckedChange={(checked) => setPrivacyAccepted(checked === true)}
+                    data-testid="checkbox-privacy-accept"
+                  />
+                  <Label
+                    htmlFor="privacy-checkbox"
+                    className="text-sm leading-relaxed cursor-pointer"
+                  >
+                    {t('privacy.agreeLabel').split(t('privacy.title')).map((part, i, arr) =>
+                      i < arr.length - 1 ? (
+                        <span key={i}>
+                          {part}
+                          <Link href="/privacy" className="text-primary hover:underline" data-testid="link-privacy-checkbox" target="_blank">
+                            {t('privacy.title')}
+                          </Link>
+                        </span>
+                      ) : (
+                        <span key={i}>{part}</span>
+                      )
+                    )}
+                  </Label>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <Checkbox
+                    id="terms-checkbox"
+                    checked={termsAccepted}
+                    onCheckedChange={(checked) => setTermsAccepted(checked === true)}
+                    data-testid="checkbox-terms-accept"
+                  />
+                  <Label
+                    htmlFor="terms-checkbox"
+                    className="text-sm leading-relaxed cursor-pointer"
+                  >
+                    {t('terms.agreeLabel').split(t('terms.titleShort')).map((part, i, arr) =>
+                      i < arr.length - 1 ? (
+                        <span key={i}>
+                          {part}
+                          <Link href="/terms" className="text-primary hover:underline" data-testid="link-terms-checkbox" target="_blank">
+                            {t('terms.titleShort')}
+                          </Link>
+                        </span>
+                      ) : (
+                        <span key={i}>{part}</span>
+                      )
+                    )}
+                  </Label>
+                </div>
+              </div>
+
               <Button
                 type="submit"
                 className="w-full"
-                disabled={isLoading}
+                disabled={isLoading || !isPasswordValid(formData.password) || formData.password !== formData.confirmPassword || !termsAccepted || !privacyAccepted}
                 data-testid="button-signup-submit"
               >
                 {isLoading ? t('common.loading') : t('auth.signUpButton')}
                 <UserPlus className="ml-2 w-4 h-4" />
               </Button>
-
-              <p className="text-xs text-center text-muted-foreground">
-                <Link href="/terms" className="hover:underline hover:text-primary transition-colors" data-testid="link-terms-signup">
-                  {t('footer.terms')}
-                </Link>
-                {' & '}
-                <Link href="/privacy" className="hover:underline hover:text-primary transition-colors" data-testid="link-privacy-signup">
-                  {t('privacy.title')}
-                </Link>
-              </p>
             </form>
 
             <div className="mt-6 text-center text-sm">

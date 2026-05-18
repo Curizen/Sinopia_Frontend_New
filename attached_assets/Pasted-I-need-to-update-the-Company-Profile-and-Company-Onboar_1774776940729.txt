@@ -1,0 +1,47 @@
+I need to update the Company Profile and Company Onboarding flows to support 4 new data fields: `street_address`, `vat_number`, `state`, and `zip_code`.
+
+**Important Note on Authentication:** Do NOT include `id` or `user_id` in the payload. The backend identifies the user and company strictly through the Auth Session (Token/Cookie).
+
+**The target JSON payload structure for both Creation (POST) and Updating (PUT) is strictly this:**
+```json
+{
+  "company_name": "abu-alasal",
+  "industry": "consulting",
+  "website": "[https://www.arrow-consulting.net](https://www.arrow-consulting.net)",
+  "phone": "0798024513",
+  "email": "qalzaghal@gmail.com",
+  "country": "Jordan",
+  "city": "Amman",
+  "bio": "",
+  "company_size": "1-10",
+  "street_address": "123 Market Street",
+  "vat_number": "466-577-Ak9",
+  "state": "amman",
+  "zip_code": "45782"
+}
+Please execute the following updates:
+
+1. Update the Company Onboarding Form
+Locate the initial registration form (e.g., CompanyOnboarding or CompanyInfoForm).
+
+Add the 4 new input fields (street_address, vat_number, state, zip_code).
+
+UI Suggestion: Group the address-related fields together (Street Address, City, State, ZIP Code, Country) for a better UX.
+
+Update the form's submission handler to include these 4 new fields in the API payload.
+
+2. Update the Company Profile & Edit Modal
+Locate the Company Profile view component and its associated Edit Contact Info / Edit Company Info Modal.
+
+Display: Show VAT Number, Street Address, State, and ZIP Code on the main profile card if they have values.
+
+Edit Modal: Add inputs for these 4 fields in the modal.
+
+Ensure the default values are populated correctly from the fetched user data.
+
+Ensure the onSave/onSubmit function sends the clean payload (without id or user_id) in the PUT request.
+
+3. Verify Backend Proxy (server/routes.ts)
+Check the routes handling the Company Profile POST and PUT requests.
+
+Ensure they use the Transparent Proxy pattern (passing req.body directly). Remove any manual mapping that might strip out the new fields or artificially inject IDs into the body.

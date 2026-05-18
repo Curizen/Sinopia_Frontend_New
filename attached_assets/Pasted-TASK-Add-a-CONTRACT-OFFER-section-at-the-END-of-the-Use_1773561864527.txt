@@ -1,0 +1,246 @@
+TASK
+Add a CONTRACT / OFFER section at the END of the Use Case page for the Skill Searcher.
+
+The contract must be automatically generated using the existing project data.
+
+IMPORTANT
+Do not change existing routes.
+Do not break the layout.
+Do not modify existing components.
+Add the contract section only at the bottom of the Use Case page.
+
+------------------------------------------------
+
+LOCATION
+
+Page:
+Use Case details page
+
+Route example:
+/use-case/{id}
+
+Add a new section AFTER the final existing section.
+
+Structure:
+
+Use Case Page
+
+Overview
+Deliverables
+Stages
+Experts
+
+↓
+
+NEW SECTION
+
+Contract / Offer
+
+------------------------------------------------
+
+SECTION TITLE
+
+Contract Offer
+
+------------------------------------------------
+
+STATIC SINOPIA INFORMATION
+
+Add a static block with Sinopia company information:
+
+Sales Person:
+Herrn Jens Uwe Jung
+
+Company:
+Sinopia Deutschland GmbH
+Deckerstraße 39
+70372 Stuttgart
+
+Tel:
+0177 492 8319
+
+Email:
+procurement@sinopia.eu
+
+Web:
+www.sinopia.eu
+
+------------------------------------------------
+
+CONTRACT CONTENT
+
+The contract must dynamically use project data.
+
+--------------------------------
+
+1. Offer Header
+
+Offer No:
+{project.id}
+
+Dear Sir or Madam,
+
+Thank you for your inquiry. We are pleased to submit the following offer regarding your inquiry for Use Case No. ({project.id}) ({project.title})
+
+--------------------------------
+
+2. Management Summary
+
+Use:
+
+{project.description}
+
+--------------------------------
+
+3. Implementation Phases & Milestones
+
+Loop through project stages:
+
+For each stage display:
+
+{project_stages.stage_name}
+{project_stages.description}
+
+--------------------------------
+
+4. Scope of Services
+
+Display objectives:
+
+{project.objectives}
+
+--------------------------------
+
+5. Required Skills & Roles
+
+Loop through roles:
+
+{project_job_title.job_title}
+{project_job_title.description}
+
+--------------------------------
+
+6. Prerequisites & Assumptions
+
+Use dynamic data:
+
+Company Size:
+{skill_searcher.company_size}
+
+Industry:
+{skill_searcher.industry}
+
+Then display static assumptions:
+
+Provision of necessary hardware and software by the customer.
+
+Access to customer administration tools.
+
+Provision of documentation and instructions.
+
+Provision of workspace if required.
+
+Onboarding must not exceed 5 working days.
+
+Scope limits:
+
+Implementation of up to 5 Agents
+
+Implementation of up to 5 Workflows
+
+Integration of up to 5 Interfaces
+
+--------------------------------
+
+7. Service Hours
+
+Standard service hours:
+
+Monday - Friday
+06:00 – 20:00
+(excluding public holidays)
+
+Working day:
+8 hours + 30 minute break
+
+--------------------------------
+
+8. Travel Expenses
+
+Travel expenses such as transportation, accommodation, and meals are billed separately based on actual receipts.
+
+--------------------------------
+
+9. Payment Plan
+
+Calculate percentage of each phase based on:
+
+stage.total_hours / project.total_project_hours
+
+Example:
+
+Phase 1:
+(stage_hours / total_hours) %
+
+Phase 2:
+(stage_hours / total_hours) %
+
+Phase 3:
+(stage_hours / total_hours) %
+
+Phase 4:
+(stage_hours / total_hours) %
+
+Invoices payable within 7 days.
+
+--------------------------------
+
+10. Acceptance
+
+Offer expires after 7 days from generation date.
+
+Display:
+
+current date
+expiry date = current date + 7 days
+
+--------------------------------
+
+DESIGN
+
+Render the contract inside a styled document container.
+
+Style rules:
+
+white background
+document padding
+max width centered
+section titles bold
+tables clean
+
+It should look like a proposal document.
+
+--------------------------------
+
+LANGUAGE SUPPORT
+
+Use existing i18n system.
+
+Add translation keys for:
+
+Contract Offer
+Management Summary
+Implementation Phases
+Scope of Services
+Required Skills
+Prerequisites
+Payment Plan
+
+--------------------------------
+
+FINAL RESULT
+
+When a Skill Searcher opens a Use Case page:
+
+the bottom of the page shows a dynamically generated offer / contract
+based on the project data.

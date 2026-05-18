@@ -7,6 +7,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp
 import { useToast } from '@/hooks/use-toast';
 import { useI18n } from '@/i18n';
 import { ArrowLeft, Shield } from 'lucide-react';
+import { authService } from '@/services/authService';
 
 export default function OTPVerificationPage() {
   const { toast } = useToast();
@@ -26,26 +27,58 @@ export default function OTPVerificationPage() {
 
     setIsLoading(true);
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    toast({
-      title: t('auth.otpVerification.codeVerified'),
-      description: type === 'reset' ? t('auth.otpVerification.codeVerifiedResetDesc') : t('auth.otpVerification.codeVerifiedEmailDesc'),
-    });
-    
-    if (type === 'reset') {
-      setLocation(`/reset-password?email=${encodeURIComponent(email)}`);
-    } else {
-      setLocation('/dashboard');
+    try {
+      const response = await authService.verifyForgotPasswordOtp({ email, otp });
+      
+      const isSuccess = response.status === 'success' || 
+                        response.message?.toLowerCase().includes('verified') ||
+                        response.message?.toLowerCase().includes('successful');
+      
+      if (isSuccess) {
+        toast({
+          title: t('auth.otpVerification.codeVerified'),
+          description: type === 'reset' ? t('auth.otpVerification.codeVerifiedResetDesc') : t('auth.otpVerification.codeVerifiedEmailDesc'),
+        });
+        
+        if (type === 'reset') {
+          setLocation(`/reset-password?email=${encodeURIComponent(email)}`);
+          window.scrollTo(0, 0);
+        } else {
+          setLocation('/profile');
+          window.scrollTo(0, 0);
+        }
+      } else {
+        toast({
+          title: t('common.error'),
+          description: response.message || t('auth.otp.invalidCodeDesc'),
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('common.error');
+      toast({
+        title: t('common.error'),
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleResend = async () => {
-    toast({
-      title: t('auth.otpVerification.codeResent'),
-      description: t('auth.otpVerification.codeResentDesc'),
-    });
+    try {
+      await authService.forgotPassword(email);
+      toast({
+        title: t('auth.otpVerification.codeResent'),
+        description: t('auth.otpVerification.codeResentDesc'),
+      });
+    } catch {
+      toast({
+        title: t('auth.otpVerification.codeResent'),
+        description: t('auth.otpVerification.codeResentDesc'),
+      });
+    }
   };
 
   return (

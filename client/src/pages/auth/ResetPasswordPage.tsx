@@ -8,11 +8,14 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useI18n } from '@/i18n';
 import { Eye, EyeOff, Lock, Check } from 'lucide-react';
+import { authService } from '@/services/authService';
+import { PasswordRequirements, isPasswordValid } from '@/components/auth/PasswordRequirements';
 
 export default function ResetPasswordPage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const { t } = useI18n();
+  
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,14 +32,26 @@ export default function ResetPasswordPage() {
 
     setIsLoading(true);
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    toast({
-      title: t('auth.resetPassword.success'),
-      description: t('auth.resetPassword.successDesc'),
-    });
-    setLocation('/sign-in');
-    setIsLoading(false);
+    try {
+      await authService.resetPassword({
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+      });
+      toast({
+        title: t('auth.resetPassword.success'),
+        description: t('auth.resetPassword.successDesc'),
+      });
+      setLocation('/sign-in');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('common.error');
+      toast({
+        title: t('common.error'),
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -72,9 +87,7 @@ export default function ResetPasswordPage() {
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  {t('auth.resetPassword.passwordHint')}
-                </p>
+                {formData.password && <PasswordRequirements password={formData.password} />}
               </div>
 
               <div className="space-y-2">
@@ -114,7 +127,7 @@ export default function ResetPasswordPage() {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={isLoading || !passwordsMatch}
+                disabled={isLoading || !passwordsMatch || !isPasswordValid(formData.password)}
                 data-testid="button-reset-submit"
               >
                 {isLoading ? t('auth.resetPassword.resetting') : t('auth.resetPassword.resetButton')}

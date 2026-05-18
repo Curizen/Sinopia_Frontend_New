@@ -1,7 +1,7 @@
 import { type ReactNode, useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import sinopiaLogo from '@assets/sinopia_logo.png';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,9 +39,9 @@ export function PublicLayout({ children }: PublicLayoutProps) {
     setLanguage(language === 'en' ? 'de' : 'en');
   };
 
-  const handleLogout = () => {
-    logout();
-    setLocation('/');
+  const handleLogout = async () => {
+    await logout();
+    setLocation('/sign-in');
   };
 
   return (
@@ -51,7 +51,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-2">
               <img 
-                src="https://curizen.com/products/sinopia2025/images/logo_sinopia.png" 
+                src={sinopiaLogo} 
                 alt="Sinopia Logo" 
                 className="w-16 h-auto rounded-md object-cover"
               />
@@ -90,15 +90,10 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="flex items-center gap-2"
+                      size="icon"
                       data-testid="button-user-avatar"
                     >
-                      <Avatar className="w-8 h-8">
-                        <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                          {user?.firstName?.[0]}
-                          {user?.lastName?.[0]}
-                        </AvatarFallback>
-                      </Avatar>
+                      <User className="w-5 h-5 text-muted-foreground" />
                     </Button>
                   </DropdownMenuTrigger>
 
@@ -247,17 +242,13 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               </Link>
             </div>
 
-            <div className="text-center text-sm text-muted-foreground">
-              <p>&copy; {new Date().getFullYear()} Sinopia. {t('footer.copyright')}</p>
-            </div>
-
             <div className="text-center">
               <a
-                href="https://curizen.com/"
+                href="https://www.curizen.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
-                data-testid="link-powered-by"
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                data-testid="text-powered-by"
               >
                 {t('footer.poweredBy')}
               </a>

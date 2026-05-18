@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'wouter';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 import { useI18n } from '@/i18n';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, MapPin, Send } from 'lucide-react';
 
 export default function ContactPage() {
   const { toast } = useToast();
@@ -19,20 +21,52 @@ export default function ContactPage() {
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!privacyAccepted) {
+      toast({
+        title: t('common.error'),
+        description: t('privacy.agreeError'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setIsSubmitting(true);
-    
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: t('common.success'),
-      description: t('contact.successMessage'),
-    });
-    
-    setFormData({ name: '', email: '', subject: '', message: '' });
-    setIsSubmitting(false);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        toast({
+          title: t('common.success'),
+          description: t('contact.successMessage'),
+        });
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setPrivacyAccepted(false);
+      } else {
+        toast({
+          title: t('common.error'),
+          description: t('contact.errorMessage'),
+          variant: 'destructive',
+        });
+      }
+    } catch {
+      toast({
+        title: t('common.error'),
+        description: t('contact.errorMessage'),
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -102,7 +136,34 @@ export default function ContactPage() {
                         data-testid="input-contact-message"
                       />
                     </div>
-                    <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting} data-testid="button-contact-submit">
+
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="privacy-checkbox-contact"
+                        checked={privacyAccepted}
+                        onCheckedChange={(checked) => setPrivacyAccepted(checked === true)}
+                        data-testid="checkbox-privacy-contact"
+                      />
+                      <Label
+                        htmlFor="privacy-checkbox-contact"
+                        className="text-sm leading-relaxed cursor-pointer"
+                      >
+                        {t('privacy.agreeLabel').split(t('privacy.title')).map((part, i, arr) =>
+                          i < arr.length - 1 ? (
+                            <span key={i}>
+                              {part}
+                              <Link href="/privacy" className="text-primary hover:underline" data-testid="link-privacy-contact" target="_blank">
+                                {t('privacy.title')}
+                              </Link>
+                            </span>
+                          ) : (
+                            <span key={i}>{part}</span>
+                          )
+                        )}
+                      </Label>
+                    </div>
+
+                    <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting || !privacyAccepted} data-testid="button-contact-submit">
                       {isSubmitting ? t('common.loading') : t('contact.sendButton')}
                       <Send className="ml-2 w-4 h-4" />
                     </Button>
@@ -121,20 +182,6 @@ export default function ContactPage() {
                     <div>
                       <h3 className="font-semibold mb-1">{t('contact.info.email')}</h3>
                       <p className="text-sm text-muted-foreground">info@sinopia.eu</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      <Phone className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold mb-1">{t('contact.info.phone')}</h3>
-                      <p className="text-sm text-muted-foreground">+49 177 4928319</p>
                     </div>
                   </div>
                 </CardContent>

@@ -1,0 +1,66 @@
+Task:
+Integrate the new Terms of Service (AGB) into the dedicated
+Terms page that is linked from the Sign Up flow.
+
+IMPORTANT:
+- Must support German and English via the existing i18n system
+- No hardcoded text
+- No mixed languages on the same page
+- No routing, build, or runtime errors
+
+====================================
+LANGUAGE HANDLING
+====================================
+
+- Default language: German (DE)
+- When site language is switched to English → show English terms
+- Use the same localization mechanism already used in the project
+  (no new language logic)
+
+====================================
+CONTENT IMPLEMENTATION
+====================================
+
+1) Replace the current Terms / Terms of Service content
+   with the NEW provided AGB text.
+
+2) Store content in translation files:
+   - terms.de
+   - terms.en
+
+3) Use translation keys in the Terms page UI, e.g.:
+   t("terms.title")
+   t("terms.sections.scope.title")
+   t("terms.sections.scope.content")
+
+====================================
+SIGN UP INTEGRATION
+====================================
+
+- The "Terms of Service" link on the Sign Up page must:
+  → Open the Terms page
+  → Display content in the currently selected language
+  → NOT reload the app unnecessarily
+
+- The acceptance checkbox text must be localized:
+  - German: „Ich habe die Allgemeinen Geschäftsbedingungen gelesen und akzeptiere sie“
+  - English: “I have read and agree to the Terms of Service”
+
+====================================
+UI & STABILITY RULES
+====================================
+
+- Keep existing page layout and styling
+- Do NOT change routes or component structure
+- Do NOT duplicate markup for languages
+- Ensure zero console warnings or errors
+
+====================================
+EXPECTED RESULT
+====================================
+
+- Sign Up page links to the correct Terms page
+- Terms content switches language dynamically (DE / EN)
+- German shown by default
+- English shown when language = EN
+- Clean UI, no crashes, no hydration issues

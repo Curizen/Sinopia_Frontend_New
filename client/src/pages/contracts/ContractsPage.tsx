@@ -24,8 +24,7 @@ import {
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { formatCurrency, formatDate } from '@/lib/utils/formatters';
-import { Search, Handshake, FileSignature, Calendar, DollarSign } from 'lucide-react';
-import { UnderDevelopment } from '@/components/common/UnderDevelopment';
+import { Search, Handshake, FileSignature, Calendar } from 'lucide-react';
 
 export default function ContractsPage() {
   const { user } = useAuth();
@@ -77,7 +76,6 @@ export default function ContractsPage() {
           </p>
         </div>
 
-        <UnderDevelopment className="mb-6" />
 
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
@@ -137,8 +135,7 @@ export default function ContractsPage() {
                         </p>
                       </div>
                       <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <DollarSign className="w-4 h-4" />
+                        <span>
                           {formatCurrency(contract.amount)}
                         </span>
                         <span className="flex items-center gap-1">

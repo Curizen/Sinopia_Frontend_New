@@ -1,0 +1,83 @@
+You are working on my existing Sinopia web app (React + TypeScript). Please implement the following changes end-to-end. Read the codebase first, then apply minimal, clean changes with full English + German translations for any new UI text. Keep the existing styling/theme.
+
+1) Skill Searcher signup flow: “Company Info” step BEFORE dashboard
+   1.1) After successful Sign Up + OTP verification (if OTP exists), and ONLY for role = "skill_searcher", route the user to a new required onboarding page:
+       Route: /onboarding/company (or /sign-up/company-info)
+   1.2) This page must be completed before the user can access /dashboard and other authenticated routes.
+       - If a skill_searcher tries to open /dashboard without completing company info, redirect them to the company info page.
+   1.3) The company info form must collect:
+       - City
+       - Country
+       - Company size (dropdown)
+       - Plus any existing “profile info” fields already used in the skill searcher profile (reuse the existing profile structure/components where possible)
+   1.4) Validation:
+       - City and Country are required.
+       - Company size is required.
+   1.5) On submit:
+       - Save the data to the user profile (in localStorage)., and show in dashborad
+       - Then route to /dashboard (or the “under development” screen if your flow currently routes there).
+   1.6) UX:
+       - Show a simple progress indicator: “Step 1/2” (Account) → “Step 2/2” (Company Info) for skill_searcher.
+       - If the user is skill_giver, keep the current flow unchanged.
+
+2) Add fields to User Profile model and UI (Skill Searcher)
+   2.1) Update the User type/interface to include:
+       - city?: string
+       - country?: string
+       - companySize?: string
+   2.2) Make sure these values persist and are available anywhere the profile is rendered.
+   2.3) On the Profile page for skill_searcher:
+       - Display City, Country, Company Size.
+       - Add edit support consistent with your existing “Edit Profile” pattern.
+
+3) Skill Searcher profile design: company information ABOVE “About”
+   3.1) In skill_searcher profile page UI, add a “Company Information” card/section.
+   3.2) Place it above the “About” section.
+   3.3) The “Company Information” section should show:
+       - Company size
+       - City
+       - Country
+       Use the same component style as other profile sections (Card, spacing, typography).
+
+4) About page: update “Our Values” content
+   4.1) In the About page, replace the current “Our Values” list/section with this new list (use the same visual style):
+       - Service Expertise
+       - Innovation
+       - New Thinking
+       - Orchestration
+       - Partnership
+       - Integrity
+       - Achievement
+   4.2) Make sure this section is translated in both languages:
+       - English (as above)
+       - German translations (accurate professional German):
+         * Service Expertise → Service-Expertise
+         * Innovation → Innovation
+         * New Thinking → Neues Denken
+         * Orchestration → Orchestrierung
+         * Partnership → Partnerschaft
+         * Integrity → Integrität
+         * Achievement → Leistung
+   4.3) If there is a heading “Our Values”, ensure it also translates.
+
+5) Terms of Service: update “Last updated” year
+   5.1) Find the Terms of Service page/content.
+   5.2) Change:
+       “Last updated: November 2024.”
+       to:
+       “Last updated: November 2025.”
+   5.3) Ensure both EN and DE versions reflect the correct year (translate German equivalent if it exists).
+
+6) Internationalization requirements (must be strict)
+   6.1) Ensure ANY new text keys are added to BOTH EN and DE translation files.
+   6.2) Replace any remaining hardcoded strings in the new/modified screens with translation keys.
+   6.3) Verify that when switching language, all newly added labels/placeholders/buttons/headings change accordingly.
+
+7) Deliverables
+   7.1) Provide the final updated code changes across the files you modified.
+   7.2) After implementing, run/verify the app so:
+       - Skill Searcher: Sign up → OTP → Company Info page → Dashboard
+       - Skill Searcher cannot bypass Company Info.
+       - Profile shows Company Information above About.
+       - About page shows updated values list (EN/DE).
+       - Terms page shows “November 2025”.

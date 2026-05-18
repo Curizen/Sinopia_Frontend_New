@@ -1,0 +1,137 @@
+TASK:
+Apply the following updates safely across the project.
+No build errors, no broken routes, no i18n issues.
+
+========================================
+PART 1 — REPLACE PRIVACY POLICY CONTENT
+========================================
+
+I will paste the NEW Privacy Policy paragraph between quotation marks.
+
+You must:
+
+1) Completely replace the existing Privacy Policy content
+   (both German and English versions).
+
+2) Use EXACTLY the text I provide.
+   - Do NOT rewrite
+   - Do NOT translate automatically
+   - Do NOT summarize
+   - Preserve formatting and line breaks
+
+3) Store the new text in:
+   - locales/de/privacy.json
+   - locales/en/privacy.json
+
+4) Keep language switching fully functional.
+
+WAIT for me to paste:
+
+"PASTE NEW PRIVACY TEXT HERE"
+
+After that:
+Insert it into both language files appropriately.
+If I provide both DE and EN separately,
+store them correctly per language.
+
+========================================
+PART 2 — RENAME TERMS OF SERVICE
+========================================
+
+Rename:
+
+English:
+"Terms of Service"
+→ "General Terms and Conditions"
+
+German:
+If currently shown as "Terms of Service" or similar,
+replace with:
+"Allgemeine Geschäftsbedingungen"
+
+Apply this change everywhere:
+- Footer
+- Sign Up
+- Modal references
+- Settings
+- Any navigation
+- Any translation keys
+
+Do NOT change routes.
+Only change displayed labels.
+
+========================================
+PART 3 — SIGN UP CHECKBOX LOGIC
+========================================
+
+On the Sign Up page:
+
+There must be TWO required checkboxes:
+
+1) Privacy Policy checkbox
+   Text:
+   - English: "I have read and agree to the Privacy Policy"
+   - German: "Ich habe die Datenschutzerklärung gelesen und akzeptiere sie"
+   Link must point to:
+   /privacy
+
+2) General Terms and Conditions checkbox
+   Text:
+   - English: "I agree to the General Terms and Conditions"
+   - German: "Ich akzeptiere die Allgemeinen Geschäftsbedingungen"
+   Link must point to:
+   /terms
+
+IMPORTANT:
+- Both checkboxes must be REQUIRED.
+- User cannot submit without checking both.
+- Do NOT open modal preview.
+- Just link to the dedicated pages.
+- Keep existing validation system intact.
+
+========================================
+PART 4 — CONTACT US CHECKBOX
+========================================
+
+On the Contact Us page:
+
+Add a REQUIRED checkbox above the Send button.
+
+Text:
+
+English:
+"I agree to the Privacy Policy"
+
+German:
+"Ich stimme der Datenschutzerklärung zu"
+
+- Link must go to /privacy
+- User cannot send message without checking
+- Keep current form validation logic
+- No alerts — use inline validation only
+
+========================================
+TECHNICAL REQUIREMENTS
+========================================
+
+- Do NOT duplicate translation keys.
+- Use existing i18n system.
+- Do NOT hardcode text inside components.
+- Use translation keys for all checkbox labels.
+- Ensure no missing key warnings.
+- Keep routing untouched.
+- No console errors.
+- No hydration errors.
+
+========================================
+FINAL VALIDATION
+========================================
+
+✔ Privacy Policy replaced with new text
+✔ Terms renamed everywhere
+✔ Two required checkboxes in Sign Up
+✔ Required checkbox in Contact Us
+✔ Links route correctly
+✔ German default language works
+✔ English switches properly
+✔ No runtime or build errors

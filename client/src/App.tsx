@@ -1,4 +1,4 @@
-import { Switch, Route, Redirect } from "wouter";
+import { Switch, Route, Redirect, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -26,23 +26,25 @@ import ForgotPasswordPage from "@/pages/auth/ForgotPasswordPage";
 import OTPVerificationPage from "@/pages/auth/OTPVerificationPage";
 import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
 import VerifyOtpPage from "@/pages/auth/VerifyOtpPage";
-import CVUploadPage from "@/pages/auth/CVUploadPage";
+import CompanyInfoPage from "@/pages/auth/CompanyInfoPage";
 import DashboardPage from "@/pages/dashboard/DashboardPage";
 import ProjectsPage from "@/pages/projects/ProjectsPage";
 import ProjectDetailPage from "@/pages/projects/ProjectDetailPage";
 import AddProjectPage from "@/pages/projects/AddProjectPage";
 import UseCaseUploadPage from "@/pages/use-cases/UseCaseUploadPage";
-import OffersPage from "@/pages/offers/OffersPage";
+import UseCaseDetailsPage from "@/pages/use-cases/UseCaseDetailsPage";
+import OffersListPage from "@/pages/offers/OffersListPage";
+import OfferDetailsPage from "@/pages/offers/OfferDetailsPage";
 import ContractsPage from "@/pages/contracts/ContractsPage";
 import PaymentsPage from "@/pages/payments/PaymentsPage";
 import NotificationsPage from "@/pages/notifications/NotificationsPage";
 import ProfilePage from "@/pages/profile/ProfilePage";
 import SettingsPage from "@/pages/settings/SettingsPage";
-import UnderDevelopmentPage from "@/pages/UnderDevelopmentPage";
 import NotFound from "@/pages/not-found";
 
 function PrivateRoute({ component: Component }: { component: React.ComponentType }) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
+  const [location] = useLocation();
 
   if (isLoading) {
     return (
@@ -53,7 +55,13 @@ function PrivateRoute({ component: Component }: { component: React.ComponentType
   }
 
   if (!isAuthenticated) {
-    return <Redirect to="/sign-in" />;
+    // Store current path as return URL for redirect after login
+    const returnUrl = encodeURIComponent(location);
+    return <Redirect to={`/sign-in?returnUrl=${returnUrl}`} />;
+  }
+
+  if (user?.role === 'skill_searcher' && !user?.companyOnboardingCompleted) {
+    return <Redirect to="/onboarding/company" />;
   }
 
   return <Component />;
@@ -71,7 +79,20 @@ function PublicOnlyRoute({ component: Component }: { component: React.ComponentT
   }
 
   if (isAuthenticated) {
-    return <Redirect to="/under-development" />;
+    // Check if there's a returnUrl in query params to preserve it
+    const searchParams = new URLSearchParams(window.location.search);
+    const returnUrl = searchParams.get('returnUrl');
+    if (returnUrl) {
+      try {
+        const decodedUrl = decodeURIComponent(returnUrl);
+        if (decodedUrl.startsWith('/')) {
+          return <Redirect to={decodedUrl} />;
+        }
+      } catch {
+        // Invalid URL, fall through to default
+      }
+    }
+    return <Redirect to="/profile" />;
   }
 
   return <Component />;
@@ -87,7 +108,6 @@ function Router() {
       <Route path="/contact" component={ContactPage} />
       <Route path="/terms" component={TermsPage} />
       <Route path="/privacy" component={PrivacyPage} />
-      <Route path="/under-development" component={UnderDevelopmentPage} />
       
       <Route path="/sign-in">
         <PublicOnlyRoute component={SignInPage} />
@@ -107,9 +127,7 @@ function Router() {
       <Route path="/verify-otp">
         <PublicOnlyRoute component={VerifyOtpPage} />
       </Route>
-      <Route path="/sign-up/cv">
-        <PublicOnlyRoute component={CVUploadPage} />
-      </Route>
+      <Route path="/onboarding/company" component={CompanyInfoPage} />
 
       <Route path="/dashboard">
         <PrivateRoute component={DashboardPage} />
@@ -126,8 +144,14 @@ function Router() {
       <Route path="/use-cases/upload">
         <PrivateRoute component={UseCaseUploadPage} />
       </Route>
+      <Route path="/use-case/:id">
+        <PrivateRoute component={UseCaseDetailsPage} />
+      </Route>
       <Route path="/offers">
-        <PrivateRoute component={OffersPage} />
+        <PrivateRoute component={OffersListPage} />
+      </Route>
+      <Route path="/offers/:id">
+        <PrivateRoute component={OfferDetailsPage} />
       </Route>
       <Route path="/contracts">
         <PrivateRoute component={ContractsPage} />
